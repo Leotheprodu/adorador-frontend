@@ -1,4 +1,4 @@
-import { $user } from "@stores/users";
+import { $user } from "@/global/stores/users";
 import { getLocalStorage } from "../utils/handleLocalStorage";
 
 export const CheckIsLoggedIn = () => {

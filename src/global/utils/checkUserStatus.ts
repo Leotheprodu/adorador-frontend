@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/react";
-import { $user } from "@stores/users";
+import { $user } from "@/global/stores/users";
 
 export const CheckUserStatus = ({
   isLoggedIn = false,
