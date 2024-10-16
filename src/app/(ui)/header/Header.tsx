@@ -9,9 +9,21 @@ export const Header = () => {
           {appName}
         </h1>
       </Link>
-      <div>
-        <nav></nav>
-      </div>
+
+      <nav>
+        <ul className="flex space-x-5">
+          <li>
+            <Link href={"/auth/login"}>
+              <p className="text-lg">Login</p>
+            </Link>
+          </li>
+          <li>
+            <Link href={"/auth/register"}>
+              <p className="text-lg">Register</p>
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };
