@@ -7,3 +7,12 @@
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: "Agdasima";
+  src: url(/fonts/Agdasima-Regular.ttf);
+}
+
+.font-agdasima {
+  font-family: "Agdasima", sans-serif;
+}

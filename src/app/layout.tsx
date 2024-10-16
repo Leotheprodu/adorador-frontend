@@ -1,19 +1,8 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./(ui)/globals.css";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./(ui)/providers";
-
-const geistSans = localFont({
-  src: "./(ui)/fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./(ui)/fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { Header } from "./(ui)/header/Header";
 
 export const metadata: Metadata = {
   title: "Adorador",
@@ -27,12 +16,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`antialiased`}>
         <Providers>
           <Toaster />
-          {children}
+          <div className="grid grid-rows-[5rem_1fr_15rem] relative">
+            <div className="h-[5rem]">
+              <header className="h-[5rem] w-screen bg-blanco bg-opacity-10 backdrop-blur-2xl fixed top-0">
+                <Header />
+              </header>
+            </div>
+            <main>{children}</main>
+            <div className="h-[15rem]">
+              <footer className="h-full w-screen bg-negro text-blanco"></footer>
+            </div>
+          </div>
         </Providers>
       </body>
     </html>
