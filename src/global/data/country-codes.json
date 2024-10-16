@@ -1,0 +1,206 @@
+[
+  {
+    "country": "Alemania",
+    "code": "49",
+    "currency": "EUR",
+    "langCountry": "de-DE"
+  },
+  {
+    "country": "Andorra",
+    "code": "376",
+    "currency": "EUR",
+    "langCountry": "ca-AD"
+  },
+  {
+    "country": "Arabia Saudita",
+    "code": "966",
+    "currency": "SAR",
+    "langCountry": "ar-SA"
+  },
+  {
+    "country": "Argentina",
+    "code": "54",
+    "currency": "ARS",
+    "langCountry": "es-AR"
+  },
+  {
+    "country": "Australia",
+    "code": "61",
+    "currency": "AUD",
+    "langCountry": "en-AU"
+  },
+  {
+    "country": "Austria",
+    "code": "43",
+    "currency": "EUR",
+    "langCountry": "de-AT"
+  },
+  {
+    "country": "Bahréin",
+    "code": "973",
+    "currency": "BHD",
+    "langCountry": "ar-BH"
+  },
+  {
+    "country": "Belice",
+    "code": "501",
+    "currency": "BZD",
+    "langCountry": "en-BZ"
+  },
+  {
+    "country": "Bolivia",
+    "code": "591",
+    "currency": "BOB",
+    "langCountry": "es-BO"
+  },
+  {
+    "country": "Brasil",
+    "code": "55",
+    "currency": "BRL",
+    "langCountry": "pt-BR"
+  },
+  {
+    "country": "Canadá",
+    "code": "1",
+    "currency": "CAD",
+    "langCountry": "en-CA"
+  },
+  {
+    "country": "Chile",
+    "code": "56",
+    "currency": "CLP",
+    "langCountry": "es-CL"
+  },
+  {
+    "country": "Colombia",
+    "code": "57",
+    "currency": "COP",
+    "langCountry": "es-CO"
+  },
+  {
+    "country": "Costa Rica",
+    "code": "506",
+    "currency": "CRC",
+    "langCountry": "es-CR"
+  },
+  {
+    "country": "Ecuador",
+    "code": "593",
+    "currency": "USD",
+    "langCountry": "es-EC"
+  },
+  {
+    "country": "El Salvador",
+    "code": "503",
+    "currency": "USD",
+    "langCountry": "es-SV"
+  },
+  {
+    "country": "España",
+    "code": "34",
+    "currency": "EUR",
+    "langCountry": "es-ES"
+  },
+  {
+    "country": "Estados Unidos",
+    "code": "1",
+    "currency": "USD",
+    "langCountry": "en-US"
+  },
+  {
+    "country": "Francia",
+    "code": "33",
+    "currency": "EUR",
+    "langCountry": "fr-FR"
+  },
+  {
+    "country": "Guatemala",
+    "code": "502",
+    "currency": "GTQ",
+    "langCountry": "es-GT"
+  },
+  {
+    "country": "Honduras",
+    "code": "504",
+    "currency": "HNL",
+    "langCountry": "es-HN"
+  },
+  {
+    "country": "India",
+    "code": "91",
+    "currency": "INR",
+    "langCountry": "hi-IN"
+  },
+  {
+    "country": "Italia",
+    "code": "39",
+    "currency": "EUR",
+    "langCountry": "it-IT"
+  },
+  {
+    "country": "Japón",
+    "code": "81",
+    "currency": "JPY",
+    "langCountry": "ja-JP"
+  },
+  {
+    "country": "México",
+    "code": "52",
+    "currency": "MXN",
+    "langCountry": "es-MX"
+  },
+  {
+    "country": "Nicaragua",
+    "code": "505",
+    "currency": "NIO",
+    "langCountry": "es-NI"
+  },
+  {
+    "country": "Panamá",
+    "code": "507",
+    "currency": "PAB",
+    "langCountry": "es-PA"
+  },
+  {
+    "country": "Paraguay",
+    "code": "595",
+    "currency": "PYG",
+    "langCountry": "es-PY"
+  },
+  {
+    "country": "Perú",
+    "code": "51",
+    "currency": "PEN",
+    "langCountry": "es-PE"
+  },
+  {
+    "country": "Puerto Rico",
+    "code": "1",
+    "currency": "USD",
+    "langCountry": "en-PR"
+  },
+  {
+    "country": "Reino Unido",
+    "code": "44",
+    "currency": "GBP",
+    "langCountry": "en-GB"
+  },
+  {
+    "country": "República Dominicana",
+    "code": "1",
+    "currency": "DOP",
+    "langCountry": "es-DO"
+  },
+  {
+    "country": "Uruguay",
+    "code": "598",
+    "currency": "UYU",
+    "langCountry": "es-UY"
+  },
+  {
+    "country": "Venezuela",
+    "code": "58",
+    "currency": "VES",
+    "langCountry": "es-VE"
+  }
+]
