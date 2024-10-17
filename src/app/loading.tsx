@@ -1,15 +1,18 @@
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@/global/utils/Spinner";
 
-export default function Loading({ label = "Cargando..." }: { label?: string }) {
+export default function Loading(/* { label = "Cargando..." }: { label?: string } */) {
   return (
-    <div className=" flex items-center justify-center w-full h-screen">
+    <>
+      {/* <div className=" flex items-center justify-center w-full h-screen">
       <Spinner
         size="lg"
-        color="primary"
+        color="default"
         label={`${label}`}
-        labelColor="primary"
+        labelColor="foreground"
         className="my-0 mx-auto"
       />
-    </div>
+    </div> */}
+      <Spinner isLoading={true} />
+    </>
   );
 }
