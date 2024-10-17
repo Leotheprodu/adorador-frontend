@@ -1,12 +1,54 @@
 import type { Metadata } from "next";
-import "./(ui)/globals.css";
+import "../global/config/globals.css";
 import { Toaster } from "react-hot-toast";
-import { Providers } from "./(ui)/providers";
-import { Header } from "./(ui)/header/Header";
+import { Providers } from "../global/utils/Providers";
+import { appDescription, appName, domain } from "@/global/config/constants";
 
 export const metadata: Metadata = {
-  title: "Adorador",
-  description: "Sistema de Lyrics para Iglesias",
+  title: {
+    template: `%s | ${appName}`,
+    default: `${appName}`,
+  },
+  description: `${appDescription}`,
+  keywords: ["iglesia", "herramientas", "cristiano"],
+  openGraph: {
+    title: `${appName}`,
+    description: `${appDescription}`,
+    url: `${domain}`,
+    siteName: `${appName}`,
+    images: [
+      {
+        url: "/yehu.jpg",
+        width: 1200,
+        height: 628,
+        alt: "yehu imagen",
+      },
+    ],
+    locale: "es_CR",
+    type: "website",
+  },
+  robots: {
+    index: false,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: false,
+      noimageindex: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  /* twitter: {
+    card: 'summary_large_image',
+    title: `${appName}`,
+    description: `${appDescription}`,
+    siteId: '1467726470533754880',
+    creator: '@nextjs',
+    creatorId: '1467726470533754880',
+    images: ['https://nextjs.org/og.png'],
+  }, */
 };
 
 export default function RootLayout({
@@ -19,17 +61,7 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <Providers>
           <Toaster />
-          <div className="grid grid-rows-[5rem_1fr_15rem] relative">
-            <div className="h-[5rem]">
-              <header className="h-[5rem] w-screen bg-blanco bg-opacity-10 backdrop-blur-2xl fixed top-0">
-                <Header />
-              </header>
-            </div>
-            <main>{children}</main>
-            <div className="h-[15rem]">
-              <footer className="h-full w-screen bg-negro text-blanco"></footer>
-            </div>
-          </div>
+          {children}
         </Providers>
       </body>
     </html>
