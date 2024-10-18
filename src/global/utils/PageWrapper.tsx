@@ -10,17 +10,16 @@ export const PageWrapper = ({
 }) => {
   if (variant === "1") {
     return (
-      <AnimatePresence>
+      <div className="z-30">
         <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 0.5 }}
           className=""
         >
           {children}
         </motion.div>
-      </AnimatePresence>
+      </div>
     );
   } else if (variant === "2") {
     return (

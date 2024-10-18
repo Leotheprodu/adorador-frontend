@@ -58,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`antialiased`}>
+      <body>
         <Providers>
           <Toaster />
           {children}
