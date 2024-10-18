@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 };
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center p-8 pb-20 sm:p-20">
+    <div className="flex flex-col items-center justify-center p-8 pb-20 sm:p-20 h-screen">
       Hola Adorador
     </div>
   );

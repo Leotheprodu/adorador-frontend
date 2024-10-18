@@ -1,5 +1,7 @@
+"use client";
+import { LinksProps } from "@/global/config/links";
 import { CheckUserStatus } from "@/global/utils/checkUserStatus";
-import { LinksProps } from "../interfaces/NavbarInterfaces";
+
 import Link from "next/link";
 
 export const NavbarLinks = ({

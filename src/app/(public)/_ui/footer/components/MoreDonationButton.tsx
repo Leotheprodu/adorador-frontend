@@ -41,7 +41,7 @@ export const MoreDonationButton = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Otros métodos de pago
+                Métodos de pago para Donación
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col justify-center items-center gap-6">

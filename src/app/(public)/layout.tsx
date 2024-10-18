@@ -1,4 +1,5 @@
 import { Footer } from "./_ui/footer/Footer";
+
 import { Header } from "./_ui/header/Header";
 
 export default function PublicLayout({
@@ -10,7 +11,8 @@ export default function PublicLayout({
         <Header />
       </div>
       <main className="">{children}</main>
-      <div className="h-[15rem] overflow-hidden">
+
+      <div className="flex flex-col min-h-[15rem] min-w-full">
         <Footer />
       </div>
     </div>

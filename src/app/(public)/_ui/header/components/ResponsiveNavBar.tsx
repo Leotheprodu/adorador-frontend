@@ -1,23 +1,14 @@
 "use client";
-import { userRoles } from "@/global/config/constants";
 import { useEffect, useState } from "react";
-import { LinksProps } from "../interfaces/NavbarInterfaces";
 import { MenuButtonIcon } from "@/global/icons/MenuButtonIcon";
 import { LoginNavButton } from "./LoginNavButton";
 import { usePathname } from "next/navigation";
 import { NavbarLinks } from "./NavbarLinks";
+import { links } from "@/global/config/links";
+
 export const ResponsiveNavBar = () => {
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const links: LinksProps[] = [
-    {
-      name: "Contacto",
-      href: "/contacto",
-      isLoggedIn: false,
-      roles: [],
-      negativeRoles: [userRoles.Admin.id],
-    },
-  ];
   useEffect(() => {
     setIsOpen(false);
   }, [pathName]);
@@ -35,7 +26,7 @@ export const ResponsiveNavBar = () => {
         <MenuButtonIcon />
       </button>
       <nav className={`${isOpen ? "flex" : "hidden md:flex"} z-50`}>
-        <ul className="flex flex-col md:flex-row rounded-tl-xl fixed top-[5rem] md:top-auto right-0 h-screen md:h-full w-1/2 md:w-full p-5 md:p-0 bg-secundario md:bg-transparent md:visible md:relative gap-4">
+        <ul className="flex flex-col md:flex-row rounded-tl-xl fixed top-[5rem] md:top-auto right-0 h-screen md:h-full w-1/2 md:w-full p-5 md:p-0 bg-secundario md:bg-transparent md:visible md:relative gap-4 z-50">
           <NavbarLinks pathName={pathName} links={links} />
           <LoginNavButton pathName={pathName} />
         </ul>

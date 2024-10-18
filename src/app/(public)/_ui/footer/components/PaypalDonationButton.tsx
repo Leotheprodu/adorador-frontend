@@ -39,7 +39,7 @@ export const PaypalDonationButton = () => {
         env: "production",
         hosted_button_id: "P8VJXU5CHT3N8", // ID de tu botón
         image: {
-          src: "https://www.paypalobjects.com/es_XC/i/btn/btn_donateCC_LG.gif",
+          src: "https://www.paypalobjects.com/webstatic/mktg/logo-center/logotipo_paypal_pagos_seguros.png",
           alt: "Donar con el botón PayPal",
           title: "PayPal - The safer, easier way to pay online!",
         },
