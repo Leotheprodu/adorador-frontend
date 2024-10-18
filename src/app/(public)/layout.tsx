@@ -1,4 +1,4 @@
-import { Header } from "./(ui)/header/Header";
+import { Header } from "./_ui/header/Header";
 
 export default function PublicLayout({
   children,

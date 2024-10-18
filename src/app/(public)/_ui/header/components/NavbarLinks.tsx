@@ -1,5 +1,5 @@
 import { CheckUserStatus } from "@/global/utils/checkUserStatus";
-import { LinksProps } from "./NavbarInterfaces";
+import { LinksProps } from "../interfaces/NavbarInterfaces";
 import Link from "next/link";
 
 export const NavbarLinks = ({

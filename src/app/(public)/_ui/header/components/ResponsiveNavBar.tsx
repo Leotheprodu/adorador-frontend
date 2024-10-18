@@ -1,11 +1,11 @@
 "use client";
 import { userRoles } from "@/global/config/constants";
 import { useEffect, useState } from "react";
-import { LinksProps } from "./NavbarInterfaces";
+import { LinksProps } from "../interfaces/NavbarInterfaces";
 import { MenuButtonIcon } from "@/global/icons/MenuButtonIcon";
-import { NavbarLinks } from "./NavbarLinks";
 import { LoginNavButton } from "./LoginNavButton";
 import { usePathname } from "next/navigation";
+import { NavbarLinks } from "./NavbarLinks";
 export const ResponsiveNavBar = () => {
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +32,7 @@ export const ResponsiveNavBar = () => {
         aria-label="Abrir menú"
         className="fixed active:scale-85 right-5 flex items-center justify-center md:hidden z-50"
       >
+        S
         <MenuButtonIcon />
       </button>
       <nav className={`${isOpen ? "flex" : "hidden md:flex"} z-50`}>
