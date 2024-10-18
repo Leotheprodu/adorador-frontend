@@ -1,3 +1,4 @@
+import { Footer } from "./_ui/footer/Footer";
 import { Header } from "./_ui/header/Header";
 
 export default function PublicLayout({
@@ -9,8 +10,8 @@ export default function PublicLayout({
         <Header />
       </div>
       <main className="">{children}</main>
-      <div className="h-[15rem]">
-        <footer className="h-full bg-negro text-blanco"></footer>
+      <div className="h-[15rem] overflow-hidden">
+        <Footer />
       </div>
     </div>
   );

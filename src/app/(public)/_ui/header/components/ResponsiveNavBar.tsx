@@ -32,7 +32,6 @@ export const ResponsiveNavBar = () => {
         aria-label="Abrir menú"
         className="fixed active:scale-85 right-5 flex items-center justify-center md:hidden z-50"
       >
-        S
         <MenuButtonIcon />
       </button>
       <nav className={`${isOpen ? "flex" : "hidden md:flex"} z-50`}>
