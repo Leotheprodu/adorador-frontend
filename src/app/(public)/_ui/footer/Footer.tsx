@@ -52,7 +52,7 @@ export const Footer = () => {
             href="https://leoserranodev.vercel.app/es/"
             target="_blank"
             rel="noopener noreferrer"
-            className="border-b-1 hover:border-b-2 border-slate-400 hover:text-slate-100 transition-all duration-200"
+            className="hover:border-b-1 border-slate-400 hover:text-slate-100 transition-all duration-200"
           >
             Leonardo Serrano
           </a>{" "}
