@@ -1,8 +1,8 @@
-"use client";
-import { LinksProps } from "@/global/config/links";
-import { CheckUserStatus } from "@/global/utils/checkUserStatus";
+'use client';
+import { LinksProps } from '@/global/interfaces/AppSecurityInterfaces';
+import { CheckUserStatus } from '@/global/utils/checkUserStatus';
 
-import Link from "next/link";
+import Link from 'next/link';
 
 export const FooterLinks = ({ links }: { links: LinksProps[] }) => {
   return (
@@ -10,13 +10,13 @@ export const FooterLinks = ({ links }: { links: LinksProps[] }) => {
       {links.map(({ name, href, isLoggedIn, roles, negativeRoles }) =>
         CheckUserStatus({ isLoggedIn, roles, negativeRoles }) ? (
           <li key={name}>
-            <Link href={href} className={`text-primario linkNav relative`}>
+            <Link href={href} className="linkNav relative text-primario">
               {name}
 
-              <span className="absolute bottom-5 opacity-0 left-0 w-0 h-0 border-t-2 border-secundario dark:border-primario transition-all duration-100" />
+              <span className="absolute bottom-5 left-0 h-0 w-0 border-t-2 border-secundario opacity-0 transition-all duration-100 dark:border-primario" />
             </Link>
           </li>
-        ) : null
+        ) : null,
       )}
     </>
   );

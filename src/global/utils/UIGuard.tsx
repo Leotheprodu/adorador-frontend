@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { CheckUserStatus } from "./checkUserStatus";
-import { useStore } from "@nanostores/react";
-import { Spinner } from "./Spinner";
-import { $user } from "@/global/stores/users";
-import { UiGuardProps } from "../interfaces/AppSecurityInterfaces";
+import React, { useEffect, useState } from 'react';
+import { CheckUserStatus } from './checkUserStatus';
+import { useStore } from '@nanostores/react';
+import { Spinner } from './Spinner';
+import { $user } from '@/global/stores/users';
+import { UiGuardProps } from '../interfaces/AppSecurityInterfaces';
 
 export const UIGuard = ({
   children,
@@ -27,7 +27,7 @@ export const UIGuard = ({
           children
         ) : (
           <div>
-            {user.isLoggedIn ? "No tiene Permisos" : "Debe iniciar sesión"}
+            {user.isLoggedIn ? 'No tiene Permisos' : 'Debe iniciar sesión'}
           </div>
         )}
       </>

@@ -1,10 +1,10 @@
-"use client";
-import { useEffect, useState } from "react";
-import { MenuButtonIcon } from "@/global/icons/MenuButtonIcon";
-import { LoginNavButton } from "./LoginNavButton";
-import { usePathname } from "next/navigation";
-import { NavbarLinks } from "./NavbarLinks";
-import { links } from "@/global/config/links";
+'use client';
+import { useEffect, useState } from 'react';
+import { MenuButtonIcon } from '@/global/icons/MenuButtonIcon';
+import { LoginNavButton } from './LoginNavButton';
+import { usePathname } from 'next/navigation';
+import { NavbarLinks } from './NavbarLinks';
+import { links } from '@/global/config/links';
 
 export const ResponsiveNavBar = () => {
   const pathName = usePathname();
@@ -14,26 +14,26 @@ export const ResponsiveNavBar = () => {
   }, [pathName]);
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     }
   }, [isOpen]);
 
   return (
     <>
       {isOpen && (
-        <div className="md:hidden fixed inset-0 h-screen w-screen bg-white bg-opacity-70 backdrop-blur-sm z-40"></div>
+        <div className="fixed inset-0 z-40 h-screen w-screen bg-white bg-opacity-70 backdrop-blur-sm md:hidden"></div>
       )}
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Abrir menú"
-        className="fixed active:scale-85 right-5 flex items-center justify-center md:hidden z-50"
+        className="fixed right-5 z-50 flex items-center justify-center active:scale-85 md:hidden"
       >
         <MenuButtonIcon />
       </button>
-      <nav className={`${isOpen ? "flex" : "hidden md:flex"} z-50`}>
-        <ul className="flex flex-col md:flex-row rounded-tl-xl fixed top-[5rem] md:top-auto right-0 h-screen md:h-full w-1/2 md:w-full p-5 md:p-0 bg-secundario md:bg-transparent md:visible md:relative gap-4 z-50">
+      <nav className={`${isOpen ? 'flex' : 'hidden md:flex'} z-50`}>
+        <ul className="fixed right-0 top-[5rem] z-50 flex h-screen w-1/2 flex-col gap-4 rounded-tl-xl bg-secundario p-5 md:visible md:relative md:top-auto md:h-full md:w-full md:flex-row md:bg-transparent md:p-0">
           <NavbarLinks pathName={pathName} links={links} />
           <LoginNavButton pathName={pathName} />
         </ul>

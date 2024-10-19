@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { LinksProps } from "@/global/interfaces/AppSecurityInterfaces";
-import { CheckUserStatus } from "@/global/utils/checkUserStatus";
+import { LinksProps } from '@/global/interfaces/AppSecurityInterfaces';
+import { CheckUserStatus } from '@/global/utils/checkUserStatus';
 
-import Link from "next/link";
+import Link from 'next/link';
 
 export const NavbarLinks = ({
   pathName,
@@ -21,7 +21,7 @@ export const NavbarLinks = ({
               href={href}
               className={`text-primario md:text-secundario linkNav relative ${
                 pathName.includes(href) &&
-                "border-l-2 border-secundario dark:border-primario md:border-primario md:dark:border-secundario"
+                'border-l-2 border-secundario dark:border-primario md:border-primario md:dark:border-secundario'
               }`}
             >
               {name}
@@ -30,7 +30,7 @@ export const NavbarLinks = ({
               )}
             </Link>
           </li>
-        ) : null
+        ) : null,
       )}
     </>
   );

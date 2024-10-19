@@ -1,5 +1,5 @@
-import { useStore } from "@nanostores/react";
-import { $user } from "@/global/stores/users";
+import { useStore } from '@nanostores/react';
+import { $user } from '@/global/stores/users';
 
 export const CheckUserStatus = ({
   isLoggedIn = false,
@@ -20,7 +20,7 @@ export const CheckUserStatus = ({
   }
   // Verificar si el usuario tiene alguno de los negativeRoles
   const hasNegativeRoles = negativeRoles?.some((negativeRole) =>
-    user.roles.includes(negativeRole)
+    user.roles.includes(negativeRole),
   );
 
   // Si el usuario tiene algún rol negativo, devolver false

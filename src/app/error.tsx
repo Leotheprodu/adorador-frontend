@@ -1,7 +1,7 @@
-"use client"; // Error components must be Client Components
+'use client'; // Error components must be Client Components
 
-import { useEffect } from "react";
-import { Button } from "@nextui-org/react";
+import { useEffect } from 'react';
+import { Button } from '@nextui-org/react';
 
 export default function Error({
   error,
@@ -16,9 +16,9 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex flex-col justify-center items-center mt-16 h-60">
-      <h1 className=" uppercase mb-8 text-3xl font-bold">Lo sentimos</h1>
-      <h2 className=" mb-8">Parece que ha habido un error</h2>
+    <div className="mt-16 flex h-60 flex-col items-center justify-center">
+      <h1 className="mb-8 text-3xl font-bold uppercase">Lo sentimos</h1>
+      <h2 className="mb-8">Parece que ha habido un error</h2>
       <Button
         color="danger"
         onClick={

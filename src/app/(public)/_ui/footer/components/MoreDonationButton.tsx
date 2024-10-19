@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Modal,
   ModalContent,
@@ -7,9 +7,9 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@nextui-org/react";
+} from '@nextui-org/react';
 
-import { InputSecureTextToCopy } from "./InputSecureTextToCopy";
+import { InputSecureTextToCopy } from './InputSecureTextToCopy';
 
 export const MoreDonationButton = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -28,42 +28,42 @@ export const MoreDonationButton = () => {
               </ModalHeader>
 
               <ModalBody>
-                <div className="flex flex-col justify-center items-center gap-2">
-                  <div className="flex flex-col justify-center items-center gap-2 bg-slate-100 rounded-lg p-4 w-full">
-                    <div className="flex flex-col justify-center items-center gap-1">
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="flex w-full flex-col items-center justify-center gap-2 rounded-lg bg-slate-100 p-4">
+                    <div className="flex flex-col items-center justify-center gap-1">
                       <h2 className="font-bold uppercase">Sinpe Móvil</h2>
                     </div>
-                    <div className="flex justify-center items-center gap-2">
-                      <InputSecureTextToCopy value={"63017707"} />
-                      <InputSecureTextToCopy value={"63017717"} />
+                    <div className="flex items-center justify-center gap-2">
+                      <InputSecureTextToCopy value={'63017707'} />
+                      <InputSecureTextToCopy value={'63017717'} />
                     </div>
                   </div>
-                  <div className="flex flex-col justify-center items-center gap-2 bg-slate-100 rounded-lg p-4 w-full">
-                    <div className="flex flex-col justify-center items-center gap-2">
+                  <div className="flex w-full flex-col items-center justify-center gap-2 rounded-lg bg-slate-100 p-4">
+                    <div className="flex flex-col items-center justify-center gap-2">
                       <h2 className="font-bold uppercase">Cuentas (IBAN)</h2>
                     </div>
-                    <div className="flex flex-col gap-2 items-center justify-center w-full">
+                    <div className="flex w-full flex-col items-center justify-center gap-2">
                       <InputSecureTextToCopy
-                        value={"CR42081400011023655943"}
+                        value={'CR42081400011023655943'}
                         label="Wink Colones"
                       />
                       <InputSecureTextToCopy
-                        value={"CR67015101720010723281"}
+                        value={'CR67015101720010723281'}
                         label="Banco Nacional Colones"
                       />
                       <InputSecureTextToCopy
-                        value={"CR07081400012023655957"}
+                        value={'CR07081400012023655957'}
                         label="Wink Dólares"
                       />
                       <InputSecureTextToCopy
-                        value={"CR57015101720020052921"}
+                        value={'CR57015101720020052921'}
                         label="Banco Nacional Dólares"
                       />
                     </div>
                   </div>
                 </div>
                 <InputSecureTextToCopy
-                  value={"Yehudy Leonardo Serrano Alfaro"}
+                  value={'Yehudy Leonardo Serrano Alfaro'}
                   label="Nombre del titular"
                 />
               </ModalBody>

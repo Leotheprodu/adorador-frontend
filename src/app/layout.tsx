@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
-import "../global/config/globals.css";
-import { Toaster } from "react-hot-toast";
-import { Providers } from "../global/utils/Providers";
-import { appDescription, appName, domain } from "@/global/config/constants";
+import type { Metadata } from 'next';
+import '../global/config/globals.css';
+import { Toaster } from 'react-hot-toast';
+import { Providers } from '../global/utils/Providers';
+import { appDescription, appName, domain } from '@/global/config/constants';
 
 export const metadata: Metadata = {
   title: {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: `${appName}`,
   },
   description: `${appDescription}`,
-  keywords: ["iglesia", "herramientas", "cristiano"],
+  keywords: ['iglesia', 'herramientas', 'cristiano'],
   openGraph: {
     title: `${appName}`,
     description: `${appDescription}`,
@@ -18,14 +18,14 @@ export const metadata: Metadata = {
     siteName: `${appName}`,
     images: [
       {
-        url: "/yehu.jpg",
+        url: '/yehu.jpg',
         width: 1200,
         height: 628,
-        alt: "yehu imagen",
+        alt: 'yehu imagen',
       },
     ],
-    locale: "es_CR",
-    type: "website",
+    locale: 'es_CR',
+    type: 'website',
   },
   robots: {
     index: false,
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
       index: true,
       follow: false,
       noimageindex: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   /* twitter: {

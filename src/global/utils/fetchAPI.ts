@@ -17,8 +17,8 @@ export async function fetchAPI<TResponse, TBody = undefined>({
       method === 'GET' || method === 'DELETE' || body === null
         ? undefined
         : isFormData
-        ? (body as FormData)
-        : JSON.stringify(body),
+          ? (body as FormData)
+          : JSON.stringify(body),
     headers: isFormData ? undefined : { 'Content-Type': 'application/json' },
   };
 

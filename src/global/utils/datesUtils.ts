@@ -1,6 +1,6 @@
 export function getNextPaymentDate(
   currentDateString: string | Date,
-  format: 'iso' | 'yyyy-MM-dd' = 'iso'
+  format: 'iso' | 'yyyy-MM-dd' = 'iso',
 ): string {
   const currentDate = new Date(currentDateString);
 

@@ -2,7 +2,7 @@ export const Spinner = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <>
       {isLoading && (
-        <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-blanco z-[60]">
+        <div className="fixed left-0 top-0 z-[60] flex h-screen w-screen items-center justify-center bg-blanco">
           <div className="sk-cube-grid">
             <div className="sk-cube sk-cube1"></div>
             <div className="sk-cube sk-cube2"></div>

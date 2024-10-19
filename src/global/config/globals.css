@@ -9,12 +9,12 @@
 }
 
 @font-face {
-  font-family: "Agdasima";
+  font-family: 'Agdasima';
   src: url(/fonts/Agdasima-Regular.ttf);
 }
 
 .font-agdasima {
-  font-family: "Agdasima", sans-serif;
+  font-family: 'Agdasima', sans-serif;
 }
 
 .linkNav:hover .absolute {

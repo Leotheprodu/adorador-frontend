@@ -1,14 +1,14 @@
-"use client";
-import { motion, AnimatePresence } from "framer-motion";
+'use client';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const PageWrapper = ({
   children,
-  variant = "1",
+  variant = '1',
 }: {
   children: React.ReactNode;
-  variant?: "1" | "2";
+  variant?: '1' | '2';
 }) => {
-  if (variant === "1") {
+  if (variant === '1') {
     return (
       <div className="z-30">
         <motion.div
@@ -21,7 +21,7 @@ export const PageWrapper = ({
         </motion.div>
       </div>
     );
-  } else if (variant === "2") {
+  } else if (variant === '2') {
     return (
       <AnimatePresence>
         <motion.div

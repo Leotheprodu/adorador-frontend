@@ -1,23 +1,23 @@
-import { countryCodes } from "../config/constants";
+import { countryCodes } from '../config/constants';
 
 export const moneyFormat = (value: number) => {
-  const userCountry = "Costa Rica";
+  const userCountry = 'Costa Rica';
   const data = countryCodes.find(
-    (countryCode) => countryCode.country === userCountry
+    (countryCode) => countryCode.country === userCountry,
   );
-  const currency: string = (data?.currency as string) || "CRC";
-  const langCountry: string = (data?.langCountry as string) || "es-CR";
+  const currency: string = (data?.currency as string) || 'CRC';
+  const langCountry: string = (data?.langCountry as string) || 'es-CR';
 
   const formatter = new Intl.NumberFormat(langCountry, {
-    style: "currency",
+    style: 'currency',
     currency,
   });
   return formatter.format(value);
 };
 
 export const formatNumber = (number: number) => {
-  return new Intl.NumberFormat("es-CR", {
-    style: "decimal",
+  return new Intl.NumberFormat('es-CR', {
+    style: 'decimal',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(number);
@@ -42,8 +42,8 @@ export const formatDate = (date: string | Date) => {
 export const convertDateForInput = (date: string | Date) => {
   const fecha = new Date(date);
   const year = fecha.getUTCFullYear();
-  const month = (fecha.getUTCMonth() + 1).toString().padStart(2, "0"); // Los meses son 0-indexados
-  const day = fecha.getUTCDate().toString().padStart(2, "0");
+  const month = (fecha.getUTCMonth() + 1).toString().padStart(2, '0'); // Los meses son 0-indexados
+  const day = fecha.getUTCDate().toString().padStart(2, '0');
 
   return `${year}-${month}-${day}`;
 };

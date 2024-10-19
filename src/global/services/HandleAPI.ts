@@ -3,8 +3,8 @@ import {
   useMutation,
   type UseQueryResult,
   type UseMutationResult,
-} from "@tanstack/react-query";
-import { fetchAPI } from "../utils/fetchAPI";
+} from '@tanstack/react-query';
+import { fetchAPI } from '../utils/fetchAPI';
 
 export const FetchData = <TResponse>({
   key,
@@ -25,12 +25,12 @@ export const FetchData = <TResponse>({
 export const PostData = <TResponse, TData = undefined>({
   key,
   url,
-  method = "POST",
+  method = 'POST',
   isFormData,
 }: {
   key: string;
   url: string;
-  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   isFormData?: boolean;
 }): UseMutationResult<TResponse, Error, TData | null, unknown> => {
   return useMutation<TResponse, Error, TData | null, unknown>({
