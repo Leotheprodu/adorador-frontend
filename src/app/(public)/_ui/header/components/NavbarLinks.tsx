@@ -1,5 +1,6 @@
 "use client";
-import { LinksProps } from "@/global/config/links";
+
+import { LinksProps } from "@/global/interfaces/AppSecurityInterfaces";
 import { CheckUserStatus } from "@/global/utils/checkUserStatus";
 
 import Link from "next/link";

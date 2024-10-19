@@ -3,6 +3,7 @@ import { CheckUserStatus } from "./checkUserStatus";
 import { useStore } from "@nanostores/react";
 import { Spinner } from "./Spinner";
 import { $user } from "@/global/stores/users";
+import { UiGuardProps } from "../interfaces/AppSecurityInterfaces";
 
 export const UIGuard = ({
   children,
@@ -10,13 +11,7 @@ export const UIGuard = ({
   roles = [],
   negativeRoles = [],
   isLoading = false,
-}: {
-  children: React.ReactNode;
-  isLoggedIn: boolean;
-  roles: number[];
-  negativeRoles?: number[];
-  isLoading?: boolean;
-}) => {
+}: UiGuardProps) => {
   const user = useStore($user);
   const [pageLoading, setPageLoading] = useState(true);
   useEffect(() => {
