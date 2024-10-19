@@ -8,7 +8,7 @@ import { appName } from '@/global/config/constants';
 
 export const Footer = () => {
   return (
-    <footer className="flex h-full flex-col bg-negro text-blanco">
+    <footer className="mt-40 flex h-full flex-col bg-negro text-blanco">
       <div className="relative grid grid-cols-[1fr] bg-negro p-4 text-blanco md:grid-cols-[1fr_1fr_1fr_1fr]">
         <ScrollToTopButton />
         <WaveFooterSVG className="absolute bottom-[98%] text-negro" />

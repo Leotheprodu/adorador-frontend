@@ -5,6 +5,7 @@ import { LoginNavButton } from './LoginNavButton';
 import { usePathname } from 'next/navigation';
 import { NavbarLinks } from './NavbarLinks';
 import { links } from '@/global/config/links';
+import { checkIsLoggedIn } from '@/global/services/CheckIsLoggedIn';
 
 export const ResponsiveNavBar = () => {
   const pathName = usePathname();
@@ -19,7 +20,9 @@ export const ResponsiveNavBar = () => {
       document.body.style.overflow = 'auto';
     }
   }, [isOpen]);
-
+  useEffect(() => {
+    checkIsLoggedIn();
+  }, []);
   return (
     <>
       {isOpen && (
