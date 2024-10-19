@@ -7,29 +7,12 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Input,
 } from "@nextui-org/react";
-import { useState } from "react";
-import toast from "react-hot-toast";
+
+import { InputSecureTextToCopy } from "./InputSecureTextToCopy";
 
 export const MoreDonationButton = () => {
-  const [lastCopied, setLastCopied] = useState<string | null>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const copyToClipboard = (number: string) => {
-    if (number === lastCopied) {
-      return; // No hacer nada si es el mismo número
-    }
-    navigator.clipboard
-      .writeText(number)
-      .then(() => {
-        toast.success(`${number} copiado al portapapeles`);
-        setLastCopied(number);
-      })
-      .catch((err) => {
-        console.error("Error al copiar el número", err);
-        toast.error("Error al copiar el número");
-      });
-  };
 
   return (
     <div>
@@ -43,56 +26,46 @@ export const MoreDonationButton = () => {
               <ModalHeader className="flex flex-col gap-1">
                 Métodos de pago para Donación
               </ModalHeader>
-              <ModalBody>
-                <div className="flex flex-col justify-center items-center gap-6">
-                  <div className="flex flex-col justify-center items-center gap-4 bg-slate-100 rounded-lg p-4 w-full">
-                    <div className="flex flex-col justify-center items-center gap-4">
-                      <h2 className="font-bold uppercase">Sinpe Móvil</h2>
-                      <small className="text-slate-500">
-                        (toca para copiar)
-                      </small>
-                    </div>
-                    <div className="flex justify-center items-center gap-4">
-                      <Input
-                        value={"63017707"}
-                        className="text-xl font-bold"
-                        onClick={() => {
-                          copyToClipboard("63017707");
-                        }}
-                      />
 
-                      <Input
-                        value={"63017717"}
-                        className="text-xl font-bold"
-                        onClick={() => {
-                          copyToClipboard("63017717");
-                        }}
-                      />
+              <ModalBody>
+                <div className="flex flex-col justify-center items-center gap-2">
+                  <div className="flex flex-col justify-center items-center gap-2 bg-slate-100 rounded-lg p-4 w-full">
+                    <div className="flex flex-col justify-center items-center gap-1">
+                      <h2 className="font-bold uppercase">Sinpe Móvil</h2>
                     </div>
-                    <p>Yehudy Leonardo Serrano Alfaro</p>
+                    <div className="flex justify-center items-center gap-2">
+                      <InputSecureTextToCopy value={"63017707"} />
+                      <InputSecureTextToCopy value={"63017717"} />
+                    </div>
                   </div>
-                  <div className="flex flex-col justify-center items-center gap-4 bg-slate-100 rounded-lg p-4 w-full">
-                    <div className="flex flex-col justify-center items-center gap-4">
-                      <h2 className="font-bold uppercase">
-                        Cuenta Bancaria (IBAN)
-                      </h2>
-                      <small className="text-slate-500">
-                        (toca para copiar)
-                      </small>
+                  <div className="flex flex-col justify-center items-center gap-2 bg-slate-100 rounded-lg p-4 w-full">
+                    <div className="flex flex-col justify-center items-center gap-2">
+                      <h2 className="font-bold uppercase">Cuentas (IBAN)</h2>
                     </div>
-                    <div className="flex justify-center items-center gap-4">
-                      <p className="text-center">Wink Colones</p>
-                      <Input
+                    <div className="flex flex-col gap-2 items-center justify-center w-full">
+                      <InputSecureTextToCopy
                         value={"CR42081400011023655943"}
-                        className="text-xl font-bold"
-                        onClick={() => {
-                          copyToClipboard("CR42081400011023655943");
-                        }}
+                        label="Wink Colones"
+                      />
+                      <InputSecureTextToCopy
+                        value={"CR67015101720010723281"}
+                        label="Banco Nacional Colones"
+                      />
+                      <InputSecureTextToCopy
+                        value={"CR07081400012023655957"}
+                        label="Wink Dólares"
+                      />
+                      <InputSecureTextToCopy
+                        value={"CR57015101720020052921"}
+                        label="Banco Nacional Dólares"
                       />
                     </div>
-                    <p>Yehudy Leonardo Serrano Alfaro</p>
                   </div>
                 </div>
+                <InputSecureTextToCopy
+                  value={"Yehudy Leonardo Serrano Alfaro"}
+                  label="Nombre del titular"
+                />
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" onPress={onClose}>
