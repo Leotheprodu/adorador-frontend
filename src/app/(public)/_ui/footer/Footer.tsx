@@ -9,9 +9,9 @@ import { appName } from '@/global/config/constants';
 export const Footer = () => {
   return (
     <footer className="mt-40 flex h-full flex-col bg-negro text-blanco">
-      <div className="relative grid grid-cols-[1fr] bg-negro p-4 text-blanco md:grid-cols-[1fr_1fr_1fr_1fr]">
+      <section className="relative grid grid-cols-[1fr] bg-negro p-4 text-blanco md:grid-cols-[1fr_1fr_1fr_1fr]">
         <ScrollToTopButton />
-        <WaveFooterSVG className="absolute bottom-[98%] text-negro" />
+        <WaveFooterSVG className="absolute bottom-[98%] -z-10 w-full text-negro" />
 
         <ul className="hidden flex-col items-center gap-2 p-2 md:flex">
           <h2 className="text-bold mb-3 text-lg uppercase text-slate-500">
@@ -42,8 +42,8 @@ export const Footer = () => {
           <PaypalDonationButton />
           <MoreDonationButton />
         </div>
-      </div>
-      <div className="flex items-center justify-center bg-slate-900 p-2 text-center text-xs text-slate-400">
+      </section>
+      <section className="flex items-center justify-center bg-slate-900 p-2 text-center text-xs text-slate-400">
         <p>
           © {new Date().getFullYear()}{' '}
           <span className="font-agdasima font-bold uppercase">{appName}</span>{' '}
@@ -58,7 +58,7 @@ export const Footer = () => {
           </a>{' '}
           con ❤️ para la comunidad cristiana.
         </p>
-      </div>
+      </section>
     </footer>
   );
 };
