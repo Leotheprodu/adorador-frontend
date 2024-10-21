@@ -1,4 +1,4 @@
-import { MailIcon } from '@/global/icons/MailIcon';
+import { MailIcon } from '@global/icons/MailIcon';
 import { Input } from '@nextui-org/react';
 
 export const InputEmailLoginForm = ({
@@ -23,7 +23,7 @@ export const InputEmailLoginForm = ({
         onClear={() => handleOnClear('email')}
         label="Correo Electrónico"
         placeholder="Ingresa tu correo electrónico"
-        className="max-w-xs"
+        className=""
         variant="underlined"
         startContent={
           <MailIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />

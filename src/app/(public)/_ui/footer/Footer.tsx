@@ -1,10 +1,10 @@
 import { PaypalDonationButton } from './components/PaypalDonationButton';
 import { MoreDonationButton } from './components/MoreDonationButton';
 import { links } from '@/global/config/links';
-import { FooterLinks } from './components/FooterLinks';
 import { WaveFooterSVG } from './components/svg/WaveFooterSVG';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { appName } from '@/global/config/constants';
+import { NavbarLinks } from '@ui/header/components/NavbarLinks';
 
 export const Footer = () => {
   return (
@@ -18,7 +18,7 @@ export const Footer = () => {
             {' '}
             Enlaces
           </h2>
-          <FooterLinks links={links} />
+          <NavbarLinks backgroundColor="oscuro" links={links} />
         </ul>
         <div className="flex flex-col gap-4 border-slate-800 p-2 text-sm text-slate-400 md:col-span-2 md:col-start-2 md:border-x-1 md:px-10 lg:px-16">
           <p>

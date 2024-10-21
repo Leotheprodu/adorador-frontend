@@ -1,10 +1,10 @@
-import { PostData } from '@/global/services/HandleAPI';
-import { Server1API } from '@/global/config/constants';
+import { PostData } from '@global/services/HandleAPI';
+import { Server1API } from '@global/config/constants';
 import type {
   LoggedUser,
   LoginInterface,
   SignUpInterface,
-} from '../_interfaces/LoginInterface';
+} from '@auth/login/_interfaces/LoginInterface';
 
 export const logoutService = () => {
   return PostData<LoggedUser>({

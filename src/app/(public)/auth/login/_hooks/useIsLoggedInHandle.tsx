@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { logoutService } from '../_services/authService';
-import { LoggedUser } from '../_interfaces/LoginInterface';
-import { $user } from '@/global/stores/users';
-import { setLocalStorage } from '@/global/utils/handleLocalStorage';
+import { logoutService } from '@auth/login/_services/authService';
+import { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
+import { $user } from '@stores/users';
+import { setLocalStorage } from '@global/utils/handleLocalStorage';
 import toast from 'react-hot-toast';
-import { errorCode } from '@/global/utils/errorMsgFormat';
+import { errorCode } from '@global/utils/errorMsgFormat';
 export const useIsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
   const { error, status, mutate, isPending } = logoutService();
 

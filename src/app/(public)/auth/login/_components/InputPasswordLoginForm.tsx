@@ -1,6 +1,6 @@
 import { Input } from '@nextui-org/react';
-import { EndContentInputPassword } from './EndContentInputPassword';
-import { KeyIcon } from '@/global/icons/KeyIcon';
+import { EndContentInputPassword } from '@auth/login/_components/EndContentInputPassword';
+import { KeyIcon } from '@global/icons/KeyIcon';
 
 export const InputPasswordLoginForm = ({
   handle,
@@ -38,7 +38,7 @@ export const InputPasswordLoginForm = ({
           />
         }
         type={isVisible ? 'text' : 'password'}
-        className="max-w-xs"
+        className=""
         startContent={
           <KeyIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />
         }

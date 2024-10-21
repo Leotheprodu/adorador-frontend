@@ -21,7 +21,13 @@
     ],
     "paths": {
       "@/*": ["*"],
-      "@stores/*": ["global/stores/*"]
+      "@stores/*": ["global/stores/*"],
+      "@auth/*": ["app/(public)/auth/*"],
+      "@app/*": ["app/*"],
+      "@global/*": ["global/*"],
+      "@home/*": ["app/(public)/home/*"],
+      "@ui/*": ["app/(public)/_ui/*"],
+      "@admin/*": ["app/(private)/admin/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

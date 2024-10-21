@@ -1,6 +1,6 @@
 import { Button } from '@nextui-org/react';
-import { useIsLoggedInHandle } from '../_hooks/useIsLoggedInHandle';
-import { LoggedUser } from '../_interfaces/LoginInterface';
+import { useIsLoggedInHandle } from '@auth/login/_hooks/useIsLoggedInHandle';
+import { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
 
 export const IsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
   const { handleLogout, isPending } = useIsLoggedInHandle({ user });
@@ -25,7 +25,7 @@ export const IsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
           className="uppercase"
           color="danger"
         >
-          Cerrar Sesion
+          Cerrar sesión
         </Button>
       </div>
     </div>

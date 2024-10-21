@@ -1,11 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { MenuButtonIcon } from '@/global/icons/MenuButtonIcon';
-import { LoginNavButton } from './LoginNavButton';
 import { usePathname } from 'next/navigation';
-import { NavbarLinks } from './NavbarLinks';
-import { links } from '@/global/config/links';
-import { checkIsLoggedIn } from '@/global/services/CheckIsLoggedIn';
+import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
+import { NavbarLinks } from '@ui/header/components/NavbarLinks';
+import { links } from '@global/config/links';
+import { checkIsLoggedIn } from '@global/services/checkIsLoggedIn';
 
 export const ResponsiveNavBar = () => {
   const pathName = usePathname();
@@ -37,8 +36,8 @@ export const ResponsiveNavBar = () => {
       </button>
       <nav className={`${isOpen ? 'flex' : 'hidden md:flex'} z-50`}>
         <ul className="fixed right-0 top-[5rem] z-50 flex h-screen w-1/2 flex-col gap-4 rounded-tl-xl bg-secundario p-5 md:visible md:relative md:top-auto md:h-full md:w-full md:flex-row md:bg-transparent md:p-0">
-          <NavbarLinks pathName={pathName} links={links} />
-          <LoginNavButton pathName={pathName} />
+          <NavbarLinks links={links} />
+          {/* <LoginNavButton pathName={pathName} /> */}
         </ul>
       </nav>
     </>

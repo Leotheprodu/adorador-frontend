@@ -1,5 +1,5 @@
-import { EyeFilledIcon } from '@/global/icons/EyeFilledIcon';
-import { EyeSlashFilledIcon } from '@/global/icons/EyeSlashFilledIcon';
+import { EyeFilledIcon } from '@global/icons/EyeFilledIcon';
+import { EyeSlashFilledIcon } from '@global/icons/EyeSlashFilledIcon';
 
 export const EndContentInputPassword = ({ toggleVisibility, isVisible }) => {
   return (

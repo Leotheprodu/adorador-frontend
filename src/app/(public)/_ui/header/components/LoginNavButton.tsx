@@ -1,6 +1,6 @@
-import { $user } from '@/global/stores/users';
-import { useStore } from '@nanostores/react';
 import Link from 'next/link';
+import { useStore } from '@nanostores/react';
+import { $user } from '@global/stores/users';
 
 export const LoginNavButton = ({ pathName }: { pathName: string }) => {
   const user = useStore($user);

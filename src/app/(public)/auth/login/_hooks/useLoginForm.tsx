@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { $user } from '@/global/stores/users';
-import { loginService } from '../_services/authService';
-import { setLocalStorage } from '@/global/utils/handleLocalStorage';
+import { $user } from '@global/stores/users';
+import { loginService } from '@auth/login/_services/authService';
+import { setLocalStorage } from '@global/utils/handleLocalStorage';
 import toast from 'react-hot-toast';
-import { errorCode, errorMessage } from '@/global/utils/errorMsgFormat';
-import { handleOnChange, handleOnClear } from '@/global/utils/formUtils';
+import { errorCode, errorMessage } from '@global/utils/errorMsgFormat';
+import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 
 export const useLoginForm = (formInit: { email: string; password: string }) => {
   const user = useStore($user);

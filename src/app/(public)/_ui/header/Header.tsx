@@ -1,6 +1,6 @@
-import { appName } from '@/global/config/constants';
+import { appName } from '@global/config/constants';
 import Link from 'next/link';
-import { ResponsiveNavBar } from './components/ResponsiveNavBar';
+import { ResponsiveNavBar } from '@ui/header/components/ResponsiveNavBar';
 
 export const Header = () => {
   return (

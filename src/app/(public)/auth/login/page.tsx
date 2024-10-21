@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
-import { LoginForm } from './_components/LoginForm';
+import { LoginForm } from '@auth/login/_components/LoginForm';
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Iniciar sesión',
   description: 'Inicia sesión en la plataforma',
 };
 
