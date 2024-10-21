@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
-import { signUpService } from '@auth/login/_services/authService';
-import { setLocalStorage } from '@global/utils/handleLocalStorage';
 import toast from 'react-hot-toast';
 import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
+import { signUpService } from '@auth/sign-up/_services/signUpService';
 
 export const useSignUpForm = (formInit: {
   email: string;
@@ -34,8 +33,6 @@ export const useSignUpForm = (formInit: {
 
   useEffect(() => {
     if (status === 'success') {
-      $user.set(data);
-      setLocalStorage('user', data);
       toast.success('Usuario creado, revisa tu bandeja de correo electrónico');
       setForm(formInit);
       setIsInvalidPass(false);

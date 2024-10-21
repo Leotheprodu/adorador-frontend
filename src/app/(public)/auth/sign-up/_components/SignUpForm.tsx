@@ -1,7 +1,7 @@
 'use client';
 import { Button, Link } from '@nextui-org/react';
-import { useSignUpForm } from '@/app/(public)/auth/sign-up/_hooks/useSignUpForm';
-import { InputUsernameSignUpForm } from '@/app/(public)/auth/sign-up/_components/InputUsernameSignUpForm';
+import { useSignUpForm } from '@auth/sign-up/_hooks/useSignUpForm';
+import { InputUsernameSignUpForm } from '@auth/sign-up/_components/InputUsernameSignUpForm';
 import { InputEmailLoginForm } from '@auth/login/_components/InputEmailLoginForm';
 import { InputPasswordLoginForm } from '@auth/login/_components/InputPasswordLoginForm';
 import { findHrefFromLinks } from '@global/utils/findHrefFromLinks';

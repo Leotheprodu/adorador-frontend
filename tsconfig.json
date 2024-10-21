@@ -27,7 +27,8 @@
       "@global/*": ["global/*"],
       "@home/*": ["app/(public)/home/*"],
       "@ui/*": ["app/(public)/_ui/*"],
-      "@admin/*": ["app/(private)/admin/*"]
+      "@admin/*": ["app/(private)/admin/*"],
+      "@users/*": ["app/(public)/users/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

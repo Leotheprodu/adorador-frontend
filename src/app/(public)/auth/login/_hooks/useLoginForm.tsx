@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
-import { loginService } from '@auth/login/_services/authService';
+import { loginService } from '@auth/login/_services/loginService';
 import { setLocalStorage } from '@global/utils/handleLocalStorage';
 import toast from 'react-hot-toast';
 import { errorCode, errorMessage } from '@global/utils/errorMsgFormat';

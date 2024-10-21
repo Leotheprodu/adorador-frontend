@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { logoutService } from '@auth/login/_services/authService';
+import { logoutService } from '@auth/login/_services/loginService';
 import { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
 import { $user } from '@stores/users';
 import { setLocalStorage } from '@global/utils/handleLocalStorage';
