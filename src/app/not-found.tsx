@@ -1,4 +1,4 @@
-import { PageWrapper } from '@/global/utils/PageWrapper';
+import { PageWrapper } from '@global/utils/PageWrapper';
 import { Link } from '@nextui-org/link';
 import NextLink from 'next/link';
 export default function NotFound() {

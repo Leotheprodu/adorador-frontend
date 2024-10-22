@@ -1,6 +1,6 @@
-import { Footer } from './_ui/footer/Footer';
+import { Footer } from '@ui/footer/Footer';
 
-import { Header } from './_ui/header/Header';
+import { Header } from '@ui/header/Header';
 
 export default function PublicLayout({
   children,

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import '../global/config/globals.css';
+import '@global/config/globals.css';
 import { Toaster } from 'react-hot-toast';
-import { Providers } from '../global/utils/Providers';
-import { appDescription, appName, domain } from '@/global/config/constants';
+import { Providers } from '@global/utils/Providers';
+import { appDescription, appName, domain } from '@global/config/constants';
 
 export const metadata: Metadata = {
   title: {
