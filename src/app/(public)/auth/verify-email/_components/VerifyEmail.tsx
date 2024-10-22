@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Link } from '@nextui-org/react';
 import { verifyEmailService } from '@auth/verify-email/_services/verifyService';
 import toast from 'react-hot-toast';
@@ -8,17 +8,20 @@ import { useSearchParams } from 'next/navigation';
 
 export const VerifyEmail = () => {
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+  const hasMutated = useRef(false);
 
+  const token = searchParams.get('token');
   const { status, mutate } = verifyEmailService({
     token: typeof token === 'string' ? token : '',
   });
   useEffect(() => {
-    if (token) {
+    if (token && status === 'idle' && !hasMutated.current) {
+      hasMutated.current = true;
+      console.log(status);
       mutate(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (status === 'success') {

@@ -101,14 +101,14 @@ export const useSignUpForm = (formInit: {
       return;
     }
 
-    // eslint-disable-next-line
-
     mutate({
       password: form.password,
       email: form.email,
       name: form.username,
-      phone: form.phone.length > 0 ? '+' + form.phone : '',
-      birthdate: form.birthdate ?? new Date(form.birthdate).toISOString(),
+      phone: form.phone.length > 0 ? '+' + form.phone : undefined,
+      birthdate: form.birthdate
+        ? new Date(form.birthdate).toISOString()
+        : undefined,
     });
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
