@@ -1,6 +1,6 @@
-import { CopyIcon } from '@/global/icons/CopyIcon';
-import { EyeFilledIcon } from '@/global/icons/EyeFilledIcon';
-import { EyeSlashFilledIcon } from '@/global/icons/EyeSlashFilledIcon';
+import { CopyIcon } from '@global/icons/CopyIcon';
+import { EyeFilledIcon } from '@global/icons/EyeFilledIcon';
+import { EyeSlashFilledIcon } from '@global/icons/EyeSlashFilledIcon';
 import { Input, Tooltip } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 

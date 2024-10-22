@@ -1,5 +1,5 @@
 'use client';
-import { ArrowUpIcon } from '@/global/icons/ArrowUpIcon';
+import { ArrowUpIcon } from '@global/icons/ArrowUpIcon';
 import { Button } from '@nextui-org/react';
 import React from 'react';
 

@@ -20,9 +20,7 @@ export const LoginForm = () => {
     isPending,
   } = useLoginForm({ email: '', password: '' });
 
-  if (user.isLoggedIn) {
-    return <IsLoggedInHandle user={user} />;
-  }
+  if (user.isLoggedIn) return <IsLoggedInHandle user={user} />;
 
   return (
     <div>

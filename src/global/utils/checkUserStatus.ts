@@ -1,15 +1,12 @@
 import { useStore } from '@nanostores/react';
 import { $user } from '@/global/stores/users';
+import { AppSecurityProps } from '../interfaces/AppSecurityInterfaces';
 
 export const CheckUserStatus = ({
   isLoggedIn = false,
   roles = [],
   negativeRoles = [],
-}: {
-  isLoggedIn: boolean;
-  roles: number[];
-  negativeRoles?: number[];
-}): boolean => {
+}: AppSecurityProps): boolean => {
   const user = useStore($user);
 
   if (!user.isLoggedIn && !isLoggedIn) {

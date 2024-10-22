@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 
-import { InputSecureTextToCopy } from './InputSecureTextToCopy';
+import { InputSecureTextToCopy } from '@ui/footer/components/InputSecureTextToCopy';
 
 export const MoreDonationButton = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

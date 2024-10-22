@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { LinksProps } from '@global/interfaces/AppSecurityInterfaces';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { useStore } from '@nanostores/react';
-import { $user } from '@/global/stores/users';
+import { $user } from '@global/stores/users';
 import { usePathname } from 'next/navigation';
 
 export const NavbarLinks = ({
