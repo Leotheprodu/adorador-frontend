@@ -20,6 +20,7 @@ export const InputEmailLoginForm = ({
         size="lg"
         type="email"
         isClearable
+        isRequired
         onClear={() => handleOnClear('email')}
         label="Correo Electrónico"
         placeholder="Ingresa tu correo electrónico"

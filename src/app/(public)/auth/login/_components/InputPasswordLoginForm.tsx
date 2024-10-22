@@ -30,6 +30,7 @@ export const InputPasswordLoginForm = ({
         size="lg"
         label={confirmPassword ? 'Confirmar contraseña' : 'Contraseña'}
         placeholder="Ingresa tu contraseña"
+        isRequired
         variant="underlined"
         endContent={
           <EndContentInputPassword

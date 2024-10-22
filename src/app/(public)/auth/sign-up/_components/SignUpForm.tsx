@@ -5,6 +5,8 @@ import { InputUsernameSignUpForm } from '@auth/sign-up/_components/InputUsername
 import { InputEmailLoginForm } from '@auth/login/_components/InputEmailLoginForm';
 import { InputPasswordLoginForm } from '@auth/login/_components/InputPasswordLoginForm';
 import { findHrefFromLinks } from '@global/utils/findHrefFromLinks';
+import { InputPhoneSignUpForm } from './InputPhoneSignUpForm';
+import { InputBirthdateSignUpForm } from './InputBirthdateSignUpForm';
 
 export const SignUpForm = () => {
   const {
@@ -17,23 +19,32 @@ export const SignUpForm = () => {
     email,
     password,
     password2,
+    phone,
+    birthdate,
     isPending,
     username,
     noFormValue,
-    user,
+    dataEmail,
     status,
-  } = useSignUpForm({ email: '', password: '', username: '', password2: '' });
+  } = useSignUpForm({
+    email: '',
+    password: '',
+    username: '',
+    password2: '',
+    phone: '',
+    birthdate: '',
+  });
 
   if (status === 'success') {
     return (
       <div>
         <h1 className="mb-6 text-center text-3xl font-semibold">
-          Registro Exitoso
+          ¡Registro Exitoso!
         </h1>
         <p className="mb-4 text-center text-slate-400">
           Revisa tu correo electrónico{' '}
-          <span className="text-secundario">{user.email}</span> para confirmar
-          tu cuenta
+          <span className="text-secundario">{dataEmail}</span> para confirmar tu
+          cuenta
         </p>
       </div>
     );
@@ -55,6 +66,10 @@ export const SignUpForm = () => {
           <InputEmailLoginForm
             handle={{ handleOnClear, email, handleOnChange, noFormValue }}
           />
+          <InputPhoneSignUpForm
+            handle={{ handleOnChange, phone, noFormValue }}
+          />
+          <InputBirthdateSignUpForm handle={{ handleOnChange, birthdate }} />
           <InputPasswordLoginForm
             handle={{
               handleOnChange,

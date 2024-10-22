@@ -6,8 +6,7 @@ export const EndContentInputPassword = ({ toggleVisibility, isVisible }) => {
     <button
       className="focus:outline-none"
       type="button"
-      onMouseDown={toggleVisibility}
-      onMouseUp={toggleVisibility}
+      onClick={toggleVisibility}
     >
       {isVisible ? (
         <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />

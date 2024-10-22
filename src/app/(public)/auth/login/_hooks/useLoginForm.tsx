@@ -44,6 +44,13 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
     }
   }, [data, error, status]);
 
+  useEffect(() => {
+    if (isVisible) {
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 5000);
+    }
+  }, [isVisible]);
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {

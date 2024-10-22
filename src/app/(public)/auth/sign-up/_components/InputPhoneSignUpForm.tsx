@@ -1,32 +1,31 @@
 import { Input } from '@nextui-org/react';
 
-export const InputUsernameSignUpForm = ({
+export const InputPhoneSignUpForm = ({
   handle,
 }: {
   handle: {
     // eslint-disable-next-line
     handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    username: string;
-    noFormValue?: { username: boolean };
+    phone: string;
+    noFormValue?: { phone: boolean };
   };
 }) => {
-  const { handleOnChange, username, noFormValue } = handle;
+  const { handleOnChange, phone, noFormValue } = handle;
 
   return (
     <div className="flex flex-col items-center justify-center">
       <Input
         size="lg"
-        label="Nombre de usuario"
-        placeholder="Ingresa tu nombre de usuario"
-        isRequired
+        label="Ingresa tu numero de teléfono"
+        placeholder="50677778888"
         variant="underlined"
         type="text"
         className=""
-        autoComplete="username"
-        value={username}
+        autoComplete="phone"
+        value={phone}
         onChange={handleOnChange}
-        name="username"
-        isInvalid={noFormValue?.username}
+        name="phone"
+        isInvalid={noFormValue?.phone}
       />
     </div>
   );
