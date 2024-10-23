@@ -25,10 +25,11 @@
       "@auth/*": ["app/(public)/auth/*"],
       "@app/*": ["app/*"],
       "@global/*": ["global/*"],
-      "@home/*": ["app/(public)/home/*"],
+      "@home/*": ["app/(public)/(home)/*"],
       "@ui/*": ["app/(public)/_ui/*"],
       "@admin/*": ["app/(private)/admin/*"],
-      "@users/*": ["app/(public)/users/*"]
+      "@users/*": ["app/(public)/users/*"],
+      "@churches/*": ["app/(public)/iglesias/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
