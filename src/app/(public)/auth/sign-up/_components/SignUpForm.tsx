@@ -52,7 +52,7 @@ export const SignUpForm = () => {
     );
   }
   return (
-    <UIGuard isLoggedIn={false} roles={[]} negativeRoles={[userRoles.User.id]}>
+    <UIGuard isLoggedIn={false} roles={[]} negativeRoles={[userRoles.user.id]}>
       <div className="max-w-sm">
         <h1 className="mb-10 text-center text-3xl font-semibold text-primary">
           ¡Crea tu cuenta!

@@ -23,28 +23,45 @@ export const NavbarLinks = ({
   };
   return (
     <>
-      {links.map(({ name, href, isLoggedIn, roles, negativeRoles }) =>
-        CheckUserStatus({ isLoggedIn, roles, negativeRoles }) ? (
-          <li key={name}>
-            <Link
-              href={href}
-              className={`linkNav relative ${colorsSettings[backgroundColor]} ${
-                pathName.includes(href) && 'border-b-2'
-              }`}
-            >
-              {name === 'Login'
-                ? user.isLoggedIn
-                  ? 'Cerrar sesión'
-                  : 'Iniciar sesión'
-                : name}
-              {!pathName.includes(href) && (
-                <span
-                  className={`absolute bottom-5 left-0 h-0 w-0 border-t-2 opacity-0 transition-all duration-100 ${colorsSettings[backgroundColor]}`}
-                />
-              )}
-            </Link>
-          </li>
-        ) : null,
+      {links.map(
+        ({
+          name,
+          href,
+          isLoggedIn,
+          roles,
+          negativeRoles,
+          churchRoles,
+          checkChurchId,
+          negativeChurchRoles,
+        }) =>
+          CheckUserStatus({
+            isLoggedIn,
+            roles,
+            negativeRoles,
+            churchRoles,
+            checkChurchId,
+            negativeChurchRoles,
+          }) ? (
+            <li key={name}>
+              <Link
+                href={href}
+                className={`linkNav relative ${colorsSettings[backgroundColor]} ${
+                  pathName.includes(href) && 'border-b-2'
+                }`}
+              >
+                {name === 'Login'
+                  ? user.isLoggedIn
+                    ? 'Cerrar sesión'
+                    : 'Iniciar sesión'
+                  : name}
+                {!pathName.includes(href) && (
+                  <span
+                    className={`absolute bottom-5 left-0 h-0 w-0 border-t-2 opacity-0 transition-all duration-100 ${colorsSettings[backgroundColor]}`}
+                  />
+                )}
+              </Link>
+            </li>
+          ) : null,
       )}
     </>
   );

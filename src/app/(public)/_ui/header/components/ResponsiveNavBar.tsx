@@ -37,7 +37,6 @@ export const ResponsiveNavBar = () => {
       <nav className={`${isOpen ? 'flex' : 'hidden md:flex'} z-50`}>
         <ul className="fixed right-0 top-[5rem] z-50 flex h-screen w-1/2 flex-col gap-4 rounded-tl-xl bg-secundario p-5 md:visible md:relative md:top-auto md:h-full md:w-full md:flex-row md:bg-transparent md:p-0">
           <NavbarLinks links={links} />
-          {/* <LoginNavButton pathName={pathName} /> */}
         </ul>
       </nav>
     </>

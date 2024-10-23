@@ -7,10 +7,13 @@ import { UiGuardProps } from '../interfaces/AppSecurityInterfaces';
 
 export const UIGuard = ({
   children,
-  isLoggedIn = false,
+  isLoggedIn,
   roles = [],
   negativeRoles = [],
   isLoading = false,
+  checkChurchId,
+  churchRoles = [],
+  negativeChurchRoles = [],
 }: UiGuardProps) => {
   const user = useStore($user);
   const [pageLoading, setPageLoading] = useState(true);
@@ -23,7 +26,14 @@ export const UIGuard = ({
       <Spinner isLoading={pageLoading} />
 
       <>
-        {CheckUserStatus({ isLoggedIn, roles, negativeRoles }) ? (
+        {CheckUserStatus({
+          isLoggedIn,
+          roles,
+          negativeRoles,
+          checkChurchId,
+          churchRoles,
+          negativeChurchRoles,
+        }) ? (
           children
         ) : (
           <div>

@@ -1,20 +1,27 @@
 import { useStore } from '@nanostores/react';
-import { $user } from '@/global/stores/users';
-import { AppSecurityProps } from '../interfaces/AppSecurityInterfaces';
+import { $user } from '@global/stores/users';
+import { AppSecurityProps } from '@global/interfaces/AppSecurityInterfaces';
 
 export const CheckUserStatus = ({
-  isLoggedIn = false,
-  roles = [],
-  negativeRoles = [],
+  isLoggedIn,
+  roles,
+  negativeRoles,
+  checkChurchId,
+  churchRoles,
+  negativeChurchRoles,
 }: AppSecurityProps): boolean => {
   const user = useStore($user);
+  // Verificar si el usuario está logueado y no tiene la propiedad isLoggedIn en false
+  if (isLoggedIn !== undefined) {
+    if (isLoggedIn === true && !user.isLoggedIn) {
+      return false;
+    }
 
-  if (!user.isLoggedIn && !isLoggedIn) {
-    return true;
+    if (isLoggedIn === false && user.isLoggedIn) {
+      return false;
+    }
   }
-  if (!user.isLoggedIn && isLoggedIn) {
-    return false;
-  }
+
   // Verificar si el usuario tiene alguno de los negativeRoles
   const hasNegativeRoles = negativeRoles?.some((negativeRole) =>
     user.roles.includes(negativeRole),
@@ -25,10 +32,47 @@ export const CheckUserStatus = ({
     return false;
   }
 
-  // Verificar si el usuario cumple con los requisitos positivos
-  return (
-    !isLoggedIn ||
-    (isLoggedIn && user.isLoggedIn && roles.length === 0) ||
-    roles.some((role) => user.roles.includes(role))
+  // verifica si el usuario tiene alguna membership con el id de la iglesia
+  if (checkChurchId) {
+    const hasMembership = user.memberships.some(
+      (membership) => membership.church.id === checkChurchId,
+    );
+    if (!hasMembership) {
+      return false;
+    }
+  }
+
+  // Verificar si el usuario tiene alguno de los negativeChurchRoles en la iglesia
+  const hasNegativeChurchRoles = negativeChurchRoles?.some((negativeRole) =>
+    user.memberships
+      .find((membership) => membership.church.id === checkChurchId)
+      ?.roles.map((role) => role.churchRoleId)
+      .includes(negativeRole),
   );
+
+  // Si el usuario tiene algún rol negativo en la iglesia, devolver false
+  if (negativeChurchRoles && hasNegativeChurchRoles) {
+    return false;
+  }
+
+  const hasRequiredRole = roles?.some((role) => user.roles.includes(role));
+
+  // Verificar si el usuario tiene alguno de los roles requeridos
+  if (roles && !hasRequiredRole) {
+    return false;
+  }
+
+  const hasChurchRole = churchRoles?.some((role) => {
+    const membership = user.memberships.find(
+      (membership) => membership.church.id === checkChurchId,
+    );
+    return membership?.roles.map((role) => role.churchRoleId).includes(role);
+  });
+
+  // Verificar si el usuario tiene alguno de los roles de iglesia requeridos
+  if (churchRoles && !hasChurchRole) {
+    return false;
+  }
+
+  return true;
 };

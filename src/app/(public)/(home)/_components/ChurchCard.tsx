@@ -7,14 +7,15 @@ import {
   CardFooter,
 } from '@nextui-org/react';
 import { ChurchProps } from '@churches/_interfaces/churchesInterface';
-import { formatDate, formatTime } from '@/global/utils/dataFormat';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { $user } from '@/global/stores/users';
+import { formatDate, formatTime } from '@global/utils/dataFormat';
+import { useEffect, useState } from 'react';
+import { $user } from '@global/stores/users';
 import { useStore } from '@nanostores/react';
+import Link from 'next/link';
+import { CheckUserStatus } from '@global/utils/checkUserStatus';
+import { churchRoles } from '@global/config/constants';
 
 export const ChurchCard = ({ church }: { church: ChurchProps }) => {
-  const router = useRouter();
   const user = useStore($user);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const events =
@@ -24,6 +25,24 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
   const MembershipsChurches =
     user?.memberships.map((membership) => membership.church.id) ?? [];
 
+  //si el evento actual es igual a la fecha actual, el valor de la variable isCurrentEvent es verdadero
+  const [isCurrentEvent, setIsCurrentEvent] = useState(false);
+
+  useEffect(() => {
+    setIsCurrentEvent(
+      new Date(events[currentEventIndex]?.date).setHours(0, 0, 0, 0) ===
+        new Date().setHours(0, 0, 0, 0),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentEventIndex]);
+
+  const isUserAuthorized = CheckUserStatus({
+    isLoggedIn: true,
+    checkChurchId: church.id,
+    churchRoles: [churchRoles.musician.id, churchRoles.worshipLeader.id],
+  });
+  console.log(isUserAuthorized);
+  console.log(user);
   return (
     <Card className="relative flex h-80 w-80 flex-col overflow-hidden rounded-md border border-gray-300">
       <CardHeader className="mt-4">
@@ -84,13 +103,23 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
           </div>
         )}
       </CardBody>
-      <CardFooter>
+      <CardFooter className="flex gap-3">
         <Button
-          onClick={() => router.push(`/iglesias/${church.id}`)}
-          className="z-10 mt-2 rounded bg-gray-200 px-2 py-1"
+          href={`/iglesias/${church.id}`}
+          className="z-10 mt-2 rounded"
+          as={Link}
         >
           Mas información
         </Button>
+        {events.length > 0 && (isCurrentEvent || isUserAuthorized) && (
+          <Button
+            href={`/iglesias/${church.id}/eventos/${events[currentEventIndex].id}`}
+            className="z-10 mt-2 rounded"
+            as={Link}
+          >
+            Ver evento
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

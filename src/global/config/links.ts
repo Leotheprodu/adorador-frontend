@@ -5,13 +5,10 @@ export const links: LinksProps[] = [
     name: 'Crear cuenta',
     href: '/auth/sign-up',
     isLoggedIn: false,
-    roles: [],
-    negativeRoles: [userRoles.User.id],
+    negativeRoles: [userRoles.user.id],
   },
   {
     name: 'Login',
     href: '/auth/login',
-    isLoggedIn: false,
-    roles: [],
   },
 ];
