@@ -1,6 +1,6 @@
 import { Server1API } from '@global/config/constants';
 import { FetchData } from '@global/services/HandleAPI';
-import { ChurchProps } from '@churches/_interfaces/churchesInterface';
+import { ChurchProps } from '@iglesias/_interfaces/churchesInterface';
 
 export const getChurches = () => {
   return FetchData<ChurchProps[]>({

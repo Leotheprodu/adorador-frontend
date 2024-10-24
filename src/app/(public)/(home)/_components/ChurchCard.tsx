@@ -6,7 +6,7 @@ import {
   Button,
   CardFooter,
 } from '@nextui-org/react';
-import { ChurchProps } from '@churches/_interfaces/churchesInterface';
+import { ChurchProps } from '@iglesias/_interfaces/churchesInterface';
 import { formatDate, formatTime } from '@global/utils/dataFormat';
 import { useEffect, useState } from 'react';
 import { $user } from '@global/stores/users';

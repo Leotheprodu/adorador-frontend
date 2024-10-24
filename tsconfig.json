@@ -29,7 +29,7 @@
       "@ui/*": ["app/(public)/_ui/*"],
       "@admin/*": ["app/(private)/admin/*"],
       "@users/*": ["app/(public)/users/*"],
-      "@churches/*": ["app/(public)/iglesias/*"]
+      "@iglesias/*": ["app/(public)/iglesias/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
