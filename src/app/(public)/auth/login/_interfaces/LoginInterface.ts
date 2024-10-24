@@ -1,4 +1,4 @@
-import { User } from '@/app/(public)/users/_interfaces/UserInterface';
+import { User } from '@admin/usuarios/_interfaces/UserInterface';
 
 export interface LoggedUser extends User {
   isLoggedIn: boolean;

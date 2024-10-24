@@ -1,6 +1,6 @@
 import { PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
-import { User } from '@users/_interfaces/UserInterface';
+import { User } from '@admin/usuarios/_interfaces/UserInterface';
 import { SignUpInterface } from '@auth/sign-up/_interfaces/SignUpInterface';
 
 export const signUpService = () => {
