@@ -8,39 +8,41 @@ import { UiGuardProps } from '../interfaces/AppSecurityInterfaces';
 export const UIGuard = ({
   children,
   isLoggedIn,
-  roles = [],
-  negativeRoles = [],
+  roles,
+  negativeRoles,
   isLoading = false,
   checkChurchId,
-  churchRoles = [],
-  negativeChurchRoles = [],
+  churchRoles,
+  negativeChurchRoles,
 }: UiGuardProps) => {
   const user = useStore($user);
   const [pageLoading, setPageLoading] = useState(true);
   useEffect(() => {
     setPageLoading(isLoading);
   }, [isLoading]);
+  const checkUserStatus = CheckUserStatus({
+    isLoggedIn,
+    roles,
+    negativeRoles,
+    checkChurchId,
+    churchRoles,
+    negativeChurchRoles,
+  });
+  if (pageLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
-      <Spinner isLoading={pageLoading} />
-
-      <>
-        {CheckUserStatus({
-          isLoggedIn,
-          roles,
-          negativeRoles,
-          checkChurchId,
-          churchRoles,
-          negativeChurchRoles,
-        }) ? (
-          children
-        ) : (
-          <div>
-            {user.isLoggedIn ? 'No tiene Permisos' : 'Debe iniciar sesión'}
-          </div>
-        )}
-      </>
+      {checkUserStatus ? (
+        children
+      ) : (
+        <div>
+          {user.isLoggedIn
+            ? 'No tienes permisos para acceder a esta página'
+            : 'Inicia sesión para continuar'}
+        </div>
+      )}
     </>
   );
 };

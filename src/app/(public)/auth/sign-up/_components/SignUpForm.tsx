@@ -8,7 +8,6 @@ import { findHrefFromLinks } from '@global/utils/findHrefFromLinks';
 import { InputPhoneSignUpForm } from './InputPhoneSignUpForm';
 import { InputBirthdateSignUpForm } from './InputBirthdateSignUpForm';
 import { UIGuard } from '@/global/utils/UIGuard';
-import { userRoles } from '@/global/config/constants';
 
 export const SignUpForm = () => {
   const {
@@ -52,7 +51,7 @@ export const SignUpForm = () => {
     );
   }
   return (
-    <UIGuard isLoggedIn={false} roles={[]} negativeRoles={[userRoles.user.id]}>
+    <UIGuard isLoggedIn={false}>
       <div className="max-w-sm">
         <h1 className="mb-10 text-center text-3xl font-semibold text-primary">
           ¡Crea tu cuenta!
