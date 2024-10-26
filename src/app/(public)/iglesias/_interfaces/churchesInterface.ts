@@ -1,8 +1,4 @@
-export interface EventsProps {
-  id: number;
-  title: string;
-  date: string | Date;
-}
+import { EventsProps } from '@/app/(public)/iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 
 export interface ChurchProps {
   id: number;
