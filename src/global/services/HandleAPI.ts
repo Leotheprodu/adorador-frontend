@@ -4,7 +4,7 @@ import {
   type UseQueryResult,
   type UseMutationResult,
 } from '@tanstack/react-query';
-import { fetchAPI } from '../utils/fetchAPI';
+import { fetchAPI } from '@global/utils/fetchAPI';
 
 export const FetchData = <TResponse>({
   key,

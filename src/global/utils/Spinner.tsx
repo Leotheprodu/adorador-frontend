@@ -2,7 +2,7 @@
 
 export const Spinner = () => {
   return (
-    <div className="fixed inset-0 flex h-full w-full items-center justify-center bg-white">
+    <div className="fixed inset-0 flex h-full w-full items-center justify-center">
       <div className="sk-cube-grid">
         <div className="sk-cube sk-cube1"></div>
         <div className="sk-cube sk-cube2"></div>

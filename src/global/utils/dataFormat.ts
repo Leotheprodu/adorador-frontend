@@ -27,9 +27,9 @@ export const formatDate = (date: string | Date, showDay: boolean = false) => {
   const dateObject = new Date(date);
 
   // Obtener el día, mes y año usando métodos UTC para evitar problemas de zona horaria
-  const day = dateObject.getUTCDate();
-  const month = dateObject.getUTCMonth() + 1; // Los meses van de 0 a 11
-  const year = dateObject.getUTCFullYear();
+  const day = dateObject.getDate();
+  const month = dateObject.getMonth() + 1; // Los meses van de 0 a 11
+  const year = dateObject.getFullYear();
 
   // Formatear el día y el mes para que siempre tengan dos dígitos
   const formattedDay = day < 10 ? `0${day}` : day;
@@ -45,7 +45,7 @@ export const formatDate = (date: string | Date, showDay: boolean = false) => {
     'viernes',
     'sábado',
   ];
-  const dayName = showDay ? `${dayNames[dateObject.getUTCDay()]} ` : '';
+  const dayName = showDay ? `${dayNames[dateObject.getDay()]} ` : '';
 
   // Retornar en formato dd-mm-yyyy o con el nombre del día si showDay es true
   return `${dayName}${formattedDay}-${formattedMonth}-${year}`;
@@ -56,8 +56,8 @@ export const formatTime = (date: string | Date, format: 12 | 24 = 12) => {
     const dateObject = new Date(date);
 
     // Obtener la hora y los minutos usando métodos UTC para evitar problemas de zona horaria
-    const hours = dateObject.getUTCHours();
-    const minutes = dateObject.getUTCMinutes();
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
 
     // Formatear la hora para que siempre tenga dos dígitos
     const formattedHours = hours < 10 ? `0${hours}` : hours;
@@ -67,8 +67,8 @@ export const formatTime = (date: string | Date, format: 12 | 24 = 12) => {
     return `${formattedHours}:${formattedMinutes}`;
   } else {
     const dateObject = new Date(date);
-    let hours = dateObject.getUTCHours();
-    const minutes = dateObject.getUTCMinutes();
+    let hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
     const period = hours >= 12 ? 'PM' : 'AM';
 
     // Convertir la hora al formato de 12 horas
@@ -83,9 +83,18 @@ export const formatTime = (date: string | Date, format: 12 | 24 = 12) => {
 
 export const convertDateForInput = (date: string | Date) => {
   const fecha = new Date(date);
-  const year = fecha.getUTCFullYear();
-  const month = (fecha.getUTCMonth() + 1).toString().padStart(2, '0'); // Los meses son 0-indexados
-  const day = fecha.getUTCDate().toString().padStart(2, '0');
+  const year = fecha.getFullYear();
+  const month = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Los meses son 0-indexados
+  const day = fecha.getDate().toString().padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+};
+
+export const formatTimeLeft = (milliseconds: number) => {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
 };

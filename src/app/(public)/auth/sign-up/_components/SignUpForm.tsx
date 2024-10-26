@@ -51,7 +51,7 @@ export const SignUpForm = () => {
     );
   }
   return (
-    <UIGuard isLoggedIn={false}>
+    <UIGuard isLoggedIn={isPending}>
       <div className="max-w-sm">
         <h1 className="mb-10 text-center text-3xl font-semibold text-primary">
           ¡Crea tu cuenta!

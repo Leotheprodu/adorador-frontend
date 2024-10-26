@@ -20,16 +20,16 @@
       }
     ],
     "paths": {
-      "@/*": ["*"],
-      "@stores/*": ["global/stores/*"],
-      "@auth/*": ["app/(public)/auth/*"],
-      "@app/*": ["app/*"],
-      "@global/*": ["global/*"],
-      "@home/*": ["app/(public)/(home)/*"],
-      "@ui/*": ["app/(public)/_ui/*"],
-      "@admin/*": ["app/(private)/admin/*"],
+      "@iglesias/*": ["app/(public)/iglesias/*"],
       "@users/*": ["app/(public)/users/*"],
-      "@iglesias/*": ["app/(public)/iglesias/*"]
+      "@home/*": ["app/(public)/(home)/*"],
+      "@auth/*": ["app/(public)/auth/*"],
+      "@admin/*": ["app/(private)/admin/*"],
+      "@ui/*": ["app/(public)/_ui/*"],
+      "@stores/*": ["global/stores/*"],
+      "@global/*": ["global/*"],
+      "@app/*": ["app/*"],
+      "@/*": ["*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
