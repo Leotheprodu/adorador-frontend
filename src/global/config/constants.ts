@@ -85,3 +85,73 @@ export const translates = {
   active: 'Activo',
   inactive: 'Inactivo',
 };
+
+export const songTypes = {
+  worship: {
+    es: 'Adoración',
+    en: 'Worship',
+  },
+  praise: {
+    es: 'Alabanza',
+    en: 'Praise',
+  },
+};
+
+export const rootNotes = {
+  C: { american: 'C', regular: 'Do' },
+  'C#': { american: 'C#', regular: 'Do#', aBemol: 'Db', rBemol: 'Reb' },
+  D: { american: 'D', regular: 'Re' },
+  'D#': { american: 'D#', regular: 'Re#', aBemol: 'Eb', rBemol: 'Mib' },
+  E: { american: 'E', regular: 'Mi' },
+  F: { american: 'F', regular: 'Fa' },
+  'F#': { american: 'F#', regular: 'Fa#', aBemol: 'Gb', rBemol: 'Solb' },
+  G: { american: 'G', regular: 'Sol' },
+  'G#': { american: 'G#', regular: 'Sol#', aBemol: 'Ab', rBemol: 'Lab' },
+  A: { american: 'A', regular: 'La' },
+  'A#': { american: 'A#', regular: 'La#', aBemol: 'Bb', rBemol: 'Sib' },
+  B: { american: 'B', regular: 'Si' },
+};
+
+export const keys = [
+  'C',
+  'C#',
+  'D',
+  'D#',
+  'E',
+  'F',
+  'F#',
+  'G',
+  'G#',
+  'A',
+  'A#',
+  'B',
+];
+
+export const chordQualities = [
+  '',
+  'm',
+  'dim',
+  'aug',
+  'sus2',
+  'sus4',
+  '7',
+  'maj7',
+  'm7',
+  'mMaj7',
+  'dim7',
+  'm7b5',
+  '9',
+  'maj9',
+  'm9',
+  '11',
+  'maj11',
+  'm11',
+  '13',
+  'maj13',
+  'm13',
+];
+export const keyChordQualities = ['', 'm'];
+
+export const songKeys = keys.flatMap((note) =>
+  keyChordQualities.map((quality) => `${note}${quality}`),
+);
