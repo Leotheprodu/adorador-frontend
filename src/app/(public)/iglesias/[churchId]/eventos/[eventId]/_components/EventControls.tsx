@@ -24,6 +24,7 @@ export const EventControls = ({ songs }: { songs: EventSongsProps[] }) => {
         <div className="flex w-full flex-col items-start gap-2 text-slate-800">
           {songs.map((data) => (
             <Button
+              disabled={selectedSong === data.song.id}
               variant="light"
               onClick={() => handleClickSong(data.song.id)}
               className={`flex justify-start ${selectedSong === data.song.id ? 'border-1 border-slate-500 shadow-md' : ''}`}
@@ -42,6 +43,7 @@ export const EventControls = ({ songs }: { songs: EventSongsProps[] }) => {
       </div>
       <div className="flex gap-7">
         <Button
+          disabled={lyricSelected === 0}
           onClick={() => {
             if (lyricSelected > 0) $lyricSelected.set($lyricSelected.value - 1);
           }}
@@ -49,6 +51,7 @@ export const EventControls = ({ songs }: { songs: EventSongsProps[] }) => {
           {'<'}
         </Button>
         <Button
+          disabled={lyricSelected === selectedSongLyricLength}
           onClick={() => {
             if (lyricSelected < selectedSongLyricLength)
               $lyricSelected.set($lyricSelected.value + 1);

@@ -32,6 +32,7 @@ export const EventMainScreen = ({
   const eventData = useStore($event);
   const selectedSongId = useStore($eventSelectedSong);
   const [selectedSongData, setSelectedSongData] = useState<EventSongsProps>();
+  const selectedSongLyricLength = useStore($selectedSongLyricLength);
   useEffect(() => {
     if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
       $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
@@ -60,6 +61,24 @@ export const EventMainScreen = ({
       setDataOfLyricSelected(undefined);
     }
   }, [lyricSelected, selectedSongData]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isFullscreen) {
+        if (event.key === 'ArrowRight') {
+          if (lyricSelected < selectedSongLyricLength)
+            $lyricSelected.set($lyricSelected.value + 1);
+        } else if (event.key === 'ArrowLeft') {
+          if (lyricSelected > 0) $lyricSelected.set($lyricSelected.value - 1);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isFullscreen, selectedSongData, lyricSelected, selectedSongLyricLength]);
 
   return (
     <>
@@ -99,11 +118,17 @@ export const EventMainScreen = ({
                     }}
                     className={`col-span-1 w-10`}
                   >
-                    <h2 className="text-2xl">{`${chord.rootNote}${chord.chordQuality}${chord.slashChord ? '/' + chord.slashChord + chord.slashQuality : ''}`}</h2>
+                    <h2
+                      className={`text-2xl text-slate-300 md:text-4xl lg:text-6xl ${isFullscreen ? 'lg:text-8xl' : ''}`}
+                    >{`${chord.rootNote}${chord.chordQuality}${chord.slashChord ? '/' + chord.slashChord + chord.slashQuality : ''}`}</h2>
                   </div>
                 ))}
               </div>
-              <h1 className="text-2xl">{dataOfLyricSelected?.lyrics}</h1>
+              <h1
+                className={`text-2xl md:text-4xl lg:text-6xl ${isFullscreen ? 'lg:text-8xl' : ''}`}
+              >
+                {dataOfLyricSelected?.lyrics}
+              </h1>
             </div>
           )}
         </div>
