@@ -1,8 +1,16 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
 import { useStore } from '@nanostores/react';
-import { $event, $eventSelectedSong } from '@stores/event';
+import {
+  $event,
+  $eventSelectedSong,
+  $lyricSelected,
+  $selectedSongLyricLength,
+} from '@stores/event';
 import { useEffect, useState } from 'react';
-import { EventSongsProps } from '../../_interfaces/eventsInterface';
+import {
+  EventSongsProps,
+  LyricsProps,
+} from '../../_interfaces/eventsInterface';
 import { handleTranspose } from '../_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
 
@@ -20,10 +28,16 @@ export const EventMainScreen = ({
 }) => {
   const { divRef, title, eventDateLeft, isFullscreen, activateFullscreen } =
     eventMainScreenProps;
-
+  const [dataOfLyricSelected, setDataOfLyricSelected] = useState<LyricsProps>();
   const eventData = useStore($event);
   const selectedSongId = useStore($eventSelectedSong);
   const [selectedSongData, setSelectedSongData] = useState<EventSongsProps>();
+  useEffect(() => {
+    if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
+      $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
+    }
+  }, [selectedSongData]);
+
   useEffect(() => {
     if (eventData?.songs) {
       const songId = selectedSongId;
@@ -33,6 +47,19 @@ export const EventMainScreen = ({
       }
     }
   }, [eventData, selectedSongId]);
+
+  const lyricSelected = useStore($lyricSelected);
+
+  useEffect(() => {
+    if (
+      selectedSongData &&
+      lyricSelected <= selectedSongData?.song.lyrics.length
+    ) {
+      setDataOfLyricSelected(selectedSongData?.song.lyrics[lyricSelected - 1]);
+    } else {
+      setDataOfLyricSelected(undefined);
+    }
+  }, [lyricSelected, selectedSongData]);
 
   return (
     <>
@@ -50,16 +77,20 @@ export const EventMainScreen = ({
             </h3>
           </div>
         )}
-        {selectedSongData?.song.lyrics.map((lyric) => (
-          <div key={lyric.id} className="flex flex-col items-center">
+
+        <div className="flex flex-col items-center">
+          {lyricSelected === 0 && (
+            <h1 className="text-4xl">{selectedSongData?.song.title}</h1>
+          )}
+          {lyricSelected > 0 && (
             <div className="flex flex-col items-center">
-              {lyric.lyrics === '' && (
+              {dataOfLyricSelected?.lyrics === '' && (
                 <h1 className="text-center text-3xl">
-                  ({lyric.structure.title})
+                  ({dataOfLyricSelected?.structure.title})
                 </h1>
               )}
               <div className="grid w-full grid-cols-5 gap-4">
-                {lyric.chords.map((chord) => (
+                {dataOfLyricSelected?.chords.map((chord) => (
                   <div
                     key={chord.id}
                     style={{
@@ -72,10 +103,10 @@ export const EventMainScreen = ({
                   </div>
                 ))}
               </div>
-              <h1 className="text-2xl">{lyric.lyrics}</h1>
+              <h1 className="text-2xl">{dataOfLyricSelected?.lyrics}</h1>
             </div>
-          </div>
-        ))}
+          )}
+        </div>
 
         {/* {isFullscreen && (
             <div className="absolute bottom-0 left-0 h-40 w-full bg-slate-900">

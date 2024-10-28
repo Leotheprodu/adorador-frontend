@@ -11,6 +11,8 @@ export const $event = atom<EventByIdInterface>({
 export const $eventSelectedSong = atom<number>(0);
 
 export const $eventLirycSelected = atom<number>(0);
+export const $lyricSelected = atom<number>(0);
+export const $selectedSongLyricLength = atom<number>(0);
 
 export const $eventConfig = atom({
   fontSize: 16,

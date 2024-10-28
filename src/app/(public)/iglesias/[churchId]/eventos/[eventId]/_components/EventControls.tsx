@@ -2,7 +2,11 @@ import { songTypes } from '@global/config/constants';
 import { EventSongsProps } from '../../_interfaces/eventsInterface';
 import { handleTranspose } from '../_utils/handleTranspose';
 import { Button } from '@nextui-org/react';
-import { $eventSelectedSong } from '@stores/event';
+import {
+  $eventSelectedSong,
+  $lyricSelected,
+  $selectedSongLyricLength,
+} from '@stores/event';
 import { useStore } from '@nanostores/react';
 
 export const EventControls = ({ songs }: { songs: EventSongsProps[] }) => {
@@ -10,6 +14,8 @@ export const EventControls = ({ songs }: { songs: EventSongsProps[] }) => {
   const handleClickSong = (id: number) => {
     $eventSelectedSong.set(id);
   };
+  const lyricSelected = useStore($lyricSelected);
+  const selectedSongLyricLength = useStore($selectedSongLyricLength);
 
   return (
     <section className="grid items-center bg-slate-50 p-4 md:grid-cols-[2fr_1fr]">
@@ -33,6 +39,23 @@ export const EventControls = ({ songs }: { songs: EventSongsProps[] }) => {
             </Button>
           ))}
         </div>
+      </div>
+      <div className="flex gap-7">
+        <Button
+          onClick={() => {
+            if (lyricSelected > 0) $lyricSelected.set($lyricSelected.value - 1);
+          }}
+        >
+          {'<'}
+        </Button>
+        <Button
+          onClick={() => {
+            if (lyricSelected < selectedSongLyricLength)
+              $lyricSelected.set($lyricSelected.value + 1);
+          }}
+        >
+          {'>'}
+        </Button>
       </div>
     </section>
   );
