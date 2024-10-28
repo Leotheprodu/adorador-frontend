@@ -28,9 +28,9 @@ export const EventByIdPage = ({
   useEffect(() => {
     if (data) {
       $event.set(data);
-      setLocalStorage(`event-${params.eventId}`, data);
-    } else if (error && getLocalStorage(`event-${params.eventId}`)) {
-      $event.set(getLocalStorage(`event-${params.eventId}`));
+      setLocalStorage(`event`, data);
+    } else if (error && getLocalStorage(`event`)) {
+      $event.set(getLocalStorage(`event`));
     }
   }, [data, params.eventId, error]);
 
@@ -43,7 +43,7 @@ export const EventByIdPage = ({
 
   return (
     <UIGuard isLoading={isLoading}>
-      <div className="flex h-full flex-col items-center justify-center lg:w-1/2">
+      <div className="flex h-full flex-col lg:w-1/2">
         <EventMainScreen
           eventMainScreenProps={{
             divRef,
@@ -53,6 +53,7 @@ export const EventByIdPage = ({
             activateFullscreen,
           }}
         />
+
         {!isFullscreen && (
           <div className="mt-5 h-full w-full rounded-lg p-4">
             <EventControls songs={data?.songs ?? []} />
