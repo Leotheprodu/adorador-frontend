@@ -3,17 +3,16 @@ import { useStore } from '@nanostores/react';
 import {
   $event,
   $eventSelectedSong,
+  $isStreamAdmin,
   $lyricSelected,
   $selectedSongLyricLength,
 } from '@stores/event';
 import { useEffect, useState } from 'react';
-import {
-  EventSongsProps,
-  LyricsProps,
-} from '../../_interfaces/eventsInterface';
+import { EventSongsProps } from '../../_interfaces/eventsInterface';
 import { handleTranspose } from '../_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
-
+import { LyricsShowcase } from './LyricsShowcase';
+import { AnimatePresence, motion } from 'framer-motion';
 export const EventMainScreen = ({
   eventMainScreenProps,
 }: {
@@ -28,11 +27,12 @@ export const EventMainScreen = ({
 }) => {
   const { divRef, title, eventDateLeft, isFullscreen, activateFullscreen } =
     eventMainScreenProps;
-  const [dataOfLyricSelected, setDataOfLyricSelected] = useState<LyricsProps>();
   const eventData = useStore($event);
   const selectedSongId = useStore($eventSelectedSong);
   const [selectedSongData, setSelectedSongData] = useState<EventSongsProps>();
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
+  const isStreamAdmin = useStore($isStreamAdmin);
+
   useEffect(() => {
     if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
       $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
@@ -52,24 +52,20 @@ export const EventMainScreen = ({
   const lyricSelected = useStore($lyricSelected);
 
   useEffect(() => {
-    if (
-      selectedSongData &&
-      lyricSelected <= selectedSongData?.song.lyrics.length
-    ) {
-      setDataOfLyricSelected(selectedSongData?.song.lyrics[lyricSelected - 1]);
-    } else {
-      setDataOfLyricSelected(undefined);
-    }
-  }, [lyricSelected, selectedSongData]);
-
-  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen) {
+      if (isFullscreen && isStreamAdmin) {
         if (event.key === 'ArrowRight') {
-          if (lyricSelected < selectedSongLyricLength)
-            $lyricSelected.set($lyricSelected.value + 1);
+          if (lyricSelected.index < selectedSongLyricLength)
+            $lyricSelected.set({
+              index: lyricSelected.index + 1,
+              action: 'forward',
+            });
         } else if (event.key === 'ArrowLeft') {
-          if (lyricSelected > 0) $lyricSelected.set($lyricSelected.value - 1);
+          if (lyricSelected.index > 0)
+            $lyricSelected.set({
+              index: lyricSelected.index - 1,
+              action: 'backward',
+            });
         }
       }
     };
@@ -78,7 +74,13 @@ export const EventMainScreen = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isFullscreen, selectedSongData, lyricSelected, selectedSongLyricLength]);
+  }, [
+    isFullscreen,
+    selectedSongData,
+    lyricSelected,
+    selectedSongLyricLength,
+    isStreamAdmin,
+  ]);
 
   return (
     <>
@@ -96,48 +98,109 @@ export const EventMainScreen = ({
             </h3>
           </div>
         )}
+        {lyricSelected.index === 0 && (
+          <h1 className="text-4xl">{selectedSongData?.song.title}</h1>
+        )}
 
-        <div className="flex flex-col items-center">
-          {lyricSelected === 0 && (
-            <h1 className="text-4xl">{selectedSongData?.song.title}</h1>
-          )}
-          {lyricSelected > 0 && (
-            <div className="flex flex-col items-center">
-              {dataOfLyricSelected?.lyrics === '' && (
-                <h1 className="text-center text-3xl">
-                  ({dataOfLyricSelected?.structure.title})
-                </h1>
-              )}
-              <div className="grid w-full grid-cols-5 gap-4">
-                {dataOfLyricSelected?.chords.map((chord) => (
-                  <div
-                    key={chord.id}
-                    style={{
-                      gridColumnStart: chord.position,
-                      gridColumnEnd: chord.position + 1,
-                    }}
-                    className={`col-span-1 w-10`}
-                  >
-                    <h2
-                      className={`text-2xl text-slate-300 md:text-4xl lg:text-6xl ${isFullscreen ? 'lg:text-8xl' : ''}`}
-                    >{`${chord.rootNote}${chord.chordQuality}${chord.slashChord ? '/' + chord.slashChord + chord.slashQuality : ''}`}</h2>
-                  </div>
-                ))}
-              </div>
-              <h1
-                className={`text-2xl md:text-4xl lg:text-6xl ${isFullscreen ? 'lg:text-8xl' : ''}`}
+        <div className="absolute inset-0 flex flex-col">
+          <AnimatePresence>
+            {isFullscreen && (
+              <motion.div
+                key={lyricSelected.index - 1}
+                initial={{
+                  opacity: 0,
+                  y: lyricSelected.action === 'backward' ? -300 : 300,
+                }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  y: lyricSelected.action === 'forward' ? -300 : 300,
+                }}
+                transition={{
+                  opacity: { duration: 0.3 },
+                  y: { duration: 0.4 },
+                }}
+                className="pointer-events-none absolute top-20 z-0 w-full text-center text-2xl text-gray-800"
+                style={{
+                  filter: 'blur(6px)',
+                  textShadow: '0 0 20px rgba(255, 255, 255, 0.1)',
+                }}
               >
-                {dataOfLyricSelected?.lyrics}
-              </h1>
-            </div>
-          )}
+                <LyricsShowcase
+                  lyricsShowcaseProps={{
+                    isFullscreen,
+                    selectedSongData,
+                    lyricSelected: {
+                      ...lyricSelected,
+                      index: lyricSelected.index - 1,
+                    },
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            <motion.div
+              key={lyricSelected.index}
+              initial={{
+                opacity: 0,
+                y: lyricSelected.action === 'backward' ? -200 : 200,
+              }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{
+                opacity: 0,
+                y: lyricSelected.action === 'forward' ? -200 : 200,
+              }}
+              transition={{ opacity: { duration: 0.2 }, y: { duration: 0.5 } }}
+              className="pointer-events-none absolute bottom-1/2 w-full text-center text-2xl text-white"
+            >
+              <LyricsShowcase
+                lyricsShowcaseProps={{
+                  isFullscreen,
+                  selectedSongData,
+                  lyricSelected,
+                }}
+              />
+            </motion.div>
+          </AnimatePresence>
+          <AnimatePresence>
+            {isFullscreen && lyricSelected.index !== 0 && (
+              <motion.div
+                key={lyricSelected.index - 1}
+                initial={{
+                  opacity: 0,
+                  y: lyricSelected.action === 'backward' ? -300 : 300,
+                }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  y: lyricSelected.action === 'forward' ? -300 : 300,
+                }}
+                transition={{
+                  opacity: { duration: 0.3 },
+                  y: { duration: 0.4 },
+                }}
+                className="pointer-events-none absolute bottom-20 z-0 w-full text-center text-2xl text-gray-800"
+                style={{
+                  filter: 'blur(1px)',
+                }}
+              >
+                <LyricsShowcase
+                  lyricsShowcaseProps={{
+                    isFullscreen,
+                    selectedSongData,
+                    lyricSelected: {
+                      ...lyricSelected,
+                      index: lyricSelected.index + 1,
+                    },
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* {isFullscreen && (
-            <div className="absolute bottom-0 left-0 h-40 w-full bg-slate-900">
-              <EventControls songs={data?.songs ?? []} />
-            </div>
-          )} */}
         {!isFullscreen && (
           <button
             className="absolute bottom-2 right-2 hover:opacity-70"

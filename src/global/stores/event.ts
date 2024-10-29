@@ -7,11 +7,17 @@ export const $event = atom<EventByIdInterface>({
   date: '',
   songs: [],
 });
-
+export type lyricSelectedProps = {
+  index: number;
+  action: 'forward' | 'backward';
+};
 export const $eventSelectedSong = atom<number>(0);
-
+export const $isStreamAdmin = atom<boolean>(false);
 export const $eventLirycSelected = atom<number>(0);
-export const $lyricSelected = atom<number>(0);
+export const $lyricSelected = atom<lyricSelectedProps>({
+  index: 0,
+  action: 'forward',
+});
 export const $selectedSongLyricLength = atom<number>(0);
 
 export const $eventConfig = atom({

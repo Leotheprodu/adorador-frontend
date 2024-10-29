@@ -56,7 +56,10 @@ export const EventByIdPage = ({
 
         {!isFullscreen && (
           <div className="mt-5 h-full w-full rounded-lg p-4">
-            <EventControls songs={data?.songs ?? []} />
+            <EventControls
+              songs={data?.songs ?? []}
+              churchId={params.churchId}
+            />
           </div>
         )}
       </div>
