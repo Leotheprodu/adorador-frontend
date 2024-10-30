@@ -155,3 +155,38 @@ export const keyChordQualities = ['', 'm'];
 export const songKeys = keys.flatMap((note) =>
   keyChordQualities.map((quality) => `${note}${quality}`),
 );
+
+export const structureLib = {
+  intro: {
+    es: 'Intro',
+    en: 'Intro',
+  },
+  verse: {
+    es: 'Verso',
+    en: 'Verse',
+  },
+  'pre-chorus': {
+    es: 'Pre-Coro',
+    en: 'Pre-Chorus',
+  },
+  chorus: {
+    es: 'Coro',
+    en: 'Chorus',
+  },
+  bridge: {
+    es: 'Puente',
+    en: 'Bridge',
+  },
+  outro: {
+    es: 'Outro',
+    en: 'Outro',
+  },
+  interlude: {
+    es: 'Interludio',
+    en: 'Interlude',
+  },
+  solo: {
+    es: 'Solo',
+    en: 'Solo',
+  },
+};
