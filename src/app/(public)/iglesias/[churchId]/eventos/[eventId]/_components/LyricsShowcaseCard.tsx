@@ -33,14 +33,16 @@ export const LyricsShowcaseCard = ({
     }
   }, [lyricSelected, selectedSongData]);
   return (
-    <div className="flex flex-col items-center">
+    <div className="relative flex flex-col items-center">
       {lyricSelected.position > 0 && (
         <div className="flex flex-col items-center">
           {dataOfLyricSelected !== undefined &&
             dataOfLyricSelected.structure.title && (
-              <h1 className="text-center text-3xl text-gray-500">
-                ({structureLib[dataOfLyricSelected.structure.title].es})
-              </h1>
+              <h3
+                className={`absolute left-10 top-1/2 text-center ${isFullscreen ? 'text-3xl' : 'text-xl'}uppercase`}
+              >
+                {structureLib[dataOfLyricSelected.structure.title].es}
+              </h3>
             )}
           <div className="grid w-full grid-cols-5 gap-4">
             {dataOfLyricSelected?.chords.map((chord) => (

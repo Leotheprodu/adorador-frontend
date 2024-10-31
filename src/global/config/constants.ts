@@ -190,3 +190,12 @@ export const structureLib = {
     en: 'Solo',
   },
 };
+
+export const backgroundImages = [
+  '/images/backgrounds/paisaje_1.avif',
+  '/images/backgrounds/paisaje_2.avif',
+  '/images/backgrounds/paisaje_3.avif',
+  '/images/backgrounds/paisaje_4.avif',
+  '/images/backgrounds/paisaje_5.avif',
+  '/images/backgrounds/paisaje_6.avif',
+];

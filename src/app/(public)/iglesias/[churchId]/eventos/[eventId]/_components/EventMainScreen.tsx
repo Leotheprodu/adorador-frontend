@@ -1,6 +1,7 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
 import { useStore } from '@nanostores/react';
 import {
+  $backgroundImage,
   $event,
   $eventSelectedSong,
   $isStreamAdmin,
@@ -81,11 +82,14 @@ export const EventMainScreen = ({
     selectedSongLyricLength,
     isStreamAdmin,
   ]);
-
+  const backgroundImage = useStore($backgroundImage);
   return (
     <div
+      style={{
+        backgroundImage: `url('/images/backgrounds/paisaje_${backgroundImage || 1}.avif')`,
+      }}
       ref={divRef}
-      className="relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black p-5 text-blanco"
+      className="relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/70 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
     >
       {!selectedSongData && (
         <div className="font-agdasima flex flex-col items-center justify-center">
@@ -98,7 +102,9 @@ export const EventMainScreen = ({
         </div>
       )}
       {lyricSelected.position === 0 && (
-        <h1 className="text-4xl">{selectedSongData?.song.title}</h1>
+        <h1 className={`text-5xl ${isFullscreen ? 'text-8xl' : ''}`}>
+          {selectedSongData?.song.title}
+        </h1>
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (
         <h1 className="text-4xl uppercase">Fin</h1>

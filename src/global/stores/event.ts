@@ -32,3 +32,4 @@ export const $eventConfig = atom({
   showTitle: true,
   showKey: true,
 });
+export const $backgroundImage = atom<number>(1);

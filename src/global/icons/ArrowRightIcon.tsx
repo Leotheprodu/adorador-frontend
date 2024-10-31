@@ -1,6 +1,6 @@
 import type React from 'react';
 
-export const ArrowUpIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const ArrowRightIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -11,6 +11,6 @@ export const ArrowUpIcon = (props: React.SVGProps<SVGSVGElement>) => (
     width="1em"
     {...props}
   >
-    <path d="m7.5 3l7.5 8H0z" fill="currentColor" />
+    <path d="M12 7.5L4 0v15z" fill="currentColor" />
   </svg>
 );

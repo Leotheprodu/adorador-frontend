@@ -43,7 +43,7 @@ export const EventControls = ({
   }
   if (checkUser && isStreamAdmin) {
     return (
-      <section className="grid w-full grid-cols-2 grid-rows-2 items-center justify-center gap-3 bg-slate-50 p-4 md:grid-cols-3 md:grid-rows-1">
+      <section className="mt-5 grid w-full grid-cols-2 grid-rows-2 items-center justify-center gap-3 bg-slate-50 p-4 md:grid-cols-3 md:grid-rows-1">
         <EventControlsSongsList songs={songs} />
 
         <EventControlsLyricsSelect />

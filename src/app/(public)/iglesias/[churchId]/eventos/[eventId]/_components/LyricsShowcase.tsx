@@ -15,7 +15,7 @@ export const LyricsShowcase = ({
   const { isFullscreen, selectedSongData } = lyricsShowcaseProps;
   const lyricSelected = useStore($lyricSelected);
   return (
-    <div className="absolute inset-0 flex flex-col">
+    <div className="absolute inset-0 flex h-full w-full flex-col">
       <AnimatePresence>
         {isFullscreen && (
           <motion.div
@@ -33,10 +33,9 @@ export const LyricsShowcase = ({
               opacity: { duration: 0.3 },
               y: { duration: 0.4 },
             }}
-            className="pointer-events-none absolute top-20 z-0 w-full text-center text-2xl text-gray-800"
+            className="pointer-events-none absolute top-20 z-0 w-full text-center text-2xl text-white/10"
             style={{
               filter: 'blur(6px)',
-              textShadow: '0 0 20px rgba(255, 255, 255, 0.1)',
             }}
           >
             <LyricsShowcaseCard
@@ -94,10 +93,7 @@ export const LyricsShowcase = ({
               opacity: { duration: 0.3 },
               y: { duration: 0.4 },
             }}
-            className="pointer-events-none absolute bottom-20 z-0 w-full text-center text-2xl text-gray-800"
-            style={{
-              filter: 'blur(1px)',
-            }}
+            className="pointer-events-none absolute bottom-20 z-0 w-full text-center text-2xl text-white/10"
           >
             <LyricsShowcaseCard
               lyricsShowcaseCardProps={{
