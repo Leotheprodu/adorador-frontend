@@ -3,8 +3,9 @@ import {
   EventSongsProps,
   LyricsProps,
 } from '../../_interfaces/eventsInterface';
-import { lyricSelectedProps } from '@stores/event';
+import { $eventConfig, lyricSelectedProps } from '@stores/event';
 import { structureLib } from '@global/config/constants';
+import { useStore } from '@nanostores/react';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,
 }: {
@@ -17,7 +18,7 @@ export const LyricsShowcaseCard = ({
   const { isFullscreen, selectedSongData, lyricSelected } =
     lyricsShowcaseCardProps;
   const [dataOfLyricSelected, setDataOfLyricSelected] = useState<LyricsProps>();
-  console.log(dataOfLyricSelected?.structure.title);
+  const eventConfig = useStore($eventConfig);
   useEffect(() => {
     if (
       selectedSongData &&
@@ -45,20 +46,21 @@ export const LyricsShowcaseCard = ({
               </h3>
             )}
           <div className="grid w-full grid-cols-5 gap-4">
-            {dataOfLyricSelected?.chords.map((chord) => (
-              <div
-                key={chord.id}
-                style={{
-                  gridColumnStart: chord.position,
-                  gridColumnEnd: chord.position + 1,
-                }}
-                className={`col-span-1 w-10`}
-              >
-                <h2
-                  className={`text-lg md:text-xl lg:text-2xl ${isFullscreen ? 'lg:text-6xl' : ''}`}
-                >{`${chord.rootNote}${chord.chordQuality}${chord.slashChord ? '/' + chord.slashChord + chord.slashQuality : ''}`}</h2>
-              </div>
-            ))}
+            {eventConfig.showChords &&
+              dataOfLyricSelected?.chords.map((chord) => (
+                <div
+                  key={chord.id}
+                  style={{
+                    gridColumnStart: chord.position,
+                    gridColumnEnd: chord.position + 1,
+                  }}
+                  className={`col-span-1 w-10`}
+                >
+                  <h2
+                    className={`text-lg md:text-xl lg:text-2xl ${isFullscreen ? 'lg:text-6xl' : ''}`}
+                  >{`${chord.rootNote}${chord.chordQuality}${chord.slashChord ? '/' + chord.slashChord + chord.slashQuality : ''}`}</h2>
+                </div>
+              ))}
           </div>
           <h1
             className={`text-xl md:text-2xl lg:text-4xl ${isFullscreen ? 'lg:text-7xl' : ''}`}

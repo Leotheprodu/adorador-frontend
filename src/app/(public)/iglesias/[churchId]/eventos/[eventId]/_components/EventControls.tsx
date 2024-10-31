@@ -4,7 +4,7 @@ import { Button } from '@nextui-org/react';
 import { $isStreamAdmin } from '@stores/event';
 import { useStore } from '@nanostores/react';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
-import { EventControlsLyricsButtons } from './EventControlsLyricsButtons';
+import { EventControlsButtons } from './EventControlsButtons';
 import { EventControlsSongsList } from './EventControlsSongsList';
 import { EventControlsLyricsSelect } from './EventControlsLyricsSelect';
 
@@ -47,7 +47,7 @@ export const EventControls = ({
         <EventControlsSongsList songs={songs} />
 
         <EventControlsLyricsSelect />
-        <EventControlsLyricsButtons />
+        <EventControlsButtons />
       </section>
     );
   }

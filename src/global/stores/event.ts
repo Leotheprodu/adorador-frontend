@@ -25,11 +25,7 @@ export const $selectedSongData = atom<EventSongsProps | undefined>(undefined);
 export const $selectedSongLyricLength = atom<number>(0);
 
 export const $eventConfig = atom({
-  fontSize: 16,
   showChords: true,
-  showLyrics: true,
-  showStructure: true,
-  showTitle: true,
   showKey: true,
 });
 export const $backgroundImage = atom<number>(1);
