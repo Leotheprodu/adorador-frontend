@@ -23,7 +23,6 @@ export const useIsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
 
       toast.error('Error al cerrar sesión');
     }
-    // NOTE si ocurre un error prueba quitar data del array de dependencias
   }, [user, status, error]);
 
   const handleLogout = () => {

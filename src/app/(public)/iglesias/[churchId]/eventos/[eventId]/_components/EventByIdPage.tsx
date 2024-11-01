@@ -22,7 +22,7 @@ export const EventByIdPage = ({
 }: {
   params: { churchId: string; eventId: string };
 }) => {
-  const { data, isLoading, error } = getEventsById({
+  const { data, isLoading, status, refetch } = getEventsById({
     churchId: params.churchId,
     eventId: params.eventId,
   });
@@ -31,11 +31,12 @@ export const EventByIdPage = ({
   useEffect(() => {
     document.title = data?.title ?? 'Eventos';
   }, [data]);
+
   useEffect(() => {
-    if (data) {
+    if (status === 'success') {
       $event.set(data);
     }
-  }, [data, params.eventId, error]);
+  }, [status, data]);
 
   const { timeLeft } = useLeftTime({ date: data?.date });
   const { eventDateLeft } = useHandleEventLeft({
@@ -74,8 +75,8 @@ export const EventByIdPage = ({
             }}
           />
 
-          {selectedSongData && (
-            <div className="w-full">
+          <div className="h-14 w-full">
+            {selectedSongData && (
               <div className="mt-4 flex flex-col px-3">
                 <h1 className="text-2xl">
                   <span className="capitalize">
@@ -93,14 +94,15 @@ export const EventByIdPage = ({
                   </span>
                 </h1>
               </div>
-            </div>
-          )}
-          {!isFullscreen && (
-            <EventControls
-              songs={data?.songs ?? []}
-              churchId={params.churchId}
-            />
-          )}
+            )}
+          </div>
+
+          <EventControls
+            refetch={refetch}
+            eventId={params.eventId}
+            songs={data?.songs ?? []}
+            churchId={params.churchId}
+          />
         </div>
       </div>
     </UIGuard>

@@ -4,6 +4,7 @@ export interface EventsProps {
   id: number;
   title: string;
   date: string | Date;
+  eventManagerId: number;
 }
 
 export interface EventSongsProps {

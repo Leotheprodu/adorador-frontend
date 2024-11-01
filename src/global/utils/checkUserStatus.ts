@@ -1,6 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
 import { AppSecurityProps } from '@global/interfaces/AppSecurityInterfaces';
+import { $event } from '@stores/event';
 
 export const CheckUserStatus = ({
   isLoggedIn,
@@ -9,8 +10,10 @@ export const CheckUserStatus = ({
   checkChurchId,
   churchRoles,
   negativeChurchRoles,
+  checkAdminEvent,
 }: AppSecurityProps): boolean => {
   const user = useStore($user);
+  const event = useStore($event);
   // Verificar si el usuario está logueado y no tiene la propiedad isLoggedIn en false
   if (isLoggedIn !== undefined) {
     if (isLoggedIn === true && !user.isLoggedIn) {
@@ -71,6 +74,11 @@ export const CheckUserStatus = ({
 
   // Verificar si el usuario tiene alguno de los roles de iglesia requeridos
   if (churchRoles && !hasChurchRole) {
+    return false;
+  }
+
+  // Verificar si el usuario tiene permisos de administrador en el evento
+  if (checkAdminEvent && event && event?.eventManagerId !== user.id) {
     return false;
   }
 

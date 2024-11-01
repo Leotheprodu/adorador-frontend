@@ -54,7 +54,8 @@ export const EventControlsButtonsScreen = () => {
             color="default"
             type="checkbox"
             name="showChords"
-            checked={eventConfig.showChords}
+            radius="full"
+            isSelected={eventConfig.showChords}
             onChange={() =>
               $eventConfig.set({
                 ...eventConfig,

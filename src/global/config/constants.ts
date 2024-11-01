@@ -73,6 +73,10 @@ export const churchRoles = {
     id: 12,
     name: 'Danza y Teatro',
   },
+  eventWebManager: {
+    id: 13,
+    name: 'Administrador de eventos web',
+  },
 };
 export const countryCodes: {
   country: string;

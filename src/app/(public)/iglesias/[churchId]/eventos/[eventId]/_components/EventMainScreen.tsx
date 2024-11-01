@@ -4,7 +4,6 @@ import {
   $backgroundImage,
   $event,
   $eventSelectedSong,
-  $isStreamAdmin,
   $lyricSelected,
   $selectedSongData,
   $selectedSongLyricLength,
@@ -30,7 +29,6 @@ export const EventMainScreen = ({
   const selectedSongId = useStore($eventSelectedSong);
   const selectedSongData = useStore($selectedSongData);
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
-  const isStreamAdmin = useStore($isStreamAdmin);
 
   useEffect(() => {
     if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
@@ -54,7 +52,7 @@ export const EventMainScreen = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen && isStreamAdmin) {
+      if (isFullscreen) {
         if (event.key === 'ArrowRight') {
           if (lyricSelected.position <= selectedSongLyricLength + 1)
             $lyricSelected.set({
@@ -75,13 +73,7 @@ export const EventMainScreen = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [
-    isFullscreen,
-    selectedSongData,
-    lyricSelected,
-    selectedSongLyricLength,
-    isStreamAdmin,
-  ]);
+  }, [isFullscreen, selectedSongData, lyricSelected, selectedSongLyricLength]);
   const backgroundImage = useStore($backgroundImage);
   return (
     <div
@@ -113,7 +105,6 @@ export const EventMainScreen = ({
       <LyricsShowcase
         lyricsShowcaseProps={{
           isFullscreen,
-          selectedSongData,
         }}
       />
 

@@ -7,6 +7,7 @@ export interface AppSecurityProps {
   checkChurchId?: number;
   churchRoles?: number[];
   negativeChurchRoles?: number[];
+  checkAdminEvent?: boolean;
 }
 
 export interface UiGuardProps extends AppSecurityProps {

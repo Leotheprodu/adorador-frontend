@@ -1,4 +1,4 @@
-import { FetchData } from '@global/services/HandleAPI';
+import { FetchData, PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import { EventByIdInterface } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 
@@ -12,5 +12,19 @@ export const getEventsById = ({
   return FetchData<EventByIdInterface>({
     key: 'Event',
     url: `${Server1API}/churches/${churchId}/events/${eventId}`,
+  });
+};
+
+export const eventAdminChange = ({
+  eventId,
+  churchId,
+}: {
+  churchId: string;
+  eventId: string;
+}) => {
+  return PostData({
+    key: 'Event-Admin-Change',
+    url: `${Server1API}/churches/${churchId}/events/${eventId}/change-event-manager`,
+    method: 'GET',
   });
 };

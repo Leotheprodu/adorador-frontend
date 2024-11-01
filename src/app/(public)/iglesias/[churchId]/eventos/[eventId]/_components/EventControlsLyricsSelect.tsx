@@ -10,7 +10,6 @@ export const EventControlsLyricsSelect = () => {
     [],
   );
   const lyricSelected = useStore($lyricSelected);
-  console.log(lyricsGrouped);
   const scrollContainerRef = useRef(null);
   useEffect(() => {
     if (selectedSongData !== undefined) {
@@ -53,15 +52,15 @@ export const EventControlsLyricsSelect = () => {
     return null;
   }
   return (
-    <div className="flex h-full w-full flex-col items-center">
+    <div className="col-start-1 col-end-3 row-start-2 flex h-full w-full flex-col items-center md:col-start-2 md:col-end-3 md:row-start-1">
       <h4 className="mb-3 text-center font-bold text-slate-800">Letras</h4>
       <div
         ref={scrollContainerRef}
-        className="flex h-[10rem] flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
+        className="flex h-[10rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
       >
-        {lyricsGrouped.map(([structure, lyrics]) => (
-          <div key={structure}>
-            <h2 className="text-center font-bold">
+        {lyricsGrouped.map(([structure, lyrics], index) => (
+          <div key={index}>
+            <h2 className="text-center text-slate-600">
               {structureLib[structure].es}
             </h2>
             {lyrics.map((lyric, index) => (
