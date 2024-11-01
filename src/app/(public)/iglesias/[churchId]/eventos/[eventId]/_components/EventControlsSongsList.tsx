@@ -3,15 +3,17 @@ import { songTypes } from '@global/config/constants';
 import { handleTranspose } from '../_utils/handleTranspose';
 import { $eventSelectedSong } from '@stores/event';
 import { useStore } from '@nanostores/react';
+import { useEventGateway } from '../_hooks/useEventGateway';
 
 export const EventControlsSongsList = ({
   songs,
 }: {
   songs: EventSongsProps[];
 }) => {
+  const { sendMessage } = useEventGateway();
   const selectedSong = useStore($eventSelectedSong);
   const handleClickSong = (id: number) => {
-    $eventSelectedSong.set(id);
+    sendMessage({ type: 'eventSelectedSong', data: id });
   };
   return (
     <div className="col-start-1 col-end-3 row-start-3 flex h-full w-full flex-col items-center md:col-end-2 md:row-start-1">

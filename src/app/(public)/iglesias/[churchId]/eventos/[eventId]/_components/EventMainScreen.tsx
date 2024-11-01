@@ -10,6 +10,7 @@ import {
 } from '@stores/event';
 import { useEffect } from 'react';
 import { LyricsShowcase } from './LyricsShowcase';
+import { useEventGateway } from '../_hooks/useEventGateway';
 
 export const EventMainScreen = ({
   eventMainScreenProps,
@@ -29,7 +30,7 @@ export const EventMainScreen = ({
   const selectedSongId = useStore($eventSelectedSong);
   const selectedSongData = useStore($selectedSongData);
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
-
+  const { sendMessage } = useEventGateway();
   useEffect(() => {
     if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
       $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
@@ -66,17 +67,20 @@ export const EventMainScreen = ({
         if (startY - endY > 50) {
           // Deslizar hacia arriba
           if (lyricSelected.position <= selectedSongLyricLength + 1) {
-            $lyricSelected.set({
-              position: lyricSelected.position + 1,
-              action: 'forward',
+            sendMessage({
+              type: 'lyricSelected',
+              data: { position: lyricSelected.position + 1, action: 'forward' },
             });
           }
         } else if (endY - startY > 50) {
           // Deslizar hacia abajo
           if (lyricSelected.position > -1) {
-            $lyricSelected.set({
-              position: lyricSelected.position - 1,
-              action: 'backward',
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: lyricSelected.position - 1,
+                action: 'backward',
+              },
             });
           }
         }
@@ -92,6 +96,7 @@ export const EventMainScreen = ({
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFullscreen, lyricSelected, selectedSongLyricLength]);
 
   useEffect(() => {
@@ -99,15 +104,18 @@ export const EventMainScreen = ({
       if (isFullscreen) {
         if (event.key === 'ArrowDown') {
           if (lyricSelected.position <= selectedSongLyricLength + 1)
-            $lyricSelected.set({
-              position: lyricSelected.position + 1,
-              action: 'forward',
+            sendMessage({
+              type: 'lyricSelected',
+              data: { position: lyricSelected.position + 1, action: 'forward' },
             });
         } else if (event.key === 'ArrowUp') {
           if (lyricSelected.position > -1)
-            $lyricSelected.set({
-              position: lyricSelected.position - 1,
-              action: 'backward',
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: lyricSelected.position - 1,
+                action: 'backward',
+              },
             });
         }
       }
@@ -117,6 +125,7 @@ export const EventMainScreen = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFullscreen, selectedSongData, lyricSelected, selectedSongLyricLength]);
   const backgroundImage = useStore($backgroundImage);
   return (

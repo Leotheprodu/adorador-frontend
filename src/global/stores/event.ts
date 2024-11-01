@@ -3,6 +3,7 @@ import {
   EventSongsProps,
 } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { atom } from 'nanostores';
+import { Socket } from 'socket.io-client';
 
 export const $event = atom<EventByIdInterface>({
   id: 0,
@@ -15,6 +16,7 @@ export type lyricSelectedProps = {
   position: number;
   action: 'forward' | 'backward';
 };
+export const $eventSocket = atom<Socket | null>(null);
 export const $eventSelectedSong = atom<number>(0);
 export const $eventLirycSelected = atom<number>(0);
 export const $lyricSelected = atom<lyricSelectedProps>({

@@ -3,12 +3,15 @@ import { $lyricSelected, $selectedSongData } from '@stores/event';
 import { useEffect, useRef, useState } from 'react';
 import { LyricsProps } from '../../_interfaces/eventsInterface';
 import { structureLib } from '@global/config/constants';
+import { useEventGateway } from '../_hooks/useEventGateway';
 
 export const EventControlsLyricsSelect = () => {
   const selectedSongData = useStore($selectedSongData);
   const [lyricsGrouped, setLyricsGrouped] = useState<[string, LyricsProps[]][]>(
     [],
   );
+
+  const { sendMessage } = useEventGateway();
   const lyricSelected = useStore($lyricSelected);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -66,12 +69,15 @@ export const EventControlsLyricsSelect = () => {
               <div key={index} id={lyric.position.toString()}>
                 <h1
                   onClick={() => {
-                    $lyricSelected.set({
-                      position: lyric.position,
-                      action:
-                        lyricSelected.position > lyric.position
-                          ? 'backward'
-                          : 'forward',
+                    sendMessage({
+                      type: 'lyricSelected',
+                      data: {
+                        position: lyric.position,
+                        action:
+                          lyricSelected.position > lyric.position
+                            ? 'backward'
+                            : 'forward',
+                      },
                     });
                   }}
                   className={`cursor-pointer rounded-sm px-2 py-1 text-center duration-200 transition-background active:scale-95 ${lyricSelected.position === lyric.position ? 'bg-slate-200 hover:bg-slate-300' : 'hover:bg-slate-200'}`}
