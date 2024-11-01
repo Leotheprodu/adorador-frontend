@@ -10,7 +10,7 @@ export const EventControlsLyricsSelect = () => {
     [],
   );
   const lyricSelected = useStore($lyricSelected);
-  const scrollContainerRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (selectedSongData !== undefined) {
       const array =
@@ -34,11 +34,10 @@ export const EventControlsLyricsSelect = () => {
   }, [selectedSongData]);
   const scrollToElement = (elementId) => {
     const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({
+    if (element && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: element.offsetTop - scrollContainerRef.current.offsetTop,
         behavior: 'smooth',
-        block: 'nearest',
-        inline: 'nearest',
       });
     }
   };
@@ -58,15 +57,14 @@ export const EventControlsLyricsSelect = () => {
         ref={scrollContainerRef}
         className="flex h-[10rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
       >
-        {lyricsGrouped.map(([structure, lyrics], index) => (
-          <div key={index}>
+        {lyricsGrouped.map(([structure, lyrics], groupIndex) => (
+          <div key={groupIndex}>
             <h2 className="text-center text-slate-600">
               {structureLib[structure].es}
             </h2>
             {lyrics.map((lyric, index) => (
-              <div key={index}>
+              <div key={index} id={lyric.position.toString()}>
                 <h1
-                  id={lyric.position.toString()}
                   onClick={() => {
                     $lyricSelected.set({
                       position: lyric.position,
