@@ -49,18 +49,62 @@ export const EventMainScreen = ({
   }, [eventData, selectedSongId]);
 
   const lyricSelected = useStore($lyricSelected);
+  useEffect(() => {
+    let startY = 0;
+    let endY = 0;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      startY = event.touches[0].clientY;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      endY = event.touches[0].clientY;
+    };
+
+    const handleTouchEnd = () => {
+      if (isFullscreen) {
+        if (startY - endY > 50) {
+          // Deslizar hacia arriba
+          if (lyricSelected.position <= selectedSongLyricLength + 1) {
+            $lyricSelected.set({
+              position: lyricSelected.position + 1,
+              action: 'forward',
+            });
+          }
+        } else if (endY - startY > 50) {
+          // Deslizar hacia abajo
+          if (lyricSelected.position > -1) {
+            $lyricSelected.set({
+              position: lyricSelected.position - 1,
+              action: 'backward',
+            });
+          }
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isFullscreen, lyricSelected, selectedSongLyricLength]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isFullscreen) {
-        if (event.key === 'ArrowRight') {
+        if (event.key === 'ArrowDown') {
           if (lyricSelected.position <= selectedSongLyricLength + 1)
             $lyricSelected.set({
               position: lyricSelected.position + 1,
               action: 'forward',
             });
-        } else if (event.key === 'ArrowLeft') {
-          if (lyricSelected.position > 0)
+        } else if (event.key === 'ArrowUp') {
+          if (lyricSelected.position > -1)
             $lyricSelected.set({
               position: lyricSelected.position - 1,
               action: 'backward',
@@ -96,6 +140,13 @@ export const EventMainScreen = ({
       {lyricSelected.position === 0 && (
         <h1 className={`text-5xl ${isFullscreen ? 'text-8xl' : ''}`}>
           {selectedSongData?.song.title}
+        </h1>
+      )}
+      {lyricSelected.position === -1 && (
+        <h1
+          className={` ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+        >
+          {eventData?.title}
         </h1>
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (

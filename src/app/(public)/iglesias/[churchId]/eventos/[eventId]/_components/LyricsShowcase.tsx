@@ -1,10 +1,9 @@
 import { useStore } from '@nanostores/react';
 import { LyricsShowcaseCard } from './LyricsShowcaseCard';
 import { AnimatePresence, motion } from 'framer-motion';
-import { $lyricSelected, $selectedSongData } from '@stores/event';
-import { useEffect, useState } from 'react';
-import { LyricsProps } from '../../_interfaces/eventsInterface';
+import { $lyricSelected } from '@stores/event';
 import { structureLib } from '@global/config/constants';
+import { useDataOfLyricSelected } from '../_hooks/useDataOfLyricSelected';
 
 export const LyricsShowcase = ({
   lyricsShowcaseProps,
@@ -15,22 +14,8 @@ export const LyricsShowcase = ({
 }) => {
   const { isFullscreen } = lyricsShowcaseProps;
   const lyricSelected = useStore($lyricSelected);
-  const selectedSongData = useStore($selectedSongData);
-  const [dataOfLyricSelected, setDataOfLyricSelected] = useState<LyricsProps>();
-  useEffect(() => {
-    if (
-      selectedSongData &&
-      lyricSelected.position <= selectedSongData?.song.lyrics.length
-    ) {
-      setDataOfLyricSelected(
-        selectedSongData?.song.lyrics.find(
-          (lyric) => lyric.position === lyricSelected.position,
-        ),
-      );
-    } else {
-      setDataOfLyricSelected(undefined);
-    }
-  }, [lyricSelected, selectedSongData]);
+  const { dataOfLyricSelected } = useDataOfLyricSelected({ lyricSelected });
+
   return (
     <div className="absolute inset-0 flex h-full w-full flex-col">
       <AnimatePresence>
@@ -58,7 +43,6 @@ export const LyricsShowcase = ({
               <LyricsShowcaseCard
                 lyricsShowcaseCardProps={{
                   isFullscreen,
-                  dataOfLyricSelected,
                   lyricSelected: {
                     ...lyricSelected,
                     position: lyricSelected.position - 1,
@@ -95,7 +79,6 @@ export const LyricsShowcase = ({
             <LyricsShowcaseCard
               lyricsShowcaseCardProps={{
                 isFullscreen,
-                dataOfLyricSelected,
                 lyricSelected,
               }}
             />
@@ -124,7 +107,6 @@ export const LyricsShowcase = ({
               <LyricsShowcaseCard
                 lyricsShowcaseCardProps={{
                   isFullscreen,
-                  dataOfLyricSelected,
                   lyricSelected: {
                     ...lyricSelected,
                     position: lyricSelected.position + 1,

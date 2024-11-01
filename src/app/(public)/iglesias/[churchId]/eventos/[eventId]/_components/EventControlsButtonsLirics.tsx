@@ -10,9 +10,9 @@ export const EventControlsButtonsLirics = () => {
     <div className="flex flex-col items-center justify-center gap-2 rounded-md bg-white p-2">
       <h3 className="text-xs">Letras</h3>
       <button
-        disabled={lyricSelected.position === 0}
+        disabled={lyricSelected.position === -1}
         onClick={() => {
-          if (lyricSelected.position > 0)
+          if (lyricSelected.position > -1)
             $lyricSelected.set({
               position: lyricSelected.position - 1,
               action: 'backward',

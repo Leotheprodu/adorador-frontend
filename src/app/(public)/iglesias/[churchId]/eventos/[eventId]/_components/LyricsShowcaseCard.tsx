@@ -1,22 +1,20 @@
-import { LyricsProps } from '../../_interfaces/eventsInterface';
 import { $eventConfig, lyricSelectedProps } from '@stores/event';
 import { useStore } from '@nanostores/react';
+import { useDataOfLyricSelected } from '../_hooks/useDataOfLyricSelected';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,
 }: {
   lyricsShowcaseCardProps: {
     isFullscreen: boolean;
-    dataOfLyricSelected: LyricsProps | undefined;
     lyricSelected: lyricSelectedProps;
   };
 }) => {
-  const { isFullscreen, lyricSelected, dataOfLyricSelected } =
-    lyricsShowcaseCardProps;
+  const { isFullscreen, lyricSelected } = lyricsShowcaseCardProps;
   const eventConfig = useStore($eventConfig);
-
+  const { dataOfLyricSelected } = useDataOfLyricSelected({ lyricSelected });
   return (
     <div className="relative flex w-full flex-col items-center">
-      {lyricSelected.position > 0 && (
+      {lyricSelected?.position > 0 && (
         <div className="flex flex-col items-center">
           <div className="grid w-full grid-cols-5 gap-1">
             {eventConfig.showChords &&

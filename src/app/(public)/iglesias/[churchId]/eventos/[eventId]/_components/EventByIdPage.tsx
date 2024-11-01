@@ -45,6 +45,7 @@ export const EventByIdPage = ({
   });
   const { isFullscreen, activateFullscreen, divRef } = useFullscreen();
   const selectedSongData = useStore($selectedSongData);
+
   useEffect(() => {
     if (lyricSelected.position === selectedSongLyricLength + 2) {
       const currentSongIndex = data?.songs.findIndex(
@@ -59,8 +60,21 @@ export const EventByIdPage = ({
         $eventSelectedSong.set(nextSong.song.id);
       }
       $lyricSelected.set({ position: 0, action: 'forward' });
+    } else if (lyricSelected.position === -1) {
+      const currentSongIndex = data?.songs.findIndex(
+        (song) => song.song.id === selectedSongData?.song.id,
+      );
+      if (currentSongIndex !== undefined && data && currentSongIndex > 0) {
+        const previousSong = data.songs[currentSongIndex - 1];
+        $eventSelectedSong.set(previousSong.song.id);
+        $lyricSelected.set({
+          position: previousSong.song.lyrics.length,
+          action: 'backward',
+        });
+      }
     }
   }, [selectedSongLyricLength, lyricSelected, selectedSongData, data]);
+
   return (
     <UIGuard isLoading={isLoading}>
       <div className="flex h-full w-full flex-col items-center justify-center">
