@@ -43,5 +43,8 @@ export const PostData = <TResponse, TData = undefined>({
         isFormData,
       });
     },
+    onError: (error) => {
+      throw new Error(error.message);
+    },
   });
 };

@@ -17,8 +17,9 @@ export type lyricSelectedProps = {
   action: 'forward' | 'backward';
 };
 export const $eventSocket = atom<Socket | null>(null);
-export const $eventSelectedSong = atom<number>(0);
+export const $eventSelectedSongId = atom<number>(0);
 export const $eventLirycSelected = atom<number>(0);
+export const $eventLiveMessage = atom<string>('');
 export const $lyricSelected = atom<lyricSelectedProps>({
   position: 0,
   action: 'forward',
@@ -29,5 +30,5 @@ export const $selectedSongLyricLength = atom<number>(0);
 export const $eventConfig = atom({
   showChords: false,
   showKey: true,
+  backgroundImage: 1,
 });
-export const $backgroundImage = atom<number>(1);

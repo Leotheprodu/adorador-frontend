@@ -9,7 +9,7 @@ export const useCheckIsLoggedIn = () => {
   const localUser = getLocalStorage('user');
 
   useEffect(() => {
-    if (user?.id === 0 && localUser?.id !== 0) {
+    if (localUser && user?.id === 0 && localUser?.id !== 0) {
       $user.set(localUser);
     }
   }, [user, localUser]);

@@ -7,14 +7,13 @@ import {
 } from '@global/utils/handleLocalStorage';
 import { useStore } from '@nanostores/react';
 import { Checkbox } from '@nextui-org/react';
-import { $backgroundImage, $eventConfig } from '@stores/event';
+import { $eventConfig } from '@stores/event';
 import { useEffect } from 'react';
 export const EventControlsButtonsScreen = () => {
-  const backgroundImage = useStore($backgroundImage);
   const eventConfig = useStore($eventConfig);
   useEffect(() => {
-    if (getLocalStorage('backgroundImage')) {
-      $backgroundImage.set(getLocalStorage('backgroundImage'));
+    if (getLocalStorage('eventConfig')) {
+      $eventConfig.set(getLocalStorage('eventConfig'));
     }
   }, []);
   return (
@@ -25,9 +24,15 @@ export const EventControlsButtonsScreen = () => {
         <div className="flex items-center justify-center gap-2">
           <button
             onClick={() => {
-              if (backgroundImage > 1) {
-                $backgroundImage.set(backgroundImage - 1);
-                setLocalStorage('backgroundImage', backgroundImage - 1);
+              if (eventConfig.backgroundImage > 1) {
+                $eventConfig.set({
+                  ...eventConfig,
+                  backgroundImage: eventConfig.backgroundImage - 1,
+                });
+                setLocalStorage('eventConfig', {
+                  ...eventConfig,
+                  backgroundImage: eventConfig.backgroundImage - 1,
+                });
               }
             }}
             className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
@@ -36,9 +41,15 @@ export const EventControlsButtonsScreen = () => {
           </button>
           <button
             onClick={() => {
-              if (backgroundImage < backgroundImages.length) {
-                $backgroundImage.set(backgroundImage + 1);
-                setLocalStorage('backgroundImage', backgroundImage + 1);
+              if (eventConfig.backgroundImage < backgroundImages.length) {
+                $eventConfig.set({
+                  ...eventConfig,
+                  backgroundImage: eventConfig.backgroundImage + 1,
+                });
+                setLocalStorage('eventConfig', {
+                  ...eventConfig,
+                  backgroundImage: eventConfig.backgroundImage + 1,
+                });
               }
             }}
             className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
@@ -56,12 +67,16 @@ export const EventControlsButtonsScreen = () => {
             name="showChords"
             radius="full"
             isSelected={eventConfig.showChords}
-            onChange={() =>
+            onChange={() => {
               $eventConfig.set({
                 ...eventConfig,
                 showChords: !eventConfig.showChords,
-              })
-            }
+              });
+              setLocalStorage('eventConfig', {
+                ...eventConfig,
+                showChords: !eventConfig.showChords,
+              });
+            }}
           />
         </div>
       </div>

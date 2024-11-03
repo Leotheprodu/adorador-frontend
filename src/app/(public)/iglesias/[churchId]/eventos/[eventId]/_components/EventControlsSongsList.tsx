@@ -1,7 +1,7 @@
 import { EventSongsProps } from '../../_interfaces/eventsInterface';
 import { songTypes } from '@global/config/constants';
 import { handleTranspose } from '../_utils/handleTranspose';
-import { $eventSelectedSong } from '@stores/event';
+import { $eventSelectedSongId } from '@stores/event';
 import { useStore } from '@nanostores/react';
 import { useEventGateway } from '../_hooks/useEventGateway';
 
@@ -11,7 +11,7 @@ export const EventControlsSongsList = ({
   songs: EventSongsProps[];
 }) => {
   const { sendMessage } = useEventGateway();
-  const selectedSong = useStore($eventSelectedSong);
+  const selectedSongId = useStore($eventSelectedSongId);
   const handleClickSong = (id: number) => {
     sendMessage({ type: 'eventSelectedSong', data: id });
   };
@@ -23,9 +23,9 @@ export const EventControlsSongsList = ({
         <div className="flex h-[10rem] w-full flex-col items-start gap-2 overflow-y-auto rounded-lg bg-slate-100 p-2 text-slate-800">
           {songs.map((data) => (
             <button
-              disabled={selectedSong === data.song.id}
+              disabled={selectedSongId === data.song.id}
               onClick={() => handleClickSong(data.song.id)}
-              className={`flex justify-start rounded-sm p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95 ${selectedSong === data.song.id ? 'bg-slate-200 hover:bg-slate-300' : ''}`}
+              className={`flex justify-start rounded-sm p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95 ${selectedSongId === data.song.id ? 'bg-slate-200 hover:bg-slate-300' : ''}`}
               key={data.song.id}
             >
               <p className="">

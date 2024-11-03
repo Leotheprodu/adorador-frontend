@@ -1,16 +1,19 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
 import { useStore } from '@nanostores/react';
 import {
-  $backgroundImage,
   $event,
-  $eventSelectedSong,
+  $eventSelectedSongId,
   $lyricSelected,
   $selectedSongData,
   $selectedSongLyricLength,
+  $eventConfig,
+  $eventLiveMessage,
 } from '@stores/event';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { LyricsShowcase } from './LyricsShowcase';
 import { useEventGateway } from '../_hooks/useEventGateway';
+import { CheckUserStatus } from '@global/utils/checkUserStatus';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export const EventMainScreen = ({
   eventMainScreenProps,
@@ -27,10 +30,15 @@ export const EventMainScreen = ({
   const { divRef, title, eventDateLeft, isFullscreen, activateFullscreen } =
     eventMainScreenProps;
   const eventData = useStore($event);
-  const selectedSongId = useStore($eventSelectedSong);
+  const eventConfig = useStore($eventConfig);
+  const selectedSongId = useStore($eventSelectedSongId);
   const selectedSongData = useStore($selectedSongData);
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
   const { sendMessage } = useEventGateway();
+  const checkPermission = CheckUserStatus({
+    isLoggedIn: true,
+    checkAdminEvent: true,
+  });
   useEffect(() => {
     if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
       $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
@@ -48,6 +56,17 @@ export const EventMainScreen = ({
       }
     }
   }, [eventData, selectedSongId]);
+  const eventLiveMessage = useStore($eventLiveMessage);
+  const [liveMessage, setLiveMessage] = useState('');
+  useEffect(() => {
+    if (eventLiveMessage !== '') {
+      setLiveMessage(eventLiveMessage);
+      setTimeout(() => {
+        setLiveMessage('');
+        $eventLiveMessage.set('');
+      }, 5000);
+    }
+  }, [eventLiveMessage]);
 
   const lyricSelected = useStore($lyricSelected);
   useEffect(() => {
@@ -63,7 +82,7 @@ export const EventMainScreen = ({
     };
 
     const handleTouchEnd = () => {
-      if (isFullscreen) {
+      if (isFullscreen && checkPermission) {
         if (startY - endY > 50) {
           // Deslizar hacia arriba
           if (lyricSelected.position <= selectedSongLyricLength + 1) {
@@ -101,7 +120,7 @@ export const EventMainScreen = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen) {
+      if (isFullscreen && checkPermission) {
         if (event.key === 'ArrowDown') {
           if (lyricSelected.position <= selectedSongLyricLength + 1)
             sendMessage({
@@ -127,11 +146,10 @@ export const EventMainScreen = ({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFullscreen, selectedSongData, lyricSelected, selectedSongLyricLength]);
-  const backgroundImage = useStore($backgroundImage);
   return (
     <div
       style={{
-        backgroundImage: `url('/images/backgrounds/paisaje_${backgroundImage || 1}.avif')`,
+        backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
       className="relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/70 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
@@ -160,6 +178,18 @@ export const EventMainScreen = ({
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (
         <h1 className="text-4xl uppercase">Fin</h1>
+      )}
+
+      {liveMessage !== '' && (
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <p>{liveMessage}</p>
+          </motion.div>
+        </AnimatePresence>
       )}
 
       <LyricsShowcase

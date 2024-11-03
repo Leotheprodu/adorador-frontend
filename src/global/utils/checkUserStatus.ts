@@ -15,7 +15,7 @@ export const CheckUserStatus = ({
   const user = useStore($user);
   const event = useStore($event);
   // Verificar si el usuario está logueado y no tiene la propiedad isLoggedIn en false
-  if (isLoggedIn !== undefined) {
+  if (user !== null && isLoggedIn !== null && isLoggedIn !== undefined) {
     if (isLoggedIn === true && !user.isLoggedIn) {
       return false;
     }

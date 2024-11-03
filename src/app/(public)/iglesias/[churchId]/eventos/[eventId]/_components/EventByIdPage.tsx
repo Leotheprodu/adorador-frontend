@@ -9,7 +9,8 @@ import { EventMainScreen } from './EventMainScreen';
 import { useEffect } from 'react';
 import {
   $event,
-  $eventSelectedSong,
+  $eventLiveMessage,
+  $eventSelectedSongId,
   $eventSocket,
   $lyricSelected,
   $selectedSongData,
@@ -33,7 +34,6 @@ export const EventByIdPage = ({
   const { sendMessage } = useEventGateway();
   const lyricSelected = useStore($lyricSelected);
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
-  /*  const eventSelectedSong = useStore($eventSelectedSong); */
   useEffect(() => {
     document.title = data?.title ?? 'Eventos';
   }, [data]);
@@ -100,19 +100,29 @@ export const EventByIdPage = ({
   useEffect(() => {
     const socket = io(Server1API); // Asegúrate de que el puerto coincida con el del servidor
     $eventSocket.set(socket);
-
-    socket.on('lyricSelected', (data) => {
-      $lyricSelected.set(data);
+    $lyricSelected.set({ position: 0, action: 'forward' });
+    $eventSelectedSongId.set(0);
+    // Escuchar el evento 'lyricSelected' con el ID específico y actualizar el estado correspondiente
+    socket.on(`lyricSelected-${params.eventId}`, (data) => {
+      console.log(data);
+      $lyricSelected.set(data.message);
     });
 
-    socket.on('eventSelectedSong', (data) => {
-      $eventSelectedSong.set(data);
+    // Escuchar el evento 'eventSelectedSong' con el ID específico y actualizar el estado correspondiente
+    socket.on(`eventSelectedSong-${params.eventId}`, (data) => {
+      console.log(data);
+      $eventSelectedSongId.set(data.message);
+    });
+
+    // Escucha el evento 'liveMessage' con el ID específico y actualiza el estado correspondiente
+    socket.on(`liveMessage-${params.eventId}`, (data) => {
+      $eventLiveMessage.set(data);
     });
 
     return () => {
       socket.close();
     };
-  }, []);
+  }, [params.eventId]);
 
   return (
     <UIGuard isLoading={isLoading}>

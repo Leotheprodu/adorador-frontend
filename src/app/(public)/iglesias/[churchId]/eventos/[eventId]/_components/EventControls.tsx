@@ -132,7 +132,10 @@ export const EventControls = ({
       >
         {checkAdminEvent && <EventControlsSongsList songs={songs} />}
         {checkAdminEvent && <EventControlsLyricsSelect />}
-        <EventControlsButtons isEventAdmin={checkAdminEvent} />
+        <EventControlsButtons
+          churchId={parseInt(churchId)}
+          isEventAdmin={checkAdminEvent}
+        />
       </section>
     </div>
   );
