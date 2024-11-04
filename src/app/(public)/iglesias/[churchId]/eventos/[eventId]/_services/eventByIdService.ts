@@ -16,12 +16,11 @@ export const getEventsById = ({
 };
 
 export const eventAdminChange = ({
-  eventId,
-  churchId,
+  params,
 }: {
-  churchId: string;
-  eventId: string;
+  params: { churchId: string; eventId: string };
 }) => {
+  const { churchId, eventId } = params;
   return PostData<{ message: string; eventManager: string }>({
     key: 'Event-Admin-Change',
     url: `${Server1API}/churches/${churchId}/events/${eventId}/change-event-manager`,
