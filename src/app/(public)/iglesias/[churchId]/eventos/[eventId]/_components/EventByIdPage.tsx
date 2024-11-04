@@ -9,6 +9,7 @@ import { EventMainScreen } from './EventMainScreen';
 import { useEffect } from 'react';
 import {
   $event,
+  $eventAdminName,
   $eventLiveMessage,
   $eventSelectedSongId,
   $eventSocket,
@@ -31,7 +32,7 @@ export const EventByIdPage = ({
     churchId: params.churchId,
     eventId: params.eventId,
   });
-  const { sendMessage } = useEventGateway();
+  const { sendMessage } = useEventGateway(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const lyricSelected = useStore($lyricSelected);
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
   useEffect(() => {
@@ -101,17 +102,19 @@ export const EventByIdPage = ({
     const socket = io(Server1API); // Asegúrate de que el puerto coincida con el del servidor
     $eventSocket.set(socket);
     $lyricSelected.set({ position: 0, action: 'forward' });
+    $eventAdminName.set('');
     $eventSelectedSongId.set(0);
     // Escuchar el evento 'lyricSelected' con el ID específico y actualizar el estado correspondiente
     socket.on(`lyricSelected-${params.eventId}`, (data) => {
-      console.log(data);
       $lyricSelected.set(data.message);
+      $eventAdminName.set(data.eventAdmin);
     });
 
     // Escuchar el evento 'eventSelectedSong' con el ID específico y actualizar el estado correspondiente
     socket.on(`eventSelectedSong-${params.eventId}`, (data) => {
       console.log(data);
       $eventSelectedSongId.set(data.message);
+      $eventAdminName.set(data.eventAdmin);
     });
 
     // Escucha el evento 'liveMessage' con el ID específico y actualiza el estado correspondiente

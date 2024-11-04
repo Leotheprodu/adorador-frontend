@@ -22,7 +22,7 @@ export const eventAdminChange = ({
   churchId: string;
   eventId: string;
 }) => {
-  return PostData({
+  return PostData<{ message: string; eventManager: string }>({
     key: 'Event-Admin-Change',
     url: `${Server1API}/churches/${churchId}/events/${eventId}/change-event-manager`,
     method: 'GET',

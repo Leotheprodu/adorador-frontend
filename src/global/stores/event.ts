@@ -17,6 +17,7 @@ export type lyricSelectedProps = {
   action: 'forward' | 'backward';
 };
 export const $eventSocket = atom<Socket | null>(null);
+export const $eventAdminName = atom<string>('');
 export const $eventSelectedSongId = atom<number>(0);
 export const $eventLirycSelected = atom<number>(0);
 export const $eventLiveMessage = atom<string>('');

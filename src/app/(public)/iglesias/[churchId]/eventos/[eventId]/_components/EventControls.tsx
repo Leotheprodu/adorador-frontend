@@ -16,6 +16,8 @@ import {
 import { eventAdminChange } from '../_services/eventByIdService';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useStore } from '@nanostores/react';
+import { $eventAdminName } from '@stores/event';
 export const EventControls = ({
   songs,
   churchId,
@@ -27,19 +29,25 @@ export const EventControls = ({
   eventId: string;
   refetch: () => void;
 }) => {
-  const { mutate, error, status } = eventAdminChange({
+  const { mutate, error, status, data } = eventAdminChange({
     churchId,
     eventId,
   });
 
+  const eventAdminName = useStore($eventAdminName);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, eventAdminName]);
+
   useEffect(() => {
     if (status === 'success') {
-      refetch();
+      $eventAdminName.set(data?.eventManager);
       toast.success('Ahora eres el administrador de este evento');
     } else if (status === 'error') {
       toast.error('Error al cambiar el administrador de este evento');
     }
-  }, [refetch, status, error]);
+  }, [refetch, status, error, data]);
   const checkUserMembership = CheckUserStatus({
     isLoggedIn: true,
     checkChurchId: parseInt(churchId),
@@ -61,19 +69,29 @@ export const EventControls = ({
 
   return (
     <div>
+      <section
+        className={`mt-5 grid w-full items-center justify-center gap-3 bg-slate-50 p-4 ${checkAdminEvent ? 'grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-1' : 'grid-cols-1 grid-rows-1'}`}
+      >
+        {checkAdminEvent && <EventControlsSongsList songs={songs} />}
+        {checkAdminEvent && <EventControlsLyricsSelect />}
+        <EventControlsButtons
+          churchId={parseInt(churchId)}
+          isEventAdmin={checkAdminEvent}
+        />
+      </section>
       {checkUserMembership && (
         <div className="mt-2 flex flex-col items-center gap-1 pl-2 md:flex-row">
           <h2
-            className={`${checkAdminEvent ? 'text-sm text-slate-400' : 'text-base text-negro'}`}
+            className={`${checkAdminEvent ? 'text-xs text-slate-400' : 'text-xs text-negro'}`}
           >
             {checkAdminEvent
-              ? 'Administras este evento'
-              : 'No administras este evento'}
+              ? 'Manejas este evento'
+              : `${eventAdminName} maneja el evento`}
           </h2>
           {!checkAdminEvent && (
-            <div className="flex items-center justify-center gap-1">
-              <p>¿Quieres administrar este evento?</p>
-              <Button onPress={onOpen} variant="bordered" color="danger">
+            <div className="flex items-center justify-center gap-1 text-xs">
+              <p>¿Quieres Manejar este evento?</p>
+              <Button onPress={onOpen} variant="light" color="danger" size="sm">
                 Aceptar
               </Button>
               <Modal
@@ -85,20 +103,20 @@ export const EventControls = ({
                 <ModalContent>
                   {(onClose) => (
                     <>
-                      <ModalHeader className="flex flex-col gap-1">
-                        Cambiar de administrador de este evento
+                      <ModalHeader className="flex flex-col">
+                        Cambiar de Manejador de este evento
                       </ModalHeader>
                       <ModalBody>
-                        <div className="flex flex-col items-center justify-center gap-3">
+                        <div className="flex flex-col items-center justify-center gap-12">
                           <h4 className="text-center font-semibold">
-                            ¿Estas seguro que quieres ser el administrador?
+                            ¿Estas seguro que quieres ser el manejador?
                           </h4>
                           <p>
-                            Ten en cuenta que solo puede haber un administrador
-                            de evento, si lo cambias, el administrador actual
-                            perderá los permisos.
+                            Ten en cuenta que solo puede haber un manejador en
+                            este evento, si lo cambias, el manejador actual no
+                            podrá serguir manejando el evento.
                           </p>
-                          <p className="font-bold uppercase text-danger">
+                          <p className="uppercase text-danger">
                             {' '}
                             Ten cuidado si en este momentos están en vivo
                           </p>
@@ -110,13 +128,13 @@ export const EventControls = ({
                           variant="light"
                           onPress={onClose}
                         >
-                          Close
+                          Cerrar
                         </Button>
                         <Button
                           color="primary"
                           onPress={handleChangeEventAdmin}
                         >
-                          Action
+                          Aceptar
                         </Button>
                       </ModalFooter>
                     </>
@@ -127,16 +145,6 @@ export const EventControls = ({
           )}
         </div>
       )}
-      <section
-        className={`mt-5 grid w-full items-center justify-center gap-3 bg-slate-50 p-4 ${checkAdminEvent ? 'grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-1' : 'grid-cols-1 grid-rows-1'}`}
-      >
-        {checkAdminEvent && <EventControlsSongsList songs={songs} />}
-        {checkAdminEvent && <EventControlsLyricsSelect />}
-        <EventControlsButtons
-          churchId={parseInt(churchId)}
-          isEventAdmin={checkAdminEvent}
-        />
-      </section>
     </div>
   );
 };
