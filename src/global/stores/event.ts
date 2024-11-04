@@ -16,11 +16,21 @@ export type lyricSelectedProps = {
   position: number;
   action: 'forward' | 'backward';
 };
+export type NoteType = 'american' | 'regular';
+export type AccidentalType = 'sostenido' | 'bemol';
+
 export const $eventSocket = atom<Socket | null>(null);
 export const $eventAdminName = atom<string>('');
 export const $eventSelectedSongId = atom<number>(0);
 export const $eventLirycSelected = atom<number>(0);
 export const $eventLiveMessage = atom<string>('');
+export const $chordPreferences = atom<{
+  noteType: NoteType;
+  accidentalType: AccidentalType;
+}>({
+  noteType: 'american',
+  accidentalType: 'sostenido',
+});
 export const $lyricSelected = atom<lyricSelectedProps>({
   position: 0,
   action: 'forward',

@@ -112,7 +112,6 @@ export const EventByIdPage = ({
 
     // Escuchar el evento 'eventSelectedSong' con el ID específico y actualizar el estado correspondiente
     socket.on(`eventSelectedSong-${params.eventId}`, (data) => {
-      console.log(data);
       $eventSelectedSongId.set(data.message);
       $eventAdminName.set(data.eventAdmin);
     });

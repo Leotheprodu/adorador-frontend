@@ -101,7 +101,14 @@ export const songTypes = {
   },
 };
 
-export const rootNotes = {
+export const rootNotes: {
+  [key: string]: {
+    american: string;
+    regular: string;
+    aBemol?: string;
+    rBemol?: string;
+  };
+} = {
   C: { american: 'C', regular: 'Do' },
   'C#': { american: 'C#', regular: 'Do#', aBemol: 'Db', rBemol: 'Reb' },
   D: { american: 'D', regular: 'Re' },

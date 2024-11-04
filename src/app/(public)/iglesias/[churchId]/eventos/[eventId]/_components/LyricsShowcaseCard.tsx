@@ -1,6 +1,11 @@
-import { $eventConfig, lyricSelectedProps } from '@stores/event';
+import {
+  $eventConfig,
+  $selectedSongData,
+  lyricSelectedProps,
+} from '@stores/event';
 import { useStore } from '@nanostores/react';
 import { useDataOfLyricSelected } from '../_hooks/useDataOfLyricSelected';
+import { getNoteByType } from '../_utils/getNoteByType';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,
 }: {
@@ -12,6 +17,7 @@ export const LyricsShowcaseCard = ({
   const { isFullscreen, lyricSelected } = lyricsShowcaseCardProps;
   const eventConfig = useStore($eventConfig);
   const { dataOfLyricSelected } = useDataOfLyricSelected({ lyricSelected });
+  const selectedSongData = useStore($selectedSongData);
   return (
     <div className="relative flex w-full flex-col items-center">
       {lyricSelected?.position > 0 && (
@@ -30,7 +36,7 @@ export const LyricsShowcaseCard = ({
                   <h2
                     className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-2xl lg:text-4xl'} w-full text-center text-lg`}
                   >
-                    {`${chord.rootNote}${chord.chordQuality}${chord.slashChord ? '/' + chord.slashChord + chord.slashQuality : ''}`}
+                    {`${getNoteByType(chord.rootNote, selectedSongData?.transpose)}${chord.chordQuality}${chord.slashChord ? '/' + getNoteByType(chord.slashChord, selectedSongData?.transpose) + chord.slashQuality : ''}`}
                   </h2>
                 </div>
               ))}
