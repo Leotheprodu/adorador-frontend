@@ -14,21 +14,12 @@ import { LyricsShowcase } from '@iglesias/[churchId]/eventos/[eventId]/_componen
 import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useFullscreen } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useFullscreen';
+import { useHandleEventLeft } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useHandleEventLeft';
 
-export const EventMainScreen = ({
-  eventMainScreenProps,
-}: {
-  eventMainScreenProps: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    divRef: any;
-    title: string;
-    eventDateLeft: string;
-    isFullscreen: boolean;
-    activateFullscreen: () => void;
-  };
-}) => {
-  const { divRef, title, eventDateLeft, isFullscreen, activateFullscreen } =
-    eventMainScreenProps;
+export const EventMainScreen = () => {
+  const { isFullscreen, activateFullscreen, divRef } = useFullscreen();
+  const { eventDateLeft } = useHandleEventLeft();
   const eventData = useStore($event);
   const eventConfig = useStore($eventConfig);
   const selectedSongId = useStore($eventSelectedSongId);
@@ -39,6 +30,7 @@ export const EventMainScreen = ({
     isLoggedIn: true,
     checkAdminEvent: true,
   });
+  const { title, songs } = eventData;
   useEffect(() => {
     if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
       $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
@@ -48,14 +40,14 @@ export const EventMainScreen = ({
   }, [selectedSongData]);
 
   useEffect(() => {
-    if (eventData?.songs) {
+    if (songs) {
       const songId = selectedSongId;
-      const song = eventData.songs.find((song) => song.song.id === songId);
+      const song = songs.find((song) => song.song.id === songId);
       if (song) {
         $selectedSongData.set(song);
       }
     }
-  }, [eventData, selectedSongId]);
+  }, [songs, selectedSongId]);
   const eventLiveMessage = useStore($eventLiveMessage);
   const [liveMessage, setLiveMessage] = useState('');
   useEffect(() => {
@@ -173,7 +165,7 @@ export const EventMainScreen = ({
         <h1
           className={` ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
         >
-          {eventData?.title}
+          {title}
         </h1>
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (

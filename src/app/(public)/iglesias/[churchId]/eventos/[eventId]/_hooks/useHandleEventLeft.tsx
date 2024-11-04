@@ -1,15 +1,13 @@
 import { formatTimeLeft } from '@global/utils/dataFormat';
+import { useStore } from '@nanostores/react';
+import { $event } from '@stores/event';
 import { useEffect, useState } from 'react';
+import { useLeftTime } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useLeftTime';
 
-export const useHandleEventLeft = ({
-  timeLeft,
-  date,
-}: {
-  timeLeft: number;
-  date: string | Date | undefined;
-}) => {
+export const useHandleEventLeft = () => {
   const [eventDateLeft, setEventDateLeft] = useState<string>('');
-
+  const { date } = useStore($event);
+  const { timeLeft } = useLeftTime({ date });
   useEffect(() => {
     setEventDateLeft(handleEventTime(timeLeft, date));
 

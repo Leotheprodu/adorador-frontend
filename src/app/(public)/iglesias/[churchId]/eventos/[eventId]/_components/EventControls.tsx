@@ -1,4 +1,3 @@
-import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { EventControlsButtons } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtons';
 import { EventControlsSongsList } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsSongsList';
@@ -19,16 +18,13 @@ import toast from 'react-hot-toast';
 import { useStore } from '@nanostores/react';
 import { $eventAdminName } from '@stores/event';
 export const EventControls = ({
-  songs,
-  churchId,
-  eventId,
+  params,
   refetch,
 }: {
-  songs: EventSongsProps[];
-  churchId: string;
-  eventId: string;
+  params: { churchId: string; eventId: string };
   refetch: () => void;
 }) => {
+  const { churchId, eventId } = params;
   const { mutate, error, status, data } = eventAdminChange({
     churchId,
     eventId,
@@ -72,7 +68,7 @@ export const EventControls = ({
       <section
         className={`mt-5 grid w-full items-center justify-center gap-3 bg-slate-50 p-4 ${checkAdminEvent ? 'grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-1' : 'grid-cols-1 grid-rows-1'}`}
       >
-        {checkAdminEvent && <EventControlsSongsList songs={songs} />}
+        {checkAdminEvent && <EventControlsSongsList />}
         {checkAdminEvent && <EventControlsLyricsSelect />}
         <EventControlsButtons
           churchId={parseInt(churchId)}

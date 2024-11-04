@@ -1,173 +1,28 @@
 'use client';
 import { UIGuard } from '@global/utils/UIGuard';
-import { getEventsById } from '@iglesias/[churchId]/eventos/[eventId]/_services/eventByIdService';
-import { useFullscreen } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useFullscreen';
-import { useLeftTime } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useLeftTime';
-import { useHandleEventLeft } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useHandleEventLeft';
 import { EventControls } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControls';
 import { EventMainScreen } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventMainScreen';
-import { useEffect } from 'react';
-import {
-  $event,
-  $eventAdminName,
-  $eventLiveMessage,
-  $eventSelectedSongId,
-  $eventSocket,
-  $lyricSelected,
-  $selectedSongData,
-  $selectedSongLyricLength,
-} from '@stores/event';
-import { useStore } from '@nanostores/react';
-import { handleTranspose } from '@iglesias/[churchId]/eventos/[eventId]/_utils/handleTranspose';
-import { Server1API, songTypes } from '@global/config/constants';
-import io from 'socket.io-client';
-import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
+import { useEventByIdPage } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventByIdPage';
+import { EventSimpleTitle } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventSimpleTitle';
 
 export const EventByIdPage = ({
   params,
 }: {
   params: { churchId: string; eventId: string };
 }) => {
-  const { data, isLoading, status, refetch } = getEventsById({
-    churchId: params.churchId,
-    eventId: params.eventId,
+  const { isLoading, refetch } = useEventByIdPage({
+    params,
   });
-  const { sendMessage } = useEventGateway(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const lyricSelected = useStore($lyricSelected);
-  const selectedSongLyricLength = useStore($selectedSongLyricLength);
-  useEffect(() => {
-    document.title = data?.title ?? 'Eventos';
-  }, [data]);
-
-  useEffect(() => {
-    if (status === 'success') {
-      $event.set(data);
-    }
-  }, [status, data]);
-
-  const { timeLeft } = useLeftTime({ date: data?.date });
-  const { eventDateLeft } = useHandleEventLeft({
-    timeLeft,
-    date: data?.date,
-  });
-  const { isFullscreen, activateFullscreen, divRef } = useFullscreen();
-  const selectedSongData = useStore($selectedSongData);
-
-  useEffect(() => {
-    if (lyricSelected.position === selectedSongLyricLength + 2) {
-      const currentSongIndex = data?.songs.findIndex(
-        (song) => song.song.id === selectedSongData?.song.id,
-      );
-      if (
-        currentSongIndex !== undefined &&
-        data &&
-        currentSongIndex < data.songs.length - 1
-      ) {
-        const nextSong = data.songs[currentSongIndex + 1];
-        sendMessage({ type: 'eventSelectedSong', data: nextSong.song.id });
-      }
-      sendMessage({
-        type: 'lyricSelected',
-        data: { position: 0, action: 'forward' },
-      });
-    } else if (lyricSelected.position === -1) {
-      const currentSongIndex = data?.songs.findIndex(
-        (song) => song.song.id === selectedSongData?.song.id,
-      );
-      if (currentSongIndex !== undefined && data && currentSongIndex > 0) {
-        const previousSong = data.songs[currentSongIndex - 1];
-        sendMessage({
-          type: 'eventSelectedSong',
-          data: previousSong.song.id,
-        });
-        sendMessage({
-          type: 'lyricSelected',
-          data: {
-            position: previousSong.song.lyrics.length,
-            action: 'backward',
-          },
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lyricSelected, selectedSongLyricLength, selectedSongData, data]);
-
-  useEffect(() => {
-    if (status === 'success') {
-      $event.set(data);
-    }
-  }, [status, data]);
-
-  useEffect(() => {
-    const socket = io(Server1API); // Asegúrate de que el puerto coincida con el del servidor
-    $eventSocket.set(socket);
-    $lyricSelected.set({ position: 0, action: 'forward' });
-    $eventAdminName.set('');
-    $eventSelectedSongId.set(0);
-    // Escuchar el evento 'lyricSelected' con el ID específico y actualizar el estado correspondiente
-    socket.on(`lyricSelected-${params.eventId}`, (data) => {
-      $lyricSelected.set(data.message);
-      $eventAdminName.set(data.eventAdmin);
-    });
-
-    // Escuchar el evento 'eventSelectedSong' con el ID específico y actualizar el estado correspondiente
-    socket.on(`eventSelectedSong-${params.eventId}`, (data) => {
-      $eventSelectedSongId.set(data.message);
-      $eventAdminName.set(data.eventAdmin);
-    });
-
-    // Escucha el evento 'liveMessage' con el ID específico y actualiza el estado correspondiente
-    socket.on(`liveMessage-${params.eventId}`, (data) => {
-      $eventLiveMessage.set(data);
-    });
-
-    return () => {
-      socket.close();
-    };
-  }, [params.eventId]);
 
   return (
     <UIGuard isLoading={isLoading}>
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="flex w-full max-w-screen-md flex-col">
-          <EventMainScreen
-            eventMainScreenProps={{
-              divRef,
-              title: data?.title ?? '',
-              eventDateLeft,
-              isFullscreen,
-              activateFullscreen,
-            }}
-          />
+          <EventMainScreen />
 
-          <div className="h-14 w-full">
-            {selectedSongData && (
-              <div className="mt-4 flex flex-col px-3">
-                <h1 className="text-2xl">
-                  <span className="capitalize">
-                    {selectedSongData.song.title}
-                  </span>
-                  {selectedSongData.song.key &&
-                    ', ' +
-                      handleTranspose(
-                        selectedSongData.song.key,
-                        selectedSongData.transpose,
-                      )}{' '}
-                  -{' '}
-                  <span className="capitalize">
-                    {songTypes[selectedSongData.song.songType].es}
-                  </span>
-                </h1>
-              </div>
-            )}
-          </div>
+          <EventSimpleTitle />
 
-          <EventControls
-            refetch={refetch}
-            eventId={params.eventId}
-            songs={data?.songs ?? []}
-            churchId={params.churchId}
-          />
+          <EventControls refetch={refetch} params={params} />
         </div>
       </div>
     </UIGuard>

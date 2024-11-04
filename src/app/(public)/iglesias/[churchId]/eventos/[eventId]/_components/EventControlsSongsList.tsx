@@ -1,15 +1,12 @@
-import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { songTypes } from '@global/config/constants';
 import { handleTranspose } from '@iglesias/[churchId]/eventos/[eventId]/_utils/handleTranspose';
-import { $eventSelectedSongId } from '@stores/event';
+import { $event, $eventSelectedSongId } from '@stores/event';
 import { useStore } from '@nanostores/react';
 import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 
-export const EventControlsSongsList = ({
-  songs,
-}: {
-  songs: EventSongsProps[];
-}) => {
+export const EventControlsSongsList = () => {
+  const eventData = useStore($event);
+  const { songs } = eventData;
   const { sendMessage } = useEventGateway();
   const selectedSongId = useStore($eventSelectedSongId);
   const handleClickSong = (id: number) => {
