@@ -1,4 +1,4 @@
-import { EventByIdPage } from './_components/EventByIdPage';
+import { EventByIdPage } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventByIdPage';
 
 export default function EventId({
   params,

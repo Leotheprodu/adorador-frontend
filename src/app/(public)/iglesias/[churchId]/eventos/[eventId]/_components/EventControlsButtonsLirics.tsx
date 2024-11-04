@@ -2,7 +2,7 @@ import { ArrowDownIcon } from '@global/icons/ArrowDownIcon';
 import { ArrowUpIcon } from '@global/icons/ArrowUpIcon';
 import { useStore } from '@nanostores/react';
 import { $lyricSelected, $selectedSongLyricLength } from '@stores/event';
-import { useEventGateway } from '../_hooks/useEventGateway';
+import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 
 export const EventControlsButtonsLirics = () => {
   const lyricSelected = useStore($lyricSelected);

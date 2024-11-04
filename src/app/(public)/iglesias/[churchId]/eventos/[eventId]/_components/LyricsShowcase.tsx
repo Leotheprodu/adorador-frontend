@@ -1,9 +1,9 @@
 import { useStore } from '@nanostores/react';
-import { LyricsShowcaseCard } from './LyricsShowcaseCard';
+import { LyricsShowcaseCard } from '@iglesias/[churchId]/eventos/[eventId]/_components/LyricsShowcaseCard';
 import { AnimatePresence, motion } from 'framer-motion';
 import { $lyricSelected } from '@stores/event';
 import { structureLib } from '@global/config/constants';
-import { useDataOfLyricSelected } from '../_hooks/useDataOfLyricSelected';
+import { useDataOfLyricSelected } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useDataOfLyricSelected';
 
 export const LyricsShowcase = ({
   lyricsShowcaseProps,

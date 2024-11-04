@@ -1,6 +1,6 @@
-import { EventControlsButtonsLirics } from './EventControlsButtonsLirics';
-/* import { EventControlsButtonsLiveMessages } from './EventControlsButtonsLiveMessages'; */
-import { EventControlsButtonsScreen } from './EventControlsButtonsScreen';
+import { EventControlsButtonsLirics } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtonsLirics';
+/* import { EventControlsButtonsLiveMessages } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtonsLiveMessages'; */
+import { EventControlsButtonsScreen } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtonsScreen';
 
 export const EventControlsButtons = ({
   isEventAdmin,

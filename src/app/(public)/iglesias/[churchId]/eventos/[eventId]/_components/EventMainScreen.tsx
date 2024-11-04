@@ -10,8 +10,8 @@ import {
   $eventLiveMessage,
 } from '@stores/event';
 import { useEffect, useState } from 'react';
-import { LyricsShowcase } from './LyricsShowcase';
-import { useEventGateway } from '../_hooks/useEventGateway';
+import { LyricsShowcase } from '@iglesias/[churchId]/eventos/[eventId]/_components/LyricsShowcase';
+import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { AnimatePresence, motion } from 'framer-motion';
 

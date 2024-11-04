@@ -1,9 +1,9 @@
-import { EventSongsProps } from '../../_interfaces/eventsInterface';
+import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { songTypes } from '@global/config/constants';
-import { handleTranspose } from '../_utils/handleTranspose';
+import { handleTranspose } from '@iglesias/[churchId]/eventos/[eventId]/_utils/handleTranspose';
 import { $eventSelectedSongId } from '@stores/event';
 import { useStore } from '@nanostores/react';
-import { useEventGateway } from '../_hooks/useEventGateway';
+import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 
 export const EventControlsSongsList = ({
   songs,

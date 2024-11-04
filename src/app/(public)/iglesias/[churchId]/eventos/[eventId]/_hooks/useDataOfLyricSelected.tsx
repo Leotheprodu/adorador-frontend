@@ -1,7 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { $selectedSongData, lyricSelectedProps } from '@stores/event';
 import { useEffect, useState } from 'react';
-import { LyricsProps } from '../../_interfaces/eventsInterface';
+import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 
 export const useDataOfLyricSelected = ({
   lyricSelected,

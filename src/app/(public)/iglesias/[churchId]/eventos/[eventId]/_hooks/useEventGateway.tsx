@@ -3,7 +3,7 @@ import { $event, lyricSelectedProps } from '@stores/event';
 import {
   eventSelectedSongGateway,
   lyricSelectedGateway,
-} from '../_services/eventWSService';
+} from '@iglesias/[churchId]/eventos/[eventId]/_services/eventWSService';
 
 export type MessageProps =
   | { type: 'lyricSelected'; data: lyricSelectedProps }

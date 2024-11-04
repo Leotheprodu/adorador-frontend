@@ -5,7 +5,7 @@ import { useFullscreen } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/use
 import { useLeftTime } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useLeftTime';
 import { useHandleEventLeft } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useHandleEventLeft';
 import { EventControls } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControls';
-import { EventMainScreen } from './EventMainScreen';
+import { EventMainScreen } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventMainScreen';
 import { useEffect } from 'react';
 import {
   $event,
@@ -18,10 +18,10 @@ import {
   $selectedSongLyricLength,
 } from '@stores/event';
 import { useStore } from '@nanostores/react';
-import { handleTranspose } from '../_utils/handleTranspose';
+import { handleTranspose } from '@iglesias/[churchId]/eventos/[eventId]/_utils/handleTranspose';
 import { Server1API, songTypes } from '@global/config/constants';
 import io from 'socket.io-client';
-import { useEventGateway } from '../_hooks/useEventGateway';
+import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 
 export const EventByIdPage = ({
   params,

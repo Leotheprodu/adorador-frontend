@@ -4,8 +4,8 @@ import {
   lyricSelectedProps,
 } from '@stores/event';
 import { useStore } from '@nanostores/react';
-import { useDataOfLyricSelected } from '../_hooks/useDataOfLyricSelected';
-import { getNoteByType } from '../_utils/getNoteByType';
+import { useDataOfLyricSelected } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useDataOfLyricSelected';
+import { getNoteByType } from '@iglesias/[churchId]/eventos/[eventId]/_utils/getNoteByType';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,
 }: {

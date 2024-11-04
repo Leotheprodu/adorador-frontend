@@ -1,8 +1,8 @@
-import { EventSongsProps } from '../../_interfaces/eventsInterface';
+import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
-import { EventControlsButtons } from './EventControlsButtons';
-import { EventControlsSongsList } from './EventControlsSongsList';
-import { EventControlsLyricsSelect } from './EventControlsLyricsSelect';
+import { EventControlsButtons } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtons';
+import { EventControlsSongsList } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsSongsList';
+import { EventControlsLyricsSelect } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsLyricsSelect';
 import { churchRoles } from '@global/config/constants';
 import {
   Modal,
@@ -13,7 +13,7 @@ import {
   Button,
   useDisclosure,
 } from '@nextui-org/react';
-import { eventAdminChange } from '../_services/eventByIdService';
+import { eventAdminChange } from '@iglesias/[churchId]/eventos/[eventId]/_services/eventByIdService';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useStore } from '@nanostores/react';
