@@ -32,7 +32,9 @@ export const EventControls = ({
       <section
         className={`mt-5 grid w-full items-center justify-center gap-3 bg-slate-50 p-4 ${checkAdminEvent ? 'grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-1' : 'grid-cols-1 grid-rows-1'}`}
       >
-        {checkAdminEvent && <EventControlsSongsList />}
+        {checkAdminEvent && (
+          <EventControlsSongsList params={params} refetch={refetch} />
+        )}
         {checkAdminEvent && <EventControlsLyricsSelect />}
         <EventControlsButtons
           churchId={parseInt(churchId)}

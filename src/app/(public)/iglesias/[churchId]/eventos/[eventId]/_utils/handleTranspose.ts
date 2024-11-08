@@ -6,6 +6,7 @@ export const handleTranspose = (key: keysType | null, transpose: number) => {
 
   const keyIndex = songKeys.indexOf(key);
   if (keyIndex === -1) return '';
-  const newIndex = (keyIndex + transpose * 2) % songKeys.length;
+  let newIndex = (keyIndex + transpose * 2) % songKeys.length;
+  if (newIndex < 0) newIndex += songKeys.length;
   return songKeys[newIndex];
 };

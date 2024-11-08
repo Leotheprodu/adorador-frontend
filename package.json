@@ -11,6 +11,7 @@
     "structure": "node ./scripts/createFolders.js"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^17.0.0",
     "@nanostores/react": "github:nanostores/react",
     "@nextui-org/react": "^2.4.8",
     "@tanstack/react-query": "^5.59.15",

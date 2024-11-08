@@ -20,7 +20,7 @@ export const EventControlsButtonsScreen = () => {
     <div className="flex flex-col gap-2 rounded-md bg-white p-2">
       <h3 className="text-center text-xs">Pantalla</h3>
       <div className="flex items-center justify-center gap-2">
-        <h4 className="text-xs">Fondo</h4>
+        <h4 className="text-sm">Fondo</h4>
         <div className="flex items-center justify-center gap-2">
           <button
             onClick={() => {
@@ -58,27 +58,25 @@ export const EventControlsButtonsScreen = () => {
           </button>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <h4 className="text-xs">Acordes</h4>
-        <div className="flex w-full items-center justify-center">
-          <Checkbox
-            color="default"
-            type="checkbox"
-            name="showChords"
-            radius="full"
-            isSelected={eventConfig.showChords}
-            onChange={() => {
-              $eventConfig.set({
-                ...eventConfig,
-                showChords: !eventConfig.showChords,
-              });
-              setLocalStorage('eventConfig', {
-                ...eventConfig,
-                showChords: !eventConfig.showChords,
-              });
-            }}
-          />
-        </div>
+      <div className="flex items-center justify-center gap-2">
+        <Checkbox
+          color="default"
+          size="sm"
+          isSelected={eventConfig.showChords}
+          aria-label="Mostrar acordes"
+          onValueChange={() => {
+            $eventConfig.set({
+              ...eventConfig,
+              showChords: !eventConfig.showChords,
+            });
+            setLocalStorage('eventConfig', {
+              ...eventConfig,
+              showChords: !eventConfig.showChords,
+            });
+          }}
+        >
+          Acordes
+        </Checkbox>
       </div>
     </div>
   );
