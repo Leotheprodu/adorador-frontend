@@ -4,6 +4,7 @@ import { $event, $eventSelectedSongId } from '@stores/event';
 import { useStore } from '@nanostores/react';
 import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 import { UpdatingSongList } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/UpdatingSongList';
+import { AddSongEventButton } from './addSongToEvent/AddSongEventButton';
 
 export const EventControlsSongsList = ({
   refetch,
@@ -27,6 +28,7 @@ export const EventControlsSongsList = ({
         <div className="mb-3 flex items-center justify-center gap-2">
           <h4 className="text-center font-bold text-slate-800">Canciones</h4>
           <UpdatingSongList songs={songs} params={params} refetch={refetch} />
+          <AddSongEventButton params={params} />
         </div>
 
         <div className="flex h-[10rem] w-full flex-col gap-2 overflow-y-auto rounded-lg bg-slate-100 p-2 text-slate-800">
