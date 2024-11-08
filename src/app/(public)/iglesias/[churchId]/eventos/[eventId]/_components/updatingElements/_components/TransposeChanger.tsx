@@ -21,9 +21,9 @@ export const TransposeChanger = ({
   index: number;
 }) => {
   return (
-    <Popover placement="right">
+    <Popover>
       <PopoverTrigger>
-        <button className="flex items-center justify-center rounded-full p-2 duration-200 hover:bg-slate-300">
+        <button className="flex items-center justify-center rounded-full p-1 duration-200 hover:bg-slate-300">
           <ArrowsUpDownIconIcon className="text-primary-500" />
         </button>
       </PopoverTrigger>

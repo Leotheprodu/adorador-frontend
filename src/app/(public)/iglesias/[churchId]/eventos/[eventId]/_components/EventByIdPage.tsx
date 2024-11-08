@@ -1,5 +1,4 @@
 'use client';
-import { UIGuard } from '@global/utils/UIGuard';
 import { EventControls } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControls';
 import { EventMainScreen } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventMainScreen';
 import { useEventByIdPage } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventByIdPage';
@@ -15,16 +14,18 @@ export const EventByIdPage = ({
   });
 
   return (
-    <UIGuard isLoading={isLoading}>
-      <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="flex w-full max-w-screen-md flex-col">
-          <EventMainScreen />
+    <div className="flex h-full w-full flex-col items-center justify-center">
+      <div className="flex w-full max-w-screen-md flex-col">
+        <EventMainScreen />
 
-          <EventSimpleTitle />
+        <EventSimpleTitle />
 
-          <EventControls refetch={refetch} params={params} />
-        </div>
+        <EventControls
+          refetch={refetch}
+          params={params}
+          isLoading={isLoading}
+        />
       </div>
-    </UIGuard>
+    </div>
   );
 };

@@ -12,7 +12,10 @@ import {
 import { EditIcon } from '@global/icons/EditIcon';
 import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { UpdateElementCard } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/_components/UpdateElementCard';
-import { eventUpdateSongs } from './_services/updatingEventSongsService';
+import {
+  eventDeleteSongs,
+  eventUpdateSongs,
+} from './_services/updatingEventSongsService';
 import toast from 'react-hot-toast';
 
 export const UpdatingSongList = ({
@@ -26,20 +29,33 @@ export const UpdatingSongList = ({
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [songOrder, setSongOrder] = useState<EventSongsProps[]>([]);
+  const [songsToDelete, setSongsToDelete] = useState<number[]>([]);
   const { mutate, status, isPending } = eventUpdateSongs({ params });
+  const {
+    mutate: mutateDeleteSongs,
+    isPending: isPendingDeleteSongs,
+    status: statusDeleteSongs,
+  } = eventDeleteSongs({ params });
 
   useEffect(() => {
     setSongOrder([...songs]);
   }, [songs]);
 
   useEffect(() => {
-    if (status === 'success') {
+    if (status === 'error') {
+      toast.error('Ha ocurrido un actualizando las canciones');
+    }
+    if (statusDeleteSongs === 'error') {
+      toast.error('Ha ocurrido un error eliminando las canciones');
+    }
+
+    if (status === 'success' || statusDeleteSongs === 'success') {
       toast.success('Canciones actualizadas correctamente');
       refetch();
       onOpenChange();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [status, statusDeleteSongs]);
   const handleDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -55,14 +71,32 @@ export const UpdatingSongList = ({
 
     setSongOrder(reorderedSongs);
   };
-
+  const handleClose = () => {
+    refetch();
+    onOpenChange();
+  };
   const handleSaveChanges = () => {
     const updatedSongs = songOrder.map((song) => ({
       songId: song.song.id,
       transpose: song.transpose,
       order: song.order,
     }));
-    mutate({ songDetails: updatedSongs });
+
+    if (songsToDelete.length > 0 && updatedSongs.length > 0) {
+      const newOrderofUpdatedSongs = updatedSongs.filter(
+        (song) => !songsToDelete.includes(song.songId),
+      );
+      //fix the new order of the songs
+      const newOrder = newOrderofUpdatedSongs.map((song, index) => ({
+        ...song,
+        order: index + 1,
+      }));
+
+      mutateDeleteSongs({ songIds: songsToDelete });
+      mutate({ songDetails: newOrder });
+    } else if (updatedSongs.length > 0) {
+      mutate({ songDetails: updatedSongs });
+    }
   };
 
   return (
@@ -75,7 +109,7 @@ export const UpdatingSongList = ({
       </button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Editar canciones del evento
@@ -97,6 +131,8 @@ export const UpdatingSongList = ({
                             songOrder={songOrder}
                             setSongOrder={setSongOrder}
                             params={params}
+                            songsToDelete={songsToDelete}
+                            setSongsToDelete={setSongsToDelete}
                           />
                         ))}
                         {provided.placeholder}
@@ -109,14 +145,14 @@ export const UpdatingSongList = ({
                 <Button
                   color="danger"
                   variant="light"
-                  isDisabled={isPending}
-                  onPress={onClose}
+                  isDisabled={isPending || isPendingDeleteSongs}
+                  onPress={handleClose}
                 >
                   Cerrar
                 </Button>
                 <Button
                   color="primary"
-                  isLoading={isPending}
+                  isLoading={isPending || isPendingDeleteSongs}
                   onPress={handleSaveChanges}
                 >
                   Guardar cambios

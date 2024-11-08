@@ -16,3 +16,15 @@ export const eventUpdateSongs = ({
     method: 'PATCH',
   });
 };
+export const eventDeleteSongs = ({
+  params,
+}: {
+  params: { churchId: string; eventId: string };
+}) => {
+  const { churchId, eventId } = params;
+  return PostData<{ message: string }, { songIds: number[] }>({
+    key: 'EventSongDelete',
+    url: `${Server1API}/churches/${churchId}/events/${eventId}/songs`,
+    method: 'DELETE',
+  });
+};

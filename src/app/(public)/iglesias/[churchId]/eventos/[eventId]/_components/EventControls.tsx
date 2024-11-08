@@ -10,9 +10,11 @@ import { EventControlsHandleManager } from './EventControlsHandleManager';
 export const EventControls = ({
   params,
   refetch,
+  isLoading,
 }: {
   params: { churchId: string; eventId: string };
   refetch: () => void;
+  isLoading: boolean;
 }) => {
   const { churchId } = params;
 
@@ -20,7 +22,8 @@ export const EventControls = ({
 
   useEffect(() => {
     refetch();
-  }, [refetch, eventAdminName]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventAdminName]);
 
   const checkAdminEvent = CheckUserStatus({
     isLoggedIn: true,
@@ -33,7 +36,11 @@ export const EventControls = ({
         className={`mt-5 grid w-full items-center justify-center gap-3 bg-slate-50 p-4 ${checkAdminEvent ? 'grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-1' : 'grid-cols-1 grid-rows-1'}`}
       >
         {checkAdminEvent && (
-          <EventControlsSongsList params={params} refetch={refetch} />
+          <EventControlsSongsList
+            params={params}
+            refetch={refetch}
+            isLoading={isLoading}
+          />
         )}
         {checkAdminEvent && <EventControlsLyricsSelect />}
         <EventControlsButtons

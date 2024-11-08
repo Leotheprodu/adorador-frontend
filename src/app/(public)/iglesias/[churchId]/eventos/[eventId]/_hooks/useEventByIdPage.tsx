@@ -9,18 +9,12 @@ export const useEventByIdPage = ({
 }: {
   params: { churchId: string; eventId: string };
 }) => {
-  const { data, isLoading, status, refetch } = getEventsById({
+  const { data, isLoading, status, refetch, isRefetching } = getEventsById({
     churchId: params.churchId,
     eventId: params.eventId,
   });
   usePrevOrNextSongDetection();
   useEventWSConexion({ params });
-
-  useEffect(() => {
-    if (status === 'success') {
-      $event.set(data);
-    }
-  }, [status, data]);
 
   useEffect(() => {
     document.title = `${data?.title}`;
@@ -30,7 +24,7 @@ export const useEventByIdPage = ({
     if (status === 'success') {
       $event.set(data);
     }
-  }, [status, data]);
+  }, [status, data, isRefetching]);
 
   return {
     isLoading,

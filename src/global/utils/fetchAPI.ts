@@ -14,7 +14,7 @@ export async function fetchAPI<TResponse, TBody = undefined>({
     method,
     credentials: 'include',
     body:
-      method === 'GET' || method === 'DELETE' || body === null
+      method === 'GET' || body === null
         ? undefined
         : isFormData
           ? (body as FormData)
