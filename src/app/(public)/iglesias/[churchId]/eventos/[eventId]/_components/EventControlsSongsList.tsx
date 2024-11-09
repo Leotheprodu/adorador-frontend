@@ -45,7 +45,7 @@ export const EventControlsSongsList = ({
             params={params}
             refetch={refetch}
           />
-          <AddSongEventButton params={params} />
+          <AddSongEventButton params={params} refetch={refetch} />
         </div>
 
         <div className="flex h-[10rem] w-full flex-col gap-2 overflow-y-auto rounded-lg bg-slate-100 p-2 text-slate-800">

@@ -12,13 +12,16 @@ import {
 import { $event } from '@stores/event';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { addSongsToEventService } from './services/AddSongsToEventService';
 
 export const AddSongEventBySavedSongs = ({
   params,
   setIsOpenPopover,
+  refetch,
 }: {
   params: { churchId: string; eventId: string };
   setIsOpenPopover: (open: boolean) => void;
+  refetch: () => void;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const eventSongs = useStore($event).songs;
@@ -34,12 +37,25 @@ export const AddSongEventBySavedSongs = ({
       song.artist?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       song.key?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+  const { status, mutate } = addSongsToEventService({ params });
   useEffect(() => {
     if (!isOpen) {
       setIsOpenPopover(true);
     }
   }, [isOpen, setIsOpenPopover]);
 
+  useEffect(() => {
+    if (status === 'success') {
+      toast.success('Canciones agregadas al evento');
+      refetch();
+      setIsOpenPopover(false);
+      onOpenChange();
+    }
+    if (status === 'error') {
+      toast.error('Error al agregar canciones al evento');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
   const handleSelectSong = (index: number) => {
     const songId = data ? data[index].id : null;
     const eventSongsLength = eventSongs.length;
@@ -67,9 +83,7 @@ export const AddSongEventBySavedSongs = ({
   };
 
   const handleAddSongToEvent = () => {
-    console.log(selectedSongs);
-    toast.success('Canciones agregadas al evento');
-    onOpenChange();
+    mutate({ songDetails: selectedSongs });
   };
 
   return (

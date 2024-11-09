@@ -1,6 +1,6 @@
 import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { handleTranspose } from '@iglesias/[churchId]/eventos/[eventId]/_utils/handleTranspose';
-import { TransposeChanger } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/_components/TransposeChanger';
+import { TransposeChanger } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/components/TransposeChanger';
 import { songTypes } from '@global/config/constants';
 import { Draggable } from '@hello-pangea/dnd';
 import Link from 'next/link';

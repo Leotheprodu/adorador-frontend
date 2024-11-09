@@ -11,11 +11,11 @@ import {
 } from '@nextui-org/react';
 import { EditIcon } from '@global/icons/EditIcon';
 import { EventSongsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
-import { UpdateElementCard } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/_components/UpdateElementCard';
+import { UpdateElementCard } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/components/UpdateElementCard';
 import {
   eventDeleteSongs,
   eventUpdateSongs,
-} from './_services/updatingEventSongsService';
+} from './services/updatingEventSongsService';
 import toast from 'react-hot-toast';
 
 export const UpdatingSongList = ({

@@ -6,8 +6,10 @@ import { useState } from 'react';
 
 export const AddSongEventButton = ({
   params,
+  refetch,
 }: {
   params: { churchId: string; eventId: string };
+  refetch: () => void;
 }) => {
   const [isOpenPopover, setIsOpenPopover] = useState(false);
   return (
@@ -25,6 +27,7 @@ export const AddSongEventButton = ({
           <AddSongEventBySavedSongs
             params={params}
             setIsOpenPopover={setIsOpenPopover}
+            refetch={refetch}
           />
           <AddNewSongtoChurchAndEvent />
         </div>
