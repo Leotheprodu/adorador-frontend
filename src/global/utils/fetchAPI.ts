@@ -28,6 +28,7 @@ export async function fetchAPI<TResponse, TBody = undefined>({
   if (response.ok) {
     return data;
   } else {
+    console.error(data);
     throw new Error(`${data.statusCode}-${data.message}`);
   }
 }

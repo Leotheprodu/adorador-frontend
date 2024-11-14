@@ -44,6 +44,7 @@ export const PostData = <TResponse, TData = undefined>({
       });
     },
     onError: (error) => {
+      console.log(error);
       throw new Error(error.message);
     },
   });

@@ -29,7 +29,11 @@ export const AddSongEventButton = ({
             setIsOpenPopover={setIsOpenPopover}
             refetch={refetch}
           />
-          <AddNewSongtoChurchAndEvent />
+          <AddNewSongtoChurchAndEvent
+            params={params}
+            setIsOpenPopover={setIsOpenPopover}
+            refetch={refetch}
+          />
         </div>
       </PopoverContent>
     </Popover>

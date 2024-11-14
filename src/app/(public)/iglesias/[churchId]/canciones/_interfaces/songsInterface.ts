@@ -1,9 +1,12 @@
-export interface SongProps {
+export interface SongProps extends SongPropsWithoutId {
   id: number;
+}
+
+export interface SongPropsWithoutId {
   title: string;
-  artist: string | null;
+  artist?: string;
   songType: 'worship' | 'praise';
-  youtubeLink: string | null;
-  key: string | null;
-  tempo: number | null;
+  youtubeLink?: string;
+  key?: string;
+  tempo?: number;
 }

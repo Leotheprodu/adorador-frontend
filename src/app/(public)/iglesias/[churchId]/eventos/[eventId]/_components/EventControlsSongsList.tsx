@@ -5,8 +5,8 @@ import { useStore } from '@nanostores/react';
 import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useEventGateway';
 import { UpdatingSongList } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/UpdatingSongList';
 import { AddSongEventButton } from './addSongToEvent/AddSongEventButton';
-import { UpdateIcon } from '@global/icons/UpdateIcon';
 import { Spinner } from '@nextui-org/react';
+import { RefetchButtonUpdateIcon } from './addSongToEvent/refetchButtonUpdateIcon';
 
 export const EventControlsSongsList = ({
   refetch,
@@ -31,15 +31,7 @@ export const EventControlsSongsList = ({
       <div className="w-full">
         <div className="mb-3 flex items-center justify-center gap-2">
           <h4 className="text-center font-bold text-slate-800">Canciones</h4>
-          <button
-            className="rounded-full p-2 duration-200 hover:bg-slate-300"
-            onClick={() => {
-              console.log('click');
-              refetch();
-            }}
-          >
-            <UpdateIcon className="text-primary-500" />
-          </button>
+          <RefetchButtonUpdateIcon refetch={refetch} />
           <UpdatingSongList
             songs={[...songs]}
             params={params}
