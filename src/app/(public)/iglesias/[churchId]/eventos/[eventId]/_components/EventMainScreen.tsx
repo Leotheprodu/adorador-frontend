@@ -144,7 +144,7 @@ export const EventMainScreen = () => {
         backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
-      className="relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/70 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
+      className="font-agdasima relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/80 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
     >
       {!selectedSongData && (
         <div className="font-agdasima flex flex-col items-center justify-center">
@@ -169,7 +169,11 @@ export const EventMainScreen = () => {
         </h1>
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (
-        <h1 className="text-4xl uppercase">Fin</h1>
+        <h1
+          className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+        >
+          Fin
+        </h1>
       )}
 
       {liveMessage !== '' && (

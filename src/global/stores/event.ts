@@ -42,4 +42,5 @@ export const $eventConfig = atom({
   showChords: false,
   showKey: true,
   backgroundImage: 1,
+  showStructure: true,
 });
