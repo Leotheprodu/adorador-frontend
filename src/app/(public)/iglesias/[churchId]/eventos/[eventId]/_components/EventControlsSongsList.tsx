@@ -6,7 +6,7 @@ import { useEventGateway } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/u
 import { UpdatingSongList } from '@iglesias/[churchId]/eventos/[eventId]/_components/updatingElements/UpdatingSongList';
 import { AddSongEventButton } from './addSongToEvent/AddSongEventButton';
 import { Spinner } from '@nextui-org/react';
-import { RefetchButtonUpdateIcon } from './addSongToEvent/refetchButtonUpdateIcon';
+import { RefetchButtonUpdateIcon } from './addSongToEvent/RefetchButtonUpdateIcon';
 
 export const EventControlsSongsList = ({
   refetch,
