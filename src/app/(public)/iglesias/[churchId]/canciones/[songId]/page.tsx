@@ -1,15 +1,13 @@
+import { SongIdMainPage } from './_components/SongIdMainPage';
+
 export default function SongsById({
   params,
 }: {
-  params: { churchId: string; songId };
+  params: { churchId: string; songId: string };
 }) {
   return (
     <main className="flex h-screen flex-col items-center p-8 pb-20 sm:p-20">
-      <section>
-        <h1>
-          cancion id: {params.songId} de la Iglesia id: {params.churchId}
-        </h1>
-      </section>
+      <SongIdMainPage params={params} />
     </main>
   );
 }

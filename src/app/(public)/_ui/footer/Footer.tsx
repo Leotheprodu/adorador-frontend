@@ -3,7 +3,6 @@ import { MoreDonationButton } from '@ui/footer/components/MoreDonationButton';
 import { links } from '@global/config/links';
 import { WaveFooterSVG } from '@ui/footer/components/svg/WaveFooterSVG';
 import ScrollToTopButton from '@ui/footer/components/ScrollToTopButton';
-import { appName } from '@global/config/constants';
 import { NavbarLinks } from '../header/components/NavbarLinks';
 
 export const Footer = () => {
@@ -12,7 +11,6 @@ export const Footer = () => {
       <section className="relative grid grid-cols-[1fr] bg-negro p-4 text-blanco md:grid-cols-[1fr_1fr_1fr_1fr]">
         <ScrollToTopButton />
         <WaveFooterSVG className="absolute bottom-[98%] -z-10 w-full text-negro" />
-
         <ul className="hidden flex-col items-center gap-2 p-2 md:flex">
           <h2 className="text-bold mb-3 text-lg uppercase text-slate-500">
             {' '}
@@ -42,22 +40,6 @@ export const Footer = () => {
           <PaypalDonationButton />
           <MoreDonationButton />
         </div>
-      </section>
-      <section className="flex items-center justify-center bg-slate-900 p-2 text-center text-xs text-slate-400">
-        <p>
-          © {new Date().getFullYear()}{' '}
-          <span className="font-agdasima font-bold uppercase">{appName}</span>{' '}
-          <span className="mx-1">|</span> Hecho por{' '}
-          <a
-            href="https://leoserranodev.vercel.app/es/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-slate-400 transition-all duration-200 hover:border-b-1 hover:text-slate-100"
-          >
-            Leonardo Serrano
-          </a>{' '}
-          con ❤️ para la comunidad cristiana.
-        </p>
       </section>
     </footer>
   );

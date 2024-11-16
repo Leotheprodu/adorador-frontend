@@ -100,3 +100,24 @@
     transform: scale3D(0, 0, 1);
   }
 }
+
+.MusicPlayer-volumen {
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 0.3rem;
+  outline: none;
+  background-color: #fafafa;
+  border-radius: 5px;
+  transition-duration: 0.15s;
+}
+
+.MusicPlayer-volumen::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 0.8rem;
+  width: 0.6rem;
+  border-radius: 5px;
+  background-color: #fafafa;
+}
