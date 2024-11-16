@@ -33,26 +33,29 @@ export const SongOfChurchCard = ({
               </button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem textValue="Ir a detalles de canción" key="Ir">
-                <Link href={`/iglesias/${churchId}/canciones/${song.id}`}>
-                  Ir a canción
-                </Link>
+              <DropdownItem
+                as={Link}
+                href={`/iglesias/${churchId}/canciones/${song.id}`}
+                textValue="Ir a detalles de canción"
+                key="Ir"
+              >
+                Ir a canción
               </DropdownItem>
-              <DropdownItem textValue="escuchar canción" key="escuchar">
-                <button
-                  onClick={() => {
-                    if (song.youtubeLink === null || song.youtubeLink === '') {
-                      return;
-                    }
-                    $SelectedSong.set({
-                      id: song.id,
-                      name: song.title,
-                      youtubeLink: song.youtubeLink,
-                    });
-                  }}
-                >
-                  Escuchar
-                </button>
+              <DropdownItem
+                onClick={() => {
+                  if (song.youtubeLink === null || song.youtubeLink === '') {
+                    return;
+                  }
+                  $SelectedSong.set({
+                    id: song.id,
+                    name: song.title,
+                    youtubeLink: song.youtubeLink,
+                  });
+                }}
+                textValue="escuchar canción"
+                key="escuchar"
+              >
+                Escuchar
               </DropdownItem>
               <DropdownItem
                 textValue="Eliminar canción"
