@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 5000",
-    "dev:cel": "next dev -H 192.168.50.101 -p 5000",
+    "dev:cel": "next dev -H 192.168.50.100 -p 5000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -15,6 +15,7 @@ import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { VolumeOffIcon } from '@global/icons/VolumeOffIcon';
 import { VolumeDownIcon } from '@global/icons/VolumeDownIcon';
 import { VolumeUpIcon } from '@global/icons/VolumeUpIcon';
+import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 
 export const MusicPlayer = () => {
   const playlist = useStore($PlayList);
@@ -85,9 +86,6 @@ export const MusicPlayer = () => {
   const handleNextSong = () => {
     if (!selectedBeat) {
       $SelectedSong.set(playlist[0]);
-
-      /* setLocalStorage(`localSelectedBeat`, beats[0]);
-      setLocalStorage(`localPlayList`, { name: mainPlayListName, beats }); */
       setPlaying(true);
       setEnded(false);
     } else {
@@ -96,13 +94,11 @@ export const MusicPlayer = () => {
       );
       setPlaying(true);
       setEnded(false);
-      /* setLocalStorage(`localPlayList`, { name, beats: playlistBeats }); */
+
       if (currentIndex === playlist.length - 1) {
         $SelectedSong.set(playlist[0]);
-        /* setLocalStorage(`localSelectedBeat`, playlistBeats[0]); */
       } else {
         $SelectedSong.set(playlist[currentIndex + 1]);
-        /*  setLocalStorage(`localSelectedBeat`, playlistBeats[currentIndex + 1]); */
       }
     }
   };
@@ -112,21 +108,7 @@ export const MusicPlayer = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ended]);
-  /* useEffect(() => {
-    setLocalStorage(`volumen`, volume);
-  }, [volume]); */
-  /* useEffect(() => {
-    if (
-      localStorage.getItem(`localSelectedBeat`) &&
-      localStorage.getItem(`localPlayList`)
-    ) {
-      $SelectedBeat.set(getLocalStorage(`localSelectedBeat`));
-      $PlayList.set(getLocalStorage(`localPlayList`));
-      setTimeout(() => {
-        setPlaying(false);
-      }, 200);
-    }
-  }, []); */
+
   useEffect(() => {
     if (selectedBeat) {
       setEnded(false);
@@ -141,8 +123,14 @@ export const MusicPlayer = () => {
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } pointer-events-auto mt-[3rem] flex flex-col rounded-lg bg-primario p-2 shadow-lg ring-1 ring-black ring-opacity-5`}
+            } group pointer-events-auto relative mt-[3rem] flex flex-col rounded-lg bg-primario p-2 shadow-lg ring-1 ring-black ring-opacity-5`}
           >
+            <button
+              onClick={() => toast.remove('beat-toast')}
+              className="invisible absolute right-2 top-2 m-0 flex h-4 w-4 items-center justify-center rounded-full bg-white p-1 text-center duration-200 group-hover:visible"
+            >
+              <DeleteMusicIcon className="text-danger-500" />
+            </button>
             <div className="flex flex-col justify-center">
               <img
                 src={`https://img.youtube.com/vi/${selectedBeat?.youtubeLink}/mqdefault.jpg`}
@@ -162,14 +150,13 @@ export const MusicPlayer = () => {
     }
 
     return () => {
-      toast.dismiss();
+      toast.remove('beat-toast');
     };
   }, [selectedBeat]);
   const handlePrevSong = () => {
     if (!selectedBeat) {
       $SelectedSong.set(playlist[0]);
-      /* setLocalStorage(`localSelectedBeat`, beats[0]);
-      setLocalStorage(`localPlayList`, { name: mainPlayListName, beats }); */
+
       setPlaying(true);
       setEnded(false);
     } else {
@@ -179,16 +166,10 @@ export const MusicPlayer = () => {
       setPlaying(true);
       setEnded(false);
 
-      /* setLocalStorage(`localPlayList`, { name, beats: playlistBeats }); */
       if (currentIndex === 0) {
         $SelectedSong.set(playlist[playlist.length - 1]);
-        /* setLocalStorage(
-          `localSelectedBeat`,
-          playlistBeats[playlistBeats.length - 1]
-        ); */
       } else {
         $SelectedSong.set(playlist[currentIndex - 1]);
-        /* setLocalStorage(`localSelectedBeat`, playlistBeats[currentIndex - 1]); */
       }
     }
   };
@@ -260,13 +241,15 @@ export const MusicPlayer = () => {
           </div>
           <div className="z-20 flex flex-col items-center justify-center gap-2">
             <div className="flex items-center justify-center gap-5">
-              <button
-                type="button"
-                className="flex items-center justify-center rounded-full p-1 opacity-75 duration-75 ease-in-out hover:opacity-100 active:scale-90"
-                onClick={handlePrevSong}
-              >
-                <BackwardIcon className="text-primary-200" />
-              </button>
+              {playlist.length > 1 && (
+                <button
+                  type="button"
+                  className="flex items-center justify-center rounded-full p-1 opacity-75 duration-75 ease-in-out hover:opacity-100 active:scale-90"
+                  onClick={handlePrevSong}
+                >
+                  <BackwardIcon className="text-primary-200" />
+                </button>
+              )}
               <Button
                 type="button"
                 radius="full"
@@ -280,14 +263,15 @@ export const MusicPlayer = () => {
                   <PlayIcon className="scale-125 text-primary-500" />
                 )}
               </Button>
-
-              <button
-                type="button"
-                className="flex items-center justify-center rounded-full p-1 opacity-75 duration-75 ease-in-out hover:opacity-100 active:scale-90"
-                onClick={handleNextSong}
-              >
-                <ForwardIcon className="text-primary-200" />
-              </button>
+              {playlist.length > 1 && (
+                <button
+                  type="button"
+                  className="flex items-center justify-center rounded-full p-1 opacity-75 duration-75 ease-in-out hover:opacity-100 active:scale-90"
+                  onClick={handleNextSong}
+                >
+                  <ForwardIcon className="text-primary-200" />
+                </button>
+              )}
             </div>
             <div className="absolute right-[8rem] flex w-[10rem] items-center justify-center gap-1">
               {volume === 0 ? (
