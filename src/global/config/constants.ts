@@ -201,6 +201,40 @@ export const structureLib = {
     en: 'Solo',
   },
 };
+export const songStructure = [
+  {
+    title: 'intro',
+    id: 1,
+  },
+  {
+    title: 'verse',
+    id: 2,
+  },
+  {
+    title: 'pre-chorus',
+    id: 3,
+  },
+  {
+    title: 'chorus',
+    id: 4,
+  },
+  {
+    title: 'bridge',
+    id: 5,
+  },
+  {
+    title: 'interlude',
+    id: 6,
+  },
+  {
+    title: 'solo',
+    id: 7,
+  },
+  {
+    title: 'outro',
+    id: 8,
+  },
+];
 
 export const backgroundImages = [
   '/images/backgrounds/paisaje_1.avif',

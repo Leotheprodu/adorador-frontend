@@ -36,7 +36,6 @@ export const SongOfChurchCard = ({
               <DropdownItem
                 as={Link}
                 href={`/iglesias/${churchId}/canciones/${song.id}`}
-                textValue="Ir a detalles de canción"
                 key="Ir"
               >
                 Ir a canción
@@ -52,17 +51,11 @@ export const SongOfChurchCard = ({
                     youtubeLink: song.youtubeLink,
                   });
                 }}
-                textValue="escuchar canción"
                 key="escuchar"
               >
                 Escuchar
               </DropdownItem>
-              <DropdownItem
-                textValue="Eliminar canción"
-                key="delete"
-                className="text-danger"
-                color="danger"
-              >
+              <DropdownItem key="delete" className="text-danger" color="danger">
                 Eliminar
               </DropdownItem>
             </DropdownMenu>

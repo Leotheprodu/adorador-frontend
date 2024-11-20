@@ -37,3 +37,18 @@ export const uploadSongLyrics = ({
     isFormData: true,
   });
 };
+
+export const addNewLyricService = ({
+  params,
+}: {
+  params: { churchId: string; songId: string };
+}) => {
+  return PostData<
+    { message: string },
+    { structureId: number; lyrics: string; position: number }
+  >({
+    key: 'CreateNewLyric',
+    url: `${Server1API}/churches/${params.churchId}/songs/${params.songId}/lyrics`,
+    method: 'POST',
+  });
+};
