@@ -1,4 +1,4 @@
-import { songKeys } from '@global/config/constants';
+import { keyChordQualities, keys, songKeys } from '@global/config/constants';
 
 export interface EventsProps {
   id: number;
@@ -13,13 +13,16 @@ export interface EventSongsProps {
   song: SongEventProps;
 }
 export type keysType = (typeof songKeys)[number];
+export type ChordType = (typeof keys)[number];
+export type ChordQualityType = (typeof keyChordQualities)[number];
 
-export interface ChordProps {
+export interface ChordProps extends ChordPropsWithoutId {
   id: number;
-  rootNote: string;
-  chordQuality: string;
-  slashChord: string;
-  slashQuality: string;
+}
+export interface ChordPropsWithoutId {
+  rootNote: ChordType;
+  chordQuality?: ChordQualityType | '' | undefined;
+  slashChord?: ChordType | '' | undefined;
   position: number;
 }
 export interface StructureProps {

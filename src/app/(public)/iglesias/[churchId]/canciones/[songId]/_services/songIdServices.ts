@@ -1,7 +1,10 @@
 import { FetchData, PostData } from '@global/services/HandleAPI';
 import { SongProps } from '../../_interfaces/songsInterface';
 import { Server1API } from '@global/config/constants';
-import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
+import {
+  ChordPropsWithoutId,
+  LyricsProps,
+} from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 
 export const getSongData = ({
   params,
@@ -49,6 +52,19 @@ export const addNewLyricService = ({
   >({
     key: 'CreateNewLyric',
     url: `${Server1API}/churches/${params.churchId}/songs/${params.songId}/lyrics`,
+    method: 'POST',
+  });
+};
+export const addChordToLyricService = ({
+  params,
+  lyricId,
+}: {
+  params: { churchId: string; songId: string };
+  lyricId: number;
+}) => {
+  return PostData<{ message: string }, ChordPropsWithoutId>({
+    key: 'CreateNewChord',
+    url: `${Server1API}/churches/${params.churchId}/songs/${params.songId}/lyrics/${lyricId}/chords`,
     method: 'POST',
   });
 };

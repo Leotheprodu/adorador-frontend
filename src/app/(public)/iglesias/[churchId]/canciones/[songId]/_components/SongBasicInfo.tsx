@@ -56,7 +56,7 @@ export const SongBasicInfo = ({
   };
   return (
     <div
-      className={`group flex flex-col gap-1 rounded-lg border-danger-200 p-4 transition-all duration-150 ease-in ${isUserChecked && 'hover:border-2'}`}
+      className={`group flex flex-col gap-1 rounded-lg p-4 transition-all duration-100 ease-in ${isUserChecked && 'hover:shadow-lg'}`}
     >
       <div className="flex gap-2">
         <h1 className="font-bold">{data?.title}</h1>

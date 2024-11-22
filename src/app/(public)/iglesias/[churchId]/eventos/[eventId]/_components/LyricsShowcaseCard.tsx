@@ -71,11 +71,6 @@ export const LyricsShowcaseCard = ({
                               chordPreferences,
                             )}
                           </p>
-                          <p
-                            className={`text-slate-400 ${isFullscreen ? 'md:text-3xl lg:text-5xl' : 'md:text-xl lg:text-3xl'} w-full text-center text-base`}
-                          >
-                            {chord.slashQuality}
-                          </p>
                         </div>
                       </>
                     )}

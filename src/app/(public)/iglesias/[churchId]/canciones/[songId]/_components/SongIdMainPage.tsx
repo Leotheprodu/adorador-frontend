@@ -43,7 +43,12 @@ export const SongIdMainPage = ({
           {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 ? (
             <>
               {LyricsOfCurrentSong?.map((lyric) => (
-                <LyricsCard key={lyric.id} lyric={lyric} />
+                <LyricsCard
+                  key={lyric.id}
+                  lyric={lyric}
+                  refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                  params={params}
+                />
               ))}
               <div className="mt-5">
                 {addNewLyric ? (
