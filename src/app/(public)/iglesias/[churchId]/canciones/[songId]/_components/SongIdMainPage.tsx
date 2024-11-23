@@ -11,12 +11,15 @@ import { NoLyricsSong } from './NoLyricsSong';
 import { LyricsCard } from './LyricsCard';
 import { AddNewLyricForm } from './AddNewLyricForm';
 import { AddSongIcon } from '@global/icons/AddSongIcon';
+import { useStore } from '@nanostores/react';
+import { $chordPreferences } from '@stores/event';
 
 export const SongIdMainPage = ({
   params,
 }: {
   params: { churchId: string; songId: string };
 }) => {
+  const chordPreferences = useStore($chordPreferences);
   const { data, isLoading, status } = getSongData({ params });
   const { data: LyricsOfCurrentSong, refetch: refetchLyricsOfCurrentSong } =
     getSongLyrics({ params });
@@ -48,6 +51,7 @@ export const SongIdMainPage = ({
                   lyric={lyric}
                   refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
                   params={params}
+                  chordPreferences={chordPreferences}
                 />
               ))}
               <div className="mt-5">

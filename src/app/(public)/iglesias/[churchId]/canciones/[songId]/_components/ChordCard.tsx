@@ -3,22 +3,64 @@ import { ArrowRightIcon } from '@global/icons/ArrowRightIcon';
 import { getNoteByType } from '@iglesias/[churchId]/eventos/[eventId]/_utils/getNoteByType';
 import { ChordProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { useStore } from '@nanostores/react';
-import { $chordPreferences } from '@stores/event';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  changeChordPositionService,
+  deleteChordService,
+} from '../_services/songIdServices';
+import toast from 'react-hot-toast';
+import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 export const ChordCard = ({
   chord,
   allChordsState,
+  chordPreferences,
+  lyricId,
+  params,
 }: {
   chord: ChordProps;
+  lyricId: number;
+  params: { churchId: string; songId: string };
+  chordPreferences: ReturnType<typeof useStore>['state'];
   allChordsState: {
     sortedChords: ChordProps[];
     setSortedChords: React.Dispatch<React.SetStateAction<ChordProps[]>>;
   };
 }) => {
   const { sortedChords, setSortedChords } = allChordsState;
-  const chordPreferences = useStore($chordPreferences);
   const [showButtons, setShowButtons] = useState(false);
+  const { mutate, isPending, status } = changeChordPositionService({
+    params,
+    lyricId,
+    chordId: chord.id,
+  });
+  const {
+    mutate: mutateDeleteChord,
+    isPending: isPendingDeleteChord,
+    status: statusDeleteChord,
+  } = deleteChordService({
+    params,
+    lyricId,
+    chordId: chord.id,
+  });
+
+  useEffect(() => {
+    if (status === 'error') {
+      toast.error(
+        'El acorde no se pudo actualizar, intente de nuevo mas tarde',
+      );
+    }
+  }, [status]);
+  useEffect(() => {
+    if (statusDeleteChord === 'error') {
+      toast.error('El acorde no se pudo eliminar, intente de nuevo mas tarde');
+    } else if (statusDeleteChord === 'success') {
+      setSortedChords(sortedChords.filter((c) => c.id !== chord.id));
+      toast.success('Acorde eliminado');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusDeleteChord]);
 
   useEffect(() => {
     if (!showButtons) {
@@ -53,7 +95,7 @@ export const ChordCard = ({
       }
       return c;
     });
-
+    mutate({ position: newPosition });
     setSortedChords(newArray);
   };
 
@@ -72,10 +114,13 @@ export const ChordCard = ({
       }
       return c;
     });
-
+    mutate({ position: newPosition });
     setSortedChords(newArray);
   };
 
+  const handleDeleteChord = () => {
+    mutateDeleteChord(null);
+  };
   return (
     <div className={`chord-card${chord.id} relative`}>
       {showButtons && (
@@ -93,11 +138,26 @@ export const ChordCard = ({
               transition={{ type: 'spring', stiffness: 300 }}
               className="flex gap-2"
             >
-              <button onClick={handleClickLeft} className="p-1">
+              <button
+                disabled={isPending}
+                onClick={handleClickLeft}
+                className="p-1"
+              >
                 <ArrowLeftIcon className="text-primary-500" />
               </button>
-              <button onClick={handleClickRight} className="p-1">
+              <button
+                disabled={isPending}
+                onClick={handleClickRight}
+                className="p-1"
+              >
                 <ArrowRightIcon className="text-primary-500" />
+              </button>
+              <button
+                disabled={isPendingDeleteChord}
+                onClick={handleDeleteChord}
+                className="p-1"
+              >
+                <DeleteMusicIcon className="text-danger-500" />
               </button>
             </motion.div>
           </motion.div>

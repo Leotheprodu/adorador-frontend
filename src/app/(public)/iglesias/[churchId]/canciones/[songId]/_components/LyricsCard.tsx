@@ -2,15 +2,18 @@ import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInte
 import React, { useEffect, useState } from 'react';
 import { NoChordCard } from './NoChordCard';
 import { ChordCard } from './ChordCard';
+import { useStore } from '@nanostores/react';
 
 export const LyricsCard = ({
   lyric,
   refetchLyricsOfCurrentSong,
   params,
+  chordPreferences,
 }: {
   lyric: LyricsProps;
   refetchLyricsOfCurrentSong: () => void;
   params: { churchId: string; songId: string };
+  chordPreferences: ReturnType<typeof useStore>['state'];
 }) => {
   const [noChordsPosition, setNoChordsPosition] = useState<number[]>([]);
   const [sortedChords, setSortedChords] = useState([...lyric.chords]);
@@ -24,12 +27,6 @@ export const LyricsCard = ({
     setNoChordsPosition(noChords);
   }, [sortedChords]);
 
-  /* useEffect(() => {
-    const sorted = [...lyric.chords].sort((a, b) => a.position - b.position);
-    setSortedChords(sorted);
-
-  }, []); */
-
   return (
     <div className="group flex flex-col rounded-md p-3 duration-100 hover:shadow-md">
       <div className="grid w-full grid-cols-5 grid-rows-1 gap-1">
@@ -39,10 +36,13 @@ export const LyricsCard = ({
             <ChordCard
               key={chord.id}
               chord={chord}
+              params={params}
               allChordsState={{
                 sortedChords,
                 setSortedChords,
               }}
+              chordPreferences={chordPreferences}
+              lyricId={lyric.id}
             />
           ))}
         {noChordsPosition.map((position) => (
