@@ -17,7 +17,9 @@ export const LyricsCard = ({
 }) => {
   const [noChordsPosition, setNoChordsPosition] = useState<number[]>([]);
   const [sortedChords, setSortedChords] = useState([...lyric.chords]);
-
+  useEffect(() => {
+    setSortedChords([...lyric.chords]);
+  }, [lyric]);
   useEffect(() => {
     const actualChordPositions = sortedChords.map((chord) => chord.position);
     const totalPositions = [1, 2, 3, 4, 5];

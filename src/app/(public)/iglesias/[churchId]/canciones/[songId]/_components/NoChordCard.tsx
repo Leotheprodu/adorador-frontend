@@ -41,11 +41,13 @@ export const NoChordCard = ({
   });
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   useEffect(() => {
     if (status === 'success') {
       refetchLyricsOfCurrentSong();
       onOpenChange();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
   const handleSetChord = (e, name: string) => {
@@ -68,13 +70,12 @@ export const NoChordCard = ({
     setChordQualities(sortedChordQualities);
   }, []);
 
-  const createNewChordHanlde = () => {
-    console.log(chord);
+  const createNewChordHandle = () => {
     mutate({
       rootNote: chord.rootNote,
       chordQuality: chord.chordQuality === '' ? undefined : chord.chordQuality,
       slashChord: chord.slashChord === '' ? undefined : chord.slashChord,
-      position: position,
+      position,
     });
   };
   return (
@@ -174,7 +175,7 @@ export const NoChordCard = ({
                 <Button
                   isLoading={isPending}
                   color="primary"
-                  onPress={createNewChordHanlde}
+                  onPress={createNewChordHandle}
                 >
                   Agregar
                 </Button>
