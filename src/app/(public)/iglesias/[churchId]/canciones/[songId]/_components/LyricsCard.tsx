@@ -19,7 +19,7 @@ export const LyricsCard = ({
   const [sortedChords, setSortedChords] = useState([...lyric.chords]);
   useEffect(() => {
     setSortedChords([...lyric.chords]);
-  }, [lyric]);
+  }, [lyric.chords]);
   useEffect(() => {
     const actualChordPositions = sortedChords.map((chord) => chord.position);
     const totalPositions = [1, 2, 3, 4, 5];
@@ -32,21 +32,23 @@ export const LyricsCard = ({
   return (
     <div className="group flex flex-col rounded-md p-3 duration-100 hover:shadow-md">
       <div className="grid w-full grid-cols-5 grid-rows-1 gap-1">
-        {lyric.chords &&
-          lyric.chords.length > 0 &&
-          sortedChords.map((chord) => (
-            <ChordCard
-              key={chord.id}
-              chord={chord}
-              params={params}
-              allChordsState={{
-                sortedChords,
-                setSortedChords,
-              }}
-              chordPreferences={chordPreferences}
-              lyricId={lyric.id}
-            />
-          ))}
+        {sortedChords &&
+          sortedChords.length > 0 &&
+          sortedChords
+            .sort((a, b) => a.position - b.position)
+            .map((chord) => (
+              <ChordCard
+                key={chord.id}
+                chord={chord}
+                params={params}
+                allChordsState={{
+                  sortedChords,
+                  setSortedChords,
+                }}
+                chordPreferences={chordPreferences}
+                lyricId={lyric.id}
+              />
+            ))}
         {noChordsPosition.map((position) => (
           <NoChordCard
             key={position}
@@ -57,7 +59,7 @@ export const LyricsCard = ({
           />
         ))}
       </div>
-      <h1 className="w-full">{lyric.lyrics}</h1>
+      <button className="w-full">{lyric.lyrics}</button>
     </div>
   );
 };
