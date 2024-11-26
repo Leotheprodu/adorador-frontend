@@ -3,20 +3,26 @@ import React, { useEffect, useState } from 'react';
 import { NoChordCard } from './NoChordCard';
 import { ChordCard } from './ChordCard';
 import { useStore } from '@nanostores/react';
+import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
+import { LyricsCardButtons } from './LyricsCardButtons';
 
 export const LyricsCard = ({
   lyric,
   refetchLyricsOfCurrentSong,
   params,
   chordPreferences,
+  lyricsOfCurrentSong,
 }: {
   lyric: LyricsProps;
   refetchLyricsOfCurrentSong: () => void;
   params: { churchId: string; songId: string };
   chordPreferences: ReturnType<typeof useStore>['state'];
+  lyricsOfCurrentSong: LyricsProps[];
 }) => {
   const [noChordsPosition, setNoChordsPosition] = useState<number[]>([]);
   const [sortedChords, setSortedChords] = useState([...lyric.chords]);
+  const [showButtons, setShowButtons] = useState(false);
+  const [updateLyric, setUpdateLyric] = useState(false);
   useEffect(() => {
     setSortedChords([...lyric.chords]);
   }, [lyric.chords]);
@@ -29,8 +35,16 @@ export const LyricsCard = ({
     setNoChordsPosition(noChords);
   }, [sortedChords]);
 
+  const handleClickLyric = () => {
+    setShowButtons(!showButtons);
+    setUpdateLyric(!updateLyric);
+  };
   return (
-    <div className="group flex flex-col rounded-md p-3 duration-100 hover:shadow-md">
+    <div
+      onMouseEnter={() => setShowButtons(true)}
+      onMouseLeave={() => setShowButtons(false)}
+      className={`group relative flex flex-col rounded-md p-3 duration-100 hover:shadow-md lyric-card${lyric.id}`}
+    >
       <div className="grid w-full grid-cols-5 grid-rows-1 gap-1">
         {sortedChords &&
           sortedChords.length > 0 &&
@@ -59,7 +73,30 @@ export const LyricsCard = ({
           />
         ))}
       </div>
-      <button className="w-full">{lyric.lyrics}</button>
+      {updateLyric ? (
+        <AddOrUpdateLyricForm
+          type="update"
+          setAddNewLyric={setUpdateLyric}
+          dataOfLyricToUpdate={lyric}
+          refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+          params={params}
+        />
+      ) : (
+        <button
+          onClick={handleClickLyric}
+          className="text-left transition-all duration-100 hover:underline"
+        >
+          {lyric.lyrics}
+        </button>
+      )}
+      {showButtons && (
+        <LyricsCardButtons
+          lyricsOfCurrentSong={lyricsOfCurrentSong}
+          lyric={lyric}
+          params={params}
+          refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+        />
+      )}
     </div>
   );
 };

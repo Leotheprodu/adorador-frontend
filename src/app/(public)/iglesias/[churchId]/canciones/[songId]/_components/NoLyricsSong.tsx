@@ -1,5 +1,5 @@
 import React from 'react';
-import { AddNewLyricForm } from './AddNewLyricForm';
+import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
 import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 
 export const NoLyricsSong = ({
@@ -17,7 +17,7 @@ export const NoLyricsSong = ({
     <div className="flex flex-col gap-3">
       <h3 className="text-lg font-bold">Esta canción aun no tiene letra</h3>
       <p>Empieza a escribir la letra o puedes subir un archivo txt</p>
-      <AddNewLyricForm
+      <AddOrUpdateLyricForm
         refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
         LyricsOfCurrentSong={LyricsOfCurrentSong}
         params={params}

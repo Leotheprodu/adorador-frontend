@@ -55,6 +55,50 @@ export const addNewLyricService = ({
     method: 'POST',
   });
 };
+
+export const updateLyricService = ({
+  params,
+  lyricId,
+}: {
+  params: { churchId: string; songId: string };
+  lyricId: number;
+}) => {
+  return PostData<
+    { message: string },
+    { structureId?: number; lyrics?: string; position?: number }
+  >({
+    key: 'UpdateLyric',
+    url: `${Server1API}/churches/${params.churchId}/songs/${params.songId}/lyrics/${lyricId}`,
+    method: 'PATCH',
+  });
+};
+
+export const updateLyricsPositionsService = ({
+  params,
+}: {
+  params: { churchId: string; songId: string };
+}) => {
+  return PostData<{ message: string }, { id: number; position: number }[]>({
+    key: 'UpdateLyricsPositions',
+    url: `${Server1API}/churches/${params.churchId}/songs/${params.songId}/lyrics`,
+    method: 'PATCH',
+  });
+};
+
+export const deleteLyricService = ({
+  params,
+  lyricId,
+}: {
+  params: { churchId: string; songId: string };
+  lyricId: number;
+}) => {
+  return PostData<{ message: string }>({
+    key: 'DeleteLyric',
+    url: `${Server1API}/churches/${params.churchId}/songs/${params.songId}/lyrics/${lyricId}`,
+    method: 'DELETE',
+  });
+};
+
 export const addChordToLyricService = ({
   params,
   lyricId,
