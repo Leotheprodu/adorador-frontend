@@ -1,4 +1,3 @@
-import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   deleteLyricService,
@@ -7,6 +6,8 @@ import {
 import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { ButtonDeleteLyric } from './ButtonDeleteLyric';
+import { ButtonMoveLyric } from './ButtonMoveLyric';
 
 export const LyricsCardButtons = ({
   lyric,
@@ -70,21 +71,27 @@ export const LyricsCardButtons = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3, type: 'spring', stiffness: 300 }}
-        className="absolute -right-8 top-3 transform rounded-br-lg rounded-tr-lg bg-slate-100 py-5 pl-3"
+        className="absolute -right-6 top-3 rounded-br-lg rounded-tr-lg bg-slate-100 py-5 pl-3"
       >
         <motion.div
           initial={{ y: -10 }}
           animate={{ y: 0 }}
           transition={{ type: 'spring', stiffness: 300 }}
-          className="flex gap-2"
+          className="flex flex-col items-center justify-center gap-2"
         >
-          <button
-            disabled={isPendingDeleteLyric || isPendingUpdateLyricsPositions}
-            onClick={handleDeleteLyric}
-            className="p-1"
-          >
-            <DeleteMusicIcon className="text-danger-500" />
-          </button>
+          <ButtonDeleteLyric
+            lyric={lyric.lyrics}
+            isPendingDeleteLyric={isPendingDeleteLyric}
+            isPendingUpdateLyricsPositions={isPendingUpdateLyricsPositions}
+            handleDeleteLyric={handleDeleteLyric}
+          />
+
+          <ButtonMoveLyric
+            params={params}
+            currentLyric={lyric}
+            lyricsOfCurrentSong={lyricsOfCurrentSong}
+            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+          />
         </motion.div>
       </motion.div>
     </AnimatePresence>
