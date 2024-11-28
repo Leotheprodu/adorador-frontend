@@ -89,6 +89,7 @@ export const LyricsCard = ({
           {lyric.lyrics}
         </button>
       )}
+
       {showButtons && (
         <LyricsCardButtons
           lyricsOfCurrentSong={lyricsOfCurrentSong}
