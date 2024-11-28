@@ -4,10 +4,11 @@ import { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
 import { $user } from '@stores/users';
 import { setLocalStorage } from '@global/utils/handleLocalStorage';
 import toast from 'react-hot-toast';
-import { errorCode } from '@global/utils/errorMsgFormat';
 export const useIsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
   const { error, status, mutate, isPending } = logoutService();
-
+  const errorCode = (error: string) => {
+    return parseInt(error.split('-')[0]);
+  };
   useEffect(() => {
     if (status === 'success') {
       $user.set({ ...user, isLoggedIn: false });
