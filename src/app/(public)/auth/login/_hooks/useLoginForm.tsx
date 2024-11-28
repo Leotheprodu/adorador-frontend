@@ -5,7 +5,6 @@ import { $user } from '@global/stores/users';
 import { loginService } from '@auth/login/_services/loginService';
 import { setLocalStorage } from '@global/utils/handleLocalStorage';
 import toast from 'react-hot-toast';
-import { errorCode, errorMessage } from '@global/utils/errorMsgFormat';
 import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 
 export const useLoginForm = (formInit: { email: string; password: string }) => {
@@ -14,6 +13,13 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isInvalidPass, setIsInvalidPass] = useState(false);
   const { data, error, status, mutate, isPending } = loginService();
+  const errorMessage = (error: string) => {
+    return error.split('-')[1];
+  };
+
+  const errorCode = (error: string) => {
+    return parseInt(error.split('-')[0]);
+  };
 
   useEffect(() => {
     if (status === 'success') {
