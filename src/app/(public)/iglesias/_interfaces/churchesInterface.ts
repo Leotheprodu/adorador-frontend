@@ -1,4 +1,4 @@
-import { EventsProps } from '@/app/(public)/iglesias/[churchId]/eventos/_interfaces/eventsInterface';
+import { EventsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 
 export interface ChurchProps {
   id: number;
