@@ -1,7 +1,5 @@
-import {
-  ChurchProps,
-  EventsProps,
-} from '@iglesias/_interfaces/churchesInterface';
+import { ChurchProps } from '@iglesias/_interfaces/churchesInterface';
+import { EventsProps } from '../eventos/_interfaces/eventsInterface';
 
 export interface CountProps {
   events: number;
