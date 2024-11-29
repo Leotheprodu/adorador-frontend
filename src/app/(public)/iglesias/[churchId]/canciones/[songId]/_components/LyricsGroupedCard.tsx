@@ -1,5 +1,5 @@
 import { structureLib } from '@global/config/constants';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LyricsCard } from './LyricsCard';
 import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
 import { AddSongIcon } from '@global/icons/AddSongIcon';
@@ -22,6 +22,13 @@ export const LyricsGroupedCard = ({
   lyricsOfCurrentSong: LyricsProps[];
 }) => {
   const [addNewLyric, setAddNewLyric] = useState(false);
+  const [newPosition, setNewPosition] = useState(1);
+
+  useEffect(() => {
+    if (lyrics.length > 0) {
+      setNewPosition(lyrics[lyrics.length - 1].position + 1);
+    }
+  }, [lyrics]);
 
   const structureColors: { [key: string]: string } = {
     intro: '#CCFFDD', // slightly darker green
@@ -63,9 +70,8 @@ export const LyricsGroupedCard = ({
             params={params}
             refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
             setAddNewLyric={setAddNewLyric}
-            newPosition={
-              lyrics.length > 0 ? lyrics[lyrics.length - 1].position + 1 : 1
-            }
+            newPosition={newPosition}
+            type="add"
           />
         ) : (
           <button

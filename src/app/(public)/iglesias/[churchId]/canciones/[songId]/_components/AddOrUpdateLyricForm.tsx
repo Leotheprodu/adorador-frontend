@@ -102,6 +102,16 @@ export const AddOrUpdateLyricForm = ({
           lyrics: newLyric,
           position: LyricsOfCurrentSong.length + 1,
         });
+      } else if (
+        LyricsOfCurrentSong &&
+        newPosition &&
+        newPosition === LyricsOfCurrentSong.length + 1
+      ) {
+        mutateAddNewLyric({
+          structureId: structure,
+          lyrics: newLyric,
+          position: newPosition,
+        });
       }
     } else if (type === 'update' && dataOfLyricToUpdate) {
       mutateUpdateLyric({
