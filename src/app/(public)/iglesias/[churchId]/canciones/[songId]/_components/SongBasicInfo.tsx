@@ -64,7 +64,7 @@ export const SongBasicInfo = ({
         {selectedSong?.id !== data?.id && (
           <Tooltip color="primary" content="Reproducir canción">
             <button
-              className="duration-100 active:scale-90"
+              className="rounded-sm bg-primary-100 p-1 duration-100 hover:opacity-80 hover:shadow-md active:scale-90"
               onClick={handleClickPlay}
             >
               {<PlayIcon />}
@@ -79,13 +79,16 @@ export const SongBasicInfo = ({
         {data?.tempo && <p>, {data?.tempo} bpm</p>}
       </div>
 
-      <a
+      <Button
+        color="primary"
+        variant="flat"
+        as={'a'}
         target="_blank"
-        className="text-primary-900 hover:text-primary-500"
+        className="w-28 text-primary-900 hover:text-primary-500"
         href={`https://youtu.be/${data?.youtubeLink}`}
       >
-        {`https://youtu.be/${data?.youtubeLink}`}
-      </a>
+        Ir a Youtube
+      </Button>
 
       {isUserChecked && (
         <div className="invisible mt-7 flex w-full justify-end group-hover:visible">

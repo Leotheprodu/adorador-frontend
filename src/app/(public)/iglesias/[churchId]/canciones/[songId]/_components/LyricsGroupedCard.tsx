@@ -5,6 +5,7 @@ import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
 import { AddSongIcon } from '@global/icons/AddSongIcon';
 import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { useStore } from '@nanostores/react';
+import { Button } from '@nextui-org/react';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -48,9 +49,9 @@ export const LyricsGroupedCard = ({
       style={{
         backgroundColor: structureColors[structure],
       }}
-      className="min-w-[20rem] rounded-lg p-4"
+      className="w-[25rem] rounded-lg p-4"
     >
-      <h2 className="text-center text-lg text-slate-600">
+      <h2 className="text-center text-2xl font-bold text-slate-600">
         {structureLib[structure].es}
       </h2>
       {lyrics.map((lyric) => (
@@ -74,12 +75,15 @@ export const LyricsGroupedCard = ({
             type="add"
           />
         ) : (
-          <button
+          <Button
+            variant="light"
+            color="primary"
+            startContent={<AddSongIcon />}
             onClick={() => setAddNewLyric(true)}
-            className="flex items-center gap-2 duration-200 hover:underline"
+            className="text-2xl"
           >
-            <AddSongIcon /> Agregar Letra
-          </button>
+            Agregar letra
+          </Button>
         )}
       </div>
     </div>

@@ -84,7 +84,7 @@ export const LyricsCard = ({
       ) : (
         <button
           onClick={handleClickLyric}
-          className="text-left transition-all duration-100 hover:underline"
+          className="text-left text-2xl transition-all duration-100 hover:underline"
         >
           {lyric.lyrics}
         </button>

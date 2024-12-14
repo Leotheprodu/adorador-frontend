@@ -162,7 +162,6 @@ export const AddOrUpdateLyricForm = ({
         value={newLyric}
         onChange={(e) => setNewLyric(e.currentTarget.value)}
         placeholder="Agregar nueva letra"
-        autoFocus
         onKeyDown={(e) => {
           if (e.key === 'Escape') {
             e.preventDefault();
@@ -170,9 +169,9 @@ export const AddOrUpdateLyricForm = ({
           }
         }}
       />
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex w-full items-center gap-2">
         <Select
-          className="w-[10rem]"
+          className=""
           selectedKeys={structure === 0 ? undefined : [structure.toString()]}
           label="Estructura"
           onChange={(e) => {
@@ -194,7 +193,7 @@ export const AddOrUpdateLyricForm = ({
           type="submit"
           color="primary"
         >
-          {type === 'add' ? 'Agregar' : 'Actualizar'}
+          Aceptar
         </Button>
       </div>
     </form>
