@@ -23,12 +23,12 @@ export const EventControlsButtonsLirics = () => {
               },
             });
         }}
-        className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+        className="w-30 h-30 cursor-pointer rounded-full bg-slate-100 p-4 duration-200 transition-background hover:bg-slate-200 active:scale-95"
       >
-        <ArrowUpIcon className="[font-size:1rem]" />
+        <ArrowUpIcon className="[font-size:2rem]" />
       </button>
       <button
-        className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+        className="w-30 h-30 cursor-pointer rounded-full bg-slate-100 p-4 duration-200 transition-background hover:bg-slate-200 active:scale-95"
         disabled={
           lyricSelected.position === selectedSongLyricLength + 2 ||
           selectedSongLyricLength === 0
@@ -44,7 +44,7 @@ export const EventControlsButtonsLirics = () => {
             });
         }}
       >
-        <ArrowDownIcon className="[font-size:1rem]" />
+        <ArrowDownIcon className="[font-size:2rem]" />
       </button>
     </div>
   );

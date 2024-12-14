@@ -144,10 +144,10 @@ export const EventMainScreen = () => {
         backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
-      className="font-agdasima relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/80 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
+      className="relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/80 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
     >
       {!selectedSongData && (
-        <div className="font-agdasima flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
           <h1 className="text-center text-xl uppercase text-slate-400 lg:text-5xl">
             {title}
           </h1>
