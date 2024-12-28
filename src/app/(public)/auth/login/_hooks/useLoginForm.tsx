@@ -61,6 +61,7 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     mutate(form);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
