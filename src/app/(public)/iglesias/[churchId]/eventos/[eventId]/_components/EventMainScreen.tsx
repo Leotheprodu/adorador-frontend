@@ -77,10 +77,31 @@ export const EventMainScreen = () => {
       if (isFullscreen && checkPermission) {
         if (startY - endY > 50) {
           // Deslizar hacia arriba
-          if (lyricSelected.position <= selectedSongLyricLength + 1) {
+          if (
+            lyricSelected.position <= selectedSongLyricLength + 1 &&
+            selectedSongLyricLength > 4
+          ) {
             sendMessage({
               type: 'lyricSelected',
-              data: { position: lyricSelected.position + 1, action: 'forward' },
+              data: {
+                position:
+                  lyricSelected.position < selectedSongLyricLength - 4 &&
+                  lyricSelected.position < 1
+                    ? lyricSelected.position + 1
+                    : lyricSelected.position + 4,
+                action: 'forward',
+              },
+            });
+          } else if (
+            selectedSongLyricLength > 0 &&
+            selectedSongLyricLength < 4
+          ) {
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: 1,
+                action: 'forward',
+              },
             });
           }
         } else if (endY - startY > 50) {
@@ -89,7 +110,10 @@ export const EventMainScreen = () => {
             sendMessage({
               type: 'lyricSelected',
               data: {
-                position: lyricSelected.position - 1,
+                position:
+                  lyricSelected.position <= 4
+                    ? lyricSelected.position - 1
+                    : lyricSelected.position - 4,
                 action: 'backward',
               },
             });
@@ -114,17 +138,42 @@ export const EventMainScreen = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isFullscreen && checkPermission) {
         if (event.key === 'ArrowDown') {
-          if (lyricSelected.position <= selectedSongLyricLength + 1)
+          if (
+            lyricSelected.position <= selectedSongLyricLength + 1 &&
+            selectedSongLyricLength > 4
+          ) {
             sendMessage({
               type: 'lyricSelected',
-              data: { position: lyricSelected.position + 1, action: 'forward' },
+              data: {
+                position:
+                  lyricSelected.position < selectedSongLyricLength - 4 &&
+                  lyricSelected.position < 1
+                    ? lyricSelected.position + 1
+                    : lyricSelected.position + 4,
+                action: 'forward',
+              },
             });
+          } else if (
+            selectedSongLyricLength > 0 &&
+            selectedSongLyricLength < 4
+          ) {
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: 1,
+                action: 'forward',
+              },
+            });
+          }
         } else if (event.key === 'ArrowUp') {
           if (lyricSelected.position > -1)
             sendMessage({
               type: 'lyricSelected',
               data: {
-                position: lyricSelected.position - 1,
+                position:
+                  lyricSelected.position <= 4
+                    ? lyricSelected.position - 1
+                    : lyricSelected.position - 4,
                 action: 'backward',
               },
             });
@@ -144,28 +193,22 @@ export const EventMainScreen = () => {
         backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
-      className="relative flex h-[15rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/80 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
+      className="relative flex h-[20rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/80 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
     >
-      {!selectedSongData && (
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-center text-xl uppercase text-slate-400 lg:text-5xl">
-            {title}
-          </h1>
-          <h3 className="text-center text-lg uppercase lg:text-6xl">
-            {eventDateLeft}
-          </h3>
-        </div>
-      )}
+      {!selectedSongData ||
+        (lyricSelected.position === -1 && (
+          <div className="flex flex-col items-center justify-center">
+            <h1 className="text-center text-xl uppercase text-slate-400 lg:text-5xl">
+              {title}
+            </h1>
+            <h3 className="text-center text-lg uppercase lg:text-6xl">
+              {eventDateLeft}
+            </h3>
+          </div>
+        ))}
       {lyricSelected.position === 0 && (
         <h1 className={`text-5xl ${isFullscreen ? 'text-8xl' : ''}`}>
           {selectedSongData?.song.title}
-        </h1>
-      )}
-      {lyricSelected.position === -1 && (
-        <h1
-          className={` ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
-        >
-          {title}
         </h1>
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (
@@ -187,12 +230,14 @@ export const EventMainScreen = () => {
           </motion.div>
         </AnimatePresence>
       )}
-
-      <LyricsShowcase
-        lyricsShowcaseProps={{
-          isFullscreen,
-        }}
-      />
+      {lyricSelected.position > 0 &&
+        lyricSelected.position < selectedSongLyricLength + 1 && (
+          <LyricsShowcase
+            lyricsShowcaseProps={{
+              isFullscreen,
+            }}
+          />
+        )}
 
       {!isFullscreen && (
         <button

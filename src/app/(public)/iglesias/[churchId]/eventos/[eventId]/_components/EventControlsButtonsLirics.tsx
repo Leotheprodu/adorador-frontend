@@ -12,13 +12,16 @@ export const EventControlsButtonsLirics = () => {
     <div className="flex flex-col items-center justify-center gap-2 rounded-md bg-white p-2">
       <h3 className="text-xs">Letras</h3>
       <button
-        disabled={lyricSelected.position === -1}
+        disabled={lyricSelected.position <= -1}
         onClick={() => {
           if (lyricSelected.position > -1)
             sendMessage({
               type: 'lyricSelected',
               data: {
-                position: lyricSelected.position - 1,
+                position:
+                  lyricSelected.position <= 4
+                    ? lyricSelected.position - 1
+                    : lyricSelected.position - 4,
                 action: 'backward',
               },
             });
@@ -34,14 +37,33 @@ export const EventControlsButtonsLirics = () => {
           selectedSongLyricLength === 0
         }
         onClick={() => {
-          if (lyricSelected.position <= selectedSongLyricLength + 1)
+          if (
+            lyricSelected.position <= selectedSongLyricLength + 1 &&
+            selectedSongLyricLength > 4
+          ) {
             sendMessage({
               type: 'lyricSelected',
               data: {
-                position: lyricSelected.position + 1,
+                position:
+                  lyricSelected.position < selectedSongLyricLength - 4 &&
+                  lyricSelected.position < 1
+                    ? lyricSelected.position + 1
+                    : lyricSelected.position + 4,
                 action: 'forward',
               },
             });
+          } else if (
+            selectedSongLyricLength > 0 &&
+            selectedSongLyricLength < 4
+          ) {
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: 1,
+                action: 'forward',
+              },
+            });
+          }
         }}
       >
         <ArrowDownIcon className="[font-size:2rem]" />

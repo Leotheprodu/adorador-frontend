@@ -7,6 +7,7 @@ import {
 import { useStore } from '@nanostores/react';
 import { useDataOfLyricSelected } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useDataOfLyricSelected';
 import { getNoteByType } from '@iglesias/[churchId]/eventos/[eventId]/_utils/getNoteByType';
+import { structureColors, structureLib } from '@global/config/constants';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,
 }: {
@@ -21,10 +22,25 @@ export const LyricsShowcaseCard = ({
   const { dataOfLyricSelected } = useDataOfLyricSelected({ lyricSelected });
   const selectedSongData = useStore($selectedSongData);
   return (
-    <div className="relative flex w-full flex-col items-center p-10">
+    <div className="relative flex w-full flex-col items-center p-2">
       {lyricSelected?.position > 0 && (
         <div className="flex flex-col items-center justify-center gap-2">
-          <div className="grid w-full grid-cols-5 gap-1">
+          {dataOfLyricSelected !== undefined &&
+            eventConfig.showStructure &&
+            dataOfLyricSelected.structure.title && (
+              <h3
+                style={{
+                  color:
+                    structureColors[
+                      dataOfLyricSelected?.structure.title || 'verse'
+                    ],
+                }}
+                className={`absolute left-10 top-1/2 -translate-y-1/2 transform text-center ${isFullscreen ? 'text-xl lg:text-2xl xl:text-3xl' : 'text-base md:text-lg lg:text-xl xl:text-2xl'}`}
+              >
+                {structureLib[dataOfLyricSelected.structure.title].es}
+              </h3>
+            )}
+          <div className="grid w-full grid-cols-5 rounded-md bg-slate-900/80">
             {eventConfig.showChords &&
               dataOfLyricSelected?.chords
                 .sort((a, b) => a.position - b.position)
@@ -39,17 +55,16 @@ export const LyricsShowcaseCard = ({
                   >
                     <div className="flex items-end justify-center">
                       <p
-                        className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-2xl lg:text-4xl'} w-full text-center text-lg`}
+                        className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-lg`}
                       >
                         {getNoteByType(
                           chord.rootNote,
                           selectedSongData?.transpose,
                           chordPreferences,
                         )}
-                        {/* {`${getNoteByType(chord.rootNote, selectedSongData?.transpose, chordPreferences)}${chord.chordQuality}${chord.slashChord ? '/' + getNoteByType(chord.slashChord, selectedSongData?.transpose, chordPreferences) + chord.slashQuality : ''}`} */}
                       </p>
                       <p
-                        className={`text-slate-50 ${isFullscreen ? 'md:text-3xl lg:text-5xl' : 'md:text-xl lg:text-3xl'} w-full text-center text-base`}
+                        className={`text-slate-50 ${isFullscreen ? 'md:text-3xl lg:text-5xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
                       >
                         {chord.chordQuality}
                       </p>
@@ -58,7 +73,7 @@ export const LyricsShowcaseCard = ({
                       <>
                         <div className="flex items-end justify-center rounded-sm bg-slate-300 px-3 text-primary-500">
                           <p
-                            className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-2xl lg:text-4xl'} w-full text-center text-lg`}
+                            className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-lg`}
                           >
                             {getNoteByType(
                               chord.slashChord,
@@ -73,7 +88,13 @@ export const LyricsShowcaseCard = ({
                 ))}
           </div>
           <h1
-            className={` ${eventConfig.showChords && 'text-slate-50'} w-full text-justify text-3xl ${isFullscreen ? 'sm:text-3xl md:text-6xl lg:text-8xl' : 'md:text-5xl lg:text-6xl'}`}
+            style={{
+              color:
+                structureColors[
+                  dataOfLyricSelected?.structure.title || 'verse'
+                ],
+            }}
+            className={`w-full text-justify text-3xl ${isFullscreen ? 'sm:text-3xl md:text-6xl lg:text-8xl' : 'md:text-lg lg:text-xl'}`}
           >
             {dataOfLyricSelected?.lyrics}
           </h1>

@@ -24,6 +24,13 @@ export const EventControlsSongsList = ({
 
   const handleClickSong = (id: number) => {
     sendMessage({ type: 'eventSelectedSong', data: id });
+    sendMessage({
+      type: 'lyricSelected',
+      data: {
+        position: 0,
+        action: 'backward',
+      },
+    });
   };
 
   return (

@@ -166,7 +166,18 @@ export const keyChordQualities = ['', 'm'];
 export const songKeys = keys.flatMap((note) =>
   keyChordQualities.map((quality) => `${note}${quality}`),
 );
-
+export const structureColors: { [key: string]: string } = {
+  intro: '#CCFFDD', // slightly darker green
+  verse: '#FFE6E6', // light red
+  'pre-chorus': '#FFE6F2', // light pink
+  chorus: '#FFEED6', // light orange
+  bridge: '#FFFFE6', // light yellow
+  outro: '#E6F2FF', // light blue
+  preChorus: '#F2E6FF', // light purple
+  interlude: '#FFE6FF', // light magenta
+  solo: '#B3FFB3', // darker lime
+  // Add more structures and colors as needed
+};
 export const structureLib = {
   intro: {
     es: 'Intro',

@@ -1,4 +1,4 @@
-import { structureLib } from '@global/config/constants';
+import { structureColors, structureLib } from '@global/config/constants';
 import React, { useEffect, useState } from 'react';
 import { LyricsCard } from './LyricsCard';
 import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
@@ -30,19 +30,6 @@ export const LyricsGroupedCard = ({
       setNewPosition(lyrics[lyrics.length - 1].position + 1);
     }
   }, [lyrics]);
-
-  const structureColors: { [key: string]: string } = {
-    intro: '#CCFFDD', // slightly darker green
-    verse: '#FFE6E6', // light red
-    'pre-chorus': '#FFE6F2', // light pink
-    chorus: '#FFEED6', // light orange
-    bridge: '#FFFFE6', // light yellow
-    outro: '#E6F2FF', // light blue
-    preChorus: '#F2E6FF', // light purple
-    interlude: '#FFE6FF', // light magenta
-    solo: '#B3FFB3', // darker lime
-    // Add more structures and colors as needed
-  };
 
   return (
     <div
