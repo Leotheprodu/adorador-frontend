@@ -24,7 +24,7 @@ export const LyricsShowcaseCard = ({
   return (
     <div className="relative flex w-full flex-col items-center p-2">
       {lyricSelected?.position > 0 && (
-        <div className="flex flex-col items-center justify-center gap-2">
+        <div className="flex flex-col items-center justify-center">
           {dataOfLyricSelected !== undefined &&
             eventConfig.showStructure &&
             dataOfLyricSelected.structure.title && (
@@ -55,7 +55,7 @@ export const LyricsShowcaseCard = ({
                   >
                     <div className="flex items-end justify-center">
                       <p
-                        className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-lg`}
+                        className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
                       >
                         {getNoteByType(
                           chord.rootNote,
@@ -73,7 +73,7 @@ export const LyricsShowcaseCard = ({
                       <>
                         <div className="flex items-end justify-center rounded-sm bg-slate-300 px-3 text-primary-500">
                           <p
-                            className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-lg`}
+                            className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
                           >
                             {getNoteByType(
                               chord.slashChord,
@@ -94,7 +94,7 @@ export const LyricsShowcaseCard = ({
                   dataOfLyricSelected?.structure.title || 'verse'
                 ],
             }}
-            className={`w-full text-justify text-3xl ${isFullscreen ? 'sm:text-3xl md:text-6xl lg:text-8xl' : 'md:text-lg lg:text-xl'}`}
+            className={`w-full text-justify text-3xl ${isFullscreen ? 'sm:text-3xl md:text-6xl lg:text-8xl' : 'text-base md:text-lg lg:text-xl'}`}
           >
             {dataOfLyricSelected?.lyrics}
           </h1>

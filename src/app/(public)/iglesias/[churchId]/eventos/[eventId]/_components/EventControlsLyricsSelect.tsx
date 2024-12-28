@@ -2,7 +2,7 @@ import { useStore } from '@nanostores/react';
 import { $lyricSelected, $selectedSongData } from '@stores/event';
 import { useEffect, useRef, useState } from 'react';
 import { LyricsProps } from '../../_interfaces/eventsInterface';
-import { structureLib } from '@global/config/constants';
+import { structureColors, structureLib } from '@global/config/constants';
 import { useEventGateway } from '../_hooks/useEventGateway';
 
 export const EventControlsLyricsSelect = () => {
@@ -53,12 +53,22 @@ export const EventControlsLyricsSelect = () => {
   if (selectedSongData === undefined) {
     return null;
   }
+
+  const handleSelectLyric = (position: number) => {
+    sendMessage({
+      type: 'lyricSelected',
+      data: {
+        position: position,
+        action: lyricSelected.position > position ? 'backward' : 'forward',
+      },
+    });
+  };
   return (
     <div className="col-start-1 col-end-3 row-start-2 flex h-full w-full flex-col items-center md:col-start-2 md:col-end-3 md:row-start-1">
       <h4 className="mb-3 text-center font-bold text-slate-800">Letras</h4>
       <div
         ref={scrollContainerRef}
-        className="flex h-[10rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
+        className="flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
       >
         {lyricsGrouped.map(([structure, lyrics], groupIndex) => (
           <div key={groupIndex}>
@@ -69,18 +79,12 @@ export const EventControlsLyricsSelect = () => {
               <div key={index} id={lyric.position.toString()}>
                 <h1
                   onClick={() => {
-                    sendMessage({
-                      type: 'lyricSelected',
-                      data: {
-                        position: lyric.position,
-                        action:
-                          lyricSelected.position > lyric.position
-                            ? 'backward'
-                            : 'forward',
-                      },
-                    });
+                    handleSelectLyric(lyric.position);
                   }}
-                  className={`cursor-pointer rounded-sm px-2 py-1 text-center duration-200 transition-background active:scale-95 ${lyricSelected.position === lyric.position ? 'bg-slate-200 hover:bg-slate-300' : 'hover:bg-slate-200'}`}
+                  style={{
+                    backgroundColor: structureColors[structure],
+                  }}
+                  className={`cursor-pointer rounded-sm px-2 py-1 text-center duration-200 transition-background active:scale-95 ${lyricSelected.position === lyric.position || lyricSelected.position + 1 === lyric.position || lyricSelected.position + 2 === lyric.position || lyricSelected.position + 3 === lyric.position ? 'border-1 border-primary-300' : ''}`}
                 >
                   {lyric.lyrics}
                 </h1>
