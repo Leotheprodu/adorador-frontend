@@ -35,7 +35,7 @@ export const LyricsShowcaseCard = ({
                       dataOfLyricSelected?.structure.title || 'verse'
                     ],
                 }}
-                className={`absolute left-10 top-1/2 -translate-y-1/2 transform text-center ${isFullscreen ? 'text-xl lg:text-2xl xl:text-3xl' : 'text-base md:text-lg lg:text-xl xl:text-2xl'}`}
+                className={`absolute left-10 top-1/2 -translate-y-1/2 transform text-center ${isFullscreen ? 'text-xl lg:text-2xl' : 'text-base md:text-lg lg:text-xl'}`}
               >
                 {structureLib[dataOfLyricSelected.structure.title].es}
               </h3>
@@ -55,7 +55,7 @@ export const LyricsShowcaseCard = ({
                   >
                     <div className="flex items-end justify-center">
                       <p
-                        className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
+                        className={`${isFullscreen ? 'md:text-xl lg:text-2xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
                       >
                         {getNoteByType(
                           chord.rootNote,
@@ -64,7 +64,7 @@ export const LyricsShowcaseCard = ({
                         )}
                       </p>
                       <p
-                        className={`text-slate-50 ${isFullscreen ? 'md:text-3xl lg:text-5xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
+                        className={`text-slate-50 ${isFullscreen ? 'md:text-xl lg:text-2xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
                       >
                         {chord.chordQuality}
                       </p>
@@ -94,7 +94,7 @@ export const LyricsShowcaseCard = ({
                   dataOfLyricSelected?.structure.title || 'verse'
                 ],
             }}
-            className={`w-full text-justify text-3xl ${isFullscreen ? 'sm:text-3xl md:text-6xl lg:text-8xl' : 'text-base md:text-lg lg:text-xl'}`}
+            className={`w-full text-justify text-3xl ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
           >
             {dataOfLyricSelected?.lyrics}
           </h1>

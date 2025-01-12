@@ -40,7 +40,7 @@ export const $selectedSongLyricLength = atom<number>(0);
 
 export const $eventConfig = atom({
   showChords: false,
-  showKey: true,
+  showKey: false,
   backgroundImage: 1,
-  showStructure: true,
+  showStructure: false,
 });
