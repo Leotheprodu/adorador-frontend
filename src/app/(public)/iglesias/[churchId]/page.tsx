@@ -1,3 +1,4 @@
+import { ChurchIdMain } from '@iglesias/_components/ChurchIdMain';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function ChurchById({
   return (
     <div className="flex h-screen flex-col items-center p-8 pb-20 sm:p-20">
       <section>
-        <h1>Iglesia id: {params.churchId}</h1>
+        <ChurchIdMain churchId={params.churchId} />
       </section>
     </div>
   );

@@ -8,3 +8,9 @@ export const getChurches = () => {
     url: `${Server1API}/churches`,
   });
 };
+export const getChurchById = (churchId: string) => {
+  return FetchData<ChurchProps>({
+    key: 'ChurchById',
+    url: `${Server1API}/churches/${churchId}`,
+  });
+};

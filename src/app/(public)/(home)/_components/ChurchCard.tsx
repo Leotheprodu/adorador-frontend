@@ -41,11 +41,9 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
     checkChurchId: church.id,
     churchRoles: [churchRoles.musician.id, churchRoles.worshipLeader.id],
   });
-  console.log(isUserAuthorized);
-  console.log(user);
   return (
-    <Card className="relative flex h-80 w-80 flex-col overflow-hidden rounded-md border border-gray-300">
-      <CardHeader className="mt-4">
+    <Card className="relative flex w-80 flex-col overflow-hidden rounded-md border border-gray-300">
+      <CardHeader className="my-4 pb-6">
         <div>
           {MembershipsChurches.includes(church.id) && (
             <div className="absolute right-0 top-0 z-10">
@@ -58,7 +56,7 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
         <ChurchIcon className="absolute right-[-4rem] top-[1rem] z-0 h-[20rem] w-auto text-slate-100" />
         <div className="z-10 h-12">
           <h2 className="text-xl font-bold">{church.name}</h2>
-          <p className="text-xs">
+          <p className="my-2 text-xs">
             <span className="">{church.country}</span>, {church.address}
           </p>
         </div>

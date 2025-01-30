@@ -4,6 +4,8 @@ import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
 import { UiGuardProps } from '@global/interfaces/AppSecurityInterfaces';
 import { Spinner } from '@global/utils/Spinner';
+import { Button } from '@nextui-org/react';
+import Link from 'next/link';
 
 export const UIGuard = ({
   children,
@@ -32,7 +34,7 @@ export const UIGuard = ({
     }
   }, [isLoading]);
 
-  if (isLoading) {
+  if (isLoading && checkUserStatus) {
     return (
       <div
         style={{
@@ -56,9 +58,21 @@ export const UIGuard = ({
         children
       ) : (
         <div>
-          {user.isLoggedIn
-            ? 'No tienes permisos para acceder a esta página'
-            : 'Inicia sesión para continuar'}
+          {user.isLoggedIn ? (
+            <div className="flex flex-col items-center gap-2">
+              <p>Lo sentimos, no tienes permisos para acceder a esta página</p>
+              <Button color="primary" href="/" as={Link}>
+                Ir a Inicio
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <p>Debes iniciar sesión, para poder ver esta página</p>
+              <Button as={Link} color="primary" href="/auth/login">
+                Iniciar sesión
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </>

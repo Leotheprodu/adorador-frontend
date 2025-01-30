@@ -12,6 +12,8 @@ import { useStore } from '@nanostores/react';
 import { $chordPreferences } from '@stores/event';
 import { LyricsProps } from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
 import { LyricsGroupedCard } from './LyricsGroupedCard';
+import Link from 'next/link';
+import { BackwardIcon } from '@global/icons/BackwardIcon';
 
 export const SongIdMainPage = ({
   params,
@@ -25,16 +27,18 @@ export const SongIdMainPage = ({
 
   const chordPreferences = useStore($chordPreferences);
   const { data, isLoading, status } = getSongData({ params });
-  const { data: LyricsOfCurrentSong, refetch: refetchLyricsOfCurrentSong } =
-    getSongLyrics({ params });
-
+  const {
+    data: LyricsOfCurrentSong,
+    refetch: refetchLyricsOfCurrentSong,
+    status: statusOfLyricsOfCurrentSong,
+  } = getSongLyrics({ params });
   useEffect(() => {
-    if (LyricsOfCurrentSong) {
+    if (LyricsOfCurrentSong && statusOfLyricsOfCurrentSong === 'success') {
       setLyricsSorted(
         LyricsOfCurrentSong.sort((a, b) => a.position - b.position),
       );
     }
-  }, [LyricsOfCurrentSong]);
+  }, [LyricsOfCurrentSong, statusOfLyricsOfCurrentSong]);
 
   const { mutate: mutateUploadLyricsByFile, status: statusUploadLyricsByFile } =
     uploadSongLyrics({ params });
@@ -71,6 +75,18 @@ export const SongIdMainPage = ({
     >
       <div className="flex flex-col items-center overflow-hidden">
         <section className="mb-10">
+          <div className="mb-6 flex items-center gap-2">
+            <Link
+              href={`/iglesias/${params.churchId}/canciones`}
+              className="group flex items-center justify-center gap-2 transition-all duration-150 hover:cursor-pointer hover:text-primary-500"
+            >
+              <BackwardIcon />
+              <small className="hidden group-hover:block">
+                Volver a canciones
+              </small>
+            </Link>
+            <h1 className="text-xl font-bold">Detalles de canción</h1>
+          </div>
           <SongBasicInfo
             churchId={params.churchId}
             data={data}
@@ -78,7 +94,7 @@ export const SongIdMainPage = ({
           />
         </section>
         <section>
-          <div className="relative flex w-screen flex-col gap-4 overflow-x-auto px-4 xl:flex-row xl:px-10">
+          <div className="relative flex w-screen flex-col items-center gap-4 overflow-x-auto px-4 xl:flex-row xl:items-start xl:px-10">
             {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 ? (
               <>
                 {lyricsGrouped?.map(([structure, lyrics], groupIndex) => (

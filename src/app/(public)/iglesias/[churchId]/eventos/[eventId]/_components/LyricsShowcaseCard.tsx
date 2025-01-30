@@ -73,7 +73,7 @@ export const LyricsShowcaseCard = ({
                       <>
                         <div className="flex items-end justify-center rounded-sm bg-slate-300 px-3 text-primary-500">
                           <p
-                            className={`${isFullscreen ? 'md:text-4xl lg:text-6xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
+                            className={`${isFullscreen ? 'md:text-xl lg:text-2xl' : 'md:text-lg lg:text-xl'} w-full text-center text-base`}
                           >
                             {getNoteByType(
                               chord.slashChord,
@@ -94,7 +94,7 @@ export const LyricsShowcaseCard = ({
                   dataOfLyricSelected?.structure.title || 'verse'
                 ],
             }}
-            className={`w-full text-justify text-3xl ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
+            className={`w-full text-center text-3xl ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
           >
             {dataOfLyricSelected?.lyrics}
           </h1>

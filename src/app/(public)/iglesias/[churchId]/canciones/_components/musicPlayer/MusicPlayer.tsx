@@ -12,9 +12,6 @@ import { PlayIcon } from '@global/icons/PlayIcon';
 import { PauseIcon } from '@global/icons/PauseIcon';
 import { ForwardIcon } from '@global/icons/ForwardIcon';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
-import { VolumeOffIcon } from '@global/icons/VolumeOffIcon';
-import { VolumeDownIcon } from '@global/icons/VolumeDownIcon';
-import { VolumeUpIcon } from '@global/icons/VolumeUpIcon';
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 
 export const MusicPlayer = () => {
@@ -177,7 +174,7 @@ export const MusicPlayer = () => {
   return (
     <>
       {selectedBeat && (
-        <section className="sticky bottom-0 flex h-[4rem] w-full items-center justify-center bg-negro [grid-area:musicPlayer]">
+        <section className="sticky bottom-0 z-[999] flex h-[4rem] w-full items-center justify-center bg-negro [grid-area:musicPlayer]">
           <div className="peer absolute top-[-4px] z-30 flex h-1 w-full overflow-hidden opacity-85 duration-200 hover:top-[-2rem] hover:h-[2rem] hover:opacity-100">
             <div
               className="absolute left-0 z-40 h-[2rem] bg-primary-800 duration-1000 ease-linear"
@@ -253,7 +250,7 @@ export const MusicPlayer = () => {
               <Button
                 type="button"
                 radius="full"
-                className="m-0 flex h-12 w-12 min-w-0 items-center justify-center bg-primario p-0 opacity-75 duration-75 ease-in-out hover:opacity-100"
+                className="m-0 flex h-10 w-10 min-w-0 items-center justify-center bg-primario p-0 opacity-75 duration-75 ease-in-out hover:opacity-100"
                 onClick={handlePlayButtonClick}
               >
                 {playing && selectedBeat && (
@@ -273,14 +270,7 @@ export const MusicPlayer = () => {
                 </button>
               )}
             </div>
-            <div className="absolute right-[8rem] flex w-[10rem] items-center justify-center gap-1">
-              {volume === 0 ? (
-                <VolumeOffIcon className="text-primario/75" />
-              ) : volume > 0 && volume < 0.5 ? (
-                <VolumeDownIcon className="text-primario/75" />
-              ) : (
-                <VolumeUpIcon className="text-primario/75" />
-              )}
+            <div className="flex items-center justify-center gap-1">
               <input
                 type="range"
                 min={0}
