@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 };
 export default function Churches() {
   return (
-    <div className="flex h-screen flex-col items-center p-8 pb-20 sm:p-20">
+    <div className="flex h-full flex-col items-center p-8 pb-20 sm:p-20">
       Iglesias
     </div>
   );

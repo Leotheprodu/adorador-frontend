@@ -10,7 +10,7 @@ export const Footer = () => {
     <footer className="mt-40 flex h-full flex-col bg-negro text-blanco">
       <section className="relative grid grid-cols-[1fr] bg-negro p-4 text-blanco md:grid-cols-[1fr_1fr_1fr_1fr]">
         <ScrollToTopButton />
-        <WaveFooterSVG className="absolute bottom-[98%] z-10 w-full text-negro" />
+        <WaveFooterSVG className="absolute bottom-[98%] -z-10 w-full text-negro" />
         <ul className="hidden flex-col items-center gap-2 p-2 md:flex">
           <h2 className="text-bold mb-3 text-lg uppercase text-slate-500">
             {' '}

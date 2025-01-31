@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function SignUp() {
   return (
-    <div className="flex flex-col items-center justify-center gap-16 p-8 pb-20 sm:p-20">
+    <div className="flex h-full flex-col items-center justify-center gap-16 p-8 pb-20 sm:p-20">
       <SignUpForm />
     </div>
   );
