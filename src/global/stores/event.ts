@@ -43,4 +43,5 @@ export const $eventConfig = atom({
   showKey: false,
   backgroundImage: 1,
   showStructure: false,
+  lyricsScale: 1,
 });

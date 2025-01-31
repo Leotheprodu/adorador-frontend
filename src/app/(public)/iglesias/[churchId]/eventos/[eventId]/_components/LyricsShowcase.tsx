@@ -1,8 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { LyricsShowcaseCard } from '@iglesias/[churchId]/eventos/[eventId]/_components/LyricsShowcaseCard';
 import { AnimatePresence, motion } from 'framer-motion';
-import { $eventConfig, $lyricSelected, $selectedSongData } from '@stores/event';
-import { handleTranspose } from '../_utils/handleTranspose';
+import { $eventConfig, $lyricSelected } from '@stores/event';
 
 export const LyricsShowcase = ({
   lyricsShowcaseProps,
@@ -13,19 +12,18 @@ export const LyricsShowcase = ({
 }) => {
   const { isFullscreen } = lyricsShowcaseProps;
   const lyricSelected = useStore($lyricSelected);
-  const songData = useStore($selectedSongData);
+  /*  const songData = useStore($selectedSongData); */
   const eventConfig = useStore($eventConfig);
 
   return (
-    <div className="absolute inset-0 flex h-full w-full flex-col">
-      {songData?.song.key && eventConfig.showKey && (
-        <h3
-          className={`absolute right-10 top-10 text-center ${isFullscreen ? 'text-xl lg:text-2xl xl:text-3xl' : 'text-base md:text-lg lg:text-xl xl:text-2xl'}`}
-        >
-          {handleTranspose(songData.song.key, songData.transpose)}
-        </h3>
-      )}
-
+    <div
+      style={{
+        scale: isFullscreen
+          ? eventConfig.lyricsScale * 1
+          : eventConfig.lyricsScale * 0.95,
+      }}
+      className="absolute inset-0 flex h-full w-full flex-col"
+    >
       <AnimatePresence>
         <div className="absolute bottom-1/2 w-full translate-y-1/2 transform">
           <motion.div

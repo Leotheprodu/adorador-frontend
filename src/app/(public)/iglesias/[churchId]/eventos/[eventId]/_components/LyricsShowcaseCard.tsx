@@ -7,7 +7,7 @@ import {
 import { useStore } from '@nanostores/react';
 import { useDataOfLyricSelected } from '@iglesias/[churchId]/eventos/[eventId]/_hooks/useDataOfLyricSelected';
 import { getNoteByType } from '@iglesias/[churchId]/eventos/[eventId]/_utils/getNoteByType';
-import { structureColors, structureLib } from '@global/config/constants';
+import { structureColors } from '@global/config/constants';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,
 }: {
@@ -22,24 +22,23 @@ export const LyricsShowcaseCard = ({
   const { dataOfLyricSelected } = useDataOfLyricSelected({ lyricSelected });
   const selectedSongData = useStore($selectedSongData);
   return (
-    <div className="relative flex w-full flex-col items-center p-2">
+    <div
+      style={{
+        ...(eventConfig.showStructure && {
+          borderColor:
+            structureColors[dataOfLyricSelected?.structure.title || 'verse'],
+          background: `linear-gradient(
+        to right,
+        ${structureColors[dataOfLyricSelected?.structure.title || 'verse']} -500%,
+        rgba(255, 255, 255, 0) 50%,
+        ${structureColors[dataOfLyricSelected?.structure.title || 'verse']} 600%
+        )`,
+        }),
+      }}
+      className={`relative flex w-full flex-col items-center ${isFullscreen ? 'p-4 lg:p-6' : 'p-1 lg:p-2'} ${eventConfig.showStructure ? 'border-x-4' : ''}`}
+    >
       {lyricSelected?.position > 0 && (
         <div className="flex flex-col items-center justify-center">
-          {dataOfLyricSelected !== undefined &&
-            eventConfig.showStructure &&
-            dataOfLyricSelected.structure.title && (
-              <h3
-                style={{
-                  color:
-                    structureColors[
-                      dataOfLyricSelected?.structure.title || 'verse'
-                    ],
-                }}
-                className={`absolute left-10 top-1/2 -translate-y-1/2 transform text-center ${isFullscreen ? 'text-xl lg:text-2xl' : 'text-base md:text-lg lg:text-xl'}`}
-              >
-                {structureLib[dataOfLyricSelected.structure.title].es}
-              </h3>
-            )}
           <div className="grid w-full grid-cols-5 rounded-md bg-slate-900/80">
             {eventConfig.showChords &&
               dataOfLyricSelected?.chords
@@ -93,6 +92,7 @@ export const LyricsShowcaseCard = ({
                 structureColors[
                   dataOfLyricSelected?.structure.title || 'verse'
                 ],
+              filter: 'brightness(1.5)',
             }}
             className={`w-full text-center text-3xl ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
           >

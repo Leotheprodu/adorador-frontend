@@ -34,7 +34,7 @@ export const EventControlsSongsList = ({
   };
 
   return (
-    <div className="col-start-1 col-end-3 row-start-3 flex h-full w-full flex-col md:col-end-2 md:row-start-1">
+    <div className="flex h-full w-full flex-col">
       <div className="w-full">
         <div className="mb-3 flex items-center justify-center gap-2">
           <h4 className="text-center font-bold text-slate-800">Canciones</h4>

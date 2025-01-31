@@ -9,8 +9,7 @@ export const EventControlsButtonsLirics = () => {
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
   const { sendMessage } = useEventGateway();
   return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-md bg-white p-2">
-      <h3 className="text-xs">Letras</h3>
+    <div className="flex h-full flex-col items-center justify-center gap-8 rounded-md border border-slate-200 bg-white p-1 opacity-60 shadow-sm hover:opacity-100">
       <button
         disabled={lyricSelected.position <= -1}
         onClick={() => {
@@ -26,12 +25,12 @@ export const EventControlsButtonsLirics = () => {
               },
             });
         }}
-        className="w-30 h-30 cursor-pointer rounded-full bg-slate-100 p-4 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95"
       >
-        <ArrowUpIcon className="[font-size:2rem]" />
+        <ArrowUpIcon />
       </button>
       <button
-        className="w-30 h-30 cursor-pointer rounded-full bg-slate-100 p-4 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95"
         disabled={
           lyricSelected.position === selectedSongLyricLength + 2 ||
           selectedSongLyricLength === 0
@@ -66,7 +65,7 @@ export const EventControlsButtonsLirics = () => {
           }
         }}
       >
-        <ArrowDownIcon className="[font-size:2rem]" />
+        <ArrowDownIcon className="" />
       </button>
     </div>
   );

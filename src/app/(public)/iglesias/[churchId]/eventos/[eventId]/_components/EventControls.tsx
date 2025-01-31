@@ -33,15 +33,14 @@ export const EventControls = ({
   return (
     <div>
       <section
-        className={`mt-5 grid w-full items-center justify-center gap-3 bg-slate-50 p-4 ${checkAdminEvent ? 'grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-1' : 'grid-cols-1 grid-rows-1'}`}
+        className={`mt-5 h-full w-full flex-grow flex-col items-center justify-center gap-3 bg-slate-50 p-4`}
       >
-        {checkAdminEvent && (
-          <EventControlsSongsList
-            params={params}
-            refetch={refetch}
-            isLoading={isLoading}
-          />
-        )}
+        <EventControlsSongsList
+          params={params}
+          refetch={refetch}
+          isLoading={isLoading}
+        />
+
         {checkAdminEvent && <EventControlsLyricsSelect />}
         <EventControlsButtons
           churchId={parseInt(churchId)}

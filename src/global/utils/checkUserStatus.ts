@@ -2,6 +2,7 @@ import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
 import { AppSecurityProps } from '@global/interfaces/AppSecurityInterfaces';
 import { $event } from '@stores/event';
+import { userRoles } from '@global/config/constants';
 
 export const CheckUserStatus = ({
   isLoggedIn,
@@ -14,6 +15,11 @@ export const CheckUserStatus = ({
 }: AppSecurityProps): boolean => {
   const user = useStore($user);
   const event = useStore($event);
+
+  // si el usuario esta loggeado y es admin, devolver true
+  if (user?.isLoggedIn && user?.roles.includes(userRoles.admin.id)) {
+    return true;
+  }
 
   // Verificar si el usuario está logueado y no tiene la propiedad isLoggedIn en false
   if (user !== null && isLoggedIn !== null && isLoggedIn !== undefined) {

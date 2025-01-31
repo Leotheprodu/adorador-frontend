@@ -1,4 +1,3 @@
-import { EventControlsButtonsLirics } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtonsLirics';
 /* import { EventControlsButtonsLiveMessages } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtonsLiveMessages'; */
 import { EventControlsButtonsScreen } from '@iglesias/[churchId]/eventos/[eventId]/_components/EventControlsButtonsScreen';
 
@@ -16,9 +15,8 @@ export const EventControlsButtons = ({
       <h3 className="mb-3 text-center font-bold text-slate-800">
         Panel de botones
       </h3>
-      <div className="flex h-[10rem] items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
+      <div className="flex items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
         <EventControlsButtonsScreen />
-        {isEventAdmin && <EventControlsButtonsLirics />}
         {/* <EventControlsButtonsLiveMessages churchId={churchId} /> */}
       </div>
     </div>
