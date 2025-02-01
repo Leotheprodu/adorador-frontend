@@ -13,6 +13,7 @@ import { $event } from '@stores/event';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { addSongsToEventService } from './services/AddSongsToEventService';
+import { songTypes } from '@global/config/constants';
 
 export const AddSongEventBySavedSongs = ({
   params,
@@ -26,18 +27,46 @@ export const AddSongEventBySavedSongs = ({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const eventSongs = useStore($event).songs;
   const { churchId } = params;
-  const { data } = getSongsOfChurch({ churchId });
+  const { data, status: dataStatus } = getSongsOfChurch({ churchId });
   const [selectedSongs, setSelectedSongs] = useState<
     { songId: number; order: number; transpose: number }[]
   >([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredSongs = data?.filter(
-    (song) =>
-      song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      song.artist?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      song.key?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+
+  const [filteredSongs, setFilteredSongs] = useState(data);
+
+  useEffect(() => {
+    if (searchTerm === '') {
+      setFilteredSongs(
+        data?.filter(
+          (song) => !eventSongs.some((track) => track.song.id === song.id),
+        ),
+      );
+    } else {
+      const filterSongs = data?.filter(
+        (song) =>
+          song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          song.artist?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          song.key?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          songTypes[song.songType].es
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()),
+      );
+      setFilteredSongs(filterSongs);
+    }
+  }, [searchTerm, data, eventSongs]);
+
   const { status, mutate } = addSongsToEventService({ params });
+  useEffect(() => {
+    if (dataStatus === 'success') {
+      setFilteredSongs(
+        data.filter(
+          (song) => !eventSongs.some((track) => track.song.id === song.id),
+        ),
+      );
+    }
+  }, [dataStatus, data, eventSongs]);
+
   useEffect(() => {
     if (!isOpen) {
       setIsOpenPopover(true);
@@ -56,8 +85,7 @@ export const AddSongEventBySavedSongs = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
-  const handleSelectSong = (index: number) => {
-    const songId = data ? data[index].id : null;
+  const handleSelectSong = (songId: number) => {
     const eventSongsLength = eventSongs.length;
     if (songId) {
       const isSelected = selectedSongs.some((song) => song.songId === songId);
@@ -120,20 +148,23 @@ export const AddSongEventBySavedSongs = ({
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="mb-4 w-full rounded-xl border-1 border-slate-300 px-2 py-1"
                 />
-                <ul className="flex h-[17rem] w-full flex-col justify-center gap-2 overflow-y-auto rounded-xl px-1 py-2">
-                  {filteredSongs?.map((song, index) => (
-                    <li
-                      key={song.id}
-                      className={`cursor-pointer rounded-xl px-1 py-2 duration-200 hover:bg-slate-200 ${selectedSongs.some((track) => track.songId === song.id) && 'bg-slate-200 hover:bg-slate-300'}`}
-                      onClick={() => handleSelectSong(index)}
-                    >
-                      <p>
-                        {song.title} {song.artist && '-' + song.artist}
-                        {song.key && '-' + song.key}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex h-[17rem] w-full">
+                  <ul className="flex h-full w-full flex-col justify-start gap-2 overflow-y-auto rounded-xl px-1 py-2">
+                    {filteredSongs?.map((song) => (
+                      <li
+                        key={song.id}
+                        className={`cursor-pointer rounded-xl px-1 py-2 duration-200 hover:bg-slate-200 ${selectedSongs.some((track) => track.songId === song.id) && 'bg-slate-200 hover:bg-slate-300'}`}
+                        onClick={() => handleSelectSong(song.id)}
+                      >
+                        <p>
+                          {song.title} {song.artist && '-' + song.artist}
+                          {song.key && '-' + song.key}{' '}
+                          {songTypes[song.songType].es}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
