@@ -21,7 +21,6 @@ export const useSignUpForm = (formInit: {
     email: false,
     phone: false,
   });
-  const [isVisible, setIsVisible] = useState(false);
   const [isInvalidPass, setIsInvalidPass] = useState(false);
   const { data, error, status, mutate, isPending } = signUpService();
 
@@ -53,7 +52,6 @@ export const useSignUpForm = (formInit: {
       toast.success('Usuario creado, revisa tu bandeja de correo electrónico');
       setForm(formInit);
       setIsInvalidPass(false);
-      setIsVisible(false);
     } else if (status === 'error') {
       console.log(error);
       toast.error('Error al crear usuario');
@@ -61,15 +59,6 @@ export const useSignUpForm = (formInit: {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error, status]);
-  const toggleVisibility = () => setIsVisible(!isVisible);
-
-  useEffect(() => {
-    if (isVisible) {
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 5000);
-    }
-  }, [isVisible]);
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -117,11 +106,9 @@ export const useSignUpForm = (formInit: {
   };
   return {
     ...form,
-    toggleVisibility,
     handleOnChange: handleChange,
     handleOnClear: (name: string) => handleOnClear(name, setForm),
     handleSignUp,
-    isVisible,
     isInvalidPass,
     user,
     isPending,

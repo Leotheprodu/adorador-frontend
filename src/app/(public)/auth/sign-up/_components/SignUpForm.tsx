@@ -11,10 +11,8 @@ import { UIGuard } from '@/global/utils/UIGuard';
 
 export const SignUpForm = () => {
   const {
-    isVisible,
     handleOnChange,
     handleOnClear,
-    toggleVisibility,
     handleSignUp,
     isInvalidPass,
     email,
@@ -75,8 +73,6 @@ export const SignUpForm = () => {
             <InputPasswordLoginForm
               handle={{
                 handleOnChange,
-                isVisible,
-                toggleVisibility,
                 isInvalidPass,
                 password,
               }}
@@ -85,8 +81,6 @@ export const SignUpForm = () => {
               handle={{
                 confirmPassword: true,
                 handleOnChange,
-                isVisible,
-                toggleVisibility,
                 password: password2,
                 isInvalidPass,
               }}
