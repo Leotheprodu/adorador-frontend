@@ -10,10 +10,8 @@ import { useStore } from '@nanostores/react';
 
 export const LoginForm = () => {
   const {
-    isVisible,
     handleOnChange,
     handleOnClear,
-    toggleVisibility,
     handleLogin,
     isInvalidPass,
     email,
@@ -25,7 +23,7 @@ export const LoginForm = () => {
     <>
       {user.isLoggedIn && <IsLoggedInHandle user={user} />}
       {!user.isLoggedIn && (
-        <div>
+        <div className="min-h-screen">
           <h1 className="text-center text-3xl font-semibold text-primary">
             Iniciar sesión
           </h1>
@@ -40,8 +38,6 @@ export const LoginForm = () => {
               <InputPasswordLoginForm
                 handle={{
                   handleOnChange,
-                  isVisible,
-                  toggleVisibility,
                   isInvalidPass,
                   password,
                 }}
@@ -59,12 +55,21 @@ export const LoginForm = () => {
           </form>
           <div className="mt-4">
             <p className="text-center text-sm text-gray-400">
-              ¿No tienes cuenta?{' '}
+              <Link
+                href="/auth/password-recovery"
+                className="text-primary hover:underline"
+              >
+                ¿Olvidaste la contraseña?
+              </Link>
+            </p>
+          </div>
+          <div className="mt-4">
+            <p className="text-center text-sm text-gray-400">
               <Link
                 href={findHrefFromLinks('Crear cuenta')}
                 className="text-primary hover:underline"
               >
-                Créala ¡Es gratis!
+                ¿No tienes cuenta?
               </Link>
             </p>
           </div>

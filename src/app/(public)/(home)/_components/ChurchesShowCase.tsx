@@ -8,7 +8,7 @@ export const ChurchesShowCase = () => {
   const { data, error, isLoading } = getChurches();
 
   return (
-    <div>
+    <div className="h-full">
       {error && <div>Error: {error.message}</div>}
       {isLoading && (
         <div className="flex flex-wrap justify-center gap-3">

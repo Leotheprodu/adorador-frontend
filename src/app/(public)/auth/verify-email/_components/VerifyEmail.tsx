@@ -15,6 +15,7 @@ export const VerifyEmail = () => {
     token: typeof token === 'string' ? token : '',
   });
   useEffect(() => {
+    // comprobamos si el token existe y si el estado es idle y si no ha mutado
     if (token && status === 'idle' && !hasMutated.current) {
       hasMutated.current = true;
       console.log(status);

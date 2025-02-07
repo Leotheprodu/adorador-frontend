@@ -1,6 +1,7 @@
 import { Input } from '@nextui-org/react';
 import { EndContentInputPassword } from '@auth/login/_components/EndContentInputPassword';
 import { KeyIcon } from '@global/icons/KeyIcon';
+import { useEffect, useState } from 'react';
 
 export const InputPasswordLoginForm = ({
   handle,
@@ -8,20 +9,28 @@ export const InputPasswordLoginForm = ({
   handle: {
     // eslint-disable-next-line
     handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    isVisible: boolean;
-    toggleVisibility: () => void;
     isInvalidPass?: boolean;
     password: string;
     confirmPassword?: boolean;
+    placeHolder?: string;
   };
 }) => {
+  const [toggleVisibility, setToggleVisibility] = useState(false);
+
+  useEffect(() => {
+    if (toggleVisibility) {
+      setTimeout(() => {
+        setToggleVisibility(false);
+      }, 5000);
+    }
+  }, [toggleVisibility]);
+
   const {
     handleOnChange,
-    isVisible,
-    toggleVisibility,
     isInvalidPass = false,
     password,
     confirmPassword = false,
+    placeHolder = 'Ingresa tu contraseña',
   } = handle;
 
   return (
@@ -29,16 +38,16 @@ export const InputPasswordLoginForm = ({
       <Input
         size="lg"
         label={confirmPassword ? 'Confirmar contraseña' : 'Contraseña'}
-        placeholder="Ingresa tu contraseña"
+        placeholder={placeHolder}
         isRequired
         variant="underlined"
         endContent={
           <EndContentInputPassword
-            isVisible={isVisible}
-            toggleVisibility={toggleVisibility}
+            isVisible={toggleVisibility}
+            toggleVisibility={() => setToggleVisibility(!toggleVisibility)}
           />
         }
-        type={isVisible ? 'text' : 'password'}
+        type={toggleVisibility ? 'text' : 'password'}
         className=""
         startContent={
           <KeyIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />

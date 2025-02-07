@@ -10,7 +10,6 @@ import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 export const useLoginForm = (formInit: { email: string; password: string }) => {
   const user = useStore($user);
   const [form, setForm] = useState(formInit);
-  const [isVisible, setIsVisible] = useState(false);
   const [isInvalidPass, setIsInvalidPass] = useState(false);
   const { data, error, status, mutate, isPending } = loginService();
   const errorMessage = (error: string) => {
@@ -28,7 +27,6 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
       toast.success(`Bienvenido ${data.name}`);
       setForm(formInit);
       setIsInvalidPass(false);
-      setIsVisible(false);
     } else if (status === 'error') {
       if (errorCode(error.message) === 403) {
         toast.error(`${user.name}, ya has iniciado sesión`);
@@ -50,15 +48,6 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
     }
   }, [data, error, status]);
 
-  useEffect(() => {
-    if (isVisible) {
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 5000);
-    }
-  }, [isVisible]);
-  const toggleVisibility = () => setIsVisible(!isVisible);
-
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -70,11 +59,9 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
   };
   return {
     ...form,
-    toggleVisibility,
     handleOnChange: handleChange,
     handleOnClear: (name: string) => handleOnClear(name, setForm),
     handleLogin,
-    isVisible,
     isInvalidPass,
     user,
     isPending,

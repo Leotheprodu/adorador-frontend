@@ -6,7 +6,7 @@ import Link from 'next/link';
 export const IsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
   const { handleLogout, isPending } = useIsLoggedInHandle({ user });
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex min-h-[20rem] flex-col items-center gap-4">
       <h1 className="text-2xl">Hola {user.name}</h1>
       {user.status !== 'active' && (
         <p className="p-5 text-slate-400">
