@@ -67,26 +67,37 @@ export const EventControlsLyricsSelect = () => {
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center">
       <h4 className="mb-3 text-center font-bold text-slate-800">Letras</h4>
-      <div className="flex h-full items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
+      <div className="flex h-full w-full items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
         <div
           ref={scrollContainerRef}
-          className="flex h-[10rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
+          className="flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
         >
           {lyricsGrouped.map(([structure, lyrics], groupIndex) => (
-            <div key={groupIndex}>
-              <h2 className="text-center text-slate-600">
+            <div className="w-full" key={groupIndex}>
+              <h2 className="text-center text-xl font-bold text-slate-600">
                 {structureLib[structure].es}
               </h2>
               {lyrics.map((lyric, index) => (
-                <div key={index} id={lyric.position.toString()}>
+                <div
+                  className="w-full"
+                  key={index}
+                  id={lyric.position.toString()}
+                >
                   <h1
                     onClick={() => {
                       handleSelectLyric(lyric.position);
                     }}
                     style={{
-                      backgroundColor: structureColors[structure],
+                      backgroundColor:
+                        lyricSelected.position > 0 &&
+                        (lyricSelected.position === lyric.position ||
+                          lyricSelected.position + 1 === lyric.position ||
+                          lyricSelected.position + 2 === lyric.position ||
+                          lyricSelected.position + 3 === lyric.position)
+                          ? '#000000'
+                          : structureColors[structure],
                     }}
-                    className={`cursor-pointer rounded-sm px-2 py-1 text-center duration-200 transition-background active:scale-95 ${lyricSelected.position === lyric.position || lyricSelected.position + 1 === lyric.position || lyricSelected.position + 2 === lyric.position || lyricSelected.position + 3 === lyric.position ? 'border-1 border-primary-300' : ''}`}
+                    className={`w-full cursor-pointer px-2 py-1 text-center duration-200 transition-background active:scale-95 ${lyricSelected.position > 0 && (lyricSelected.position === lyric.position || lyricSelected.position + 1 === lyric.position || lyricSelected.position + 2 === lyric.position || lyricSelected.position + 3 === lyric.position) ? 'text-white' : ''}`}
                   >
                     {lyric.lyrics}
                   </h1>
