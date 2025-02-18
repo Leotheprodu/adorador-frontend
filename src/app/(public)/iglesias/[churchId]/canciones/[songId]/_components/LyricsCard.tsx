@@ -43,9 +43,9 @@ export const LyricsCard = ({
     <div
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}
-      className={`group relative flex flex-col rounded-md p-3 duration-100 hover:shadow-md lyric-card${lyric.id}`}
+      className={`group relative flex min-w-[20rem] flex-col items-center justify-center rounded-md p-3 duration-100 hover:shadow-md lyric-card${lyric.id}`}
     >
-      <div className="grid w-full grid-cols-5 grid-rows-1 gap-1">
+      <div className="grid grid-cols-5 grid-rows-1 gap-1">
         {sortedChords &&
           sortedChords.length > 0 &&
           sortedChords
@@ -84,7 +84,7 @@ export const LyricsCard = ({
       ) : (
         <button
           onClick={handleClickLyric}
-          className="text-left text-2xl transition-all duration-100 hover:underline"
+          className="text-center text-2xl transition-all duration-100 hover:underline"
         >
           {lyric.lyrics}
         </button>

@@ -169,7 +169,7 @@ export const AddOrUpdateLyricForm = ({
           }
         }}
       />
-      <div className="flex w-full items-center gap-2">
+      <div className="flex min-w-[20rem] items-center gap-2">
         <Select
           className=""
           selectedKeys={structure === 0 ? undefined : [structure.toString()]}
