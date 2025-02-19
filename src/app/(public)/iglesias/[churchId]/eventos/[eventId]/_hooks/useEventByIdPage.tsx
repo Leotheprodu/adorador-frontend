@@ -23,6 +23,7 @@ export const useEventByIdPage = ({
   useEffect(() => {
     if (status === 'success') {
       $event.set(data);
+      console.log('data', data);
     }
   }, [status, data, isRefetching]);
 

@@ -7,6 +7,7 @@ import { UpdatingSongList } from '@iglesias/[churchId]/eventos/[eventId]/_compon
 import { AddSongEventButton } from './addSongToEvent/AddSongEventButton';
 import { Spinner } from '@nextui-org/react';
 import { RefetchButtonUpdateIcon } from './addSongToEvent/RefetchButtonUpdateIcon';
+import { OfflineView } from './offlineView/OfflineView';
 
 export const EventControlsSongsList = ({
   refetch,
@@ -38,6 +39,7 @@ export const EventControlsSongsList = ({
       <div className="w-full">
         <div className="mb-3 flex items-center justify-center gap-2">
           <h4 className="text-center font-bold text-slate-800">Canciones</h4>
+          <OfflineView />
           <RefetchButtonUpdateIcon refetch={refetch} />
           <UpdatingSongList
             songs={[...songs]}
