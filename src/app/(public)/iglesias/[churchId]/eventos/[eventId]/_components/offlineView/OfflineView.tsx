@@ -71,11 +71,8 @@ export const OfflineView = () => {
             </button>
           </div>
 
-          <div
-            ref={componentRef}
-            className="flex h-full w-full flex-col items-center justify-start overflow-y-scroll"
-          >
-            <div className="max-w-[40rem]">
+          <div className="flex h-full w-full flex-col items-center justify-start overflow-y-scroll">
+            <div ref={componentRef} className="max-w-[40rem]">
               <div className="flex h-full w-full flex-col gap-2 p-2 text-slate-800">
                 {event?.songs
                   .sort((a, b) => a.order - b.order)
