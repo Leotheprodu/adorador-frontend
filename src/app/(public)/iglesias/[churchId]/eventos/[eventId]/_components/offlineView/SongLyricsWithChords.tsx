@@ -71,7 +71,7 @@ export const SongLyricsWithChords = ({ data }: { data: EventSongsProps }) => {
                               chordPreferences,
                             )}
                           </p>
-                          <p className="w-full text-center text-base text-slate-50">
+                          <p className="w-full text-center text-base">
                             {chord.chordQuality}
                           </p>
                         </div>
