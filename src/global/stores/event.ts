@@ -1,7 +1,7 @@
 import {
   EventByIdInterface,
   EventSongsProps,
-} from '@iglesias/[churchId]/eventos/_interfaces/eventsInterface';
+} from '@app/(public)/grupos/[churchId]/eventos/_interfaces/eventsInterface';
 import { atom } from 'nanostores';
 import { Socket } from 'socket.io-client';
 

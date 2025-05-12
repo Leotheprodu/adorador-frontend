@@ -1,6 +1,6 @@
 'use client';
 
-import { getChurches } from '@iglesias/_services/churchesService';
+import { getChurches } from '@app/(public)/grupos/_services/churchesService';
 import { ChurchCard } from '@home/_components/ChurchCard';
 import { SkeletonChurchCard } from '@home/_components/SkeletonChurchCard';
 
