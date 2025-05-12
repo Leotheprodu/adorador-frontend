@@ -1,4 +1,3 @@
-import { ChurchIcon } from '@global/icons/ChurchIcon';
 import {
   Card,
   CardHeader,
@@ -6,7 +5,7 @@ import {
   Button,
   CardFooter,
 } from '@nextui-org/react';
-import { ChurchProps } from '@iglesias/_interfaces/churchesInterface';
+import { ChurchProps } from '@app/(public)/grupos/_interfaces/churchesInterface';
 import { formatDate, formatTime } from '@global/utils/dataFormat';
 import { useEffect, useState } from 'react';
 import { $user } from '@global/stores/users';
@@ -14,6 +13,7 @@ import { useStore } from '@nanostores/react';
 import Link from 'next/link';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { churchRoles } from '@global/config/constants';
+import { GuitarIcon } from '@global/icons/GuitarIcon';
 
 export const ChurchCard = ({ church }: { church: ChurchProps }) => {
   const user = useStore($user);
@@ -48,12 +48,12 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
           {MembershipsChurches.includes(church.id) && (
             <div className="absolute right-0 top-0 z-10">
               <span className="rounded-l-full bg-primary px-2 py-1 text-sm text-white">
-                Mi Iglesia
+                Mi Grupo de Alabanza
               </span>
             </div>
           )}
         </div>
-        <ChurchIcon className="absolute right-[-4rem] top-[1rem] z-0 h-[20rem] w-auto text-slate-100" />
+        <GuitarIcon className="absolute right-[-4rem] top-[2rem] z-0 h-[20rem] w-auto text-slate-100" />
         <div className="z-10 h-12">
           <h2 className="text-xl font-bold">{church.name}</h2>
           <p className="my-2 text-xs">
@@ -103,7 +103,7 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
       </CardBody>
       <CardFooter className="flex gap-3">
         <Button
-          href={`/iglesias/${church.id}`}
+          href={`/grupos/${church.id}`}
           className="z-10 mt-2 rounded"
           as={Link}
         >
@@ -111,7 +111,7 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
         </Button>
         {events.length > 0 && (isCurrentEvent || isUserAuthorized) && (
           <Button
-            href={`/iglesias/${church.id}/eventos/${events[currentEventIndex].id}`}
+            href={`/grupos/${church.id}/eventos/${events[currentEventIndex].id}`}
             className="z-10 mt-2 rounded"
             as={Link}
           >
