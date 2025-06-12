@@ -4,7 +4,7 @@ export const appName = 'Adorador';
 export const Server1API = process.env.NEXT_PUBLIC_API_URL_1;
 export const domain = process.env.NEXT_PUBLIC_DOMAIN;
 export const appDescription =
-  'Adorador es una plataforma cristiana, con herramientas para la iglesia';
+  'Adorador es una plataforma cristiana, con herramientas para los ministerios de alabanza y la iglesia';
 export const userRoles = {
   admin: {
     id: 1,

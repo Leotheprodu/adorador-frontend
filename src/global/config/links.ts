@@ -10,4 +10,5 @@ export const links: LinksProps[] = [
     name: 'Login',
     href: '/auth/login',
   },
+  { name: 'discipulado', href: '/discipulado' },
 ];
