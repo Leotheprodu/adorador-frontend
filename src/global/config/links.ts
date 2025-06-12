@@ -1,6 +1,7 @@
 import { LinksProps } from '../interfaces/AppSecurityInterfaces';
 /* import { userRoles } from './constants'; */
 export const links: LinksProps[] = [
+  { name: 'Discipulado', href: '/discipulado' },
   {
     name: 'Crear cuenta',
     href: '/auth/sign-up',
@@ -10,5 +11,4 @@ export const links: LinksProps[] = [
     name: 'Login',
     href: '/auth/login',
   },
-  { name: 'discipulado', href: '/discipulado' },
 ];
