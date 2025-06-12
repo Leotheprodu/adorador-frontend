@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     default: `${appName}`,
   },
   description: `${appDescription}`,
+  icons: {
+    icon: '/favicon.ico',
+  },
   keywords: ['iglesia', 'herramientas', 'cristiano'],
   openGraph: {
     title: `${appName}`,
@@ -18,26 +21,22 @@ export const metadata: Metadata = {
     siteName: `${appName}`,
     images: [
       {
-        url: '/yehu.jpg',
+        url: '/images/posts/adorar-en-espiritu.avif',
         width: 1200,
         height: 628,
-        alt: 'yehu imagen',
+        alt: 'adorador.xyz - Herramientas para los grupos de alabanza e iglesias',
       },
     ],
     locale: 'es_CR',
     type: 'website',
   },
   robots: {
-    index: false,
+    index: true,
     follow: true,
     nocache: true,
     googleBot: {
       index: true,
-      follow: false,
-      noimageindex: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      follow: true,
     },
   },
   /* twitter: {
