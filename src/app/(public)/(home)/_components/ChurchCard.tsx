@@ -56,9 +56,7 @@ export const ChurchCard = ({ church }: { church: ChurchProps }) => {
         <GuitarIcon className="absolute right-[-4rem] top-[2rem] z-0 h-[20rem] w-auto text-slate-100" />
         <div className="z-10 h-12">
           <h2 className="text-xl font-bold">{church.name}</h2>
-          <p className="my-2 text-xs">
-            <span className="">{church.country}</span>, {church.address}
-          </p>
+          <p className="my-2 text-xs">{church.address}</p>
         </div>
       </CardHeader>
       <CardBody className="z-10 h-44">

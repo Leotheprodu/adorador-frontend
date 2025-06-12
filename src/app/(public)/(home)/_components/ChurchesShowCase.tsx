@@ -18,7 +18,7 @@ export const ChurchesShowCase = () => {
         </div>
       )}
       {data && (
-        <ul className="flex flex-wrap justify-center gap-3">
+        <ul className="flex flex-wrap gap-3">
           {data.map((church) => (
             <li key={church.id} className="">
               <ChurchCard church={church} />
