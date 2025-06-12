@@ -9,7 +9,7 @@ export interface ContentRendered {
   content: ContentBlock[];
 }
 
-type ContentBlock =
+export type ContentBlock =
   | { type: 'paragraph'; title?: string; text: string }
   | { type: 'image'; title?: string; image: string }
   | { type: 'verse'; title: string; text: string }
