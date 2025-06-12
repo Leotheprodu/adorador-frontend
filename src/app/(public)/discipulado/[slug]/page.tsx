@@ -5,30 +5,61 @@ import { posts } from '@global/content/posts';
 import ContentRenderer from './_components/ContentRenderer';
 import Image from 'next/image';
 import { authors } from '@global/content/authors';
-export const metadata: Metadata = {
-  title: {
-    template: `%s | Discipulado`,
-    default: `Discipulado`,
-  },
-  description: `Artículos y recursos para el discipulado cristiano.`,
-  keywords: ['discipulado', 'cristianismo', 'recursos espirituales'],
-  openGraph: {
-    title: `Discipulado`,
-    description: `Artículos y recursos para el discipulado cristiano.`,
-    url: `/discipulado`,
-    siteName: `Discipulado`,
-    images: [
-      {
-        url: '/images/posts/adorar-en-espiritu.avif',
-        width: 1200,
-        height: 628,
-        alt: 'Discipulado',
-      },
-    ],
-    locale: 'es_CR',
-    type: 'website',
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = posts.find(
+    (p) => p.slug === params.slug && p.category === 'discipulado',
+  );
+
+  if (!post) {
+    return {
+      title: 'Discipulado',
+      description: 'Artículos y recursos para el discipulado cristiano.',
+    };
+  }
+
+  // Extraer la descripción del primer párrafo del contenido
+  let description = 'Artículos y recursos para el discipulado cristiano.';
+  if (Array.isArray(post.content)) {
+    const firstParagraph = post.content.find(
+      (el) => el.type === 'paragraph' && typeof el.text === 'string',
+    );
+    if (
+      firstParagraph &&
+      firstParagraph.type === 'paragraph' &&
+      firstParagraph.text
+    ) {
+      // Limitar la descripción a 160 caracteres aprox.
+      description = firstParagraph.text.slice(0, 160);
+      if (firstParagraph.text.length > 160) description += '...';
+    }
+  }
+
+  return {
+    title: post.title,
+    description,
+    keywords: ['discipulado', 'cristianismo', 'recursos espirituales'],
+    openGraph: {
+      title: post.title,
+      description,
+      url: `/discipulado/${post.slug}`,
+      siteName: 'adorador.xyz',
+      images: [
+        {
+          url: post.image || '/images/posts/adorar-en-espiritu.avif',
+          width: 1200,
+          height: 628,
+          alt: post.title,
+        },
+      ],
+      locale: 'es_CR',
+      type: 'article',
+    },
+  };
+}
 export default function DiscipuladoPage({
   params,
 }: {
