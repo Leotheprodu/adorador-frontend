@@ -18,7 +18,7 @@ export const posts: ContentRendered[] = [
       {
         type: 'paragraph',
         title: '¿Deseas ser un verdadero adorador?',
-        text: 'Si estás leyendo esto, probablemente anhelas honrar a Dios más allá del canto o los instrumentos. Déjame decirte algo: ser un adorador en espíritu y en verdad no comienza con talento, sino con una vida rendida. Dios está buscando corazones dispuestos, y puede que el tuyo sea uno de ellos.',
+        text: 'Si estás leyendo esto, probablemente anhelas honrar a Dios más allá del canto o los instrumentos. Déjame decirte algo; ser un adorador en espíritu y en verdad no comienza con talento, sino con una vida rendida. Dios está buscando corazones dispuestos, y puede que el tuyo sea uno de ellos.',
       },
       {
         type: 'paragraph',
@@ -33,7 +33,7 @@ export const posts: ContentRendered[] = [
       {
         type: 'paragraph',
         title: '🧠 2. Adora con entendimiento (Verdad)',
-        text: 'No puedes adorar a un Dios que no conoces. Sumérgete en la Palabra. Conoce su carácter. Examina las letras que cantas: ¿reflejan realmente lo que enseña la Biblia? Enséñale esto también a los que lideras. Que tu adoración no sea solo emoción, sino una respuesta a la verdad.',
+        text: 'No puedes adorar a un Dios que no conoces. Sumérgete en la Palabra. Conoce su carácter. Examina las letras que cantas: ¿reflejan realmente lo que enseña la Biblia? Que tu adoración no sea solo emoción, sino una respuesta a la verdad.',
       },
       {
         type: 'verse',
@@ -52,13 +52,13 @@ export const posts: ContentRendered[] = [
       },
       {
         type: 'paragraph',
-        title: '👥 4. Forma discípulos, no solo músicos',
-        text: '¿Estás guiando a un grupo de adoradores, o solo dirigiendo ensayos? Cuida a tu equipo como un pastor cuida sus ovejas. Ora con ellos. Escúchalos. Enséñales la Palabra. Inspíralos a buscar a Dios más que el aplauso. Líder no es el que tiene más talento, sino el que más sirve.',
+        title: '👥 4. Sé un adorador que inspira a otros',
+        text: 'Tu forma de vivir, hablar, y adorar puede ser una influencia poderosa para los demás. Dios te ha puesto ahí con propósito: para animar, apoyar, y edificar a otros. Tu testimonio puede ser el empujón que alguien necesita para acercarse más al Señor. Recuerda: ser ejemplo no depende del cargo, sino del corazón.',
       },
       {
         type: 'paragraph',
         title: '🎵 5. Fluye con el Espíritu',
-        text: 'No todo momento de adoración debe estar escrito en la agenda. Aprende a escuchar la voz del Espíritu Santo. Él sabe lo que la iglesia necesita más que cualquier planificación humana. Enséñale a tu equipo a depender más del Espíritu que del setlist.',
+        text: 'No todo momento de adoración debe estar escrito en la agenda. Aprende a escuchar la voz del Espíritu Santo. Él sabe lo que la iglesia necesita más que cualquier planificación humana. Aprendamos a depender más del Espíritu Santo, que de la lista de canciones.',
       },
       {
         type: 'verse',
