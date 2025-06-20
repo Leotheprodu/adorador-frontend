@@ -22,7 +22,6 @@ export const useCheckIsLoggedIn = () => {
   const user = useStore($user);
   const localUser = getLocalStorage('user');
   const { data, status, isLoading } = checkUser();
-
   useEffect(() => {
     if (
       !isLoading &&

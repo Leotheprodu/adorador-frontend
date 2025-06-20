@@ -3,6 +3,7 @@ import { $user } from '@global/stores/users';
 import { AppSecurityProps } from '@global/interfaces/AppSecurityInterfaces';
 import { $event } from '@stores/event';
 import { userRoles } from '@global/config/constants';
+import { useEffect, useState } from 'react';
 
 export const CheckUserStatus = ({
   isLoggedIn,
@@ -12,82 +13,134 @@ export const CheckUserStatus = ({
   churchRoles,
   negativeChurchRoles,
   checkAdminEvent,
+  checkBandId,
 }: AppSecurityProps): boolean => {
   const user = useStore($user);
   const event = useStore($event);
 
-  // si el usuario esta loggeado y es admin, devolver true
-  if (user?.isLoggedIn && user?.roles.includes(userRoles.admin.id)) {
+  const [pass, setPass] = useState(true);
+
+  // Helper functions for each logical check
+  const isAdmin = () =>
+    user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
+
+  const isLoggedInCheck = () => {
+    if (isLoggedIn === undefined) return true; // If isLoggedIn is not defined, assume true
+    return user?.isLoggedIn === isLoggedIn || user?.isLoggedIn === true;
+  };
+
+  const hasNegativeRolesCheck = () =>
+    negativeRoles?.some((negativeRole) => user.roles.includes(negativeRole));
+
+  const hasMembershipCheck = () => {
+    if (checkChurchId) {
+      return user.memberships?.some(
+        (membership) => membership.church.id === checkChurchId,
+      );
+    }
     return true;
-  }
+  };
 
-  // Verificar si el usuario está logueado y no tiene la propiedad isLoggedIn en false
-  if (user !== null && isLoggedIn !== null && isLoggedIn !== undefined) {
-    if (isLoggedIn === true && !user.isLoggedIn) {
-      return false;
+  const hasBandMembershipCheck = () => {
+    if (checkBandId) {
+      return user.membersofBands?.some((band) => band.band.id === checkBandId);
     }
+    return true;
+  };
 
-    if (isLoggedIn === false && user.isLoggedIn) {
-      return false;
-    }
-  }
-
-  // Verificar si el usuario tiene alguno de los negativeRoles
-  const hasNegativeRoles = negativeRoles?.some((negativeRole) =>
-    user.roles.includes(negativeRole),
-  );
-
-  // Si el usuario tiene algún rol negativo, devolver false
-  if (negativeRoles && hasNegativeRoles) {
-    return false;
-  }
-
-  // verifica si el usuario tiene alguna membership con el id de la iglesia
-  if (checkChurchId) {
-    const hasMembership = user.memberships.some(
-      (membership) => membership.church.id === checkChurchId,
+  const hasNegativeChurchRolesCheck = () =>
+    negativeChurchRoles?.some((negativeRole) =>
+      user.memberships
+        .find((membership) => membership.church.id === checkChurchId)
+        ?.roles.map((role) => role.churchRoleId)
+        .includes(negativeRole),
     );
-    if (!hasMembership) {
-      return false;
+
+  const hasRequiredRoleCheck = () =>
+    roles?.some((role) => user.roles.includes(role));
+
+  const hasChurchRoleCheck = () => {
+    if (!churchRoles) return true;
+    return churchRoles.some((role) => {
+      const membership = user.memberships.find(
+        (membership) => membership.church.id === checkChurchId,
+      );
+      return (
+        membership?.roles.map((role) => role.churchRoleId).includes(role) ||
+        false
+      );
+    });
+  };
+
+  const userHasAdminEventPermission = () => {
+    if (checkAdminEvent && user?.isLoggedIn && user?.membersofBands) {
+      return user.membersofBands.some(
+        (band) => band.band.id === event?.bandId && band.isEventManager,
+      );
     }
-  }
+    return true;
+  };
 
-  // Verificar si el usuario tiene alguno de los negativeChurchRoles en la iglesia
-  const hasNegativeChurchRoles = negativeChurchRoles?.some((negativeRole) =>
-    user.memberships
-      .find((membership) => membership.church.id === checkChurchId)
-      ?.roles.map((role) => role.churchRoleId)
-      .includes(negativeRole),
-  );
+  useEffect(() => {
+    if (isAdmin()) {
+      setPass(true);
+      console.log('User is an admin, access granted');
+      return;
+    }
+    if (!isLoggedInCheck()) {
+      setPass(false);
+      console.log('User is not logged in or logged in status does not match');
+      return;
+    }
+    if (negativeRoles && hasNegativeRolesCheck()) {
+      setPass(false);
+      console.log('User has negative roles');
+      return;
+    }
+    if (!hasMembershipCheck()) {
+      setPass(false);
+      console.log('User does not have the required church membership');
+      return;
+    }
+    if (!hasBandMembershipCheck()) {
+      setPass(false);
+      console.log('User does not have the required band membership');
+      return;
+    }
+    if (negativeChurchRoles && hasNegativeChurchRolesCheck()) {
+      setPass(false);
+      console.log('User has negative church roles');
+      return;
+    }
+    if (roles && !hasRequiredRoleCheck()) {
+      setPass(false);
+      console.log('User does not have the required roles');
+      return;
+    }
+    if (churchRoles && !hasChurchRoleCheck()) {
+      setPass(false);
+      console.log('User does not have the required church roles');
+      return;
+    }
+    if (!userHasAdminEventPermission()) {
+      setPass(false);
+      console.log('User does not have admin event permission');
+      return;
+    }
+    setPass(true);
 
-  // Si el usuario tiene algún rol negativo en la iglesia, devolver false
-  if (negativeChurchRoles && hasNegativeChurchRoles) {
-    return false;
-  }
-
-  const hasRequiredRole = roles?.some((role) => user.roles.includes(role));
-
-  // Verificar si el usuario tiene alguno de los roles requeridos
-  if (roles && !hasRequiredRole) {
-    return false;
-  }
-
-  const hasChurchRole = churchRoles?.some((role) => {
-    const membership = user.memberships.find(
-      (membership) => membership.church.id === checkChurchId,
-    );
-    return membership?.roles.map((role) => role.churchRoleId).includes(role);
-  });
-
-  // Verificar si el usuario tiene alguno de los roles de iglesia requeridos
-  if (churchRoles && !hasChurchRole) {
-    return false;
-  }
-
-  // Verificar si el usuario tiene permisos de administrador en el evento
-  if (checkAdminEvent && event && event?.eventManagerId !== user.id) {
-    return false;
-  }
-
-  return true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    user,
+    event,
+    isLoggedIn,
+    roles,
+    negativeRoles,
+    checkChurchId,
+    churchRoles,
+    negativeChurchRoles,
+    checkAdminEvent,
+    checkBandId,
+  ]);
+  return pass;
 };

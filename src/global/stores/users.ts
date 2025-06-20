@@ -9,6 +9,7 @@ export const $user = atom<LoggedUser>({
   status: 'inactive',
   roles: [],
   memberships: [],
+  membersofBands: [],
   phone: '',
   birthdate: '',
 });

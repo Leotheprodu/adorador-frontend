@@ -1,4 +1,4 @@
-import { MusicPlayer } from '@app/(public)/grupos/[churchId]/canciones/_components/musicPlayer/MusicPlayer';
+import { MusicPlayer } from '@bands/[bandId]/canciones/_components/musicPlayer/MusicPlayer';
 import { LastFooter } from '@ui/footer/components/LastFooter';
 import { Footer } from '@ui/footer/Footer';
 

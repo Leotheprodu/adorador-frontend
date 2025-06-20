@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { ChurchesShowCase } from '@home/_components/ChurchesShowCase';
 import { NewPosts } from './_components/NewPosts';
+import { BandsShowCase } from './_components/BandsShowCase';
 
 export const metadata: Metadata = {
   title: 'Inicio',
@@ -42,7 +42,7 @@ export default function Home() {
       <div className="flex w-full flex-col items-center lg:items-start">
         <NewPosts />
         <h1 className="my-12 text-3xl">Grupos de Alabanza:</h1>
-        <ChurchesShowCase />
+        <BandsShowCase />
       </div>
     </div>
   );
