@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "@iglesias/*": ["app/(public)/grupos/*"],
+      "@bands/*": ["app/(public)/grupos/*"],
       "@users/*": ["app/(public)/users/*"],
       "@home/*": ["app/(public)/(home)/*"],
       "@auth/*": ["app/(public)/auth/*"],

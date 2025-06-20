@@ -1,7 +1,7 @@
 import {
   EventByIdInterface,
   EventSongsProps,
-} from '@app/(public)/grupos/[churchId]/eventos/_interfaces/eventsInterface';
+} from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { atom } from 'nanostores';
 import { Socket } from 'socket.io-client';
 
@@ -9,8 +9,8 @@ export const $event = atom<EventByIdInterface>({
   id: 0,
   title: '',
   date: '',
+  bandId: 0,
   songs: [],
-  eventManagerId: 0,
 });
 export type lyricSelectedProps = {
   position: number;

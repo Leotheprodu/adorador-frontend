@@ -14,6 +14,18 @@ export interface MembershipsProps {
   since: Date;
 }
 
+export interface MembersofBandsProps {
+  id: number;
+  isActive: boolean;
+  isAdmin: boolean;
+  isEventManager: boolean;
+  role: string;
+  band: {
+    id: number;
+    name: string;
+  };
+}
+
 export interface User {
   id: number;
   name: string;
@@ -23,4 +35,5 @@ export interface User {
   status: 'active' | 'inactive';
   roles: number[];
   memberships: MembershipsProps[];
+  membersofBands: MembersofBandsProps[];
 }

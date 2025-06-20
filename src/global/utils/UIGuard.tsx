@@ -16,6 +16,8 @@ export const UIGuard = ({
   checkChurchId,
   churchRoles,
   negativeChurchRoles,
+  checkAdminEvent,
+  checkBandId,
 }: UiGuardProps) => {
   const user = useStore($user);
   const checkUserStatus = CheckUserStatus({
@@ -25,6 +27,8 @@ export const UIGuard = ({
     checkChurchId,
     churchRoles,
     negativeChurchRoles,
+    checkAdminEvent,
+    checkBandId,
   });
   useEffect(() => {
     if (isLoading) {
