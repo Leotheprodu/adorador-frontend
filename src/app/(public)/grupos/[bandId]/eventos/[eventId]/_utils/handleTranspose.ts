@@ -1,5 +1,5 @@
 import { songKeys } from '@global/config/constants';
-import { keysType } from '@iglesias/[bandId]/eventos/_interfaces/eventsInterface';
+import { keysType } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 
 export const handleTranspose = (key: keysType | null, transpose: number) => {
   if (key === null) return '';
