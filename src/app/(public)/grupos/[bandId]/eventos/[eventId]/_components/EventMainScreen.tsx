@@ -78,14 +78,15 @@ export const EventMainScreen = () => {
         if (startY - endY > 50) {
           // Deslizar hacia arriba
           if (
-            lyricSelected.position <= selectedSongLyricLength + 1 &&
-            selectedSongLyricLength > 4
+            lyricSelected.position <= selectedSongLyricLength &&
+            selectedSongLyricLength > 4 &&
+            lyricSelected.position + 3 <= selectedSongLyricLength
           ) {
             sendMessage({
               type: 'lyricSelected',
               data: {
                 position:
-                  lyricSelected.position < selectedSongLyricLength - 4 &&
+                  lyricSelected.position < selectedSongLyricLength - 3 &&
                   lyricSelected.position < 1
                     ? lyricSelected.position + 1
                     : lyricSelected.position + 4,
@@ -106,7 +107,7 @@ export const EventMainScreen = () => {
           }
         } else if (endY - startY > 50) {
           // Deslizar hacia abajo
-          if (lyricSelected.position > -1) {
+          if (lyricSelected.position > 0) {
             sendMessage({
               type: 'lyricSelected',
               data: {
@@ -139,14 +140,15 @@ export const EventMainScreen = () => {
       if (isFullscreen && checkPermission) {
         if (event.key === 'ArrowDown') {
           if (
-            lyricSelected.position <= selectedSongLyricLength + 1 &&
-            selectedSongLyricLength > 4
+            lyricSelected.position <= selectedSongLyricLength &&
+            selectedSongLyricLength > 4 &&
+            lyricSelected.position + 3 <= selectedSongLyricLength
           ) {
             sendMessage({
               type: 'lyricSelected',
               data: {
                 position:
-                  lyricSelected.position < selectedSongLyricLength - 4 &&
+                  lyricSelected.position < selectedSongLyricLength - 3 &&
                   lyricSelected.position < 1
                     ? lyricSelected.position + 1
                     : lyricSelected.position + 4,
@@ -166,7 +168,7 @@ export const EventMainScreen = () => {
             });
           }
         } else if (event.key === 'ArrowUp') {
-          if (lyricSelected.position > -1)
+          if (lyricSelected.position > 0)
             sendMessage({
               type: 'lyricSelected',
               data: {

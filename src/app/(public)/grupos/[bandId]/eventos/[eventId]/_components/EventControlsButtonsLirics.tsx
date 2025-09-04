@@ -11,9 +11,9 @@ export const EventControlsButtonsLirics = () => {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-8 rounded-md border border-slate-200 bg-white p-1 opacity-60 shadow-sm hover:opacity-100">
       <button
-        disabled={lyricSelected.position <= -1}
+        disabled={lyricSelected.position <= 0}
         onClick={() => {
-          if (lyricSelected.position > -1)
+          if (lyricSelected.position > 0)
             sendMessage({
               type: 'lyricSelected',
               data: {
@@ -32,8 +32,9 @@ export const EventControlsButtonsLirics = () => {
       <button
         className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95"
         disabled={
-          lyricSelected.position === selectedSongLyricLength + 2 ||
-          selectedSongLyricLength === 0
+          lyricSelected.position === selectedSongLyricLength + 1 ||
+          selectedSongLyricLength === 0 ||
+          lyricSelected.position + 3 >= selectedSongLyricLength
         }
         onClick={() => {
           if (
