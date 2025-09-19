@@ -27,19 +27,13 @@ export const LyricsShowcaseCard = ({
         ...(eventConfig.showStructure && {
           borderColor:
             structureColors[dataOfLyricSelected?.structure.title || 'verse'],
-          background: `linear-gradient(
-        to right,
-        ${structureColors[dataOfLyricSelected?.structure.title || 'verse']} -500%,
-        rgba(255, 255, 255, 0) 50%,
-        ${structureColors[dataOfLyricSelected?.structure.title || 'verse']} 600%
-        )`,
         }),
       }}
       className={`relative flex w-full flex-col items-center ${isFullscreen ? 'p-4 lg:p-6' : 'p-1 lg:p-2'} ${eventConfig.showStructure ? 'border-x-4' : ''}`}
     >
       {lyricSelected?.position > 0 && (
         <div className="flex flex-col items-center justify-center">
-          <div className="grid w-full grid-cols-5 rounded-md bg-slate-900/80">
+          <div className="grid w-full grid-cols-5">
             {eventConfig.showChords &&
               dataOfLyricSelected?.chords
                 .sort((a, b) => a.position - b.position)
