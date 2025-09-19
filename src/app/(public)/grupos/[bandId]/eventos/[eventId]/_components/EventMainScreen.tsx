@@ -195,7 +195,7 @@ export const EventMainScreen = () => {
         backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
-      className="relative flex h-[20rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/80 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
+      className="relative flex h-[20rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/90 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
     >
       {!selectedSongData ||
         (lyricSelected.position === -1 && (
