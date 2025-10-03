@@ -6,16 +6,11 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  Input,
-  Select,
-  SelectItem,
   Checkbox,
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { addSongsToEventService } from './services/AddSongsToEventService';
-import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
-import { songKeys } from '@global/config/constants';
 import toast from 'react-hot-toast';
 import { useStore } from '@nanostores/react';
 import { $event } from '@stores/event';
@@ -24,7 +19,8 @@ import {
   addSongsToBandService,
   getSongsOfBand,
 } from '@bands/[bandId]/canciones/_services/songsOfBandService';
-
+import { handleOnChange } from '@global/utils/formUtils';
+import { FormAddNewSong } from './FormAddNewSong';
 export const AddNewSongtoChurchAndEvent = ({
   params,
   setIsOpenPopover,
@@ -42,10 +38,10 @@ export const AddNewSongtoChurchAndEvent = ({
     key: '',
     tempo: 0,
   };
+  const [form, setForm] = useState<SongPropsWithoutId>(formInit);
   const router = useRouter();
   const event = useStore($event);
   const [goToSong, setGoToSong] = useState(false);
-  const [form, setForm] = useState<SongPropsWithoutId>(formInit);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { bandId } = params;
   const { data: songsOfChurch, status: statusGetSongs } = getSongsOfBand({
@@ -55,7 +51,7 @@ export const AddNewSongtoChurchAndEvent = ({
     data: newSong,
     mutate: mutateAddSongToChurch,
     status: statusAddSongToChurch,
-  } = addSongsToBandService({ params });
+  } = addSongsToBandService({ bandId });
   const { status: statusAddSongToEvent, mutate: mutateAddSongToEvent } =
     addSongsToEventService({ params });
   useEffect(() => {
@@ -143,84 +139,11 @@ export const AddNewSongtoChurchAndEvent = ({
                 Formulario de nueva canción
               </ModalHeader>
               <ModalBody>
-                <div className="flex justify-center">
-                  <div className="flex flex-col gap-1">
-                    <Input
-                      onChange={handleChange}
-                      value={form.title}
-                      name="title"
-                      type="text"
-                      placeholder="Nombre de la canción"
-                      isClearable
-                      onClear={() => handleOnClear('title', setForm)}
-                    />
-                    <Input
-                      onChange={handleChange}
-                      value={form.artist}
-                      name="artist"
-                      type="text"
-                      placeholder="Artista"
-                      isClearable
-                      onClear={() => handleOnClear('artist', setForm)}
-                    />
-                    <Select
-                      label="Tipo de canción"
-                      onSelectionChange={(e) => {
-                        const selectedValue = Array.from(e).join('');
-
-                        setForm((prev) => ({
-                          ...prev,
-                          songType:
-                            selectedValue as SongPropsWithoutId['songType'],
-                        }));
-                      }}
-                    >
-                      <SelectItem key="praise">Alabanza</SelectItem>
-                      <SelectItem key="worship">Adoración</SelectItem>
-                    </Select>
-                    <Select
-                      label="Tonalidad"
-                      onSelectionChange={(e) => {
-                        const selectedValue = Array.from(e).join('');
-
-                        setForm((prev) => ({
-                          ...prev,
-                          key: selectedValue,
-                        }));
-                      }}
-                    >
-                      {songKeys.map((key) => (
-                        <SelectItem key={key}>{key}</SelectItem>
-                      ))}
-                    </Select>
-                    <Input
-                      onChange={(e) => {
-                        setForm((prev) => ({
-                          ...prev,
-                          tempo: parseInt(e.target.value),
-                        }));
-                      }}
-                      value={form.tempo === 0 ? '' : form.tempo?.toString()}
-                      name="tempo"
-                      type="number"
-                      placeholder="Tempo"
-                      isClearable
-                      onClear={() => handleOnClear('tempo', setForm)}
-                      endContent={
-                        <span className="text-small text-slate-500">bpm</span>
-                      }
-                    />
-                    <Input
-                      onChange={handleChange}
-                      value={form.youtubeLink}
-                      name="youtubeLink"
-                      type="text"
-                      placeholder="Link de YouTube"
-                      isClearable
-                      onClear={() => handleOnClear('youtubeLink', setForm)}
-                    />
-                  </div>
-                </div>
+                <FormAddNewSong
+                  form={form}
+                  setForm={setForm}
+                  handleChange={handleChange}
+                />
               </ModalBody>
               <ModalFooter>
                 <Checkbox

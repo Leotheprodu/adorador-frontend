@@ -10,9 +10,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { GuitarIcon } from '@global/icons/GuitarIcon';
-import { BandsProps } from '@bands/_interfaces/bandsInterface';
+import { BandsWithMembersCount } from '@bands/_interfaces/bandsInterface';
 
-export const BandCard = ({ band }: { band: BandsProps }) => {
+export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const events =
     band.events?.sort(
