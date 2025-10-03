@@ -13,12 +13,7 @@ export const getSongsOfBand = ({ bandId }: { bandId: string }) => {
   });
 };
 
-export const addSongsToBandService = ({
-  params,
-}: {
-  params: { bandId: string; eventId: string };
-}) => {
-  const { bandId } = params;
+export const addSongsToBandService = ({ bandId }: { bandId: string }) => {
   return PostData<SongProps, SongPropsWithoutId>({
     key: 'AddSongsToBand',
     url: `${Server1API}/bands/${bandId}/songs`,
