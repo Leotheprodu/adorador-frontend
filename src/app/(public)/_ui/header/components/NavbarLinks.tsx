@@ -17,9 +17,9 @@ export const NavbarLinks = ({
   const user = useStore($user);
   const colorsSettings = {
     oscuro:
-      'text-primario md:text-secundario dark:text-secundario md:dark:text-primario border-primario md:border-secundario dark:border-secundario md:dark:border-primario',
+      'text-primario md:text-secundario border-primario md:border-secundario',
     claro:
-      'text-secundario md:text-primario dark:text-primario md:dark:text-secundario border-secundario md:border-primario dark:border-primario md:dark:border-secundario',
+      'text-primario md:text-secundario border-primario md:border-secundario',
   };
   return (
     <>

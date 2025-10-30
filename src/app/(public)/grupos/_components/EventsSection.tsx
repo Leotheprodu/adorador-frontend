@@ -1,12 +1,16 @@
 import { formatDate, formatTime } from '@global/utils/dataFormat';
 import { Button } from '@nextui-org/react';
 import Link from 'next/link';
+import { AddEventButton } from './AddEventButton';
 
 export const EventsSection = ({ data, bandId }) => {
   const currentDate = new Date();
   return (
     <div className="my-4 flex flex-col justify-center">
-      <h2 className="my-6 text-lg">Eventos</h2>
+      <div className="my-6 flex items-center">
+        <h2 className="text-lg">Eventos</h2>
+        <AddEventButton bandId={bandId} />
+      </div>
       <ul className="flex flex-wrap justify-center gap-3">
         {data?.events
           .sort(

@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export const Header = () => {
   return (
-    <header className="fixed z-40 flex h-[5rem] w-screen items-center justify-between bg-blanco px-5 sm:px-20 md:bg-opacity-40 md:backdrop-blur-md">
+    <header className="fixed z-40 flex h-[5rem] w-screen items-center justify-between bg-blanco px-5 shadow-sm sm:px-20 md:bg-opacity-40 md:backdrop-blur-md">
       <Link className="flex items-center justify-center gap-2" href={'/'}>
         <Image
           width={100}
@@ -14,7 +14,7 @@ export const Header = () => {
           alt={appName}
           className="h-10 w-auto object-contain"
         />
-        <h1 className="font-agdasima text-3xl font-bold uppercase">
+        <h1 className="font-agdasima text-3xl font-bold uppercase text-secundario">
           {appName}
         </h1>
       </Link>

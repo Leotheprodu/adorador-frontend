@@ -56,8 +56,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body>
+    <html lang="es" className="bg-blanco">
+      <body className="bg-blanco">
         <Providers>
           <Toaster />
           {children}
