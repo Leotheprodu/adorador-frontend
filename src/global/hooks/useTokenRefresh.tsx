@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import {
   getTokens,
   isTokenExpired,
@@ -10,6 +10,8 @@ import { $user } from '@global/stores/users';
 import { setLocalStorage } from '@global/utils/handleLocalStorage';
 
 export const useTokenRefresh = () => {
+  const hasInitialized = useRef(false);
+
   const checkAndRefreshToken = useCallback(async () => {
     try {
       const tokens = getTokens();
@@ -50,21 +52,29 @@ export const useTokenRefresh = () => {
   }, []);
 
   useEffect(() => {
-    // Solo verificar token una vez al cargar
+    // Solo verificar token una vez al cargar, con delay para evitar conflictos
     let mounted = true;
 
     const initCheck = async () => {
-      if (mounted) {
-        await checkAndRefreshToken();
+      if (mounted && typeof window !== 'undefined' && !hasInitialized.current) {
+        hasInitialized.current = true;
+        // Esperar un poco para que la inicialización del usuario termine
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (mounted) {
+          await checkAndRefreshToken();
+        }
       }
     };
 
-    initCheck();
+    // Ejecutar después de un delay inicial
+    const timeoutId = setTimeout(() => {
+      initCheck();
+    }, 2000); // 2 segundos de delay inicial
 
     // Configurar intervalo para verificar token cada 5 minutos
     const interval = setInterval(
       () => {
-        if (mounted) {
+        if (mounted && typeof window !== 'undefined') {
           checkAndRefreshToken();
         }
       },
@@ -73,6 +83,7 @@ export const useTokenRefresh = () => {
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
       clearInterval(interval);
     };
   }, [checkAndRefreshToken]);

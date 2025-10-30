@@ -5,10 +5,15 @@ import { BandCard } from './BandCard';
 import { SkeletonBandCard } from './SkeletonBandCard';
 import { $user } from '@global/stores/users';
 import { useStore } from '@nanostores/react';
+import { useMemo } from 'react';
 
 export const BandsShowCase = () => {
   const user = useStore($user);
-  const { data, error, isLoading } = getBandsOfUser(user.isLoggedIn);
+
+  // Memoizar el estado de isLoggedIn para evitar re-renders innecesarios
+  const isLoggedIn = useMemo(() => user.isLoggedIn, [user.isLoggedIn]);
+
+  const { data, error, isLoading } = getBandsOfUser(isLoggedIn);
   return (
     <div className="h-full">
       {error && (

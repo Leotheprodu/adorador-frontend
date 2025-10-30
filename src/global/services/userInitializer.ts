@@ -1,12 +1,6 @@
 // Flag global para evitar múltiples inicializaciones
 let globalInitFlag = false;
 
-// Función para resetear el flag (útil para debug)
-export const resetUserInit = () => {
-  globalInitFlag = false;
-  console.log('[UserInit] Flag reseteado');
-};
-
 // Función simple y directa para inicializar el usuario
 export const initializeUserOnce = async () => {
   // Si ya se ejecutó, no hacer nada
@@ -33,6 +27,11 @@ export const initializeUserOnce = async () => {
 
     const localUser = getLocalStorage('user');
 
+    // Verificar si hay tokens válidos
+    const jwtUtils = await import('../utils/jwtUtils');
+    const tokens = jwtUtils.getTokens();
+    const hasValidToken = tokens && !jwtUtils.isTokenExpired(tokens);
+
     // Si localUser es null o undefined, crear usuario por defecto
     if (!localUser) {
       const defaultUser = {
@@ -49,19 +48,25 @@ export const initializeUserOnce = async () => {
       };
       setLocalStorage('user', defaultUser);
       $user.set(defaultUser);
-      console.log('[UserInit] Usuario por defecto creado');
     } else {
-      // Si existe el usuario local, sincronizar con el store si está vacío
-      const currentUser = $user.get();
-      if (currentUser.id === 0 && localUser.id !== 0) {
+      // Si existe el usuario local y tiene token válido, mantener el estado logueado
+      if (hasValidToken && localUser.isLoggedIn) {
         $user.set(localUser);
-        console.log('[UserInit] Usuario sincronizado desde localStorage');
+      } else if (!hasValidToken && localUser.isLoggedIn) {
+        // Si no hay token válido pero el usuario aparece como logueado, desloguearlo
+        const loggedOutUser = { ...localUser, isLoggedIn: false };
+        setLocalStorage('user', loggedOutUser);
+        $user.set(loggedOutUser);
+      } else {
+        // Si existe el usuario local, sincronizar con el store si está vacío
+        const currentUser = $user.get();
+        if (currentUser.id === 0 && localUser.id !== 0) {
+          $user.set(localUser);
+        }
       }
     }
-
-    console.log('[UserInit] Inicialización completada');
   } catch (error) {
-    console.error('[UserInit] Error:', error);
+    console.error('Error initializing user:', error);
     // Resetear flag para permitir reintento
     globalInitFlag = false;
   }
@@ -150,10 +155,3 @@ class UserInitializer {
 }
 
 export const userInitializer = UserInitializer.getInstance();
-
-// Hacer disponible en window para debug en producción
-if (typeof window !== 'undefined') {
-  (window as unknown as Record<string, unknown>).resetUserInit = resetUserInit;
-  (window as unknown as Record<string, unknown>).initializeUserOnce =
-    initializeUserOnce;
-}
