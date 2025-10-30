@@ -9,7 +9,7 @@ import { getSongsOfBand } from '../_services/songsOfBandService';
 import { SongOfBandCard } from './SongOfBandCard';
 
 export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
-  const { data, isLoading, status } = getSongsOfBand({
+  const { data, isLoading, status, refetch } = getSongsOfBand({
     bandId: params.bandId,
   });
 
@@ -51,6 +51,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                   key={song.id}
                   song={song}
                   bandId={params.bandId}
+                  refetch={refetch}
                 />
               ))}
         </section>
@@ -67,6 +68,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                   key={song.id}
                   song={song}
                   bandId={params.bandId}
+                  refetch={refetch}
                 />
               ))}
         </section>

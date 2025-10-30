@@ -6,9 +6,13 @@ import { useRouter } from 'next/navigation';
 export const useDeleteSong = ({
   bandId,
   songId,
+  onSuccess,
+  redirectOnDelete = true,
 }: {
   bandId: string;
   songId: string;
+  onSuccess?: () => void;
+  redirectOnDelete?: boolean;
 }) => {
   const router = useRouter();
   const {
@@ -25,8 +29,16 @@ export const useDeleteSong = ({
     if (statusDeleteSong === 'success') {
       toast.success('Canción eliminada correctamente');
       reset();
-      // Redirigir a la lista de canciones después de eliminar
-      router.push(`/grupos/${bandId}/canciones`);
+
+      // Ejecutar callback personalizado si existe
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // Redirigir solo si está habilitado
+      if (redirectOnDelete) {
+        router.push(`/grupos/${bandId}/canciones`);
+      }
     }
     if (statusDeleteSong === 'error') {
       toast.error('Error al eliminar la canción');
