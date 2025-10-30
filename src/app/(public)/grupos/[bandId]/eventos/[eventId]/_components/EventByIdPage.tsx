@@ -3,6 +3,7 @@ import { EventControls } from '@bands/[bandId]/eventos/[eventId]/_components/Eve
 import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventMainScreen';
 import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventByIdPage';
 import { EventSimpleTitle } from '@bands/[bandId]/eventos/[eventId]/_components/EventSimpleTitle';
+import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/EditEventButton';
 import Link from 'next/link';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 
@@ -27,6 +28,11 @@ export const EventByIdPage = ({
             <small className="hidden group-hover:block">Volver al grupo</small>
           </Link>
           <h1 className="text-xl font-bold">Evento</h1>
+          <EditEventButton
+            bandId={params.bandId}
+            eventId={params.eventId}
+            refetch={refetch}
+          />
         </div>
         <EventMainScreen />
 

@@ -14,3 +14,17 @@ export const addEventsToBandService = ({ bandId }: { bandId: string }) => {
     method: 'POST',
   });
 };
+
+export const updateEventService = ({
+  bandId,
+  eventId,
+}: {
+  bandId: string;
+  eventId: string;
+}) => {
+  return PostData<EventsProps, Partial<EventPropsWithoutId>>({
+    key: 'UpdateEvent',
+    url: `${Server1API}/bands/${bandId}/events/${eventId}`,
+    method: 'PATCH',
+  });
+};
