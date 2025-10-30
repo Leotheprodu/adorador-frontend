@@ -21,6 +21,12 @@ export const FetchData = <TResponse>({
     queryKey: [key],
     queryFn: () => fetchAPI<TResponse>({ url, skipAuth }),
     enabled: !!isEnabled,
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 10, // 10 minutos
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: 1,
   });
 };
 

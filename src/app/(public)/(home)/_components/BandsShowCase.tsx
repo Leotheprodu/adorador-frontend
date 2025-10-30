@@ -3,9 +3,12 @@
 import { getBandsOfUser } from '@bands/_services/bandsService';
 import { BandCard } from './BandCard';
 import { SkeletonBandCard } from './SkeletonBandCard';
+import { $user } from '@global/stores/users';
+import { useStore } from '@nanostores/react';
 
 export const BandsShowCase = () => {
-  const { data, error, isLoading } = getBandsOfUser();
+  const user = useStore($user);
+  const { data, error, isLoading } = getBandsOfUser(user.isLoggedIn);
   return (
     <div className="h-full">
       {error && (

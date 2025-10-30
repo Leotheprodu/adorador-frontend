@@ -11,10 +11,11 @@ export const getBands = () => {
     url: `${Server1API}/bands`,
   });
 };
-export const getBandsOfUser = () => {
+export const getBandsOfUser = (isEnabled: boolean = true) => {
   return FetchData<BandsWithMembersCount[]>({
     key: 'BandsOfUser',
     url: `${Server1API}/bands/user-bands`,
+    isEnabled,
   });
 };
 export const getBandById = (bandId: string) => {
