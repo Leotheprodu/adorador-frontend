@@ -10,7 +10,22 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient();
+  // Crear QueryClient con configuración estable para evitar re-creaciones
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5, // 5 minutos
+        gcTime: 1000 * 60 * 10, // 10 minutos (antes era cacheTime)
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: 1,
+      },
+      mutations: {
+        retry: 1,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
