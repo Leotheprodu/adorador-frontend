@@ -11,10 +11,24 @@ export const setLocalStorage = (key: string, value: any, isString = false) => {
 
 export const getLocalStorage = (key: string, isString = false) => {
   if (typeof window !== 'undefined') {
+    const item = localStorage.getItem(key);
+
     if (isString) {
-      return localStorage.getItem(key);
+      return item;
     } else {
-      return JSON.parse(localStorage.getItem(key) as string);
+      // Si el item es null, retornar null en lugar de intentar parsearlo
+      if (item === null) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(item);
+      } catch (error) {
+        console.error(`Error parsing localStorage item '${key}':`, error);
+        return null;
+      }
     }
   }
+
+  return null;
 };

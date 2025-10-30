@@ -6,5 +6,6 @@ export const resetPasswordService = () => {
     key: 'reset-password',
     url: `${Server1API}/auth/new-password`,
     method: 'POST',
+    skipAuth: true,
   });
 };

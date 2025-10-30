@@ -4,6 +4,7 @@ import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
 import { loginService } from '@auth/login/_services/loginService';
 import { setLocalStorage } from '@global/utils/handleLocalStorage';
+import { setTokens, getTokenExpirationTime } from '@global/utils/jwtUtils';
 import toast from 'react-hot-toast';
 import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 
@@ -21,10 +22,38 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
   };
 
   useEffect(() => {
-    if (status === 'success') {
-      $user.set(data);
-      setLocalStorage('user', data);
-      toast.success(`Bienvenido ${data.name}`);
+    if (status === 'success' && data) {
+      console.log('Respuesta de login:', data); // Debug log
+
+      // Validar que la respuesta tenga la estructura esperada
+      if (!data.accessToken || !data.refreshToken) {
+        console.error('Tokens JWT faltantes en la respuesta:', data);
+        toast.error('Error: Tokens de autenticación faltantes');
+        return;
+      }
+
+      // El backend retorna los datos del usuario directamente en el objeto raíz
+      // junto con los tokens, no dentro de una propiedad 'user'
+      const { accessToken, refreshToken, ...userData } = data;
+
+      // Almacenar tokens JWT
+      setTokens({
+        accessToken,
+        refreshToken,
+        expiresAt: getTokenExpirationTime(accessToken),
+      });
+
+      // Crear objeto de usuario sin los tokens
+      const userWithLogin = {
+        ...userData,
+        isLoggedIn: true,
+      };
+
+      $user.set(userWithLogin);
+      setLocalStorage('user', userWithLogin);
+
+      const userName = data.name || 'Usuario';
+      toast.success(`Bienvenido ${userName}`);
       setForm(formInit);
       setIsInvalidPass(false);
     } else if (status === 'error') {
