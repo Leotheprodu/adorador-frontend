@@ -8,6 +8,7 @@ export const signUpService = () => {
     key: 'sign-up',
     url: `${Server1API}/users`,
     method: 'POST',
+    skipAuth: true,
   });
 };
 
@@ -16,5 +17,6 @@ export const verifyEmailService = ({ token }: { token: string }) => {
     key: 'verify-email',
     url: `${Server1API}/auth/verify-email/${token}`,
     method: 'GET',
+    skipAuth: true,
   });
 };

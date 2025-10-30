@@ -6,5 +6,6 @@ export const PasswordRecoveryService = () => {
     key: 'password-recovery',
     url: `${Server1API}/auth/forgot-password`,
     method: 'POST',
+    skipAuth: true,
   });
 };

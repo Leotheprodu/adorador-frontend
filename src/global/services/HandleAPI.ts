@@ -10,14 +10,16 @@ export const FetchData = <TResponse>({
   key,
   url,
   isEnabled = true,
+  skipAuth = false,
 }: {
   key: string;
   url: string;
   isEnabled?: boolean;
+  skipAuth?: boolean;
 }): UseQueryResult<TResponse, Error> => {
   return useQuery<TResponse, Error>({
     queryKey: [key],
-    queryFn: () => fetchAPI<TResponse>({ url }),
+    queryFn: () => fetchAPI<TResponse>({ url, skipAuth }),
     enabled: !!isEnabled,
   });
 };
@@ -27,11 +29,13 @@ export const PostData = <TResponse, TData = undefined>({
   url,
   method = 'POST',
   isFormData,
+  skipAuth = false,
 }: {
   key: string;
   url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   isFormData?: boolean;
+  skipAuth?: boolean;
 }): UseMutationResult<TResponse, Error, TData | null, unknown> => {
   return useMutation<TResponse, Error, TData | null, unknown>({
     mutationKey: [key],
@@ -41,6 +45,7 @@ export const PostData = <TResponse, TData = undefined>({
         method,
         body: (data as FormData | null) ?? undefined,
         isFormData,
+        skipAuth,
       });
     },
     onError: (error) => {
