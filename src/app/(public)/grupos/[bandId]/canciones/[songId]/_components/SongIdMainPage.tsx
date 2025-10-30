@@ -26,7 +26,7 @@ export const SongIdMainPage = ({
   );
 
   const chordPreferences = useStore($chordPreferences);
-  const { data, isLoading, status } = getSongData({ params });
+  const { data, isLoading, status, refetch } = getSongData({ params });
   const {
     data: LyricsOfCurrentSong,
     refetch: refetchLyricsOfCurrentSong,
@@ -87,7 +87,13 @@ export const SongIdMainPage = ({
             </Link>
             <h1 className="text-xl font-bold">Detalles de canción</h1>
           </div>
-          <SongBasicInfo bandId={params.bandId} data={data} status={status} />
+          <SongBasicInfo
+            bandId={params.bandId}
+            songId={params.songId}
+            data={data}
+            status={status}
+            refetch={refetch}
+          />
         </section>
         <section>
           <div className="relative flex w-screen flex-col items-center gap-4 overflow-x-auto px-4 xl:flex-row xl:items-start xl:px-10">

@@ -20,3 +20,17 @@ export const addSongsToBandService = ({ bandId }: { bandId: string }) => {
     method: 'POST',
   });
 };
+
+export const updateSongService = ({
+  bandId,
+  songId,
+}: {
+  bandId: string;
+  songId: string;
+}) => {
+  return PostData<SongProps, Partial<SongPropsWithoutId>>({
+    key: 'UpdateSong',
+    url: `${Server1API}/bands/${bandId}/songs/${songId}`,
+    method: 'PATCH',
+  });
+};
