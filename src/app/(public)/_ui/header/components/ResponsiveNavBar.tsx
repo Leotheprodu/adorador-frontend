@@ -4,10 +4,10 @@ import { usePathname } from 'next/navigation';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import { NavbarLinks } from '@ui/header/components/NavbarLinks';
 import { links } from '@global/config/links';
-import { useCheckIsLoggedIn } from '@global/services/useCheckIsLoggedIn';
+// import { useCheckIsLoggedIn } from '@global/services/useCheckIsLoggedIn';
 
 export const ResponsiveNavBar = () => {
-  useCheckIsLoggedIn();
+  // useCheckIsLoggedIn(); // Temporalmente deshabilitado para debug
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {

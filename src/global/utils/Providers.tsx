@@ -1,9 +1,26 @@
 'use client';
 import { NextUIProvider } from '@nextui-org/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useIsClient } from '@global/hooks/useIsClient';
+import { initializeUserOnce } from '@global/services/userInitializer';
+import { useEffect } from 'react';
 // import { useTokenRefresh } from '@global/hooks/useTokenRefresh';
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
+  const isClient = useIsClient();
+
+  // Inicializar usuario una vez en toda la aplicación
+  useEffect(() => {
+    if (isClient) {
+      // Usar timeout para asegurar que todo esté cargado
+      const timeoutId = setTimeout(() => {
+        initializeUserOnce();
+      }, 200);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isClient]);
+
   // Temporalmente deshabilitado para debug
   // useTokenRefresh();
   return <>{children}</>;
