@@ -32,6 +32,14 @@ export const SongIdMainPage = ({
     refetch: refetchLyricsOfCurrentSong,
     status: statusOfLyricsOfCurrentSong,
   } = getSongLyrics({ params });
+
+  // Refetch cuando cambie el songId
+  useEffect(() => {
+    refetch();
+    refetchLyricsOfCurrentSong();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.songId]);
+
   useEffect(() => {
     if (LyricsOfCurrentSong && statusOfLyricsOfCurrentSong === 'success') {
       setLyricsSorted(

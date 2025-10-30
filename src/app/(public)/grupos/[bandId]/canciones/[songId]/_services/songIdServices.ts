@@ -1,5 +1,5 @@
 import { FetchData, PostData } from '@global/services/HandleAPI';
-import { SongProps } from '../../_interfaces/songsInterface';
+import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { Server1API } from '@global/config/constants';
 import {
   ChordPropsWithoutId,
@@ -11,7 +11,7 @@ export const getSongData = ({
 }: {
   params: { bandId: string; songId: string };
 }) => {
-  return FetchData<SongProps>({
+  return FetchData<SongPropsWithCount>({
     key: 'SongData',
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}`,
   });

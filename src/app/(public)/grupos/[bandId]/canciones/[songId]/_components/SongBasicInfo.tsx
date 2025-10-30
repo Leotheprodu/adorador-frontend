@@ -4,11 +4,12 @@ import { PlayIcon } from '@global/icons/PlayIcon';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
 import { churchRoles, songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
-import { SongProps } from '../../_interfaces/songsInterface';
+import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
 import { Button, Tooltip } from '@nextui-org/react';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
+import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 
 export const SongBasicInfo = ({
   data,
@@ -17,7 +18,7 @@ export const SongBasicInfo = ({
   songId,
   refetch,
 }: {
-  data: SongProps | undefined;
+  data: SongPropsWithCount | undefined;
   status: QueryStatus;
   bandId: string;
   songId: string;
@@ -104,6 +105,15 @@ export const SongBasicInfo = ({
             refetch={refetch}
             songData={data}
           />
+          {data &&
+            data._count &&
+            (data._count.lyrics === 0 || data._count.lyrics === null) && (
+              <DeleteSongButton
+                bandId={bandId}
+                songId={songId}
+                songTitle={data.title}
+              />
+            )}
         </div>
       </div>
     </div>

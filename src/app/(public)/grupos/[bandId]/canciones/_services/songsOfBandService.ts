@@ -34,3 +34,17 @@ export const updateSongService = ({
     method: 'PATCH',
   });
 };
+
+export const deleteSongService = ({
+  bandId,
+  songId,
+}: {
+  bandId: string;
+  songId: string;
+}) => {
+  return PostData<{ message: string }, void>({
+    key: 'DeleteSong',
+    url: `${Server1API}/bands/${bandId}/songs/${songId}`,
+    method: 'DELETE',
+  });
+};
