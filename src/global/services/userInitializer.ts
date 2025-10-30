@@ -32,6 +32,13 @@ export const initializeUserOnce = async () => {
     const tokens = jwtUtils.getTokens();
     const hasValidToken = tokens && !jwtUtils.isTokenExpired(tokens);
 
+    console.log('[UserInit] Estado:', {
+      hasLocalUser: !!localUser,
+      localUserLoggedIn: localUser?.isLoggedIn,
+      hasValidToken,
+      tokenExpiry: tokens ? new Date(tokens.expiresAt).toLocaleString() : 'N/A',
+    });
+
     // Si localUser es null o undefined, crear usuario por defecto
     if (!localUser) {
       const defaultUser = {
@@ -50,19 +57,29 @@ export const initializeUserOnce = async () => {
       $user.set(defaultUser);
     } else {
       // Si existe el usuario local y tiene token válido, mantener el estado logueado
-      if (hasValidToken && localUser.isLoggedIn) {
-        $user.set(localUser);
-      } else if (!hasValidToken && localUser.isLoggedIn) {
+      if (hasValidToken) {
+        // Si hay token válido, el usuario DEBE estar logueado
+        if (!localUser.isLoggedIn) {
+          console.log(
+            '[UserInit] Corrigiendo estado: Token válido pero usuario marcado como deslogueado',
+          );
+          const loggedInUser = { ...localUser, isLoggedIn: true };
+          setLocalStorage('user', loggedInUser);
+          $user.set(loggedInUser);
+        } else {
+          console.log('[UserInit] Usuario con token válido restaurado');
+          $user.set(localUser);
+        }
+      } else if (localUser.isLoggedIn) {
         // Si no hay token válido pero el usuario aparece como logueado, desloguearlo
+        console.log('[UserInit] Deslogueando usuario: No hay token válido');
         const loggedOutUser = { ...localUser, isLoggedIn: false };
         setLocalStorage('user', loggedOutUser);
         $user.set(loggedOutUser);
       } else {
-        // Si existe el usuario local, sincronizar con el store si está vacío
-        const currentUser = $user.get();
-        if (currentUser.id === 0 && localUser.id !== 0) {
-          $user.set(localUser);
-        }
+        // Usuario no logueado y sin token válido - estado correcto
+        console.log('[UserInit] Usuario sincronizado (sin sesión activa)');
+        $user.set(localUser);
       }
     }
   } catch (error) {

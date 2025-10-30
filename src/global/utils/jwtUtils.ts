@@ -92,8 +92,10 @@ export const getValidAccessToken = async (): Promise<string | null> => {
 
 // Función para renovar el access token usando el refresh token
 export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
+  console.log('[JWT] Intentando renovar token...');
   const tokens = getTokens();
   if (!tokens || !tokens.refreshToken) {
+    console.log('[JWT] No hay refresh token disponible');
     clearTokens();
     return null;
   }
@@ -102,11 +104,12 @@ export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
     // Usar la variable de entorno correcta
     const apiUrl = process.env.NEXT_PUBLIC_API_URL_1;
     if (!apiUrl) {
-      console.error('API URL not configured');
+      console.error('[JWT] API URL not configured');
       clearTokens();
       return null;
     }
 
+    console.log('[JWT] Llamando a /auth/refresh...');
     // Usar fetch directo para evitar bucles con fetchAPI
     const response = await fetch(`${apiUrl}/auth/refresh`, {
       method: 'POST',
@@ -119,6 +122,7 @@ export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
     });
 
     if (response.ok) {
+      console.log('[JWT] Token renovado exitosamente por el backend');
       const data: JWTAuthResponse = await response.json();
       const newTokens: TokenStorage = {
         accessToken: data.accessToken,
@@ -127,14 +131,22 @@ export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
       };
 
       setTokens(newTokens);
+      console.log(
+        '[JWT] Nuevo token expira en:',
+        new Date(newTokens.expiresAt).toLocaleString(),
+      );
       return newTokens;
     } else {
       // Si el refresh token también ha expirado o es inválido
+      console.log(
+        '[JWT] Backend rechazó el refresh token. Status:',
+        response.status,
+      );
       clearTokens();
       return null;
     }
   } catch (error) {
-    console.error('Error refreshing token:', error);
+    console.error('[JWT] Error al renovar token:', error);
     clearTokens();
     return null;
   }
