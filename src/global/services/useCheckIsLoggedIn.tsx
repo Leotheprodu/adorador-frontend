@@ -13,12 +13,12 @@ export const useCheckIsLoggedIn = () => {
   useEffect(() => {
     // Solo ejecutar en el cliente después de la hidratación
     if (!isClient) return;
-    
+
     const initializeUser = () => {
       // Prevenir múltiples ejecuciones (importante en StrictMode y producción)
       if (isInitializedRef.current) return;
       isInitializedRef.current = true;
-      
+
       const localUser = getLocalStorage('user');
 
       // Si localUser es null o undefined, crear usuario por defecto
@@ -48,7 +48,7 @@ export const useCheckIsLoggedIn = () => {
 
     // Usar timeout para evitar hydration issues
     const timeoutId = setTimeout(initializeUser, 100); // Aumentar delay para producción
-    
+
     return () => {
       clearTimeout(timeoutId);
     };
