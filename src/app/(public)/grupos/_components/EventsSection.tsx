@@ -1,10 +1,9 @@
-import { formatDate, formatTime } from '@global/utils/dataFormat';
 import { Button } from '@nextui-org/react';
 import Link from 'next/link';
 import { AddEventButton } from './AddEventButton';
+import { EventOfBandCard } from '@bands/[bandId]/eventos/_components/EventOfBandCard';
 
 export const EventsSection = ({ data, bandId }) => {
-  const currentDate = new Date();
   return (
     <div className="my-4 flex flex-col justify-center">
       <div className="my-6 flex items-center">
@@ -17,28 +16,7 @@ export const EventsSection = ({ data, bandId }) => {
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
           )
           .map((event) => (
-            <li className="flex flex-wrap" key={event.id}>
-              <Link href={`/grupos/${bandId}/eventos/${event.id}`}>
-                <div
-                  className={`${currentDate < new Date(event.date) ? 'border-success-500' : 'border-gray-100'} rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100`}
-                >
-                  <h3>{event.title}</h3>
-                  <div className="border-b border-t border-gray-200">
-                    <div className="flex w-full justify-center bg-slate-100">
-                      {currentDate < new Date(event.date) ? (
-                        <small className="text-primary-400">Próximamente</small>
-                      ) : (
-                        <small className="text-secondary-400">Ya pasó</small>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <p>{formatDate(event.date)}</p>
-                      <p>{formatTime(event.date)}</p>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </li>
+            <EventOfBandCard key={event.id} event={event} bandId={bandId} />
           ))}
       </ul>
       {data && data?._count.events > 5 && (

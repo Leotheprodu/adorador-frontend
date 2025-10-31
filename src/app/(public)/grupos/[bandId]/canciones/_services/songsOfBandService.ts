@@ -10,6 +10,7 @@ export const getSongsOfBand = ({ bandId }: { bandId: string }) => {
   return FetchData<SongPropsWithCount[]>({
     key: 'SongsOfBand',
     url: `${Server1API}/bands/${bandId}/songs`,
+    refetchOnMount: true,
   });
 };
 

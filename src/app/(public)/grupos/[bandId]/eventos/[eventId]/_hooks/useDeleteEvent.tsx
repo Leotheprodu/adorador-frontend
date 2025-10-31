@@ -1,40 +1,40 @@
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { deleteSongService } from '@bands/[bandId]/canciones/_services/songsOfBandService';
+import { deleteEventService } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 
-export const useDeleteSong = ({
+export const useDeleteEvent = ({
   bandId,
-  songId,
+  eventId,
   onSuccess,
   redirectOnDelete = true,
 }: {
   bandId: string;
-  songId: string;
+  eventId: string;
   onSuccess?: () => void;
   redirectOnDelete?: boolean;
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const {
-    mutate: mutateDeleteSong,
-    status: statusDeleteSong,
+    mutate: mutateDeleteEvent,
+    status: statusDeleteEvent,
     reset,
-  } = deleteSongService({ bandId, songId });
+  } = deleteEventService({ bandId, eventId });
 
-  const handleDeleteSong = () => {
-    mutateDeleteSong();
+  const handleDeleteEvent = () => {
+    mutateDeleteEvent(null);
   };
 
   useEffect(() => {
-    if (statusDeleteSong === 'success') {
-      toast.success('Canción eliminada correctamente');
+    if (statusDeleteEvent === 'success') {
+      toast.success('Evento eliminado correctamente');
       reset();
 
       // Invalidar las queries relacionadas para forzar refetch
-      queryClient.invalidateQueries({ queryKey: ['SongsOfBand'] });
       queryClient.invalidateQueries({ queryKey: ['BandById'] });
+      queryClient.invalidateQueries({ queryKey: ['EventsOfBand'] });
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {
@@ -43,17 +43,17 @@ export const useDeleteSong = ({
 
       // Redirigir solo si está habilitado
       if (redirectOnDelete) {
-        router.push(`/grupos/${bandId}/canciones`);
+        router.push(`/grupos/${bandId}/eventos`);
       }
     }
-    if (statusDeleteSong === 'error') {
-      toast.error('Error al eliminar la canción');
+    if (statusDeleteEvent === 'error') {
+      toast.error('Error al eliminar el evento');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusDeleteSong]);
+  }, [statusDeleteEvent]);
 
   return {
-    handleDeleteSong,
-    statusDeleteSong,
+    handleDeleteEvent,
+    statusDeleteEvent,
   };
 };

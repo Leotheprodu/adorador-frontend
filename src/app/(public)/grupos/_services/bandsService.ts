@@ -22,5 +22,6 @@ export const getBandById = (bandId: string) => {
   return FetchData<BandWithSongsProps>({
     key: 'BandById',
     url: `${Server1API}/bands/${bandId}`,
+    refetchOnMount: true,
   });
 };

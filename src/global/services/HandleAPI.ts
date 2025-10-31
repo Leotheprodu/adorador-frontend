@@ -11,11 +11,13 @@ export const FetchData = <TResponse>({
   url,
   isEnabled = true,
   skipAuth = false,
+  refetchOnMount = false,
 }: {
   key: string;
   url: string;
   isEnabled?: boolean;
   skipAuth?: boolean;
+  refetchOnMount?: boolean;
 }): UseQueryResult<TResponse, Error> => {
   return useQuery<TResponse, Error>({
     queryKey: [key],
@@ -24,7 +26,7 @@ export const FetchData = <TResponse>({
     staleTime: 1000 * 60 * 5, // 5 minutos
     gcTime: 1000 * 60 * 10, // 10 minutos
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: refetchOnMount,
     refetchOnReconnect: false,
     retry: 1,
   });
