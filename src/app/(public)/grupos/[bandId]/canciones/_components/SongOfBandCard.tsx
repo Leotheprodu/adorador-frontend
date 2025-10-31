@@ -3,6 +3,13 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+  Button,
 } from '@nextui-org/react';
 import { SongPropsWithCount } from '../_interfaces/songsInterface';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
@@ -10,15 +17,25 @@ import { songTypes } from '@global/config/constants';
 import Link from 'next/link';
 import { $SelectedSong } from '@stores/player';
 import { useStore } from '@nanostores/react';
+import { useDeleteSong } from '../_hooks/useDeleteSong';
 
 export const SongOfBandCard = ({
   song,
   bandId,
+  refetch,
 }: {
   song: SongPropsWithCount;
   bandId: string;
+  refetch?: () => void;
 }) => {
   const selectedSong = useStore($SelectedSong);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { handleDeleteSong, statusDeleteSong } = useDeleteSong({
+    bandId,
+    songId: song.id.toString(),
+    onSuccess: refetch,
+    redirectOnDelete: false,
+  });
   return (
     <div
       className={`flex flex-col items-center justify-center rounded-md border-1 ${selectedSong?.id === song.id ? 'border-primary-500' : 'border-slate-100'} p-2`}
@@ -32,7 +49,9 @@ export const SongOfBandCard = ({
                 <MenuButtonIcon />
               </button>
             </DropdownTrigger>
-            <DropdownMenu>
+            <DropdownMenu
+              disabledKeys={song._count.lyrics > 0 ? ['delete'] : []}
+            >
               <DropdownItem
                 as={Link}
                 href={`/grupos/${bandId}/canciones/${song.id}`}
@@ -55,7 +74,12 @@ export const SongOfBandCard = ({
               >
                 Escuchar
               </DropdownItem>
-              <DropdownItem key="delete" className="text-danger" color="danger">
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                onClick={onOpen}
+              >
                 Eliminar
               </DropdownItem>
             </DropdownMenu>
@@ -76,6 +100,40 @@ export const SongOfBandCard = ({
           )}
         </div>
       </div>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Confirmar eliminación
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  ¿Estás seguro de que deseas eliminar la canción{' '}
+                  <strong>&quot;{song.title}&quot;</strong>?
+                </p>
+                <p className="text-sm text-danger">
+                  Esta acción no se puede deshacer.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="default" variant="light" onPress={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  isLoading={statusDeleteSong === 'pending'}
+                  disabled={statusDeleteSong === 'success'}
+                  color="danger"
+                  onPress={handleDeleteSong}
+                >
+                  Eliminar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

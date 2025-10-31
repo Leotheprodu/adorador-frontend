@@ -12,8 +12,8 @@ import { useStore } from '@nanostores/react';
 import { $chordPreferences } from '@stores/event';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { LyricsGroupedCard } from './LyricsGroupedCard';
-import Link from 'next/link';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
+import { handleBackNavigation } from '@global/utils/navigationUtils';
 
 export const SongIdMainPage = ({
   params,
@@ -26,12 +26,20 @@ export const SongIdMainPage = ({
   );
 
   const chordPreferences = useStore($chordPreferences);
-  const { data, isLoading, status } = getSongData({ params });
+  const { data, isLoading, status, refetch } = getSongData({ params });
   const {
     data: LyricsOfCurrentSong,
     refetch: refetchLyricsOfCurrentSong,
     status: statusOfLyricsOfCurrentSong,
   } = getSongLyrics({ params });
+
+  // Refetch cuando cambie el songId
+  useEffect(() => {
+    refetch();
+    refetchLyricsOfCurrentSong();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.songId]);
+
   useEffect(() => {
     if (LyricsOfCurrentSong && statusOfLyricsOfCurrentSong === 'success') {
       setLyricsSorted(
@@ -67,6 +75,10 @@ export const SongIdMainPage = ({
     setLyricsGrouped(array);
   }, [lyricsSorted]);
 
+  const handleBackToSongs = () => {
+    handleBackNavigation(`/grupos/${params.bandId}/canciones`);
+  };
+
   return (
     <UIGuard
       isLoggedIn
@@ -76,18 +88,24 @@ export const SongIdMainPage = ({
       <div className="flex flex-col items-center overflow-hidden">
         <section className="mb-10">
           <div className="mb-6 flex items-center gap-2">
-            <Link
-              href={`/grupos/${params.bandId}/canciones`}
+            <button
+              onClick={handleBackToSongs}
               className="group flex items-center justify-center gap-2 transition-all duration-150 hover:cursor-pointer hover:text-primary-500"
             >
               <BackwardIcon />
               <small className="hidden group-hover:block">
                 Volver a canciones
               </small>
-            </Link>
+            </button>
             <h1 className="text-xl font-bold">Detalles de canción</h1>
           </div>
-          <SongBasicInfo bandId={params.bandId} data={data} status={status} />
+          <SongBasicInfo
+            bandId={params.bandId}
+            songId={params.songId}
+            data={data}
+            status={status}
+            refetch={refetch}
+          />
         </section>
         <section>
           <div className="relative flex w-screen flex-col items-center gap-4 overflow-x-auto px-4 xl:flex-row xl:items-start xl:px-10">

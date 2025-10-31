@@ -26,6 +26,7 @@ export const FormAddNewSong = ({ form, setForm, handleChange }) => {
         />
         <Select
           label="Tipo de canción"
+          selectedKeys={form.songType ? [form.songType] : []}
           onSelectionChange={(e) => {
             const selectedValue = Array.from(e).join('');
 
@@ -40,6 +41,7 @@ export const FormAddNewSong = ({ form, setForm, handleChange }) => {
         </Select>
         <Select
           label="Tonalidad"
+          selectedKeys={form.key ? [form.key] : []}
           onSelectionChange={(e) => {
             const selectedValue = Array.from(e).join('');
 

@@ -4,19 +4,25 @@ import { PlayIcon } from '@global/icons/PlayIcon';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
 import { churchRoles, songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
-import { SongProps } from '../../_interfaces/songsInterface';
-import { QueryStatus } from '@tanstack/react-query';
+import { SongPropsWithCount } from '../../_interfaces/songsInterface';
+import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
 import { Button, Tooltip } from '@nextui-org/react';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
+import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
+import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 
 export const SongBasicInfo = ({
   data,
   status,
   bandId,
+  songId,
+  refetch,
 }: {
-  data: SongProps | undefined;
+  data: SongPropsWithCount | undefined;
   status: QueryStatus;
   bandId: string;
+  songId: string;
+  refetch: (options?: RefetchOptions | undefined) => Promise<unknown>;
 }) => {
   const playlist = useStore($PlayList);
   const selectedSong = useStore($SelectedSong);
@@ -78,25 +84,38 @@ export const SongBasicInfo = ({
 
         {data?.tempo && <p>, {data?.tempo} bpm</p>}
       </div>
-
-      <Button
-        color="primary"
-        variant="flat"
-        as={'a'}
-        target="_blank"
-        className="w-28 text-primary-900 hover:text-primary-500"
-        href={`https://youtu.be/${data?.youtubeLink}`}
-      >
-        Ir a Youtube
-      </Button>
-
-      {isUserChecked && (
-        <div className="invisible mt-7 flex w-full justify-end group-hover:visible">
-          <Button variant="bordered" color="danger">
-            Editar Información
+      <div className="flex gap-1">
+        <div className="flex w-full gap-2">
+          <Button
+            color="primary"
+            variant="flat"
+            as={'a'}
+            target="_blank"
+            className="text-primary-900 hover:text-primary-500"
+            href={`https://youtu.be/${data?.youtubeLink}`}
+          >
+            Ir a Youtube
           </Button>
         </div>
-      )}
+
+        <div className="flex w-full gap-2">
+          <EditSongButton
+            bandId={bandId}
+            songId={songId}
+            refetch={refetch}
+            songData={data}
+          />
+          {data &&
+            data._count &&
+            (data._count.lyrics === 0 || data._count.lyrics === null) && (
+              <DeleteSongButton
+                bandId={bandId}
+                songId={songId}
+                songTitle={data.title}
+              />
+            )}
+        </div>
+      </div>
     </div>
   );
 };
