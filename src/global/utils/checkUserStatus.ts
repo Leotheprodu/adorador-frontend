@@ -70,12 +70,16 @@ export const CheckUserStatus = ({
   };
 
   const userHasAdminEventPermission = () => {
-    if (checkAdminEvent && user?.isLoggedIn && user?.membersofBands) {
+    // Si no se está verificando el permiso de admin del evento, retornar true
+    if (!checkAdminEvent) return true;
+
+    // Si se está verificando, el usuario debe estar logueado y tener el permiso
+    if (user?.isLoggedIn && user?.membersofBands) {
       return user.membersofBands.some(
         (band) => band.band.id === event?.bandId && band.isEventManager,
       );
     }
-    return true;
+    return false;
   };
 
   // Realizar todas las validaciones directamente (sin useMemo para evitar problemas con dependencias)
@@ -111,7 +115,7 @@ export const CheckUserStatus = ({
     console.log('User does not have the required church roles');
     return false;
   }
-  if (!userHasAdminEventPermission()) {
+  if (checkAdminEvent && !userHasAdminEventPermission()) {
     console.log('User does not have admin event permission');
     return false;
   }
