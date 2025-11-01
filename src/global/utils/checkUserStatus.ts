@@ -23,7 +23,7 @@ export const CheckUserStatus = ({
 
   const isLoggedInCheck = () => {
     if (isLoggedIn === undefined) return true; // If isLoggedIn is not defined, assume true
-    return user?.isLoggedIn === isLoggedIn || user?.isLoggedIn === true;
+    return user?.isLoggedIn === isLoggedIn;
   };
 
   const hasNegativeRolesCheck = () =>
