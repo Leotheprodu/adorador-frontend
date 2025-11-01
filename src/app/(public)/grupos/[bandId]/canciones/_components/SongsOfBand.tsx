@@ -28,7 +28,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
     }
   }, [data]);
   return (
-    <UIGuard isLoading={isLoading}>
+    <UIGuard isLoggedIn={true} checkBandId={Number(params.bandId)} isLoading={isLoading}>
       <div className="mb-6 flex items-center gap-2">
         <Link
           href={`/grupos/${params.bandId}`}

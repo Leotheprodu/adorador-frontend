@@ -33,7 +33,7 @@ export const EventsOfBand = ({ params }: { params: { bandId: string } }) => {
       ) || [];
 
   return (
-    <UIGuard isLoading={isLoading}>
+    <UIGuard isLoggedIn={true} checkBandId={Number(params.bandId)} isLoading={isLoading}>
       <div className="mb-6 flex items-center gap-2">
         <button
           onClick={handleBackToGroup}

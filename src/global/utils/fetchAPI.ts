@@ -56,11 +56,12 @@ export async function fetchAPI<TResponse, TBody = undefined>({
 
   // Si el token ha expirado y el backend retorna 401
   if (response.status === 401 && !skipAuth) {
-    // Limpiar tokens y redirigir al login
+    // Limpiar tokens
     clearTokens();
-    // Recargar la página para que el sistema de auth redirija al login
-    if (typeof window !== 'undefined') {
-      window.location.reload();
+    // Solo redirigir al login si realmente teníamos un token (es decir, el usuario estaba logueado)
+    // Esto evita bucles infinitos cuando el usuario no está logueado desde el inicio
+    if (typeof window !== 'undefined' && headers.Authorization) {
+      window.location.href = '/auth/login';
     }
     throw new Error('401-Token expired');
   }
