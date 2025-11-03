@@ -28,6 +28,7 @@ export async function fetchAPI<TResponse, TBody = undefined>({
     '/auth/verify-email',
     '/auth/email-service-status', // Para diagnóstico SMTP
     '/auth/admin/test-smtp', // Para diagnóstico SMTP detallado
+    '/auth/admin/test-email', // Para prueba de envío de email
     '/users', // Para el registro de usuarios
     '/users/resend-verification', // Para reenvío de verificación
   ];

@@ -2,11 +2,12 @@
 import { Button, Link } from '@nextui-org/react';
 import { useSignUpForm } from '@auth/sign-up/_hooks/useSignUpForm';
 import { InputUsernameSignUpForm } from '@auth/sign-up/_components/InputUsernameSignUpForm';
-import { InputEmailLoginForm } from '@auth/login/_components/InputEmailLoginForm';
+import { InputEmailOptionalForm } from '@auth/sign-up/_components/InputEmailOptionalForm';
 import { InputPasswordLoginForm } from '@auth/login/_components/InputPasswordLoginForm';
 import { findHrefFromLinks } from '@global/utils/findHrefFromLinks';
 import { InputPhoneSignUpForm } from './InputPhoneSignUpForm';
 import { InputBirthdateSignUpForm } from './InputBirthdateSignUpForm';
+import { WhatsAppVerificationComponent } from './WhatsAppVerificationComponent';
 
 export const SignUpForm = () => {
   const {
@@ -14,37 +15,33 @@ export const SignUpForm = () => {
     handleOnClear,
     handleSignUp,
     isInvalidPass,
-    email,
+    phone,
     password,
     password2,
-    phone,
+    email,
     birthdate,
     isPending,
     username,
     noFormValue,
-    dataEmail,
+    data,
     status,
+    dataPhone,
   } = useSignUpForm({
-    email: '',
+    phone: '',
     password: '',
     username: '',
     password2: '',
-    phone: '',
+    email: '',
     birthdate: '',
   });
 
-  if (status === 'success') {
+  if (status === 'success' && data) {
     return (
-      <div>
-        <h1 className="mb-6 text-center text-3xl font-semibold">
-          ¡Registro Exitoso!
-        </h1>
-        <p className="mb-4 text-center text-slate-400">
-          Revisa tu correo electrónico{' '}
-          <span className="text-secundario">{dataEmail}</span> para confirmar tu
-          cuenta
-        </p>
-      </div>
+      <WhatsAppVerificationComponent
+        verificationToken={data.verificationToken}
+        whatsappMessage={data.whatsappMessage}
+        userPhone={dataPhone || phone}
+      />
     );
   }
   return (
@@ -69,8 +66,13 @@ export const SignUpForm = () => {
           <InputUsernameSignUpForm
             handle={{ handleOnChange, username, noFormValue }}
           />
-          <InputEmailLoginForm
-            handle={{ handleOnClear, email, handleOnChange, noFormValue }}
+          <InputEmailOptionalForm
+            handle={{
+              handleOnClear,
+              email,
+              handleOnChange,
+              noFormValue: { ...noFormValue, email: false }, // Email ya no es requerido
+            }}
           />
           <InputPhoneSignUpForm
             handle={{ handleOnChange, phone, noFormValue }}
