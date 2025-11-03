@@ -8,7 +8,10 @@ import {
 export type MessageProps =
   | { type: 'lyricSelected'; data: lyricSelectedProps }
   | { type: 'eventSelectedSong'; data: number }
-  | { type: 'liveMessage'; data: string };
+  | { type: 'liveMessage'; data: string }
+  | { type: 'joinEvent'; data: { eventId: number } }
+  | { type: 'leaveEvent'; data: object }
+  | { type: 'getConnectedUsers'; data: { eventId: number } };
 export const useEventGateway = () => {
   const event = useStore($event);
   const { mutate: mutateLyricSelectedWS } = lyricSelectedGateway();

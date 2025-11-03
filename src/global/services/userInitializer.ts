@@ -27,10 +27,10 @@ export const initializeUserOnce = async () => {
 
     const localUser = getLocalStorage('user');
 
-    // Verificar si hay tokens válidos
+    // Verificar si hay tokens válidos (usar verificación sin buffer para inicialización)
     const jwtUtils = await import('../utils/jwtUtils');
     const tokens = jwtUtils.getTokens();
-    const hasValidToken = tokens && !jwtUtils.isTokenExpired(tokens);
+    const hasValidToken = tokens && !jwtUtils.isTokenActuallyExpired(tokens);
 
     console.log('[UserInit] Estado:', {
       hasLocalUser: !!localUser,
@@ -38,6 +38,17 @@ export const initializeUserOnce = async () => {
       hasValidToken,
       tokenExpiry: tokens ? new Date(tokens.expiresAt).toLocaleString() : 'N/A',
     });
+
+    // FORZAR SINCRONIZACIÓN: Si hay discrepancia entre tokens y estado, corregir inmediatamente
+    if (hasValidToken && localUser && !localUser.isLoggedIn) {
+      console.warn(
+        '[UserInit] CORRIGIENDO: Token válido pero usuario marcado como deslogueado',
+      );
+      const correctedUser = { ...localUser, isLoggedIn: true };
+      setLocalStorage('user', correctedUser);
+      $user.set(correctedUser);
+      return; // Salir temprano después de la corrección
+    }
 
     // Si localUser es null o undefined, crear usuario por defecto
     if (!localUser) {
@@ -71,11 +82,29 @@ export const initializeUserOnce = async () => {
           $user.set(localUser);
         }
       } else if (localUser.isLoggedIn) {
-        // Si no hay token válido pero el usuario aparece como logueado, desloguearlo
-        console.log('[UserInit] Deslogueando usuario: No hay token válido');
-        const loggedOutUser = { ...localUser, isLoggedIn: false };
-        setLocalStorage('user', loggedOutUser);
-        $user.set(loggedOutUser);
+        // Si no hay token válido pero el usuario aparece como logueado, intentar renovarlo
+        console.log('[UserInit] Token inválido, intentando renovar...');
+        try {
+          const newTokens = await jwtUtils.refreshAccessToken();
+          if (newTokens) {
+            console.log('[UserInit] Token renovado exitosamente');
+            // Mantener al usuario logueado con token renovado
+            $user.set(localUser);
+          } else {
+            console.log(
+              '[UserInit] No se pudo renovar token, deslogueando usuario',
+            );
+            const loggedOutUser = { ...localUser, isLoggedIn: false };
+            setLocalStorage('user', loggedOutUser);
+            $user.set(loggedOutUser);
+          }
+        } catch (error) {
+          console.log('[UserInit] Error renovando token:', error);
+          console.log('[UserInit] Deslogueando usuario');
+          const loggedOutUser = { ...localUser, isLoggedIn: false };
+          setLocalStorage('user', loggedOutUser);
+          $user.set(loggedOutUser);
+        }
       } else {
         // Usuario no logueado y sin token válido - estado correcto
         console.log('[UserInit] Usuario sincronizado (sin sesión activa)');

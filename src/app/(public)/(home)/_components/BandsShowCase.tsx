@@ -14,6 +14,7 @@ export const BandsShowCase = () => {
   const isLoggedIn = useMemo(() => user.isLoggedIn, [user.isLoggedIn]);
 
   const { data, error, isLoading } = getBandsOfUser(isLoggedIn);
+
   return (
     <div className="h-full">
       {error && (
