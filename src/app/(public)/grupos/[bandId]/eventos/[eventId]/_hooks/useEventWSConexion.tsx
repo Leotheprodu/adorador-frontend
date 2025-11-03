@@ -103,9 +103,7 @@ export const useEventWSConexion = ({
           socketConfig.auth = {
             token: token,
           };
-          console.log('[WebSocket] Conectando con autenticación');
         } else {
-          console.log('[WebSocket] Conectando como invitado (solo lectura)');
         }
 
         const newSocket = io(Server1API, socketConfig);
@@ -496,9 +494,6 @@ export const useEventWSConexion = ({
     const initializeSocket = async () => {
       // IMPORTANTE: NO resetear estados aquí - esperaremos el estado del servidor
       // Solo resetearemos si el servidor confirma que no hay estado previo
-      console.log(
-        '[WebSocket] Inicializando socket sin resetear estado - esperando datos del servidor...',
-      );
 
       // Crear socket optimizado
       const socket = await createOptimizedSocket();

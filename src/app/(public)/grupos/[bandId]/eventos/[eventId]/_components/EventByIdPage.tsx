@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { EventControls } from '@bands/[bandId]/eventos/[eventId]/_components/EventControls';
 import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventMainScreen';
 import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventByIdPage';
+import { useEventWSConexion } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventWSConexion';
 import { EventSimpleTitle } from '@bands/[bandId]/eventos/[eventId]/_components/EventSimpleTitle';
 import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/EditEventButton';
 import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/DeleteEventButton';
@@ -11,6 +12,7 @@ import { handleBackNavigation } from '@global/utils/navigationUtils';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { $event } from '@stores/event';
+import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/_components/EventConnectedUsers';
 
 export const EventByIdPage = ({
   params,
@@ -18,6 +20,11 @@ export const EventByIdPage = ({
   params: { bandId: string; eventId: string };
 }) => {
   const { isLoading, refetch } = useEventByIdPage({
+    params,
+  });
+
+  // Inicializar conexión WebSocket con autenticación
+  useEventWSConexion({
     params,
   });
 
@@ -95,6 +102,8 @@ export const EventByIdPage = ({
         <EventMainScreen />
 
         <EventSimpleTitle />
+
+        <EventConnectedUsers params={params} />
 
         <EventControls
           refetch={refetch}
