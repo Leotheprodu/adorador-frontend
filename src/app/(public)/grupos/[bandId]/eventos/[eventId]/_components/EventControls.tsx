@@ -6,6 +6,7 @@ import { useStore } from '@nanostores/react';
 import { $eventAdminName, $event } from '@stores/event';
 import { $user } from '@stores/users';
 import { EventControlsHandleManager } from './EventControlsHandleManager';
+import { userRoles } from '@global/config/constants';
 
 export const EventControls = ({
   params,
@@ -27,23 +28,28 @@ export const EventControls = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventAdminName]);
 
+  // Verificar si es administrador del sistema
+  const isSystemAdmin =
+    user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
+
   // Verificación precisa: usuario debe ser específicamente admin de este evento
   // Primero verificar si es miembro de la banda del evento
   const bandMembership =
-    user.isLoggedIn &&
-    user.membersofBands &&
-    user.membersofBands.find(
-      (membership) => membership.band.id === event.bandId,
-    );
+    user.isLoggedIn && user.membersofBands
+      ? user.membersofBands.find(
+          (membership) => membership.band.id === event.bandId,
+        )
+      : undefined;
 
-  // Verificar si es administrador específico del evento
+  // Verificar si es administrador específico del evento O administrador del sistema
   const checkAdminEvent = Boolean(
-    bandMembership && bandMembership.isEventManager,
+    (bandMembership && bandMembership.isEventManager) || isSystemAdmin,
   );
 
   // Verificar si es miembro del grupo pero NO admin (puede ver canciones pero no cambiarlas)
+  // Los admins del sistema NO deben aparecer como "solo miembros"
   const isBandMemberOnly = Boolean(
-    bandMembership && !bandMembership.isEventManager,
+    bandMembership && !bandMembership.isEventManager && !isSystemAdmin,
   );
 
   return (
@@ -60,16 +66,25 @@ export const EventControls = ({
         />
 
         {checkAdminEvent && <EventControlsLyricsSelect />}
-        {checkAdminEvent && (
-          <EventControlsButtons
-            bandId={parseInt(bandId)}
-            isEventAdmin={checkAdminEvent}
-          />
+
+        <EventControlsButtons
+          bandId={parseInt(bandId)}
+          isEventAdmin={checkAdminEvent}
+        />
+
+        {isBandMemberOnly && (
+          <div className="w-full text-center text-sm text-slate-500">
+            <p>
+              💡 Eres miembro del grupo. Solo el administrador del evento puede
+              cambiar canciones.
+            </p>
+          </div>
         )}
       </section>
 
       <EventControlsHandleManager
         checkAdminEvent={checkAdminEvent}
+        isSystemAdmin={isSystemAdmin}
         params={params}
       />
     </div>

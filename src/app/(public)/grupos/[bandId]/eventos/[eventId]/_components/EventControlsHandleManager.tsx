@@ -17,9 +17,11 @@ import { $user } from '@stores/users';
 export const EventControlsHandleManager = ({
   params,
   checkAdminEvent,
+  isSystemAdmin,
 }: {
   params: { bandId: string; eventId: string };
   checkAdminEvent: boolean;
+  isSystemAdmin: boolean;
 }) => {
   const { mutate, error, status, data } = eventAdminChange({
     params,
@@ -90,7 +92,9 @@ export const EventControlsHandleManager = ({
             className={`${checkAdminEvent ? 'text-xs text-slate-400' : 'text-xs text-negro'}`}
           >
             {checkAdminEvent
-              ? 'Manejas los eventos'
+              ? isSystemAdmin
+                ? 'Tienes permisos de administrador del sistema'
+                : 'Manejas los eventos'
               : eventAdminName
                 ? `${eventAdminName} maneja los eventos`
                 : 'Nadie maneja los eventos'}

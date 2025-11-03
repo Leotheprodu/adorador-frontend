@@ -1,5 +1,9 @@
 /* import { EventControlsButtonsLiveMessages } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtonsLiveMessages'; */
 import { EventControlsButtonsScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtonsScreen';
+import { EventControlsButtonsSwipe } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtonsSwipe';
+import { useStore } from '@nanostores/react';
+import { $user } from '@stores/users';
+import { userRoles } from '@global/config/constants';
 
 export const EventControlsButtons = ({
   isEventAdmin,
@@ -8,6 +12,12 @@ export const EventControlsButtons = ({
   isEventAdmin: boolean;
   bandId: number;
 }) => {
+  const user = useStore($user);
+
+  // Verificar si el usuario es admin del sistema (no solo admin del evento)
+  const isSystemAdmin =
+    user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
+
   return (
     <div
       className={`col-start-1 col-end-3 h-full w-full ${isEventAdmin ? 'md:col-start-3' : ''} `}
@@ -17,6 +27,7 @@ export const EventControlsButtons = ({
       </h3>
       <div className="flex items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
         <EventControlsButtonsScreen />
+        {isSystemAdmin && <EventControlsButtonsSwipe />}
         {/* <EventControlsButtonsLiveMessages bandId={bandId} /> */}
       </div>
     </div>

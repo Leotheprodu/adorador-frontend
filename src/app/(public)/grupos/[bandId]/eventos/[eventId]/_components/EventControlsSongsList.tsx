@@ -6,7 +6,7 @@ import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEve
 import { UpdatingSongList } from '@bands/[bandId]/eventos/[eventId]/_components/updatingElements/UpdatingSongList';
 import { AddSongEventButton } from './addSongToEvent/AddSongEventButton';
 import { Spinner } from '@nextui-org/react';
-import { RefetchButtonUpdateIcon } from './addSongToEvent/RefetchButtonUpdateIcon';
+
 import { OfflineView } from './offlineView/OfflineView';
 
 export const EventControlsSongsList = ({
@@ -46,7 +46,6 @@ export const EventControlsSongsList = ({
           <div className="mb-3 flex items-center justify-center gap-2">
             <h4 className="text-center font-bold text-slate-800">Canciones</h4>
             <OfflineView />
-            <RefetchButtonUpdateIcon refetch={refetch} />
             <UpdatingSongList
               songs={[...songs]}
               params={params}
@@ -98,12 +97,6 @@ export const EventControlsSongsList = ({
                   </p>
                 </div>
               ))}
-          </div>
-          <div className="mt-2 text-center text-sm text-slate-500">
-            <p>
-              💡 Eres miembro del grupo. Solo el administrador del evento puede
-              cambiar canciones.
-            </p>
           </div>
         </div>
       ) : (

@@ -77,7 +77,7 @@ export const EventMainScreen = () => {
     };
 
     const handleTouchEnd = () => {
-      if (isFullscreen && checkAdminPermission) {
+      if (isFullscreen && checkAdminPermission && !eventConfig.swipeLocked) {
         if (startY - endY > 50) {
           // Deslizar hacia arriba
           if (
@@ -136,11 +136,16 @@ export const EventMainScreen = () => {
       window.removeEventListener('touchend', handleTouchEnd);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFullscreen, lyricSelected, selectedSongLyricLength]);
+  }, [
+    isFullscreen,
+    lyricSelected,
+    selectedSongLyricLength,
+    eventConfig.swipeLocked,
+  ]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen && checkAdminPermission) {
+      if (isFullscreen && checkAdminPermission && !eventConfig.swipeLocked) {
         if (event.key === 'ArrowDown') {
           if (
             lyricSelected.position <= selectedSongLyricLength &&
@@ -191,7 +196,13 @@ export const EventMainScreen = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFullscreen, selectedSongData, lyricSelected, selectedSongLyricLength]);
+  }, [
+    isFullscreen,
+    selectedSongData,
+    lyricSelected,
+    selectedSongLyricLength,
+    eventConfig.swipeLocked,
+  ]);
   return (
     <div
       style={{

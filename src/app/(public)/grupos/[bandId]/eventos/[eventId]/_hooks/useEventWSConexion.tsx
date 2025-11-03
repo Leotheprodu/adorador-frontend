@@ -254,6 +254,7 @@ export const useEventWSConexion = ({
       socket.off(`lyricSelected-${params.eventId}`);
       socket.off(`eventSelectedSong-${params.eventId}`);
       socket.off(`eventManagerChanged-${params.eventId}`);
+      socket.off(`eventSongsUpdated-${params.eventId}`);
       socket.off(`liveMessage-${params.eventId}`);
 
       // Listener optimizado para letras con soporte para formatos legacy y nuevos
@@ -416,6 +417,38 @@ export const useEventWSConexion = ({
         } catch (error) {
           console.warn(
             '[WebSocket] Error procesando cambio de event manager:',
+            error,
+          );
+        }
+      });
+
+      // Listener para cambios en las canciones del evento
+      socket.on(`eventSongsUpdated-${params.eventId}`, (data) => {
+        console.log(
+          `[WebSocket] 🎵 Cambios en canciones del evento ${params.eventId}:`,
+          data,
+        );
+        try {
+          const { changeType, message } = data;
+
+          // La invalidación de la query se manejará desde el componente padre
+
+          // Mostrar notificación sobre el cambio
+          import('react-hot-toast').then((toast) => {
+            toast.default(
+              message || 'Se actualizaron las canciones del evento',
+            );
+          });
+
+          // Como alternativa, podemos disparar un evento personalizado que capture el componente padre
+          window.dispatchEvent(
+            new CustomEvent('eventSongsUpdated', {
+              detail: { eventId: params.eventId, changeType, message },
+            }),
+          );
+        } catch (error) {
+          console.warn(
+            '[WebSocket] Error procesando cambio de canciones:',
             error,
           );
         }
