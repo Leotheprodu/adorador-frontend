@@ -5,6 +5,6 @@ export interface LoggedUser extends User {
 }
 
 export interface LoginInterface {
-  email: string;
+  phone: string; // Cambio de email a phone
   password: string;
 }

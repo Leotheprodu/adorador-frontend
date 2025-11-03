@@ -3,9 +3,11 @@ import { Server1API } from '@global/config/constants';
 import { User } from '@admin/usuarios/_interfaces/UserInterface';
 import { SignUpInterface } from '@auth/sign-up/_interfaces/SignUpInterface';
 
-export interface SignUpResponse extends User {
-  emailSent?: boolean;
-  message?: string;
+export interface SignUpResponse {
+  user: User;
+  verificationToken: string;
+  whatsappMessage: string;
+  message: string;
 }
 
 export const signUpService = () => {
@@ -27,7 +29,15 @@ export const verifyEmailService = ({ token }: { token: string }) => {
 };
 
 export const resendVerificationService = () => {
-  return PostData<{ success: boolean; message: string }, { email: string }>({
+  return PostData<
+    {
+      success: boolean;
+      message: string;
+      verificationToken?: string;
+      whatsappMessage?: string;
+    },
+    { phone: string }
+  >({
     key: 'resend-verification',
     url: `${Server1API}/users/resend-verification`,
     method: 'POST',

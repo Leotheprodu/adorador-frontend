@@ -7,11 +7,11 @@ import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 import { signUpService } from '@auth/sign-up/_services/signUpService';
 
 export const useSignUpForm = (formInit: {
-  email: string;
+  phone: string; // phone ahora es el campo principal
   password: string;
   password2: string;
   username: string;
-  phone: string;
+  email: string; // email ahora es opcional
   birthdate: string;
 }) => {
   const user = useStore($user);
@@ -37,61 +37,49 @@ export const useSignUpForm = (formInit: {
   }, [form]);
 
   useEffect(() => {
-    // si mientras escriben el numero de telefono no permite que pongan letras o caracteres especiales
-    if (form.phone && !/^\d+$/.test(form.phone)) {
+    // Validar formato de teléfono: debe empezar con + seguido de números
+    if (form.phone && !/^\+?\d*$/.test(form.phone)) {
       setForm({ ...form, phone: form.phone.slice(0, -1) });
       toast.error(
-        ' El teléfono solo puede contener números ejemplo: 50677778888',
+        'Formato inválido. Usa: +codigoPais + número (ej: +50677778888)',
       );
-      //borra el ultimo valor ingresado si no es un numero
+      //borra el ultimo valor ingresado si no es válido
     }
   }, [form.phone]);
 
   useEffect(() => {
     if (status === 'success' && data) {
-      if (data.message) {
-        // Use the specific message from the server
-        if (data.emailSent === false) {
-          toast.error(
-            (t) => (
-              <div>
-                <p>{data.message}</p>
-                <a
-                  href="/auth/resend-verification"
-                  className="mt-2 block text-sm text-blue-600 hover:underline"
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  Reenviar correo de verificación →
-                </a>
-              </div>
-            ),
-            {
-              duration: 8000,
-              style: {
-                maxWidth: '400px',
-              },
-            },
-          );
-        } else {
-          toast.success(data.message);
-        }
-      } else {
-        // Fallback to default message
-        toast.success(
-          'Usuario creado, revisa tu bandeja de correo electrónico',
-        );
-      }
+      // Nuevo flujo: registro exitoso con token de WhatsApp
+      toast.success(
+        data.message || '¡Registro exitoso! Ahora verifica tu WhatsApp.',
+      );
       setForm(formInit);
       setIsInvalidPass(false);
     } else if (status === 'error') {
-      console.log(error);
-      // Handle specific error messages
-      if (error?.message?.includes('409-Email already exists')) {
+      console.error('SignUp Error:', error);
+
+      // Extraer mensaje de error
+      const errorMessage = error?.message || '';
+      const isConflictError =
+        errorMessage.includes('409') ||
+        errorMessage.includes('Conflict') ||
+        errorMessage.includes('already exists') ||
+        errorMessage.includes('ya existe') ||
+        errorMessage.includes('teléfono ya existe');
+
+      if (isConflictError) {
         toast.error(
           (t) => (
             <div>
-              <p>Este correo electrónico ya está registrado.</p>
+              <p>📱 Este número de WhatsApp ya está registrado.</p>
               <div className="mt-2 flex flex-col gap-1">
+                <a
+                  href="/auth/login"
+                  className="text-sm text-blue-600 hover:underline"
+                  onClick={() => toast.dismiss(t.id)}
+                >
+                  ¿Ya tienes cuenta? Inicia sesión →
+                </a>
                 <a
                   href="/auth/password-recovery"
                   className="text-sm text-blue-600 hover:underline"
@@ -99,25 +87,27 @@ export const useSignUpForm = (formInit: {
                 >
                   ¿Olvidaste tu contraseña? →
                 </a>
-                <a
-                  href="/auth/resend-verification"
-                  className="text-sm text-blue-600 hover:underline"
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  ¿No verificaste tu email? →
-                </a>
               </div>
             </div>
           ),
           {
-            duration: 8000,
+            duration: 10000, // Más tiempo para leer
             style: {
-              maxWidth: '400px',
+              maxWidth: '450px',
             },
           },
         );
+      } else if (errorMessage.includes('400')) {
+        // Error de validación
+        toast.error(
+          '❌ Error en los datos ingresados. Verifica el formato del teléfono.',
+        );
       } else {
-        toast.error('Error al crear usuario');
+        // Error genérico
+        const cleanMessage = errorMessage.split('-')[1] || errorMessage;
+        toast.error(
+          `❌ ${cleanMessage || 'Error al crear usuario. Intenta de nuevo en unos momentos.'}`,
+        );
       }
     }
 
@@ -134,31 +124,34 @@ export const useSignUpForm = (formInit: {
       setNoFormValue({ ...noFormValue, username: true });
       toast.error('El nombre de usuario es requerido');
       return;
-    } else if (!form.email) {
-      setNoFormValue({ ...noFormValue, email: true });
-      toast.error('El correo electrónico es requerido');
+    } else if (!form.phone) {
+      setNoFormValue({ ...noFormValue, phone: true });
+      toast.error('El número de WhatsApp es requerido');
+      return;
+    } else if (!form.phone.startsWith('+')) {
+      setNoFormValue({ ...noFormValue, phone: true });
+      toast.error('El teléfono debe empezar con + seguido del código de país');
+      return;
+    } else if (!/^\+[1-9]\d{7,14}$/.test(form.phone)) {
+      setNoFormValue({ ...noFormValue, phone: true });
+      toast.error('Formato de teléfono inválido. Ejemplo: +50677778888');
       return;
     }
-    //valida que el correo sea valido
+    // Validar email solo si se proporciona
     else if (
+      form.email &&
       !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)
     ) {
       setNoFormValue({ ...noFormValue, email: true });
       toast.error('El correo electrónico no es válido');
       return;
-    } else if (form.phone && !/^\d+$/.test(form.phone)) {
-      setNoFormValue({ ...noFormValue, phone: true });
-      toast.error(
-        'El teléfono solo puede contener números ejemplo: 50677778888',
-      );
-      return;
     }
 
     mutate({
       password: form.password,
-      email: form.email,
+      phone: form.phone, // phone ya incluye el +
       name: form.username,
-      phone: form.phone.length > 0 ? '+' + form.phone : undefined,
+      email: form.email || undefined, // email es opcional
       birthdate: form.birthdate
         ? new Date(form.birthdate).toISOString()
         : undefined,
@@ -178,6 +171,7 @@ export const useSignUpForm = (formInit: {
     isPending,
     noFormValue,
     status,
-    dataEmail: data?.email,
+    data,
+    dataPhone: data?.user?.phone,
   };
 };

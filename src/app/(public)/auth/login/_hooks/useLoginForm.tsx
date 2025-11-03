@@ -8,7 +8,7 @@ import { setTokens, getTokenExpirationTime } from '@global/utils/jwtUtils';
 import toast from 'react-hot-toast';
 import { handleOnChange, handleOnClear } from '@global/utils/formUtils';
 
-export const useLoginForm = (formInit: { email: string; password: string }) => {
+export const useLoginForm = (formInit: { phone: string; password: string }) => {
   const user = useStore($user);
   const [form, setForm] = useState(formInit);
   const [isInvalidPass, setIsInvalidPass] = useState(false);
@@ -79,6 +79,19 @@ export const useLoginForm = (formInit: { email: string; password: string }) => {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validación básica del formato de teléfono
+    if (!form.phone.startsWith('+')) {
+      toast.error(
+        'El número debe incluir el + y código de país (ej: +50677778888)',
+      );
+      return;
+    }
+
+    if (!/^\+[1-9]\d{7,14}$/.test(form.phone)) {
+      toast.error('Formato de número inválido. Ejemplo: +50677778888');
+      return;
+    }
 
     mutate(form);
   };

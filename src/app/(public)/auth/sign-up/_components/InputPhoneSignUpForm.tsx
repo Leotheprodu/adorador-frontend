@@ -16,16 +16,18 @@ export const InputPhoneSignUpForm = ({
     <div className="flex flex-col items-center justify-center">
       <Input
         size="lg"
-        label="Ingresa tu numero de teléfono"
-        placeholder="50677778888"
+        label="Número de WhatsApp"
+        placeholder="+50677778888"
         variant="underlined"
-        type="text"
+        type="tel"
         className=""
-        autoComplete="phone"
+        autoComplete="tel"
         value={phone}
         onChange={handleOnChange}
         name="phone"
+        isRequired
         isInvalid={noFormValue?.phone}
+        description="Incluye el + y código de país (ej: +50677778888)"
       />
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 import { Button, Link } from '@nextui-org/react';
 import { IsLoggedInHandle } from '@auth/login/_components/IsLoggedInHandle';
-import { InputEmailLoginForm } from '@auth/login/_components/InputEmailLoginForm';
+import { InputPhoneLoginForm } from '@auth/login/_components/InputPhoneLoginForm';
 import { InputPasswordLoginForm } from '@auth/login/_components/InputPasswordLoginForm';
 import { useLoginForm } from '@auth/login/_hooks/useLoginForm';
 import { findHrefFromLinks } from '@global/utils/findHrefFromLinks';
@@ -14,10 +14,10 @@ export const LoginForm = () => {
     handleOnClear,
     handleLogin,
     isInvalidPass,
-    email,
+    phone,
     password,
     isPending,
-  } = useLoginForm({ email: '', password: '' });
+  } = useLoginForm({ phone: '', password: '' });
   const user = useStore($user);
   return (
     <>
@@ -32,8 +32,8 @@ export const LoginForm = () => {
           </p>
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <InputEmailLoginForm
-                handle={{ handleOnClear, email, handleOnChange }}
+              <InputPhoneLoginForm
+                handle={{ handleOnClear, phone, handleOnChange }}
               />
               <InputPasswordLoginForm
                 handle={{
