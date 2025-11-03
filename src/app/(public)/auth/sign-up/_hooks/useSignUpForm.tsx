@@ -48,13 +48,77 @@ export const useSignUpForm = (formInit: {
   }, [form.phone]);
 
   useEffect(() => {
-    if (status === 'success') {
-      toast.success('Usuario creado, revisa tu bandeja de correo electrónico');
+    if (status === 'success' && data) {
+      if (data.message) {
+        // Use the specific message from the server
+        if (data.emailSent === false) {
+          toast.error(
+            (t) => (
+              <div>
+                <p>{data.message}</p>
+                <a
+                  href="/auth/resend-verification"
+                  className="mt-2 block text-sm text-blue-600 hover:underline"
+                  onClick={() => toast.dismiss(t.id)}
+                >
+                  Reenviar correo de verificación →
+                </a>
+              </div>
+            ),
+            {
+              duration: 8000,
+              style: {
+                maxWidth: '400px',
+              },
+            },
+          );
+        } else {
+          toast.success(data.message);
+        }
+      } else {
+        // Fallback to default message
+        toast.success(
+          'Usuario creado, revisa tu bandeja de correo electrónico',
+        );
+      }
       setForm(formInit);
       setIsInvalidPass(false);
     } else if (status === 'error') {
       console.log(error);
-      toast.error('Error al crear usuario');
+      // Handle specific error messages
+      if (error?.message?.includes('409-Email already exists')) {
+        toast.error(
+          (t) => (
+            <div>
+              <p>Este correo electrónico ya está registrado.</p>
+              <div className="mt-2 flex flex-col gap-1">
+                <a
+                  href="/auth/password-recovery"
+                  className="text-sm text-blue-600 hover:underline"
+                  onClick={() => toast.dismiss(t.id)}
+                >
+                  ¿Olvidaste tu contraseña? →
+                </a>
+                <a
+                  href="/auth/resend-verification"
+                  className="text-sm text-blue-600 hover:underline"
+                  onClick={() => toast.dismiss(t.id)}
+                >
+                  ¿No verificaste tu email? →
+                </a>
+              </div>
+            </div>
+          ),
+          {
+            duration: 8000,
+            style: {
+              maxWidth: '400px',
+            },
+          },
+        );
+      } else {
+        toast.error('Error al crear usuario');
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
