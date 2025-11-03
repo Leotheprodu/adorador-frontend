@@ -1,33 +1,31 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { Button, Link } from '@nextui-org/react';
-import { verifyEmailService } from '@auth/verify-email/_services/verifyService';
+import { verifyWhatsAppTokenService } from '@auth/verify-email/_services/verifyService';
 import toast from 'react-hot-toast';
 import { findHrefFromLinks } from '@/global/utils/findHrefFromLinks';
 import { useSearchParams } from 'next/navigation';
 
-export const VerifyEmail = () => {
+export const VerifyWhatsApp = () => {
   const searchParams = useSearchParams();
   const hasMutated = useRef(false);
 
   const token = searchParams.get('token');
-  const { status, mutate } = verifyEmailService({
-    token: typeof token === 'string' ? token : '',
-  });
+  const { status, mutate } = verifyWhatsAppTokenService();
   useEffect(() => {
     // comprobamos si el token existe y si el estado es idle y si no ha mutado
     if (token && status === 'idle' && !hasMutated.current) {
       hasMutated.current = true;
-      mutate(null);
+      mutate({ token });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (status === 'success') {
-      toast.success('Correo verificado correctamente');
+      toast.success('Número de WhatsApp verificado correctamente');
     } else if (status === 'error') {
-      toast.error('Token inválido');
+      toast.error('Token inválido o expirado');
     }
   }, [status]);
 
@@ -35,11 +33,11 @@ export const VerifyEmail = () => {
     <div className="flex flex-col items-center justify-center gap-10">
       <p>
         {status === 'pending'
-          ? 'Verificando...'
+          ? 'Verificando tu número de WhatsApp...'
           : status === 'success'
-            ? 'Correo verificado correctamente, ya puedes iniciar sesión'
+            ? '¡Número de WhatsApp verificado correctamente! Ya puedes iniciar sesión'
             : status === 'error'
-              ? 'Token inválido'
+              ? 'Token inválido o expirado. Por favor, solicita un nuevo código de verificación'
               : 'Verificando...'}
       </p>
       <div>

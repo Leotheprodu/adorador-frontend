@@ -8,7 +8,7 @@ export default function ResendVerificationPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="mb-2 text-3xl font-bold text-gray-900">
-            Verificación de Email
+            Verificación por WhatsApp
           </h1>
           <p className="text-gray-600">
             ¿Problemas con la verificación? Te ayudamos a resolverlo.

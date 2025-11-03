@@ -19,14 +19,7 @@ export const signUpService = () => {
   });
 };
 
-export const verifyEmailService = ({ token }: { token: string }) => {
-  return PostData({
-    key: 'verify-email',
-    url: `${Server1API}/auth/verify-email/${token}`,
-    method: 'GET',
-    skipAuth: true,
-  });
-};
+// Servicio de verificación removido - ahora usamos WhatsApp
 
 export const resendVerificationService = () => {
   return PostData<
