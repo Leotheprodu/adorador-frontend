@@ -10,6 +10,7 @@ import {
 } from '@nextui-org/react';
 import { $eventAdminName } from '@stores/event';
 import { eventAdminChange } from '@bands/[bandId]/eventos/[eventId]/_services/eventByIdService';
+import { refreshAccessToken } from '@global/utils/jwtUtils';
 import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { $user } from '@stores/users';
@@ -24,13 +25,18 @@ export const EventControlsHandleManager = ({
     params,
   });
   const user = useStore($user);
+
   useEffect(() => {
     if (status === 'success') {
       $eventAdminName.set(data?.eventManager);
-      toast.success('Ahora eres el administrador de este evento');
-      $user.set({
-        ...user,
-        membersofBands: user.membersofBands?.map((band) => {
+
+      // Obtener el usuario actual directamente del store para evitar loops
+      const currentUser = $user.get();
+
+      // Actualizar inmediatamente el store local del usuario
+      const updatedUser = {
+        ...currentUser,
+        membersofBands: currentUser.membersofBands?.map((band) => {
           if (band.band.id === parseInt(params.bandId)) {
             return {
               ...band,
@@ -39,11 +45,35 @@ export const EventControlsHandleManager = ({
           }
           return band;
         }),
+      };
+
+      console.log('[EventAdmin] Actualizando usuario local:', updatedUser);
+      $user.set(updatedUser);
+
+      // También actualizar localStorage para persistir el cambio
+      import('@global/utils/handleLocalStorage').then(({ setLocalStorage }) => {
+        setLocalStorage('user', updatedUser);
+        console.log('[EventAdmin] Usuario guardado en localStorage');
       });
+
+      toast.success('Ahora eres el administrador de este evento');
+
+      // Opcional: renovar token en segundo plano para sincronizar con el backend
+      refreshAccessToken()
+        .then(() => {
+          console.log('[EventAdmin] Token renovado en segundo plano');
+        })
+        .catch((error) => {
+          console.warn(
+            '[EventAdmin] Error renovando token (no crítico):',
+            error,
+          );
+        });
     } else if (status === 'error') {
       toast.error('Error al cambiar el administrador de este evento');
+      console.error('[EventAdmin] Error en cambio de administrador:', error);
     }
-  }, [status, error, data]);
+  }, [status, error, data, params.bandId]);
 
   const eventAdminName = useStore($eventAdminName);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

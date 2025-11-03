@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react';
-import { $user } from '@global/stores/users';
+import { $user } from '@stores/users';
 import { AppSecurityProps } from '@global/interfaces/AppSecurityInterfaces';
 import { $event } from '@stores/event';
 import { userRoles } from '@global/config/constants';
@@ -23,7 +23,20 @@ export const CheckUserStatus = ({
 
   const isLoggedInCheck = () => {
     if (isLoggedIn === undefined) return true; // If isLoggedIn is not defined, assume true
-    return user?.isLoggedIn === isLoggedIn;
+
+    // Debug detallado para entender el problema
+    const result = user?.isLoggedIn === isLoggedIn;
+    if (!result) {
+      console.log('[DEBUG CheckUserStatus] Login mismatch:', {
+        expected: isLoggedIn,
+        actual: user?.isLoggedIn,
+        userState: user ? 'exists' : 'null/undefined',
+        userId: user?.id,
+        userName: user?.name,
+      });
+    }
+
+    return result;
   };
 
   const hasNegativeRolesCheck = () =>
@@ -87,7 +100,10 @@ export const CheckUserStatus = ({
     console.log('User is an admin, access granted');
     return true;
   }
-  if (!isLoggedInCheck()) {
+
+  // Verificación más robusta para manejar estados transitorios durante la inicialización
+  const loginCheckResult = isLoggedInCheck();
+  if (!loginCheckResult) {
     console.log('User is not logged in or logged in status does not match');
     return false;
   }

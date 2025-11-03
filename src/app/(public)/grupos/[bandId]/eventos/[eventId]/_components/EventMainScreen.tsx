@@ -9,10 +9,11 @@ import {
   $eventConfig,
   $eventLiveMessage,
 } from '@stores/event';
+import { $user } from '@stores/users';
 import { useEffect, useState } from 'react';
 import { LyricsShowcase } from '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcase';
 import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
-import { CheckUserStatus } from '@global/utils/checkUserStatus';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { useFullscreen } from '@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen';
 import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/_hooks/useHandleEventLeft';
@@ -25,15 +26,17 @@ export const EventMainScreen = () => {
   const selectedSongId = useStore($eventSelectedSongId);
   const selectedSongData = useStore($selectedSongData);
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
+  const user = useStore($user);
   const { sendMessage } = useEventGateway();
-  const checkPermission = CheckUserStatus({
-    isLoggedIn: true,
-    checkAdminEvent: true,
-  });
   const { title, songs } = eventData;
+
+  // Verificación simple: usuario logueado y con permisos de banda
+  const checkAdminPermission =
+    user.isLoggedIn && user.membersofBands && user.membersofBands.length > 0;
   useEffect(() => {
-    if (selectedSongData && selectedSongData?.song.lyrics.length > 0) {
-      $selectedSongLyricLength.set(selectedSongData.song.lyrics.length);
+    const lyricsLength = selectedSongData?.song?.lyrics?.length || 0;
+    if (lyricsLength > 0) {
+      $selectedSongLyricLength.set(lyricsLength);
     } else {
       $selectedSongLyricLength.set(0);
     }
@@ -74,7 +77,7 @@ export const EventMainScreen = () => {
     };
 
     const handleTouchEnd = () => {
-      if (isFullscreen && checkPermission) {
+      if (isFullscreen && checkAdminPermission) {
         if (startY - endY > 50) {
           // Deslizar hacia arriba
           if (
@@ -137,7 +140,7 @@ export const EventMainScreen = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen && checkPermission) {
+      if (isFullscreen && checkAdminPermission) {
         if (event.key === 'ArrowDown') {
           if (
             lyricSelected.position <= selectedSongLyricLength &&

@@ -1,10 +1,15 @@
 import { Button } from '@nextui-org/react';
 import { useIsLoggedInHandle } from '@auth/login/_hooks/useIsLoggedInHandle';
 import { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export const IsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
   const { handleLogout, isPending } = useIsLoggedInHandle({ user });
+  const router = useRouter();
+
+  const handleGoHome = () => {
+    router.push('/');
+  };
   return (
     <div className="flex min-h-[20rem] flex-col items-center gap-4">
       <h1 className="text-2xl">Hola {user.name}</h1>
@@ -21,7 +26,7 @@ export const IsLoggedInHandle = ({ user }: { user: LoggedUser }) => {
 
       <div className="flex items-center justify-center gap-4">
         <p>Haz Iniciado sesión</p>
-        <Button as={Link} href="/" className="uppercase" color="success">
+        <Button onClick={handleGoHome} className="uppercase" color="success">
           Ir a Inicio
         </Button>
       </div>
