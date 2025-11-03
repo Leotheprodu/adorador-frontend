@@ -26,7 +26,10 @@ export async function fetchAPI<TResponse, TBody = undefined>({
     '/auth/forgot-password',
     '/auth/new-password',
     '/auth/verify-email',
+    '/auth/email-service-status', // Para diagnóstico SMTP
+    '/auth/admin/test-smtp', // Para diagnóstico SMTP detallado
     '/users', // Para el registro de usuarios
+    '/users/resend-verification', // Para reenvío de verificación
   ];
 
   const isPublicEndpoint = publicEndpoints.some((endpoint) =>
