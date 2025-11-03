@@ -19,7 +19,9 @@ export const ResendVerification = ({
     e.preventDefault();
 
     if (!phone.startsWith('+')) {
-      toast.error('El número debe incluir el + y código de país (ej: +50677778888)');
+      toast.error(
+        'El número debe incluir el + y código de país (ej: +50677778888)',
+      );
       return;
     }
 
@@ -32,7 +34,9 @@ export const ResendVerification = ({
       { phone },
       {
         onSuccess: (data) => {
-          toast.success(data.message || 'Código de verificación enviado por WhatsApp');
+          toast.success(
+            data.message || 'Código de verificación enviado por WhatsApp',
+          );
           if (onClose) onClose();
         },
         onError: (error) => {
@@ -62,8 +66,8 @@ export const ResendVerification = ({
           Reenviar Verificación por WhatsApp
         </h2>
         <p className="text-sm text-gray-600">
-          ¿No recibiste el código de verificación? Podemos enviártelo
-          nuevamente por WhatsApp.
+          ¿No recibiste el código de verificación? Podemos enviártelo nuevamente
+          por WhatsApp.
         </p>
       </div>
 
