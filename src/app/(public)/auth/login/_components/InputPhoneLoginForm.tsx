@@ -1,5 +1,5 @@
-import { Input } from '@nextui-org/react';
 import { PhoneIcon } from '@global/icons/PhoneIcon';
+import { Input } from '@nextui-org/react';
 
 export const InputPhoneLoginForm = ({
   handle,
