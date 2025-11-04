@@ -4,43 +4,51 @@ import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { PasswordRecoveryService } from '../_services/PasswordRecoveryService';
 import Link from 'next/link';
+import { WhatsAppResetComponent } from './WhatsAppResetComponent';
 
 export const PasswordRecoveryForm = () => {
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [error, setError] = useState(false);
-  const emailInput = useRef<HTMLInputElement>(null);
-  const { status, mutate, isPending } = PasswordRecoveryService();
+  const phoneInput = useRef<HTMLInputElement>(null);
+  const { status, mutate, isPending, data } = PasswordRecoveryService();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(false);
-    if (!email) {
-      toast.error('Debes ingresar un correo electrónico');
+
+    if (!phone) {
+      toast.error('Debes ingresar un número de teléfono');
       setError(true);
-      if (emailInput.current) emailInput.current.focus();
+      if (phoneInput.current) phoneInput.current.focus();
       return;
     }
-    //revisa con regex si el email es valido
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error('Debes ingresar un correo electrónico válido');
+
+    // Validar formato de teléfono internacional
+    if (!phone.startsWith('+')) {
+      toast.error(
+        'El número debe incluir el + y código de país (ej: +50677778888)',
+      );
       setError(true);
-      if (emailInput.current) emailInput.current.focus();
+      if (phoneInput.current) phoneInput.current.focus();
       return;
     }
-    mutate({ email });
+
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
+      toast.error('Formato de número inválido. Ejemplo: +50677778888');
+      setError(true);
+      if (phoneInput.current) phoneInput.current.focus();
+      return;
+    }
+
+    mutate({ phone });
   };
-  if (status === 'success') {
+  if (status === 'success' && data) {
     return (
-      <div className="flex min-h-[20rem] flex-col items-center gap-4">
-        <p>
-          Hemos enviado un enlace a tu correo electrónico para restablecer tu
-          contraseña.
-        </p>
-        <Button as={Link} href="/" color="success">
-          Ir a Inicio
-        </Button>
-      </div>
+      <WhatsAppResetComponent
+        resetToken={data.resetToken}
+        phone={data.phone}
+        whatsappMessage={data.whatsappMessage}
+      />
     );
   }
   if (status === 'error') {
@@ -63,24 +71,25 @@ export const PasswordRecoveryForm = () => {
       className="flex min-h-[20rem] max-w-[20rem] flex-col items-center gap-2"
     >
       <p className="mb-4">
-        Ingresa tu correo electrónico y te enviaremos un enlace para restablecer
-        tu contraseña.
+        Ingresa tu número de teléfono y te ayudaremos a restablecer tu
+        contraseña por WhatsApp.
       </p>
       <Input
-        ref={emailInput}
-        value={email}
-        autoComplete="email"
+        ref={phoneInput}
+        value={phone}
+        autoComplete="tel"
         onChange={(e) => {
-          setEmail(e.target.value);
+          setPhone(e.target.value);
           setError(false);
         }}
         className={`mb-4 ${error ? 'border border-danger' : ''}`}
-        type="text"
-        placeholder="correo electrónico"
+        type="tel"
+        placeholder="+50677778888"
+        description="Incluye el + y código de país"
         autoFocus
       />
       <Button isLoading={isPending} type="submit" color="primary">
-        Enviar
+        Generar Token de Reset
       </Button>
     </form>
   );
