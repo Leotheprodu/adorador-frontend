@@ -1,16 +1,10 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  CardFooter,
-} from '@nextui-org/react';
+import { Card, CardHeader, CardBody, CardFooter } from '@nextui-org/react';
 import { formatDate, formatTime } from '@global/utils/dataFormat';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { GuitarIcon } from '@global/icons/GuitarIcon';
 import { BandsWithMembersCount } from '@bands/_interfaces/bandsInterface';
+import { SecondaryButton } from '@global/components/buttons';
 
 export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -87,21 +81,19 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
         )}
       </CardBody>
       <CardFooter className="flex gap-3">
-        <Button
+        <SecondaryButton
           href={`/grupos/${band.id}`}
           className="z-10 mt-2 rounded"
-          as={Link}
         >
-          Mas información
-        </Button>
+          Ver grupo
+        </SecondaryButton>
         {events.length > 0 && (isCurrentEvent || isUserAuthorized) && (
-          <Button
+          <SecondaryButton
             href={`/grupos/${band.id}/eventos/${events[currentEventIndex].id}`}
             className="z-10 mt-2 rounded"
-            as={Link}
           >
             Ver evento
-          </Button>
+          </SecondaryButton>
         )}
       </CardFooter>
     </Card>

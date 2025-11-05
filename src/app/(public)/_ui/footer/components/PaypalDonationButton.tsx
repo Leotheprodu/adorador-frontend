@@ -47,7 +47,7 @@ export const PaypalDonationButton = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center transition-all duration-200 hover:opacity-80">
+    <div className="hover:shadow-brand-blue-500/30 flex w-full items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg">
       <div id="donate-button"></div>
     </div>
   );

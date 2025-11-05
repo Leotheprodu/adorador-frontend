@@ -59,8 +59,8 @@ describe('Footer Component', () => {
       expect(footer).toHaveClass('flex');
       expect(footer).toHaveClass('h-full');
       expect(footer).toHaveClass('flex-col');
-      expect(footer).toHaveClass('bg-negro');
-      expect(footer).toHaveClass('text-blanco');
+      expect(footer).toHaveClass('relative');
+      expect(footer).toHaveClass('overflow-hidden');
     });
 
     it('should render section with grid layout', () => {
@@ -104,7 +104,7 @@ describe('Footer Component', () => {
       expect(wave).toHaveClass('bottom-[98%]');
       expect(wave).toHaveClass('-z-10');
       expect(wave).toHaveClass('w-full');
-      expect(wave).toHaveClass('text-negro');
+      expect(wave).toHaveClass('text-gray-900');
     });
   });
 
@@ -135,11 +135,11 @@ describe('Footer Component', () => {
       render(<Footer />);
 
       const heading = screen.getByRole('heading', { name: /enlaces/i });
-      expect(heading).toHaveClass('text-bold');
-      expect(heading).toHaveClass('mb-3');
-      expect(heading).toHaveClass('text-lg');
+      expect(heading).toHaveClass('text-gradient-simple');
+      expect(heading).toHaveClass('mb-4');
+      expect(heading).toHaveClass('text-xl');
+      expect(heading).toHaveClass('font-bold');
       expect(heading).toHaveClass('uppercase');
-      expect(heading).toHaveClass('text-slate-500');
     });
 
     it('should render NavbarLinks with correct background', () => {
@@ -182,8 +182,8 @@ describe('Footer Component', () => {
       const verseSection = container.querySelector(
         '.md\\:col-span-2.md\\:col-start-2',
       );
-      expect(verseSection).toHaveClass('text-sm');
-      expect(verseSection).toHaveClass('text-slate-400');
+      expect(verseSection).toHaveClass('text-base');
+      expect(verseSection).toHaveClass('text-gray-300');
       expect(verseSection).toHaveClass('md:border-x-1');
     });
   });
@@ -207,11 +207,11 @@ describe('Footer Component', () => {
       render(<Footer />);
 
       const heading = screen.getByRole('heading', { name: /donaciones/i });
-      expect(heading).toHaveClass('text-bold');
-      expect(heading).toHaveClass('mb-3');
-      expect(heading).toHaveClass('text-lg');
+      expect(heading).toHaveClass('text-gradient-simple');
+      expect(heading).toHaveClass('mb-4');
+      expect(heading).toHaveClass('text-xl');
+      expect(heading).toHaveClass('font-bold');
       expect(heading).toHaveClass('uppercase');
-      expect(heading).toHaveClass('text-slate-500');
     });
 
     it('should render PaypalDonationButton', () => {
@@ -232,6 +232,7 @@ describe('Footer Component', () => {
       const donationsSection = container.querySelector('.md\\:col-start-4');
       expect(donationsSection).toHaveClass('flex-col');
       expect(donationsSection).toHaveClass('gap-5');
+      expect(donationsSection).toHaveClass('p-4');
     });
   });
 
@@ -293,24 +294,28 @@ describe('Footer Component', () => {
   });
 
   describe('Color Scheme', () => {
-    it('should use dark background colors', () => {
+    it('should use gradient background with brand colors', () => {
       const { container } = render(<Footer />);
 
       const footer = container.querySelector('footer');
-      expect(footer).toHaveClass('bg-negro');
-
-      const section = container.querySelector('section');
-      expect(section).toHaveClass('bg-negro');
+      expect(footer).toHaveClass('bg-gradient-to-br');
+      expect(footer).toHaveClass('from-gray-900');
+      expect(footer).toHaveClass('via-brand-purple-950');
+      expect(footer).toHaveClass('to-gray-900');
     });
 
     it('should use light text colors', () => {
       const { container } = render(<Footer />);
 
-      const footer = container.querySelector('footer');
-      expect(footer).toHaveClass('text-blanco');
-
       const section = container.querySelector('section');
-      expect(section).toHaveClass('text-blanco');
+      expect(section).toHaveClass('text-white');
+    });
+
+    it('should have decorative glow elements', () => {
+      const { container } = render(<Footer />);
+
+      const glowElements = container.querySelectorAll('.blur-3xl');
+      expect(glowElements.length).toBeGreaterThan(0);
     });
   });
 
