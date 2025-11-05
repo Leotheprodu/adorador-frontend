@@ -1,0 +1,67 @@
+import { WhiteButton, SecondaryButton } from '@global/components/buttons';
+
+export const CTASection = () => {
+  return (
+    <section className="bg-gradient-cta px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-4xl text-center">
+        {/* Main Headline */}
+        <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          ¿Listo para transformar tu ministerio de alabanza?
+        </h2>
+
+        {/* Subheadline */}
+        <p className="text-brand-purple-100 mb-8 text-lg sm:text-xl md:text-2xl">
+          Únete a grupos de alabanza que están llevando sus eventos al siguiente
+          nivel con tecnología moderna y fácil de usar.
+        </p>
+
+        {/* CTA Button */}
+        <div className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <WhiteButton href="/auth/login" className="w-full sm:w-auto">
+            Crear mi cuenta gratis
+          </WhiteButton>
+          <SecondaryButton
+            href="/discipulado"
+            className="hover:text-brand-purple-600 w-full border-white bg-transparent text-white hover:bg-white sm:w-auto"
+          >
+            Explorar recursos
+          </SecondaryButton>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="text-brand-purple-100 flex flex-col items-center justify-center gap-4 text-sm sm:flex-row sm:gap-8">
+          <div className="flex items-center gap-2">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Configuración en 5 minutos</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Sin tarjeta de crédito</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Cancela cuando quieras</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

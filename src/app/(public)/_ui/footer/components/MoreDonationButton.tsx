@@ -15,8 +15,11 @@ export const MoreDonationButton = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div>
-      <Button onPress={onOpen} color="primary" variant="bordered">
+    <div className="w-full">
+      <Button
+        onPress={onOpen}
+        className="bg-gradient-primary hover:shadow-brand-purple-500/50 w-full font-semibold text-white transition-all duration-300 hover:shadow-lg"
+      >
         Otros métodos de pago
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

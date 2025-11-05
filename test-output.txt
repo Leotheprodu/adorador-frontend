@@ -1,0 +1,178 @@
+
+> adorador-frontend@0.1.0 test
+> jest GruposCTASection.test.tsx
+
+
+[31mΓ£ÿ[39m jest v30.2.0 is [31mnot yet supported[39m in the Community edition of [33mConsole Ninja[39m.
+We are working hard on it for you [36mhttps://tinyurl.com/3h9mtwra[39m.
+
+Estimated release dates:
+  - Community users: [36maround 27th November, 2025 [1m(subject to team availability)[22m[39m
+[33m  - PRO users[39m:       [1m[32mpriority access is available now[39m[22m
+
+FAIL src/app/(public)/grupos/_components/__tests__/GruposCTASection.test.tsx
+  GruposCTASection Component
+    Logged Out State
+      ├ù should render login prompt when user is not logged in (33 ms)
+      ├ù should render call to action text (10 ms)
+      ├ù should render login button with correct link (11 ms)
+    Logged In State
+      ΓêÜ should render create group prompt when user is logged in (7 ms)
+      ΓêÜ should render create group button (7 ms)
+    Placeholder Tests for Future Implementation
+      ΓêÜ should support conditional rendering based on login state (2 ms)
+      ΓêÜ should support modal interaction for creating groups (1 ms)
+      ΓêÜ should integrate with PostData API service (1 ms)
+
+  ΓùÅ GruposCTASection Component ΓÇ║ Logged Out State ΓÇ║ should render login prompt when user is not logged in
+
+    TestingLibraryElementError: Unable to find an element with the text: ┬┐Todav├¡a no tienes un grupo?. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="border-brand-purple-200 bg-gradient-light mt-12 rounded-2xl border p-8 text-center shadow-lg"
+        >
+          <h3
+            class="mb-3 text-2xl font-bold text-gray-900"
+          >
+            ┬┐Quieres que tu grupo aparezca aqu├¡?
+          </h3>
+          <p
+            class="mb-6 text-gray-600"
+          >
+            ├Ünete a Adorador y comienza a gestionar tu ministerio de alabanza de manera profesional
+          </p>
+          <a
+            class="bg-gradient-primary inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+            href="/auth/login"
+          >
+            Registrar mi grupo
+            <span
+              class="text-lg"
+            >
+              ΓåÆ
+            </span>
+          </a>
+        </div>
+      </div>
+    </body>
+
+      103 |       render(<GruposCTASection />);
+      104 |       expect(
+    > 105 |         screen.getByText('┬┐Todav├¡a no tienes un grupo?'),
+          |                ^
+      106 |       ).toBeInTheDocument();
+      107 |     });
+      108 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/_components/__tests__/GruposCTASection.test.tsx:105:16)
+
+  ΓùÅ GruposCTASection Component ΓÇ║ Logged Out State ΓÇ║ should render call to action text
+
+    TestingLibraryElementError: Unable to find an element with the text: /Crea tu cuenta y comienza a organizar tus eventos de alabanza/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="border-brand-purple-200 bg-gradient-light mt-12 rounded-2xl border p-8 text-center shadow-lg"
+        >
+          <h3
+            class="mb-3 text-2xl font-bold text-gray-900"
+          >
+            ┬┐Quieres que tu grupo aparezca aqu├¡?
+          </h3>
+          <p
+            class="mb-6 text-gray-600"
+          >
+            ├Ünete a Adorador y comienza a gestionar tu ministerio de alabanza de manera profesional
+          </p>
+          <a
+            class="bg-gradient-primary inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+            href="/auth/login"
+          >
+            Registrar mi grupo
+            <span
+              class="text-lg"
+            >
+              ΓåÆ
+            </span>
+          </a>
+        </div>
+      </div>
+    </body>
+
+      110 |       render(<GruposCTASection />);
+      111 |       expect(
+    > 112 |         screen.getByText(
+          |                ^
+      113 |           /Crea tu cuenta y comienza a organizar tus eventos de alabanza/i,
+      114 |         ),
+      115 |       ).toBeInTheDocument();
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/_components/__tests__/GruposCTASection.test.tsx:112:16)
+
+  ΓùÅ GruposCTASection Component ΓÇ║ Logged Out State ΓÇ║ should render login button with correct link
+
+    TestingLibraryElementError: Unable to find an element with the text: Crear cuenta gratis. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="border-brand-purple-200 bg-gradient-light mt-12 rounded-2xl border p-8 text-center shadow-lg"
+        >
+          <h3
+            class="mb-3 text-2xl font-bold text-gray-900"
+          >
+            ┬┐Quieres que tu grupo aparezca aqu├¡?
+          </h3>
+          <p
+            class="mb-6 text-gray-600"
+          >
+            ├Ünete a Adorador y comienza a gestionar tu ministerio de alabanza de manera profesional
+          </p>
+          <a
+            class="bg-gradient-primary inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+            href="/auth/login"
+          >
+            Registrar mi grupo
+            <span
+              class="text-lg"
+            >
+              ΓåÆ
+            </span>
+          </a>
+        </div>
+      </div>
+    </body>
+
+      118 |     it('should render login button with correct link', () => {
+      119 |       render(<GruposCTASection />);
+    > 120 |       const loginButton = screen.getByText('Crear cuenta gratis');
+          |                                  ^
+      121 |       expect(loginButton).toBeInTheDocument();
+      122 |       expect(loginButton.closest('a')).toHaveAttribute('href', '/auth/login');
+      123 |     });
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/_components/__tests__/GruposCTASection.test.tsx:120:34)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 5 passed, 8 total
+Snapshots:   0 total
+Time:        2.812 s, estimated 3 s
+Ran all test suites matching GruposCTASection.test.tsx.

@@ -1,11 +1,11 @@
 'use client';
 
 import { getBandsOfUser } from '@bands/_services/bandsService';
-import { BandCard } from './BandCard';
-import { SkeletonBandCard } from './SkeletonBandCard';
 import { $user } from '@global/stores/users';
 import { useStore } from '@nanostores/react';
 import { useMemo } from 'react';
+import { SkeletonBandCard } from './SkeletonBandCard';
+import { BandCard } from './BandCard';
 
 export const BandsShowCase = () => {
   const user = useStore($user);
