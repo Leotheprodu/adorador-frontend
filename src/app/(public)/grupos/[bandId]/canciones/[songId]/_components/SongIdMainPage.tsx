@@ -14,6 +14,8 @@ import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface
 import { LyricsGroupedCard } from './LyricsGroupedCard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { handleBackNavigation } from '@global/utils/navigationUtils';
+import { StoredLyricsAlert } from './StoredLyricsAlert';
+import { EditLyricsOptions } from './EditLyricsOptions';
 
 export const SongIdMainPage = ({
   params,
@@ -86,6 +88,9 @@ export const SongIdMainPage = ({
       isLoading={isLoading}
     >
       <div className="flex flex-col items-center overflow-hidden">
+        {/* Alert for stored lyrics */}
+        <StoredLyricsAlert />
+
         <section className="mb-10">
           <div className="mb-6 flex items-center gap-2">
             <button
@@ -129,10 +134,24 @@ export const SongIdMainPage = ({
                 refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
                 LyricsOfCurrentSong={LyricsOfCurrentSong ?? []}
                 params={params}
+                songTitle={data?.title}
               />
             )}
           </div>
         </section>
+
+        {/* Edit/Replace Lyrics Options - Available even when lyrics exist */}
+        {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 && (
+          <section className="mt-8 flex w-full justify-center px-4">
+            <EditLyricsOptions
+              params={params}
+              songTitle={data?.title}
+              refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+              mutateUploadLyricsByFile={mutateUploadLyricsByFile}
+              existingLyrics={LyricsOfCurrentSong}
+            />
+          </section>
+        )}
       </div>
     </UIGuard>
   );

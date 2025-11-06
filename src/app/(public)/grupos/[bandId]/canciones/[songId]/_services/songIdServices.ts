@@ -144,3 +144,27 @@ export const deleteChordService = ({
     method: 'DELETE',
   });
 };
+
+export const parseTextLyricsService = ({
+  params,
+}: {
+  params: { bandId: string; songId: string };
+}) => {
+  return PostData<{ message: string }, { textContent: string }>({
+    key: 'ParseTextLyrics',
+    url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics/parse-text`,
+    method: 'POST',
+  });
+};
+
+export const deleteAllLyricsService = ({
+  params,
+}: {
+  params: { bandId: string; songId: string };
+}) => {
+  return PostData<{ message: string }>({
+    key: 'DeleteAllLyrics',
+    url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics/all`,
+    method: 'DELETE',
+  });
+};
