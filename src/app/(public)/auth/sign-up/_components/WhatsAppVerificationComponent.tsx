@@ -1,8 +1,8 @@
 'use client';
-import { Button } from '@nextui-org/react';
 import { CopyIcon } from '@global/icons/CopyIcon';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { PrimaryButton, SecondaryButton } from '@global/components/buttons';
 
 interface WhatsAppVerificationProps {
   verificationToken: string;
@@ -100,24 +100,23 @@ export const WhatsAppVerificationComponent = ({
               </p>
             </div>
 
-            <button
+            <SecondaryButton
               onClick={copyToClipboard}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:scale-105 hover:shadow-md active:scale-95"
+              startContent={<CopyIcon className="h-4 w-4" />}
+              className="mt-3 w-full"
             >
-              <CopyIcon className="h-4 w-4" />
               {copied ? '✓ Copiado' : 'Copiar código'}
-            </button>
+            </SecondaryButton>
           </div>
 
           <div className="space-y-3">
-            <Button
-              size="lg"
-              onPress={openWhatsApp}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 py-6 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
+            <PrimaryButton
+              onClick={openWhatsApp}
+              startContent={<span className="text-xl">💬</span>}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-500"
             >
-              <span className="text-xl">💬</span>
               Enviar por WhatsApp
-            </Button>
+            </PrimaryButton>
 
             <div className="space-y-2 rounded-xl bg-slate-50 p-4 text-xs text-slate-600">
               <p className="flex items-start gap-2">

@@ -5,6 +5,7 @@ import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
 import { AddSongIcon } from '@global/icons/AddSongIcon';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { useStore } from '@nanostores/react';
+import { TertiaryButton } from '@global/components/buttons';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -75,15 +76,15 @@ export const LyricsGroupedCard = ({
             type="add"
           />
         ) : (
-          <button
+          <TertiaryButton
             onClick={() => setAddNewLyric(true)}
-            className="group flex items-center gap-2 rounded-xl bg-white/80 px-4 py-3 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:scale-105 hover:bg-gradient-to-r hover:from-brand-purple-50 hover:to-brand-blue-50 hover:shadow-md hover:ring-brand-purple-200 active:scale-95"
+            startContent={
+              <AddSongIcon className="h-4 w-4 transition-transform group-hover:rotate-90" />
+            }
+            className="w-auto text-sm"
           >
-            <AddSongIcon className="h-5 w-5 text-brand-purple-600 transition-transform group-hover:rotate-90" />
-            <span className="text-sm font-semibold text-brand-purple-700">
-              Agregar línea de letra
-            </span>
-          </button>
+            Agregar línea de letra
+          </TertiaryButton>
         )}
       </div>
     </div>

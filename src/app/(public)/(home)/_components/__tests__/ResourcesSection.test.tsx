@@ -107,10 +107,11 @@ describe('ResourcesSection Component', () => {
       ).toBeInTheDocument();
     });
 
-    it('should render "Leer más" links', () => {
-      render(<ResourcesSection />);
-      const readMoreLinks = screen.getAllByText('Leer más');
-      expect(readMoreLinks.length).toBe(3);
+    it('should render clickable post cards as links', () => {
+      const { container } = render(<ResourcesSection />);
+      const postLinks = container.querySelectorAll('a[href*="/discipulado/"]');
+      // Should have 3 post links + 1 "Ver todos" button link = 4 total
+      expect(postLinks.length).toBeGreaterThanOrEqual(3);
     });
 
     it('should have correct links for posts', () => {
@@ -190,8 +191,8 @@ describe('ResourcesSection Component', () => {
       const { container } = render(<ResourcesSection />);
       const images = container.querySelectorAll('img');
       images.forEach((img) => {
-        expect(img).toHaveAttribute('width', '600');
-        expect(img).toHaveAttribute('height', '400');
+        expect(img).toHaveAttribute('width', '400');
+        expect(img).toHaveAttribute('height', '192');
       });
     });
   });

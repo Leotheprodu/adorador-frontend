@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { GuitarIcon } from '@global/icons/GuitarIcon';
 import { BandsWithMembersCount } from '@bands/_interfaces/bandsInterface';
-import Link from 'next/link';
+import { PrimaryButton, IconButton } from '@global/components/buttons';
 
 export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -89,15 +89,17 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
 
           <div className="flex items-center gap-3">
             {/* Botón anterior */}
-            <button
+            <IconButton
               onClick={() =>
                 setCurrentEventIndex((prevIndex) => Math.max(prevIndex - 1, 0))
               }
               disabled={currentEventIndex === 0}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 transition-all hover:scale-110 hover:from-brand-purple-100 hover:to-brand-pink-100 hover:text-brand-purple-700 disabled:opacity-30 disabled:hover:scale-100"
+              variant="circular"
+              size="md"
+              ariaLabel="Evento anterior"
             >
               <span className="font-bold">‹</span>
-            </button>
+            </IconButton>
 
             {/* Contenido del evento */}
             <div className="flex-1 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 p-4 shadow-sm ring-1 ring-slate-200/50">
@@ -124,17 +126,19 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
             </div>
 
             {/* Botón siguiente */}
-            <button
+            <IconButton
               onClick={() =>
                 setCurrentEventIndex((prevIndex) =>
                   Math.min(prevIndex + 1, events.length - 1),
                 )
               }
               disabled={currentEventIndex === events.length - 1}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 transition-all hover:scale-110 hover:from-brand-purple-100 hover:to-brand-pink-100 hover:text-brand-purple-700 disabled:opacity-30 disabled:hover:scale-100"
+              variant="circular"
+              size="md"
+              ariaLabel="Evento siguiente"
             >
               <span className="font-bold">›</span>
-            </button>
+            </IconButton>
           </div>
         </div>
       )}
@@ -142,22 +146,22 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
       {/* Footer - Botones de acción */}
       <div className="px-6 py-5">
         <div className="flex flex-col gap-3">
-          <Link
+          <PrimaryButton
             href={`/grupos/${band.id}`}
-            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
+            startContent={<span>👁️</span>}
+            className="w-full"
           >
-            <span>👁️</span>
             Ver Grupo
-          </Link>
+          </PrimaryButton>
 
           {events.length > 0 && (isCurrentEvent || isUserAuthorized) && (
-            <Link
+            <PrimaryButton
               href={`/grupos/${band.id}/eventos/${events[currentEventIndex].id}`}
-              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
+              startContent={<span>🎤</span>}
+              className="w-full bg-gradient-to-r from-brand-pink-500 to-brand-purple-600"
             >
-              <span>🎤</span>
               Ver Evento
-            </Link>
+            </PrimaryButton>
           )}
         </div>
       </div>

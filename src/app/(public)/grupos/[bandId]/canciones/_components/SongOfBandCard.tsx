@@ -60,9 +60,15 @@ export const SongOfBandCard = ({
           </Link>
           <Dropdown>
             <DropdownTrigger>
-              <button className="rounded-lg p-1.5 transition-all duration-200 hover:bg-brand-purple-100 active:scale-95">
+              <Button
+                isIconOnly
+                variant="light"
+                size="sm"
+                className="min-w-0 rounded-lg p-1.5 transition-all duration-200 hover:bg-brand-purple-100 active:scale-95"
+                aria-label="Menú de opciones"
+              >
                 <MenuButtonIcon />
-              </button>
+              </Button>
             </DropdownTrigger>
             <DropdownMenu
               disabledKeys={song._count.lyrics > 0 ? ['delete'] : []}
