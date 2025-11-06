@@ -18,6 +18,7 @@ interface LyricsTextEditorProps {
   refetchLyricsOfCurrentSong: () => void;
   initialText?: string;
   isEditMode?: boolean;
+  onClose?: () => void;
 }
 
 export const LyricsTextEditor = ({
@@ -26,6 +27,7 @@ export const LyricsTextEditor = ({
   refetchLyricsOfCurrentSong,
   initialText,
   isEditMode = false,
+  onClose,
 }: LyricsTextEditorProps) => {
   const [text, setText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -71,12 +73,15 @@ export const LyricsTextEditor = ({
       deleteTempLyrics(params.bandId, params.songId);
       toast.success('Letra cargada exitosamente');
       refetchLyricsOfCurrentSong();
+      // Close the editor after successful save
+      onClose?.();
     }
   }, [
     statusParseText,
     refetchLyricsOfCurrentSong,
     params.bandId,
     params.songId,
+    onClose,
   ]);
 
   const handleSubmit = () => {

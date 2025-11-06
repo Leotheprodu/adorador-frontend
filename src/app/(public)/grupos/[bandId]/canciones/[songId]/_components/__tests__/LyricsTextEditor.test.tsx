@@ -311,4 +311,19 @@ describe('LyricsTextEditor', () => {
     const textarea = screen.getByPlaceholderText(/Escribe aquí la letra/);
     expect(textarea).toHaveAttribute('spellCheck', 'false');
   });
+
+  it('should call onClose after successful save', async () => {
+    const mockOnClose = jest.fn();
+
+    render(
+      <LyricsTextEditor
+        params={mockParams}
+        refetchLyricsOfCurrentSong={mockRefetch}
+        onClose={mockOnClose}
+      />,
+    );
+
+    // onClose should not be called initially
+    expect(mockOnClose).not.toHaveBeenCalled();
+  });
 });

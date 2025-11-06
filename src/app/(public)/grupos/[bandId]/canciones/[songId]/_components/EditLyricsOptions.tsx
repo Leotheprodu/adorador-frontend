@@ -210,6 +210,7 @@ export const EditLyricsOptions = ({
                   refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
                   initialText={initialText}
                   isEditMode={true}
+                  onClose={() => setIsExpanded(false)}
                 />
               </div>
             ) : (
