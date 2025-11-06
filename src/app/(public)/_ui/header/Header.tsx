@@ -5,16 +5,21 @@ import Image from 'next/image';
 
 export const Header = () => {
   return (
-    <header className="fixed z-40 flex h-[5rem] w-screen items-center justify-between bg-blanco px-5 shadow-sm sm:px-20 md:bg-opacity-40 md:backdrop-blur-md">
-      <Link className="flex items-center justify-center gap-2" href={'/'}>
-        <Image
-          width={100}
-          height={100}
-          src="/logo_adorador.avif"
-          alt={appName}
-          className="h-10 w-auto object-contain"
-        />
-        <h1 className="font-agdasima text-3xl font-bold uppercase text-secundario">
+    <header className="fixed z-40 flex h-[5rem] w-screen items-center justify-between border-b border-brand-purple-100/50 bg-white/80 px-5 shadow-lg backdrop-blur-md transition-all sm:px-20">
+      <Link
+        className="group flex items-center justify-center gap-2 transition-transform hover:scale-105"
+        href={'/'}
+      >
+        <div className="rounded-xl bg-gradient-icon p-1.5 transition-all group-hover:shadow-md">
+          <Image
+            width={100}
+            height={100}
+            src="/logo_adorador.avif"
+            alt={appName}
+            className="h-10 w-auto object-contain"
+          />
+        </div>
+        <h1 className="font-agdasima text-3xl font-bold uppercase transition-all text-gradient-primary">
           {appName}
         </h1>
       </Link>

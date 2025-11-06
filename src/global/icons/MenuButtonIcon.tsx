@@ -6,10 +6,11 @@ export const MenuButtonIcon = (props: React.SVGProps<SVGSVGElement>) => (
     aria-hidden="true"
     fill="none"
     focusable="false"
-    height="1.5rem"
+    height="1.75rem"
     role="presentation"
     viewBox="0 -960 960 960"
-    width="1.5rem"
+    width="1.75rem"
+    className="transition-all duration-300"
     {...props}
   >
     <path

@@ -16,10 +16,24 @@ export const NavbarLinks = ({
   const pathName = usePathname();
   const user = useStore($user);
   const colorsSettings = {
-    oscuro: 'text-white md:text-white border-white md:border-white',
-    claro:
-      'text-primario md:text-secundario border-primario md:border-secundario',
+    oscuro: {
+      text: 'text-white',
+      activeText: 'text-brand-pink-300',
+      activeBg: 'bg-brand-purple-600/20',
+      activeBorder: 'border-brand-pink-400',
+      hover: 'hover:bg-brand-purple-700/30',
+    },
+    claro: {
+      text: 'text-gray-700',
+      activeText: 'text-brand-purple-600',
+      activeBg: 'bg-gradient-icon',
+      activeBorder: 'border-brand-purple-500',
+      hover: 'hover:bg-gradient-light',
+    },
   };
+
+  const settings = colorsSettings[backgroundColor];
+
   return (
     <>
       {links.map(
@@ -44,20 +58,31 @@ export const NavbarLinks = ({
             <li key={name}>
               <Link
                 href={href}
-                className={`linkNav relative ${colorsSettings[backgroundColor]} ${
-                  pathName.includes(href) && 'border-b-2'
+                className={`linkNav group relative flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-all duration-300 ${
+                  settings.text
+                } ${settings.hover} ${
+                  pathName.includes(href)
+                    ? `${settings.activeText} ${settings.activeBg} shadow-sm`
+                    : ''
                 }`}
               >
-                {name === 'Login'
-                  ? user.isLoggedIn
-                    ? 'Cerrar sesión'
-                    : 'Iniciar sesión'
-                  : name}
-                {!pathName.includes(href) && (
-                  <span
-                    className={`absolute bottom-5 left-0 h-0 w-0 border-t-2 opacity-0 transition-all duration-100 ${colorsSettings[backgroundColor]}`}
-                  />
-                )}
+                <span className="relative">
+                  {name === 'Login'
+                    ? user.isLoggedIn
+                      ? 'Cerrar sesión'
+                      : 'Iniciar sesión'
+                    : name}
+                  {pathName.includes(href) && (
+                    <span
+                      className={`absolute -bottom-1 left-0 h-0.5 w-full rounded-full ${settings.activeBorder} bg-gradient-primary`}
+                    />
+                  )}
+                  {!pathName.includes(href) && (
+                    <span
+                      className={`absolute -bottom-1 left-0 h-0.5 w-0 rounded-full bg-gradient-primary opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100`}
+                    />
+                  )}
+                </span>
               </Link>
             </li>
           ) : null,
