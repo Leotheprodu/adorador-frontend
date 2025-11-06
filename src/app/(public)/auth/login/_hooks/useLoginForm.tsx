@@ -56,6 +56,11 @@ export const useLoginForm = (formInit: { phone: string; password: string }) => {
       toast.success(`Bienvenido ${userName}`);
       setForm(formInit);
       setIsInvalidPass(false);
+
+      // Redirigir a /grupos después del login exitoso
+      if (typeof window !== 'undefined') {
+        window.location.href = '/grupos';
+      }
     } else if (status === 'error') {
       if (errorCode(error.message) === 403) {
         toast.error(`${user.name}, ya has iniciado sesión`);

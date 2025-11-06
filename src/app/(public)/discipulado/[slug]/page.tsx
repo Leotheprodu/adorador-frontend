@@ -73,52 +73,85 @@ export default function DiscipuladoPage({
   if (!post) return notFound();
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 pb-20">
-      <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
-      <p className="mb-6 text-sm text-gray-500">
-        Publicado el {new Date(post.date).toLocaleDateString('es-ES')}
-      </p>
-      {post.image && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <Image
-          src={post.image}
-          alt={post.title}
-          width={600}
-          height={300}
-          objectFit="cover"
-          objectPosition="center"
-          className="mb-6 rounded-xl shadow-md"
-        />
-      )}
-      <ContentRenderer content={post.content} />
+    <main className="mx-auto max-w-4xl px-4 py-10 pb-20">
+      {/* Header Section with Gradient */}
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 bg-clip-text text-4xl font-bold leading-tight text-transparent md:text-5xl">
+          {post.title}
+        </h1>
+        <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+          <span>📅</span>
+          <p>
+            {new Date(post.date).toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </p>
+        </div>
+      </div>
 
+      {/* Featured Image */}
+      {post.image && (
+        <div className="mb-10 overflow-hidden rounded-2xl shadow-2xl ring-1 ring-slate-200">
+          <Image
+            src={post.image}
+            alt={post.title}
+            width={800}
+            height={400}
+            className="h-auto w-full object-cover"
+          />
+        </div>
+      )}
+
+      {/* Article Content */}
+      <article className="rounded-2xl bg-white/80 p-6 shadow-xl ring-1 ring-slate-200 backdrop-blur-sm md:p-10">
+        <ContentRenderer content={post.content} />
+      </article>
+
+      {/* Author Section */}
       {author && (
-        <section className="my-6 rounded-lg bg-gray-50 p-4 shadow-sm">
-          <p className="mb-3 text-base text-gray-500">Acerca del autor:</p>
-          <div className="flex flex-col items-center gap-4 md:flex-row">
-            {author.image && (
-              <div className="flex w-1/6 items-center justify-center">
-                <img
-                  src={author.image}
-                  alt={author.name}
-                  loading="lazy"
-                  className="m-0 h-20 w-20 rounded-full object-contain p-0 shadow-lg"
-                />
-              </div>
-            )}
-            <div className="w-5/6">
-              <p className="font-semibold">{author.name}</p>
-              {author.bio && (
-                <p className="text-xs text-gray-600">{author.bio}</p>
+        <section className="mt-10 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-purple-500/5 via-brand-pink-500/5 to-brand-blue-500/5 shadow-xl ring-1 ring-slate-200 backdrop-blur-sm">
+          <div className="p-6">
+            <p className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-700">
+              <span>✍️</span>
+              Acerca del autor
+            </p>
+            <div className="flex flex-col items-center gap-6 md:flex-row">
+              {author.image && (
+                <div className="flex-shrink-0">
+                  <img
+                    src={author.image}
+                    alt={author.name}
+                    loading="lazy"
+                    className="h-24 w-24 rounded-full object-cover shadow-lg ring-4 ring-white"
+                  />
+                </div>
               )}
+              <div className="flex-grow text-center md:text-left">
+                <p className="mb-2 text-xl font-bold text-slate-800">
+                  {author.name}
+                </p>
+                {author.bio && (
+                  <p className="text-sm leading-relaxed text-slate-600">
+                    {author.bio}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </section>
       )}
-      <div className="mt-10 border-t pt-6 text-sm text-gray-500">
-        <p>
-          Este artículo es parte de nuestra colección de recursos de
-          discipulado. Si deseas contribuir o sugerir un tema, contáctanos.
+
+      {/* Footer Info */}
+      <div className="mt-10 rounded-xl bg-slate-50/80 p-6 shadow-md ring-1 ring-slate-200 backdrop-blur-sm">
+        <p className="text-center text-sm leading-relaxed text-slate-600">
+          💡 Este artículo es parte de nuestra colección de recursos de
+          discipulado. Si deseas contribuir o sugerir un tema,{' '}
+          <span className="font-semibold text-brand-purple-500">
+            contáctanos
+          </span>
+          .
         </p>
       </div>
     </main>

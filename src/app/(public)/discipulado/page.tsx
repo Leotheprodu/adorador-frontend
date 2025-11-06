@@ -30,31 +30,58 @@ export default function DiscipuladoListPage() {
   const discipulados = posts.filter((p) => p.category === 'discipulado');
 
   return (
-    <main className="mx-auto mb-[20rem] max-w-4xl px-4 py-10">
-      <h1 className="mb-6 text-4xl font-bold">Discipulados</h1>
-      <p className="mb-8 text-lg text-gray-700">
-        Aquí encontrarás recursos para tu crecimiento espiritual.
-      </p>
-      <div className="space-y-8">
+    <main className="mx-auto mb-[20rem] max-w-7xl px-4 py-10">
+      {/* Header Section */}
+      <div className="mb-12 text-center">
+        <h1 className="mb-4 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 bg-clip-text text-5xl font-bold text-transparent">
+          Discipulados
+        </h1>
+        <p className="text-lg text-slate-600">
+          Recursos para tu crecimiento espiritual 📖✨
+        </p>
+      </div>
+
+      {/* Articles Grid */}
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {discipulados.map((post) => (
           <Link
             key={post.id}
             href={`/discipulado/${post.slug}`}
-            className="block w-80 rounded-2xl border border-gray-200 p-6 transition hover:shadow-md"
+            className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 transition-all hover:scale-105 hover:shadow-2xl active:scale-100"
           >
+            {/* Image Container with Gradient Overlay */}
             {post.image && (
-              <Image
-                width={320}
-                height={180}
-                src={post.image}
-                alt={post.title}
-                className="mb-4 h-48 w-full rounded-xl object-cover"
-              />
+              <div className="relative h-48 w-full overflow-hidden">
+                <Image
+                  width={400}
+                  height={192}
+                  src={post.image}
+                  alt={post.title}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              </div>
             )}
-            <h2 className="text-2xl font-semibold">{post.title}</h2>
-            <p className="text-sm text-gray-500">
-              Publicado el {new Date(post.date).toLocaleDateString('es-ES')}
-            </p>
+
+            {/* Content */}
+            <div className="flex flex-grow flex-col p-6">
+              <h2 className="mb-3 text-xl font-bold text-slate-800 transition-colors group-hover:text-brand-purple-500">
+                {post.title}
+              </h2>
+              <div className="mt-auto flex items-center gap-2 text-sm text-slate-500">
+                <span>📅</span>
+                <p>
+                  {new Date(post.date).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+            </div>
+
+            {/* Hover Indicator */}
+            <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 transition-all duration-300 group-hover:w-full" />
           </Link>
         ))}
       </div>

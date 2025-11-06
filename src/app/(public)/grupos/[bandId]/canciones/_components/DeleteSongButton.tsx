@@ -26,7 +26,11 @@ export const DeleteSongButton = ({
 
   return (
     <>
-      <Button variant="bordered" color="danger" onClick={onOpen}>
+      <Button
+        onClick={onOpen}
+        className="bg-gradient-to-r from-red-500 to-pink-500 font-semibold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+        startContent={<span className="text-lg">🗑️</span>}
+      >
         Eliminar Canción
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

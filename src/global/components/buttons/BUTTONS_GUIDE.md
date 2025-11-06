@@ -16,6 +16,18 @@ Botón secundario con borde de la marca. Úsalo para acciones secundarias y opci
 
 Botón terciario de texto sin borde. Úsalo para acciones de menor importancia y enlaces de texto.
 
+### 4. WhiteButton
+
+Botón con fondo blanco, ideal para usar sobre fondos oscuros o gradientes.
+
+### 5. NavigationButton
+
+Botón de navegación con diseño especial para acciones de volver/navegar con íconos.
+
+### 6. IconButton
+
+Botón solo con ícono, ideal para controles compactos como navegación, menús, etc.
+
 ---
 
 ## 🚀 Uso Básico
@@ -27,12 +39,18 @@ Botón terciario de texto sin borde. Úsalo para acciones de menor importancia y
 import { PrimaryButton } from '@global/components/buttons';
 import { SecondaryButton } from '@global/components/buttons';
 import { TertiaryButton } from '@global/components/buttons';
+import { WhiteButton } from '@global/components/buttons';
+import { NavigationButton } from '@global/components/buttons';
+import { IconButton } from '@global/components/buttons';
 
 // O importar todos a la vez
 import {
   PrimaryButton,
   SecondaryButton,
   TertiaryButton,
+  WhiteButton,
+  NavigationButton,
+  IconButton,
 } from '@global/components/buttons';
 ```
 
@@ -398,3 +416,102 @@ npm test buttons
 - ✅ Más fácil de mantener
 - ✅ Tests incluidos
 - ✅ Mejor accesibilidad
+
+---
+
+## 📘 WhiteButton
+
+### Uso sobre fondos oscuros
+
+```tsx
+<section className="bg-gradient-cta">
+  <WhiteButton href="/auth/login">Crear cuenta</WhiteButton>
+</section>
+```
+
+### Con estado de carga
+
+```tsx
+<WhiteButton onClick={handleSubmit} isLoading={isPending}>
+  Confirmar
+</WhiteButton>
+```
+
+---
+
+## 📘 NavigationButton
+
+### Como botón de volver
+
+```tsx
+<NavigationButton onClick={handleBack} icon={<BackwardIcon />}>
+  Volver al grupo
+</NavigationButton>
+```
+
+### Como link con ícono a la derecha
+
+```tsx
+<NavigationButton href="/grupos" icon={<ArrowRightIcon />} iconPosition="right">
+  Ir a grupos
+</NavigationButton>
+```
+
+### Solo con ícono
+
+```tsx
+<NavigationButton onClick={handleBack} icon={<BackwardIcon />} />
+```
+
+---
+
+## 📘 IconButton
+
+### Botones de navegación circular
+
+```tsx
+<div className="flex gap-2">
+  <IconButton
+    onClick={handlePrevious}
+    variant="circular"
+    disabled={isFirst}
+    ariaLabel="Anterior"
+  >
+    <span>‹</span>
+  </IconButton>
+
+  <IconButton
+    onClick={handleNext}
+    variant="circular"
+    disabled={isLast}
+    ariaLabel="Siguiente"
+  >
+    <span>›</span>
+  </IconButton>
+</div>
+```
+
+### Botón de menú
+
+```tsx
+<IconButton
+  onClick={handleMenu}
+  variant="rounded"
+  size="sm"
+  ariaLabel="Menú de opciones"
+>
+  <MenuButtonIcon />
+</IconButton>
+```
+
+### Variantes disponibles
+
+- `circular`: Botón redondo (por defecto)
+- `square`: Botón cuadrado
+- `rounded`: Botón con bordes redondeados
+
+### Tamaños disponibles
+
+- `sm`: 32px (h-8 w-8)
+- `md`: 40px (h-10 w-10) - por defecto
+- `lg`: 48px (h-12 w-12)

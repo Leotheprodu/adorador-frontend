@@ -5,7 +5,7 @@ import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
 import { AddSongIcon } from '@global/icons/AddSongIcon';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { useStore } from '@nanostores/react';
-import { Button } from '@nextui-org/react';
+import { TertiaryButton } from '@global/components/buttons';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -14,6 +14,9 @@ export const LyricsGroupedCard = ({
   params,
   chordPreferences,
   lyricsOfCurrentSong,
+  transpose = 0,
+  showChords = true,
+  lyricsScale = 1,
 }: {
   structure: string;
   lyrics: LyricsProps[];
@@ -21,6 +24,9 @@ export const LyricsGroupedCard = ({
   params: { bandId: string; songId: string };
   chordPreferences: ReturnType<typeof useStore>['state'];
   lyricsOfCurrentSong: LyricsProps[];
+  transpose?: number;
+  showChords?: boolean;
+  lyricsScale?: number;
 }) => {
   const [addNewLyric, setAddNewLyric] = useState(false);
   const [newPosition, setNewPosition] = useState(1);
@@ -33,12 +39,17 @@ export const LyricsGroupedCard = ({
 
   return (
     <div
+      className="w-full border-l-4 py-4 pl-4"
       style={{
-        backgroundColor: structureColors[structure],
+        borderColor: structureColors[structure],
       }}
-      className="w-[25rem] rounded-lg p-4"
     >
-      <h2 className="text-center text-2xl font-bold text-slate-600">
+      <h2
+        className="mb-6 text-left text-2xl font-bold"
+        style={{
+          color: structureColors[structure],
+        }}
+      >
         {structureLib[structure].es}
       </h2>
       {lyrics.map((lyric) => (
@@ -49,9 +60,12 @@ export const LyricsGroupedCard = ({
           params={params}
           chordPreferences={chordPreferences}
           lyricsOfCurrentSong={lyricsOfCurrentSong}
+          transpose={transpose}
+          showChords={showChords}
+          lyricsScale={lyricsScale}
         />
       ))}
-      <div className="mt-5 max-w-screen-sm">
+      <div className="mt-5">
         {addNewLyric ? (
           <AddOrUpdateLyricForm
             LyricsOfCurrentSong={lyricsOfCurrentSong}
@@ -62,15 +76,15 @@ export const LyricsGroupedCard = ({
             type="add"
           />
         ) : (
-          <Button
-            variant="light"
-            color="primary"
-            startContent={<AddSongIcon />}
+          <TertiaryButton
             onClick={() => setAddNewLyric(true)}
-            className="text-2xl"
+            startContent={
+              <AddSongIcon className="h-4 w-4 transition-transform group-hover:rotate-90" />
+            }
+            className="w-auto text-sm"
           >
-            Agregar letra
-          </Button>
+            Agregar línea de letra
+          </TertiaryButton>
         )}
       </div>
     </div>

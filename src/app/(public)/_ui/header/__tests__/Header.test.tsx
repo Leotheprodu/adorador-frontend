@@ -69,7 +69,7 @@ describe('Header Component', () => {
       expect(header).toHaveClass('flex');
       expect(header).toHaveClass('h-[5rem]');
       expect(header).toHaveClass('w-screen');
-      expect(header).toHaveClass('bg-blanco');
+      expect(header).toHaveClass('bg-white/80');
     });
 
     it('should apply positioning and spacing classes', () => {
@@ -86,15 +86,15 @@ describe('Header Component', () => {
       const { container } = render(<Header />);
 
       const header = container.querySelector('header');
-      expect(header).toHaveClass('md:bg-opacity-40');
-      expect(header).toHaveClass('md:backdrop-blur-md');
+      expect(header).toHaveClass('backdrop-blur-md');
+      expect(header).toHaveClass('transition-all');
     });
 
     it('should have shadow styling', () => {
       const { container } = render(<Header />);
 
       const header = container.querySelector('header');
-      expect(header).toHaveClass('shadow-sm');
+      expect(header).toHaveClass('shadow-lg');
     });
   });
 
@@ -146,7 +146,8 @@ describe('Header Component', () => {
       expect(heading).toHaveClass('text-3xl');
       expect(heading).toHaveClass('font-bold');
       expect(heading).toHaveClass('uppercase');
-      expect(heading).toHaveClass('text-secundario');
+      expect(heading).toHaveClass('text-gradient-primary');
+      expect(heading).toHaveClass('transition-all');
     });
   });
 
@@ -289,14 +290,14 @@ describe('Header Component', () => {
       const { container } = render(<Header />);
 
       const header = container.querySelector('header');
-      expect(header).toHaveClass('md:bg-opacity-40');
+      expect(header).toHaveClass('bg-white/80');
     });
 
     it('should have responsive backdrop blur', () => {
       const { container } = render(<Header />);
 
       const header = container.querySelector('header');
-      expect(header).toHaveClass('md:backdrop-blur-md');
+      expect(header).toHaveClass('backdrop-blur-md');
     });
   });
 });
