@@ -26,25 +26,26 @@ export const ResourcesSection = () => {
             <Link
               key={post.id}
               href={`/${post.category}/${post.slug}`}
-              className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-2xl"
+              className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 transition-all hover:scale-105 hover:shadow-2xl active:scale-100"
             >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              {/* Image Container with Gradient Overlay */}
+              <div className="relative h-48 w-full overflow-hidden">
                 <Image
                   src={post.image || '/images/posts/adorar-en-espiritu.avif'}
                   alt={post.title}
-                  width={600}
-                  height={400}
+                  width={400}
+                  height={192}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <h3 className="group-hover:text-brand-purple-600 mb-3 text-xl font-bold text-gray-900 transition-colors">
+              <div className="flex flex-grow flex-col p-6">
+                <h3 className="mb-3 text-xl font-bold text-slate-800 transition-colors group-hover:text-brand-purple-500">
                   {post.title}
                 </h3>
-                <p className="mb-4 text-gray-600">
+                <p className="mb-4 flex-grow text-sm text-slate-600">
                   {(() => {
                     const paragraph = post.content.find(
                       (el) =>
@@ -58,11 +59,20 @@ export const ResourcesSection = () => {
                       : '';
                   })()}
                 </p>
-                <span className="text-brand-purple-600 inline-flex items-center gap-2 transition-all group-hover:gap-3">
-                  Leer más
-                  <span className="text-lg">→</span>
-                </span>
+                <div className="mt-auto flex items-center gap-2 text-sm text-slate-500">
+                  <span>📅</span>
+                  <p>
+                    {new Date(post.date).toLocaleDateString('es-ES', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
               </div>
+
+              {/* Hover Indicator */}
+              <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
         </div>

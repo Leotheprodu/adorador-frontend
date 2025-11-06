@@ -11,29 +11,41 @@ export default function ContentRenderer({
   content: ContentBlock[];
 }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {content.map((block, index) => {
         if (block.type === 'verse') {
           return (
             <div
               key={index}
-              className="rounded-lg border-l-4 border-blue-500 bg-gray-100 p-4"
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-blue-500/10 via-brand-purple-500/5 to-transparent p-6 shadow-lg ring-1 ring-brand-blue-500/20 transition-all hover:shadow-xl"
             >
-              {block.title && (
-                <p className="font-semibold text-blue-600">{block.title}</p>
-              )}
-              <p className="italic text-gray-700">{block.text}</p>
+              <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-brand-blue-500 to-brand-purple-500" />
+              <div className="ml-2">
+                {block.title && (
+                  <p className="mb-2 flex items-center gap-2 font-bold text-brand-blue-600">
+                    <span>📖</span>
+                    {block.title}
+                  </p>
+                )}
+                <p className="italic leading-relaxed text-slate-700">
+                  {block.text}
+                </p>
+              </div>
             </div>
           );
         }
 
         if (block.type === 'paragraph') {
           return (
-            <div key={index}>
+            <div key={index} className="space-y-3">
               {block.title && (
-                <h2 className="mb-1 text-lg font-semibold">{block.title}</h2>
+                <h2 className="text-xl font-bold text-slate-800 transition-colors hover:text-brand-purple-500">
+                  {block.title}
+                </h2>
               )}
-              <p className="whitespace-pre-line text-gray-800">{block.text}</p>
+              <p className="whitespace-pre-line text-base leading-relaxed text-slate-700">
+                {block.text}
+              </p>
             </div>
           );
         }
