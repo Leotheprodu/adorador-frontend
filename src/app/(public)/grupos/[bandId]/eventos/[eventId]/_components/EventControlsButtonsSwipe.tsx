@@ -27,23 +27,27 @@ export const EventControlsButtonsSwipe = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 rounded-md bg-white p-2">
-      <h3 className="text-center text-xs">Control Admin</h3>
-      <div className="flex flex-wrap items-center gap-1">
+    <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-pink-50/30 p-3 shadow-sm">
+      <h3 className="text-center text-xs font-semibold text-brand-pink-700">
+        🔐 Control Admin
+      </h3>
+      <div className="flex flex-wrap items-center justify-center gap-1">
         <Checkbox
-          color="default"
+          color="secondary"
           size="sm"
           isSelected={eventConfig.swipeLocked}
           aria-label="Bloquear swipe"
           onValueChange={toggleSwipeLock}
         >
-          <p className="text-xs">🔒 Bloquear Swipe</p>
+          <p className="text-xs font-medium">🔒 Bloquear Swipe</p>
         </Checkbox>
       </div>
-      <p className="text-center text-xs text-slate-500">
-        {eventConfig.swipeLocked
-          ? 'Tocar pantalla no cambiará letras'
-          : 'Tocar pantalla cambiará letras'}
+      <p className="text-center text-xs font-medium text-slate-600">
+        {eventConfig.swipeLocked ? (
+          <span className="text-brand-pink-600">✓ Pantalla protegida</span>
+        ) : (
+          <span className="text-slate-500">⚠️ Swipe activo</span>
+        )}
       </p>
     </div>
   );

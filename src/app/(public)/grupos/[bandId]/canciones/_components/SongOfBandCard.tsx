@@ -38,14 +38,29 @@ export const SongOfBandCard = ({
   });
   return (
     <div
-      className={`flex flex-col items-center justify-center rounded-md border-1 ${selectedSong?.id === song.id ? 'border-primary-500' : 'border-slate-100'} p-2`}
+      className={`group relative overflow-hidden rounded-xl border-2 bg-gradient-to-br from-white to-brand-purple-50/30 p-4 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-xl ${
+        selectedSong?.id === song.id
+          ? 'border-brand-purple-400 ring-2 ring-brand-purple-200'
+          : 'border-transparent hover:border-brand-purple-200'
+      }`}
     >
-      <div>
-        <div className="flex gap-2">
-          <h1>{song.title}</h1>
+      {/* Efecto decorativo en hover */}
+      <div className="absolute right-0 top-0 h-20 w-20 -translate-y-8 translate-x-8 rounded-full bg-gradient-to-br from-brand-purple-200 to-brand-blue-200 opacity-0 blur-2xl transition-opacity duration-200 group-hover:opacity-100"></div>
+
+      <div className="relative z-10">
+        {/* Header con título y menú */}
+        <div className="mb-3 flex items-start justify-between gap-2">
+          <Link
+            href={`/grupos/${bandId}/canciones/${song.id}`}
+            className="flex-1"
+          >
+            <h3 className="font-semibold text-slate-800 transition-colors duration-200 group-hover:text-brand-purple-700">
+              {song.title}
+            </h3>
+          </Link>
           <Dropdown>
             <DropdownTrigger>
-              <button>
+              <button className="rounded-lg p-1.5 transition-all duration-200 hover:bg-brand-purple-100 active:scale-95">
                 <MenuButtonIcon />
               </button>
             </DropdownTrigger>
@@ -56,6 +71,7 @@ export const SongOfBandCard = ({
                 as={Link}
                 href={`/grupos/${bandId}/canciones/${song.id}`}
                 key="Ir"
+                startContent={<span className="text-lg">🎵</span>}
               >
                 Ir a canción
               </DropdownItem>
@@ -71,6 +87,7 @@ export const SongOfBandCard = ({
                   });
                 }}
                 key="escuchar"
+                startContent={<span className="text-lg">▶️</span>}
               >
                 Escuchar
               </DropdownItem>
@@ -79,46 +96,70 @@ export const SongOfBandCard = ({
                 className="text-danger"
                 color="danger"
                 onClick={onOpen}
+                startContent={<span className="text-lg">🗑️</span>}
               >
                 Eliminar
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
-        <div className="flex flex-wrap gap-1">
-          <small className="rounded-sm bg-slate-200 px-2 py-1">
+
+        {/* Badges informativos */}
+        <div className="flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 px-2.5 py-1 text-xs font-medium text-brand-purple-700 shadow-sm">
             {songTypes[song.songType].es}
-          </small>
-          <small className="rounded-sm bg-slate-200 px-2 py-1">
-            {song._count.events}{' '}
-            {song._count.events === 1 ? 'evento' : 'eventos'}
-          </small>
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 shadow-sm">
+            📅 {song._count.events}
+          </span>
           {song._count.lyrics === 0 && (
-            <small className="rounded-sm bg-danger-100 px-2 py-1">
-              Sin Letra
-            </small>
+            <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-red-100 to-orange-100 px-2.5 py-1 text-xs font-medium text-red-700 shadow-sm">
+              ⚠️ Sin Letra
+            </span>
           )}
         </div>
       </div>
 
+      {/* Modal de confirmación mejorado */}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Confirmar eliminación
+              <ModalHeader className="flex flex-col gap-2 bg-gradient-to-r from-red-50 to-orange-50 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-orange-500 text-xl shadow-md">
+                    ⚠️
+                  </div>
+                  <div>
+                    <h2 className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-xl font-bold text-transparent">
+                      Confirmar Eliminación
+                    </h2>
+                    <p className="text-xs font-normal text-slate-500">
+                      Esta acción es permanente
+                    </p>
+                  </div>
+                </div>
               </ModalHeader>
-              <ModalBody>
-                <p>
+              <ModalBody className="py-6">
+                <p className="text-slate-700">
                   ¿Estás seguro de que deseas eliminar la canción{' '}
-                  <strong>&quot;{song.title}&quot;</strong>?
+                  <strong className="text-brand-purple-700">
+                    &quot;{song.title}&quot;
+                  </strong>
+                  ?
                 </p>
-                <p className="text-sm text-danger">
-                  Esta acción no se puede deshacer.
-                </p>
+                <div className="mt-2 rounded-lg bg-red-50 p-3">
+                  <p className="text-sm font-medium text-red-700">
+                    ⚠️ Esta acción no se puede deshacer
+                  </p>
+                </div>
               </ModalBody>
-              <ModalFooter>
-                <Button color="default" variant="light" onPress={onClose}>
+              <ModalFooter className="gap-2 bg-slate-50">
+                <Button
+                  variant="flat"
+                  onPress={onClose}
+                  className="font-medium"
+                >
                   Cancelar
                 </Button>
                 <Button
@@ -126,8 +167,9 @@ export const SongOfBandCard = ({
                   disabled={statusDeleteSong === 'success'}
                   color="danger"
                   onPress={handleDeleteSong}
+                  className="bg-gradient-to-r from-red-600 to-orange-600 font-semibold text-white shadow-md"
                 >
-                  Eliminar
+                  Eliminar Canción
                 </Button>
               </ModalFooter>
             </>

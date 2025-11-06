@@ -23,10 +23,17 @@ export const EventControlsButtonsScreen = () => {
     }
   }, []);
   return (
-    <div className="flex flex-col gap-2 rounded-md bg-white p-2">
-      <h3 className="text-center text-xs">Pantalla</h3>
+    <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-purple-50/30 p-3 shadow-sm">
+      <h3 className="text-center text-xs font-semibold text-brand-purple-700">
+        ⚙️ Pantalla
+      </h3>
       <div className="flex items-center justify-center gap-2">
-        <h4 className="text-sm">Letra: {eventConfig.lyricsScale}</h4>
+        <h4 className="text-sm font-medium text-slate-700">
+          Letra:{' '}
+          <span className="text-brand-purple-600">
+            {eventConfig.lyricsScale}
+          </span>
+        </h4>
         <div className="flex items-center justify-center gap-2">
           <button
             disabled={eventConfig.lyricsScale === 1}
@@ -42,7 +49,7 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
           >
             <ArrowLeftIcon className="[font-size:1rem]" />
           </button>
@@ -60,14 +67,14 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
           >
             <ArrowRightIcon className="[font-size:1rem]" />
           </button>
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <h4 className="text-sm">Fondo</h4>
+        <h4 className="text-sm font-medium text-slate-700">Fondo</h4>
         <div className="flex items-center justify-center gap-2">
           <button
             onClick={() => {
@@ -82,7 +89,7 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95"
           >
             <ArrowLeftIcon className="[font-size:1rem]" />
           </button>
@@ -99,15 +106,15 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-slate-100 p-2 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95"
           >
             <ArrowRightIcon className="[font-size:1rem]" />
           </button>
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="flex flex-wrap items-center justify-center gap-2">
         <Checkbox
-          color="default"
+          color="secondary"
           size="sm"
           isSelected={eventConfig.showStructure}
           aria-label="Mostrar estructura"
@@ -122,10 +129,10 @@ export const EventControlsButtonsScreen = () => {
             });
           }}
         >
-          <p className="text-xs">Estructura</p>
+          <p className="text-xs font-medium">Estructura</p>
         </Checkbox>
         <Checkbox
-          color="default"
+          color="secondary"
           size="sm"
           isSelected={eventConfig.showChords}
           aria-label="Mostrar acordes"
@@ -140,11 +147,11 @@ export const EventControlsButtonsScreen = () => {
             });
           }}
         >
-          <p className="text-xs">Acordes</p>
+          <p className="text-xs font-medium">Acordes</p>
         </Checkbox>
         {eventConfig.showChords && (
           <Checkbox
-            color="default"
+            color="secondary"
             size="sm"
             isSelected={chordConfig.noteType === 'american'}
             aria-label="Cifrados"
@@ -161,7 +168,7 @@ export const EventControlsButtonsScreen = () => {
               });
             }}
           >
-            <p className="text-xs">Cifrados</p>
+            <p className="text-xs font-medium">Cifrados</p>
           </Checkbox>
         )}
       </div>

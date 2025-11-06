@@ -22,10 +22,10 @@ export const EventControlsButtons = ({
     <div
       className={`col-start-1 col-end-3 h-full w-full ${isEventAdmin ? 'md:col-start-3' : ''} `}
     >
-      <h3 className="mb-3 text-center font-bold text-slate-800">
-        Panel de botones
+      <h3 className="mb-3 bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
+        Panel de Control
       </h3>
-      <div className="flex items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
+      <div className="flex items-center justify-center gap-3 rounded-xl bg-white/70 p-4 shadow-inner backdrop-blur-sm">
         <EventControlsButtonsScreen />
         {isSystemAdmin && <EventControlsButtonsSwipe />}
         {/* <EventControlsButtonsLiveMessages bandId={bandId} /> */}
