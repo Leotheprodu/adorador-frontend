@@ -168,3 +168,18 @@ export const deleteAllLyricsService = ({
     method: 'DELETE',
   });
 };
+
+export const normalizeLyricsService = ({
+  params,
+}: {
+  params: { bandId: string; songId: string };
+}) => {
+  return PostData<
+    { message: string; normalized: number },
+    { lyricIds: number[] }
+  >({
+    key: 'NormalizeLyrics',
+    url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics/normalize`,
+    method: 'POST',
+  });
+};

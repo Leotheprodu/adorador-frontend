@@ -4,6 +4,7 @@ import { LyricsTextEditor } from './LyricsTextEditor';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { convertLyricsToPlainText } from '../_utils/lyricsConverter';
 import { deleteAllLyricsService } from '../_services/songIdServices';
+import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';
 
 interface EditLyricsOptionsProps {
   params: { bandId: string; songId: string };
@@ -109,7 +110,16 @@ export const EditLyricsOptions = ({
   };
 
   return (
-    <div className="w-full max-w-5xl">
+    <div className="w-full max-w-5xl space-y-4">
+      {/* Normalize Button - Always visible */}
+      <div className="flex justify-center">
+        <ButtonNormalizeLyrics
+          params={params}
+          lyrics={existingLyrics}
+          refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+        />
+      </div>
+
       {/* Collapsed Button */}
       {!isExpanded && (
         <button

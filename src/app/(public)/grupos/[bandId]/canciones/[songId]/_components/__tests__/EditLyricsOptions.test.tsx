@@ -18,6 +18,12 @@ jest.mock('../LyricsTextEditor', () => ({
   ),
 }));
 
+jest.mock('../ButtonNormalizeLyrics', () => ({
+  ButtonNormalizeLyrics: () => (
+    <div data-testid="button-normalize-lyrics">ButtonNormalizeLyrics</div>
+  ),
+}));
+
 // Mock services
 jest.mock('../../_services/songIdServices', () => ({
   deleteAllLyricsService: jest.fn(() => ({
