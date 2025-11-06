@@ -11,6 +11,8 @@ import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 import { useDeleteEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useDeleteEvent';
 import { useStore } from '@nanostores/react';
 import { $event } from '@stores/event';
+import { $user } from '@stores/users';
+import { userRoles } from '@global/config/constants';
 
 export const DeleteEventButton = ({
   bandId,
@@ -20,6 +22,7 @@ export const DeleteEventButton = ({
   eventId: string;
 }) => {
   const event = useStore($event);
+  const user = useStore($user);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { handleDeleteEvent, statusDeleteEvent } = useDeleteEvent({
     bandId,
@@ -27,8 +30,11 @@ export const DeleteEventButton = ({
     redirectOnDelete: true,
   });
 
+  const isAdmin = user?.roles.includes(userRoles.admin.id);
+
   // Solo mostrar el botón si el evento no tiene canciones
-  if (event.songs.length > 0) {
+  // Los administradores pueden eliminar eventos incluso con canciones
+  if (event.songs.length > 0 && !isAdmin) {
     return null;
   }
 

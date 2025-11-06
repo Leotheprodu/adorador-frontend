@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { EventControls } from '@bands/[bandId]/eventos/[eventId]/_components/EventControls';
 import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventMainScreen';
 import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventByIdPage';
@@ -9,10 +9,11 @@ import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/E
 import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/DeleteEventButton';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { handleBackNavigation } from '@global/utils/navigationUtils';
+import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/_components/EventConnectedUsers';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { $event } from '@stores/event';
-import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/_components/EventConnectedUsers';
+import { userRoles } from '@global/config/constants';
 
 export const EventByIdPage = ({
   params,
@@ -31,17 +32,22 @@ export const EventByIdPage = ({
   const user = useStore($user);
   const event = useStore($event);
 
-  // Verificar si es administrador específico del evento
-  const bandMembership =
-    user.isLoggedIn && user.membersofBands
-      ? user.membersofBands.find(
-          (membership) => membership.band.id === event.bandId,
-        )
-      : undefined;
+  // Verificar si es administrador de la app O administrador específico del evento
+  const isAdminEvent = useMemo(() => {
+    // Si es admin de la app, siempre tiene acceso
+    if (user?.isLoggedIn && user?.roles.includes(userRoles.admin.id)) {
+      return true;
+    }
 
-  const checkAdminEvent = Boolean(
-    bandMembership && bandMembership.isEventManager,
-  );
+    // Si no es admin, verificar si es event manager
+    if (user?.isLoggedIn && user?.membersofBands) {
+      return user.membersofBands.some(
+        (band) => band.band.id === event?.bandId && band.isEventManager,
+      );
+    }
+
+    return false;
+  }, [user, event]);
 
   // Escuchar cambios en las canciones del evento para hacer refetch automático
   useEffect(() => {
@@ -85,7 +91,7 @@ export const EventByIdPage = ({
             <small className="hidden group-hover:block">Volver a eventos</small>
           </button>
           <h1 className="text-xl font-bold">Evento</h1>
-          {checkAdminEvent && (
+          {isAdminEvent && (
             <>
               <EditEventButton
                 bandId={params.bandId}

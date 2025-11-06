@@ -9,6 +9,9 @@ import {
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { EditIcon } from '@global/icons/EditIcon';
 import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEditEvent';
+import { useStore } from '@nanostores/react';
+import { $user } from '@stores/users';
+import { userRoles } from '@global/config/constants';
 
 export const EditEventButton = ({
   bandId,
@@ -31,8 +34,11 @@ export const EditEventButton = ({
     eventHasPassed,
   } = useEditEvent({ bandId, eventId, refetch });
 
-  // Si el evento ya pasó, no mostrar el botón
-  if (eventHasPassed) {
+  const user = useStore($user);
+  const isAdmin = user?.roles.includes(userRoles.admin.id);
+
+  // Si el evento ya pasó Y el usuario NO es admin, no mostrar el botón
+  if (eventHasPassed && !isAdmin) {
     return null;
   }
 

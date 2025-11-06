@@ -21,6 +21,10 @@ interface ElementWithFullscreen extends HTMLElement {
 
 // Detectar si estamos en iOS
 const isIOS = () => {
+  // Verificar que estamos en el cliente antes de acceder a navigator
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return false;
+  }
   return (
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
@@ -29,6 +33,10 @@ const isIOS = () => {
 
 // Detectar soporte para fullscreen
 const hasFullscreenSupport = () => {
+  // Verificar que estamos en el cliente antes de acceder a document
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return false;
+  }
   const doc = document as DocumentWithFullscreen;
   return !!(
     document.fullscreenEnabled ||
