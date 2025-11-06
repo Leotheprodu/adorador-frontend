@@ -5,7 +5,6 @@ import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
 import { AddSongIcon } from '@global/icons/AddSongIcon';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { useStore } from '@nanostores/react';
-import { Button } from '@nextui-org/react';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -65,7 +64,7 @@ export const LyricsGroupedCard = ({
           lyricsScale={lyricsScale}
         />
       ))}
-      <div className="mt-5 max-w-screen-sm">
+      <div className="mt-5">
         {addNewLyric ? (
           <AddOrUpdateLyricForm
             LyricsOfCurrentSong={lyricsOfCurrentSong}
@@ -76,15 +75,15 @@ export const LyricsGroupedCard = ({
             type="add"
           />
         ) : (
-          <Button
-            variant="light"
-            color="primary"
-            startContent={<AddSongIcon />}
+          <button
             onClick={() => setAddNewLyric(true)}
-            className="text-2xl"
+            className="group flex items-center gap-2 rounded-xl bg-white/80 px-4 py-3 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:scale-105 hover:bg-gradient-to-r hover:from-brand-purple-50 hover:to-brand-blue-50 hover:shadow-md hover:ring-brand-purple-200 active:scale-95"
           >
-            Agregar letra
-          </Button>
+            <AddSongIcon className="h-5 w-5 text-brand-purple-600 transition-transform group-hover:rotate-90" />
+            <span className="text-sm font-semibold text-brand-purple-700">
+              Agregar línea de letra
+            </span>
+          </button>
         )}
       </div>
     </div>

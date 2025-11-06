@@ -133,15 +133,15 @@ export const SongIdMainPage = ({
           <div className="mb-4 flex items-center gap-3">
             <button
               onClick={handleBackToSongs}
-              className="group flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 px-4 py-2 transition-all duration-200 hover:scale-105 hover:from-brand-purple-100 hover:to-brand-pink-100 hover:shadow-md active:scale-95"
+              className="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-purple-50 hover:shadow-md active:scale-95"
             >
-              <BackwardIcon className="h-4 w-4 text-brand-purple-600" />
-              <small className="font-semibold text-brand-purple-600">
+              <BackwardIcon />
+              <small className="hidden text-xs font-medium text-brand-purple-700 sm:group-hover:block">
                 Volver a canciones
               </small>
             </button>
-            <h1 className="text-2xl font-bold text-slate-800">
-              🎵 Detalles de canción
+            <h1 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
+              Detalles de Canción
             </h1>
           </div>
           <SongBasicInfo

@@ -2,12 +2,11 @@ import { useStore } from '@nanostores/react';
 import { $PlayList, $SelectedSong } from '@stores/player';
 import { PlayIcon } from '@global/icons/PlayIcon';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
-import { churchRoles, songTypes } from '@global/config/constants';
+import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
 import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
 import { Button, Tooltip } from '@nextui-org/react';
-import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
 import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 
@@ -26,12 +25,6 @@ export const SongBasicInfo = ({
 }) => {
   const playlist = useStore($PlayList);
   const selectedSong = useStore($SelectedSong);
-
-  const isUserChecked = CheckUserStatus({
-    isLoggedIn: true,
-    checkBandId: parseInt(bandId),
-    churchRoles: [churchRoles.musician.id, churchRoles.worshipLeader.id],
-  });
 
   useEffect(() => {
     if (
@@ -61,60 +54,79 @@ export const SongBasicInfo = ({
     }
   };
   return (
-    <div
-      className={`group flex flex-col gap-1 rounded-lg p-4 transition-all duration-100 ease-in ${isUserChecked && 'hover:shadow-lg'}`}
-    >
-      <div className="flex gap-2">
-        <h1 className="font-bold">{data?.title}</h1>
-        {data?.artist && <h2>por {data?.artist}</h2>}
-        {selectedSong?.id !== data?.id && (
+    <div className="rounded-2xl bg-white/90 p-6 shadow-xl ring-1 ring-slate-200 backdrop-blur-sm">
+      {/* Título y artista */}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold text-slate-800">{data?.title}</h1>
+        {data?.artist && (
+          <span className="rounded-full bg-gradient-to-r from-brand-purple-100 to-brand-pink-100 px-3 py-1 text-sm font-medium text-brand-purple-700">
+            🎤 {data?.artist}
+          </span>
+        )}
+        {selectedSong?.id !== data?.id && data?.youtubeLink && (
           <Tooltip color="primary" content="Reproducir canción">
             <button
-              className="rounded-sm bg-primary-100 p-1 duration-100 hover:opacity-80 hover:shadow-md active:scale-90"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
               onClick={handleClickPlay}
             >
-              {<PlayIcon />}
+              <PlayIcon className="h-5 w-5" />
             </button>
           </Tooltip>
         )}
       </div>
-      <div className="flex gap-1">
-        <p>{data && songTypes[data.songType].es}</p>
-        {data?.key && <p>, tonalidad: {handleTranspose(data?.key, 0)}</p>}
 
-        {data?.tempo && <p>, {data?.tempo} bpm</p>}
+      {/* Información de la canción */}
+      <div className="mb-5 flex flex-wrap gap-2">
+        {data && (
+          <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700">
+            <span>🎵</span>
+            {songTypes[data.songType].es}
+          </span>
+        )}
+        {data?.key && (
+          <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
+            <span>🎹</span>
+            {handleTranspose(data?.key, 0)}
+          </span>
+        )}
+        {data?.tempo && (
+          <span className="flex items-center gap-1.5 rounded-full bg-purple-50 px-3 py-1.5 text-sm font-medium text-purple-700">
+            <span>⏱️</span>
+            {data?.tempo} BPM
+          </span>
+        )}
       </div>
-      <div className="flex gap-1">
-        <div className="flex w-full gap-2">
+
+      {/* Botones de acción */}
+      <div className="flex flex-wrap gap-3">
+        {data?.youtubeLink && (
           <Button
-            color="primary"
-            variant="flat"
             as={'a'}
             target="_blank"
-            className="text-primary-900 hover:text-primary-500"
             href={`https://youtu.be/${data?.youtubeLink}`}
+            className="bg-gradient-to-r from-red-500 to-red-600 font-semibold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+            startContent={<span className="text-lg">▶️</span>}
           >
-            Ir a Youtube
+            Ver en YouTube
           </Button>
-        </div>
+        )}
 
-        <div className="flex w-full gap-2">
-          <EditSongButton
-            bandId={bandId}
-            songId={songId}
-            refetch={refetch}
-            songData={data}
-          />
-          {data &&
-            data._count &&
-            (data._count.lyrics === 0 || data._count.lyrics === null) && (
-              <DeleteSongButton
-                bandId={bandId}
-                songId={songId}
-                songTitle={data.title}
-              />
-            )}
-        </div>
+        <EditSongButton
+          bandId={bandId}
+          songId={songId}
+          refetch={refetch}
+          songData={data}
+        />
+
+        {data &&
+          data._count &&
+          (data._count.lyrics === 0 || data._count.lyrics === null) && (
+            <DeleteSongButton
+              bandId={bandId}
+              songId={songId}
+              songTitle={data.title}
+            />
+          )}
       </div>
     </div>
   );

@@ -34,7 +34,11 @@ export const EditSongButton = ({
 
   return (
     <>
-      <Button variant="bordered" color="danger" onClick={handleOpenModal}>
+      <Button
+        onClick={handleOpenModal}
+        className="bg-gradient-to-r from-brand-purple-500 to-brand-blue-500 font-semibold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+        startContent={<span className="text-lg">✏️</span>}
+      >
         Editar Información
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
