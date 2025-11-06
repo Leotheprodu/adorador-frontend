@@ -85,7 +85,7 @@ export const NoChordCard = ({
         gridColumnEnd: position + 1,
         gridRowStart: 1,
       }}
-      className="flex h-10 w-10 items-end justify-center gap-1 rounded-md border-primary-500 hover:border-1"
+      className="flex h-10 w-10 items-center justify-center gap-1 rounded-md border-primary-500 hover:border-1"
     >
       <button
         onClick={onOpen}

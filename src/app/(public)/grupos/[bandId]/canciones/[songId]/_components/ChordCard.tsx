@@ -9,6 +9,7 @@ export const ChordCard = ({
   chordPreferences,
   lyricId,
   params,
+  transpose = 0,
 }: {
   chord: ChordProps;
   lyricId: number;
@@ -18,6 +19,7 @@ export const ChordCard = ({
     sortedChords: ChordProps[];
     setSortedChords: React.Dispatch<React.SetStateAction<ChordProps[]>>;
   };
+  transpose?: number;
 }) => {
   const [showButtons, setShowButtons] = useState(false);
 
@@ -59,24 +61,24 @@ export const ChordCard = ({
         onClick={() => {
           setShowButtons(!showButtons);
         }}
-        className="flex h-10 w-10 cursor-pointer items-end justify-center rounded-md border-primary-500 hover:border-1"
+        className="flex h-full cursor-pointer items-center justify-center rounded-md border-primary-500 hover:border-1"
       >
-        <div className="flex justify-center">
-          <p className="w-full text-center">
-            {getNoteByType(chord.rootNote, 0, chordPreferences)}
-          </p>
-          <p className="w-full text-center text-slate-400">
+        <div className="flex items-baseline">
+          <span className="font-bold text-brand-purple-700">
+            {getNoteByType(chord.rootNote, transpose, chordPreferences)}
+          </span>
+          <span className="ml-0.5 text-xs text-slate-500">
             {chord.chordQuality}
-          </p>
+          </span>
+          {chord.slashChord && (
+            <>
+              <span className="mx-0.5 text-slate-600">/</span>
+              <span className="font-bold text-brand-purple-700">
+                {getNoteByType(chord.slashChord, transpose, chordPreferences)}
+              </span>
+            </>
+          )}
         </div>
-        {chord.slashChord && (
-          <>
-            <p className="w-full text-center text-slate-600">/</p>
-            <p className="w-full text-center">
-              {getNoteByType(chord.slashChord, 0, chordPreferences)}
-            </p>
-          </>
-        )}
       </div>
     </div>
   );

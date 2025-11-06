@@ -14,6 +14,9 @@ export const LyricsGroupedCard = ({
   params,
   chordPreferences,
   lyricsOfCurrentSong,
+  transpose = 0,
+  showChords = true,
+  lyricsScale = 1,
 }: {
   structure: string;
   lyrics: LyricsProps[];
@@ -21,6 +24,9 @@ export const LyricsGroupedCard = ({
   params: { bandId: string; songId: string };
   chordPreferences: ReturnType<typeof useStore>['state'];
   lyricsOfCurrentSong: LyricsProps[];
+  transpose?: number;
+  showChords?: boolean;
+  lyricsScale?: number;
 }) => {
   const [addNewLyric, setAddNewLyric] = useState(false);
   const [newPosition, setNewPosition] = useState(1);
@@ -33,12 +39,17 @@ export const LyricsGroupedCard = ({
 
   return (
     <div
+      className="w-full border-l-4 py-4 pl-4"
       style={{
-        backgroundColor: structureColors[structure],
+        borderColor: structureColors[structure],
       }}
-      className="w-[25rem] rounded-lg p-4"
     >
-      <h2 className="text-center text-2xl font-bold text-slate-600">
+      <h2
+        className="mb-6 text-left text-2xl font-bold"
+        style={{
+          color: structureColors[structure],
+        }}
+      >
         {structureLib[structure].es}
       </h2>
       {lyrics.map((lyric) => (
@@ -49,6 +60,9 @@ export const LyricsGroupedCard = ({
           params={params}
           chordPreferences={chordPreferences}
           lyricsOfCurrentSong={lyricsOfCurrentSong}
+          transpose={transpose}
+          showChords={showChords}
+          lyricsScale={lyricsScale}
         />
       ))}
       <div className="mt-5 max-w-screen-sm">

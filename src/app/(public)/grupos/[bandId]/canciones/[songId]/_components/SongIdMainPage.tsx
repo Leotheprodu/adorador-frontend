@@ -9,13 +9,14 @@ import { SongBasicInfo } from './SongBasicInfo';
 import { useEffect, useState } from 'react';
 import { NoLyricsSong } from './NoLyricsSong';
 import { useStore } from '@nanostores/react';
-import { $chordPreferences } from '@stores/event';
+import { $chordPreferences, $eventConfig } from '@stores/event';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { LyricsGroupedCard } from './LyricsGroupedCard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { handleBackNavigation } from '@global/utils/navigationUtils';
 import { StoredLyricsAlert } from './StoredLyricsAlert';
 import { EditLyricsOptions } from './EditLyricsOptions';
+import { SongViewControls } from './SongViewControls';
 
 export const SongIdMainPage = ({
   params,
@@ -27,7 +28,43 @@ export const SongIdMainPage = ({
     [],
   );
 
+  // Transpose específico de esta canción
+  const [transpose, setTranspose] = useState(0);
+
   const chordPreferences = useStore($chordPreferences);
+  const eventConfig = useStore($eventConfig);
+
+  // Cargar transposición específica de esta canción
+  useEffect(() => {
+    const storageKey = `songTranspose_${params.songId}`;
+    const loadTranspose = () => {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        setTranspose(parseInt(stored));
+      } else {
+        setTranspose(0);
+      }
+    };
+
+    loadTranspose();
+
+    // Listener para cambios en localStorage (desde otro componente)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === storageKey) {
+        loadTranspose();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Polling interval para detectar cambios locales
+    const interval = setInterval(loadTranspose, 500);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [params.songId]);
   const { data, isLoading, status, refetch } = getSongData({ params });
   const {
     data: LyricsOfCurrentSong,
@@ -91,18 +128,21 @@ export const SongIdMainPage = ({
         {/* Alert for stored lyrics */}
         <StoredLyricsAlert />
 
-        <section className="mb-10">
-          <div className="mb-6 flex items-center gap-2">
+        {/* Header Section */}
+        <section className="mb-6 w-full max-w-4xl px-4">
+          <div className="mb-4 flex items-center gap-3">
             <button
               onClick={handleBackToSongs}
-              className="group flex items-center justify-center gap-2 transition-all duration-150 hover:cursor-pointer hover:text-primary-500"
+              className="group flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 px-4 py-2 transition-all duration-200 hover:scale-105 hover:from-brand-purple-100 hover:to-brand-pink-100 hover:shadow-md active:scale-95"
             >
-              <BackwardIcon />
-              <small className="hidden group-hover:block">
+              <BackwardIcon className="h-4 w-4 text-brand-purple-600" />
+              <small className="font-semibold text-brand-purple-600">
                 Volver a canciones
               </small>
             </button>
-            <h1 className="text-xl font-bold">Detalles de canción</h1>
+            <h1 className="text-2xl font-bold text-slate-800">
+              🎵 Detalles de canción
+            </h1>
           </div>
           <SongBasicInfo
             bandId={params.bandId}
@@ -112,8 +152,17 @@ export const SongIdMainPage = ({
             refetch={refetch}
           />
         </section>
-        <section>
-          <div className="relative flex w-screen flex-col items-center gap-4 overflow-x-auto px-4 xl:flex-row xl:items-start xl:px-10">
+
+        {/* Controls Section - Only show when lyrics exist */}
+        {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 && (
+          <section className="mb-6 w-full px-4">
+            <SongViewControls songId={params.songId} />
+          </section>
+        )}
+
+        {/* Lyrics Section - Vertical Layout */}
+        <section className="w-full px-4">
+          <div className="mx-auto flex max-w-4xl flex-col gap-6">
             {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 ? (
               <>
                 {lyricsGrouped?.map(([structure, lyrics], groupIndex) => (
@@ -125,6 +174,9 @@ export const SongIdMainPage = ({
                     params={params}
                     chordPreferences={chordPreferences}
                     lyricsOfCurrentSong={LyricsOfCurrentSong}
+                    transpose={transpose}
+                    showChords={eventConfig.showChords}
+                    lyricsScale={eventConfig.lyricsScale}
                   />
                 ))}
               </>
