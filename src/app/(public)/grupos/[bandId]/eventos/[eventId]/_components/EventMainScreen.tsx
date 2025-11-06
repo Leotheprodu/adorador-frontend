@@ -211,7 +211,7 @@ export const EventMainScreen = () => {
         backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
-      className="relative flex h-[20rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black/90 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken"
+      className="relative flex h-[22rem] w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black/90 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken shadow-xl ring-1 ring-white/10 backdrop-blur-sm sm:h-[24rem]"
     >
       {!selectedSongData ||
         (lyricSelected.position === -1 && (
@@ -259,9 +259,10 @@ export const EventMainScreen = () => {
 
       {!isFullscreen && isSupported && (
         <button
-          className="absolute bottom-2 right-2 hover:opacity-70"
+          className="absolute bottom-3 right-3 rounded-xl bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 p-3 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-xl active:scale-95"
           onClick={activateFullscreen}
           title="Pantalla completa"
+          aria-label="Activar pantalla completa"
         >
           <FullscreenIcon />
         </button>

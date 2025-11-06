@@ -66,15 +66,17 @@ export const EventControlsLyricsSelect = () => {
   };
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center">
-      <h4 className="mb-3 text-center font-bold text-slate-800">Letras</h4>
-      <div className="flex h-full w-full items-center justify-center gap-2 rounded-md bg-slate-100 p-2">
+      <h4 className="mb-3 bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
+        Letras
+      </h4>
+      <div className="flex h-full w-full items-center justify-center gap-3 rounded-xl bg-white/70 p-3 shadow-inner backdrop-blur-sm">
         <div
           ref={scrollContainerRef}
-          className="flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-lg bg-slate-100 p-2"
+          className="flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-xl bg-gradient-to-br from-slate-50 to-brand-purple-50/20 p-3 shadow-sm sm:h-[22rem]"
         >
           {lyricsGrouped.map(([structure, lyrics], groupIndex) => (
-            <div className="w-full" key={groupIndex}>
-              <h2 className="text-center text-xl font-bold text-slate-600">
+            <div className="mb-4 w-full" key={groupIndex}>
+              <h2 className="mb-2 rounded-lg bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 px-3 py-2 text-center text-sm font-bold text-brand-purple-700 shadow-sm">
                 {structureLib[structure].es}
               </h2>
               {lyrics.map((lyric, index) => (
@@ -83,7 +85,7 @@ export const EventControlsLyricsSelect = () => {
                   key={index}
                   id={lyric.position.toString()}
                 >
-                  <h1
+                  <button
                     onClick={() => {
                       handleSelectLyric(lyric.position);
                     }}
@@ -97,10 +99,18 @@ export const EventControlsLyricsSelect = () => {
                           ? '#000000'
                           : structureColors[structure],
                     }}
-                    className={`w-full cursor-pointer px-2 py-1 text-center duration-200 transition-background active:scale-95 ${lyricSelected.position > 0 && (lyricSelected.position === lyric.position || lyricSelected.position + 1 === lyric.position || lyricSelected.position + 2 === lyric.position || lyricSelected.position + 3 === lyric.position) ? 'text-white' : ''}`}
+                    className={`mb-1 w-full cursor-pointer rounded-lg px-3 py-2 text-center text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md active:scale-95 ${
+                      lyricSelected.position > 0 &&
+                      (lyricSelected.position === lyric.position ||
+                        lyricSelected.position + 1 === lyric.position ||
+                        lyricSelected.position + 2 === lyric.position ||
+                        lyricSelected.position + 3 === lyric.position)
+                        ? 'text-white ring-2 ring-brand-purple-400 ring-offset-2'
+                        : ''
+                    }`}
                   >
                     {lyric.lyrics}
-                  </h1>
+                  </button>
                 </div>
               ))}
             </div>

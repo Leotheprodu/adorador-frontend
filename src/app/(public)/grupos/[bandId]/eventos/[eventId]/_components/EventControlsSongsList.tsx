@@ -44,7 +44,9 @@ export const EventControlsSongsList = ({
         // Vista de ADMINISTRADOR: Puede cambiar canciones
         <div className="w-full">
           <div className="mb-3 flex items-center justify-center gap-2">
-            <h4 className="text-center font-bold text-slate-800">Canciones</h4>
+            <h4 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
+              Canciones
+            </h4>
             <OfflineView />
             <UpdatingSongList
               songs={[...songs]}
@@ -54,22 +56,48 @@ export const EventControlsSongsList = ({
             <AddSongEventButton params={params} refetch={refetch} />
           </div>
 
-          <div className="flex h-[10rem] w-full flex-col gap-2 overflow-y-auto rounded-lg bg-slate-100 p-2 text-slate-800">
-            {isLoading && <Spinner />}
+          <div className="flex h-[12rem] w-full flex-col gap-2 overflow-y-auto rounded-xl bg-white/70 p-3 text-slate-800 shadow-inner backdrop-blur-sm sm:h-[14rem]">
+            {isLoading && (
+              <div className="flex h-full items-center justify-center">
+                <Spinner color="secondary" />
+              </div>
+            )}
             {!isLoading &&
               songs.map((data) => (
                 <button
                   disabled={selectedSongId === data.song.id}
                   onClick={() => handleClickSong(data.song.id)}
-                  className={`flex h-full rounded-sm p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95 disabled:hover:bg-slate-100 disabled:active:scale-100 ${selectedSongId === data.song.id ? 'bg-slate-200 hover:bg-slate-300' : ''}`}
+                  className={`flex min-h-[3.5rem] items-center rounded-xl border-2 p-3 shadow-sm transition-all duration-200 active:scale-95 ${
+                    selectedSongId === data.song.id
+                      ? 'border-brand-purple-300 bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 shadow-md ring-2 ring-brand-purple-200'
+                      : 'border-transparent bg-white hover:border-brand-purple-200 hover:bg-gradient-to-r hover:from-brand-purple-50 hover:to-brand-blue-50 hover:shadow-md'
+                  } disabled:active:scale-100`}
                   key={data.song.id}
                 >
-                  <p className="text-left">
-                    {data.order}) <span className="">{data.song.title}</span> -{' '}
-                    {songTypes[data.song.songType].es}
-                    {data.song.key !== null &&
-                      ` - ${handleTranspose(data.song.key, data.transpose)}`}
-                  </p>
+                  <div className="flex w-full items-center gap-3">
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                        selectedSongId === data.song.id
+                          ? 'bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md'
+                          : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {data.order}
+                    </span>
+                    <p className="flex-1 text-left text-sm font-medium sm:text-base">
+                      <span className="font-semibold">{data.song.title}</span>
+                      <span className="text-slate-500">
+                        {' '}
+                        · {songTypes[data.song.songType].es}
+                      </span>
+                      {data.song.key !== null && (
+                        <span className="text-brand-purple-600">
+                          {' '}
+                          · {handleTranspose(data.song.key, data.transpose)}
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </button>
               ))}
           </div>
@@ -78,23 +106,51 @@ export const EventControlsSongsList = ({
         // Vista de MIEMBRO DEL GRUPO: Puede VER canciones pero NO cambiarlas
         <div className="w-full">
           <div className="mb-3 flex items-center justify-center gap-2">
-            <h4 className="text-center font-bold text-slate-800">Canciones</h4>
+            <h4 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
+              Canciones
+            </h4>
             <OfflineView />
           </div>
-          <div className="flex h-[10rem] w-full flex-col gap-2 overflow-y-auto rounded-lg bg-slate-100 p-2 text-slate-800">
-            {isLoading && <Spinner />}
+          <div className="flex h-[12rem] w-full flex-col gap-2 overflow-y-auto rounded-xl bg-white/70 p-3 text-slate-800 shadow-inner backdrop-blur-sm sm:h-[14rem]">
+            {isLoading && (
+              <div className="flex h-full items-center justify-center">
+                <Spinner color="secondary" />
+              </div>
+            )}
             {!isLoading &&
               songs.map((data) => (
                 <div
-                  className={`flex h-full cursor-default rounded-sm p-1 ${selectedSongId === data.song.id ? 'bg-slate-200' : ''}`}
+                  className={`flex min-h-[3.5rem] cursor-default items-center rounded-xl border-2 p-3 shadow-sm ${
+                    selectedSongId === data.song.id
+                      ? 'border-brand-purple-300 bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 shadow-md'
+                      : 'border-transparent bg-white'
+                  }`}
                   key={data.song.id}
                 >
-                  <p className="text-left">
-                    {data.order}) <span className="">{data.song.title}</span> -{' '}
-                    {songTypes[data.song.songType].es}
-                    {data.song.key !== null &&
-                      ` - ${handleTranspose(data.song.key, data.transpose)}`}
-                  </p>
+                  <div className="flex w-full items-center gap-3">
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                        selectedSongId === data.song.id
+                          ? 'bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md'
+                          : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {data.order}
+                    </span>
+                    <p className="flex-1 text-left text-sm font-medium sm:text-base">
+                      <span className="font-semibold">{data.song.title}</span>
+                      <span className="text-slate-500">
+                        {' '}
+                        · {songTypes[data.song.songType].es}
+                      </span>
+                      {data.song.key !== null && (
+                        <span className="text-brand-purple-600">
+                          {' '}
+                          · {handleTranspose(data.song.key, data.transpose)}
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </div>
               ))}
           </div>
@@ -105,11 +161,14 @@ export const EventControlsSongsList = ({
           <div className="mb-3 flex items-center justify-center gap-2">
             <OfflineView />
           </div>
-          <div className="flex h-[10rem] w-full items-center justify-center rounded-lg bg-slate-100 p-2 text-slate-600">
-            <p className="text-center">
-              Vista de espectador - El administrador del evento controla la
-              presentación
-            </p>
+          <div className="flex h-[10rem] w-full items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-6 text-slate-600 shadow-sm">
+            <div className="text-center">
+              <div className="mb-2 text-4xl">🎵</div>
+              <p className="font-medium text-slate-700">Vista de espectador</p>
+              <p className="mt-1 text-sm text-slate-500">
+                El administrador controla la presentación
+              </p>
+            </div>
           </div>
         </div>
       )}

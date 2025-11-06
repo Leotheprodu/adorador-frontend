@@ -71,10 +71,12 @@ export const EventConnectedUsers = ({
   // Si no hay usuarios conectados pero el socket está activo, mostrar mensaje de carga
   if (connectedUsers.totalCount === 0 && socket) {
     return (
-      <div className="w-full text-left">
-        <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">
-          <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500"></div>
-          <span className="font-medium">Conectándose al evento...</span>
+      <div className="my-3 w-full">
+        <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-blue-100 to-brand-purple-100 px-4 py-2 shadow-sm backdrop-blur-sm">
+          <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-gradient-to-r from-brand-blue-500 to-brand-purple-500"></div>
+          <span className="text-sm font-medium text-brand-blue-700">
+            Conectándose al evento...
+          </span>
         </div>
       </div>
     );
@@ -124,10 +126,18 @@ export const EventConnectedUsers = ({
   };
 
   return (
-    <div className="w-full text-left">
-      <div className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-        <div className="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
-        <span className="font-medium">{formatUserList()}</span>
+    <div className="my-3 w-full">
+      <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-green-100 via-emerald-50 to-green-100 px-4 py-2 shadow-sm ring-1 ring-green-200/50 backdrop-blur-sm">
+        <div className="relative flex h-2.5 w-2.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500"></span>
+        </div>
+        <span className="text-sm font-medium text-green-800">
+          {formatUserList()}
+        </span>
+        <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
+          {connectedUsers.totalCount}
+        </span>
       </div>
     </div>
   );

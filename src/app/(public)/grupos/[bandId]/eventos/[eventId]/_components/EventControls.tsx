@@ -55,7 +55,7 @@ export const EventControls = ({
   return (
     <div>
       <section
-        className={`mt-5 h-full w-full flex-grow flex-col items-center justify-center gap-3 bg-slate-50 p-4`}
+        className={`mt-5 h-full w-full flex-grow flex-col items-center justify-center gap-3 rounded-2xl bg-gradient-to-br from-white via-slate-50 to-brand-purple-50/30 p-4 shadow-lg backdrop-blur-sm sm:p-6`}
       >
         <EventControlsSongsList
           params={params}
@@ -73,8 +73,8 @@ export const EventControls = ({
         />
 
         {isBandMemberOnly && (
-          <div className="w-full text-center text-sm text-slate-500">
-            <p>
+          <div className="w-full rounded-xl bg-gradient-to-r from-brand-blue-50 to-brand-purple-50 p-4 text-center shadow-sm">
+            <p className="text-sm font-medium text-brand-purple-700">
               💡 Eres miembro del grupo. Solo el administrador del evento puede
               cambiar canciones.
             </p>
