@@ -33,13 +33,22 @@ export const EventControlsButtonsLirics = () => {
         className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95"
         disabled={
           lyricSelected.position === selectedSongLyricLength + 1 ||
-          selectedSongLyricLength === 0 ||
-          lyricSelected.position + 3 >= selectedSongLyricLength
+          selectedSongLyricLength === 0
         }
         onClick={() => {
-          if (
-            lyricSelected.position <= selectedSongLyricLength + 1 &&
-            selectedSongLyricLength > 4
+          if (lyricSelected.position === selectedSongLyricLength) {
+            // Si estamos en la última letra, ir a "Fin"
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: selectedSongLyricLength + 1,
+                action: 'forward',
+              },
+            });
+          } else if (
+            lyricSelected.position < selectedSongLyricLength &&
+            selectedSongLyricLength > 4 &&
+            lyricSelected.position + 3 <= selectedSongLyricLength
           ) {
             sendMessage({
               type: 'lyricSelected',
@@ -53,6 +62,7 @@ export const EventControlsButtonsLirics = () => {
               },
             });
           } else if (
+            lyricSelected.position < selectedSongLyricLength &&
             selectedSongLyricLength > 0 &&
             selectedSongLyricLength < 4
           ) {
@@ -60,6 +70,18 @@ export const EventControlsButtonsLirics = () => {
               type: 'lyricSelected',
               data: {
                 position: 1,
+                action: 'forward',
+              },
+            });
+          } else if (
+            lyricSelected.position < selectedSongLyricLength &&
+            lyricSelected.position + 3 > selectedSongLyricLength
+          ) {
+            // Si estamos cerca del final pero no podemos avanzar 4, ir a la última posición
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: selectedSongLyricLength,
                 action: 'forward',
               },
             });

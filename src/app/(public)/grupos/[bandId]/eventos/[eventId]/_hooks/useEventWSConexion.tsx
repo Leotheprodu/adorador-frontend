@@ -131,34 +131,7 @@ export const useEventWSConexion = ({
             console.log(
               `[WebSocket] Servidor listo. Usuario: ${data.userName}, Autenticado: ${data.isAuthenticated}, Mensajes disponibles: ${data.messagesAvailable}`,
             );
-
-            // EJECUTAR INMEDIATAMENTE después de que se configuren los listeners
-            if (data.messagesAvailable > 0) {
-              console.log(
-                `[WebSocket SYNC] 🔄 Hay mensajes disponibles. Solicitando estado inmediatamente... (${data.messagesAvailable} mensajes)`,
-              );
-              // Usar setTimeout para ejecutar después de setupSocketListeners
-              setTimeout(() => {
-                console.log(
-                  '[WebSocket SYNC] 🔄 Listeners configurados. Solicitando estado actual...',
-                );
-                newSocket.emit('request_current_state');
-              }, 100); // Delay mínimo para asegurar que listeners estén configurados
-            } else {
-              console.log(
-                '[WebSocket SYNC] ❌ No hay mensajes previos. Inicializando estado limpio...',
-              );
-              // Usar setTimeout para ejecutar después de setupSocketListeners
-              setTimeout(() => {
-                console.log(
-                  '[WebSocket SYNC] 🔄 Listeners configurados. Inicializando estado limpio...',
-                );
-                $lyricSelected.set({ position: 0, action: 'forward' });
-                $eventAdminName.set('');
-                $eventSelectedSongId.set(0);
-                console.log('[WebSocket SYNC] ✅ Estado inicial configurado');
-              }, 100);
-            }
+            // NO hacer nada aquí - esperar a que setupSocketListeners emita listeners_ready
           },
         );
 
@@ -171,7 +144,16 @@ export const useEventWSConexion = ({
             );
             if (data.messagesCount === 0) {
               console.warn(
-                '[WebSocket SYNC] ⚠️ No hay estado previo guardado en el servidor',
+                '[WebSocket SYNC] ⚠️ No hay estado previo guardado en el servidor. Inicializando estado limpio...',
+              );
+              // Solo resetear si no hay mensajes previos
+              $lyricSelected.set({ position: 0, action: 'forward' });
+              $eventAdminName.set('');
+              $eventSelectedSongId.set(0);
+              console.log('[WebSocket SYNC] ✅ Estado inicial configurado');
+            } else {
+              console.log(
+                `[WebSocket SYNC] ✅ Estado sincronizado con ${data.messagesCount} mensajes del servidor`,
               );
             }
           },
@@ -276,8 +258,20 @@ export const useEventWSConexion = ({
             }
           } else {
             // Formato legacy directo
+            console.log(
+              '[WebSocket DEBUG] Procesando mensaje legacy:',
+              data.message,
+            );
+            console.log(
+              '[WebSocket DEBUG] isLegacyLyricMessage:',
+              isLegacyLyricMessage(data.message),
+            );
             if (data.message && isLegacyLyricMessage(data.message)) {
               lyricMessage = data.message;
+              console.log(
+                '[WebSocket DEBUG] Lyric message asignado:',
+                lyricMessage,
+              );
             }
             if (data.eventAdmin) {
               adminName = data.eventAdmin;
@@ -285,8 +279,16 @@ export const useEventWSConexion = ({
           }
 
           if (lyricMessage) {
+            console.log(
+              '[WebSocket DEBUG] Actualizando $lyricSelected con:',
+              lyricMessage,
+            );
             $lyricSelected.set(lyricMessage);
             $eventAdminName.set(adminName);
+          } else {
+            console.warn(
+              '[WebSocket DEBUG] lyricMessage es null/undefined, no se actualiza el store',
+            );
           }
         } catch (error) {
           console.warn('[WebSocket] Error procesando lyric message:', error);
@@ -313,8 +315,17 @@ export const useEventWSConexion = ({
             }
           } else {
             // Formato legacy
+            console.log(
+              '[WebSocket DEBUG] Procesando songId legacy:',
+              data.message,
+            );
+            console.log(
+              '[WebSocket DEBUG] isLegacyEventSongMessage:',
+              isLegacyEventSongMessage(data.message),
+            );
             if (isLegacyEventSongMessage(data.message)) {
               songId = data.message;
+              console.log('[WebSocket DEBUG] Song ID asignado:', songId);
             }
             if (data.eventAdmin) {
               adminName = data.eventAdmin;
@@ -322,6 +333,16 @@ export const useEventWSConexion = ({
           }
 
           if (songId !== undefined) {
+            console.log(
+              '[WebSocket DEBUG] Actualizando $eventSelectedSongId con:',
+              songId,
+            );
+
+            // Verificar si la canción cambió
+            const previousSongId = $eventSelectedSongId.get();
+            const isSongChange =
+              previousSongId !== songId && previousSongId !== 0;
+
             // Actualizar el id y el nombre del admin
             $eventSelectedSongId.set(songId);
             $eventAdminName.set(adminName);
@@ -336,8 +357,18 @@ export const useEventWSConexion = ({
                 $selectedSongData.set(matched);
                 const lyricsLength = matched.song?.lyrics?.length || 0;
                 $selectedSongLyricLength.set(lyricsLength);
-                // Reiniciar la posición de letra al cambiar canción
-                $lyricSelected.set({ position: 0, action: 'backward' });
+
+                // SOLO reiniciar la posición si la canción cambió (no en la carga inicial)
+                if (isSongChange) {
+                  console.log(
+                    '[WebSocket DEBUG] Canción cambió, reseteando posición a 0',
+                  );
+                  $lyricSelected.set({ position: 0, action: 'backward' });
+                } else {
+                  console.log(
+                    '[WebSocket DEBUG] Misma canción o carga inicial, manteniendo posición actual',
+                  );
+                }
               }
             } catch (err) {
               console.warn(
@@ -481,9 +512,18 @@ export const useEventWSConexion = ({
 
       // Emitir evento para indicar que todos los listeners están configurados
       console.log(
-        '[WebSocket] Todos los listeners configurados - emitiendo listeners_ready',
+        '[WebSocket] Todos los listeners configurados - emitiendo listeners_ready y solicitando estado',
       );
       socket.emit('listeners_ready');
+
+      // Solicitar el estado actual inmediatamente después de configurar listeners
+      // El servidor enviará los mensajes guardados a través de los listeners ya configurados
+      setTimeout(() => {
+        console.log(
+          '[WebSocket SYNC] 🔄 Solicitando estado actual del servidor...',
+        );
+        socket.emit('request_current_state');
+      }, 50); // Pequeño delay para asegurar que listeners_ready se procese primero
     },
     [params.eventId],
   );

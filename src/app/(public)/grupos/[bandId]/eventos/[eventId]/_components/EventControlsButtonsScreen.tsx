@@ -31,21 +31,21 @@ export const EventControlsButtonsScreen = () => {
         <h4 className="text-sm font-medium text-slate-700">
           Letra:{' '}
           <span className="text-brand-purple-600">
-            {eventConfig.lyricsScale}
+            {eventConfig.lyricsScale.toFixed(2)}
           </span>
         </h4>
         <div className="flex items-center justify-center gap-2">
           <button
-            disabled={eventConfig.lyricsScale === 1}
+            disabled={eventConfig.lyricsScale <= 0.5}
             onClick={() => {
-              if (eventConfig.lyricsScale > 1) {
+              if (eventConfig.lyricsScale > 0.5) {
                 $eventConfig.set({
                   ...eventConfig,
-                  lyricsScale: eventConfig.lyricsScale - 0.5,
+                  lyricsScale: Math.max(0.5, eventConfig.lyricsScale - 0.25),
                 });
                 setLocalStorage('eventConfig', {
                   ...eventConfig,
-                  lyricsScale: eventConfig.lyricsScale - 0.5,
+                  lyricsScale: Math.max(0.5, eventConfig.lyricsScale - 0.25),
                 });
               }
             }}
@@ -54,16 +54,16 @@ export const EventControlsButtonsScreen = () => {
             <ArrowLeftIcon className="[font-size:1rem]" />
           </button>
           <button
-            disabled={eventConfig.lyricsScale === 2}
+            disabled={eventConfig.lyricsScale >= 1.5}
             onClick={() => {
-              if (eventConfig.lyricsScale < 2) {
+              if (eventConfig.lyricsScale < 1.5) {
                 $eventConfig.set({
                   ...eventConfig,
-                  lyricsScale: eventConfig.lyricsScale + 0.5,
+                  lyricsScale: Math.min(1.5, eventConfig.lyricsScale + 0.25),
                 });
                 setLocalStorage('eventConfig', {
                   ...eventConfig,
-                  lyricsScale: eventConfig.lyricsScale + 0.5,
+                  lyricsScale: Math.min(1.5, eventConfig.lyricsScale + 0.25),
                 });
               }
             }}

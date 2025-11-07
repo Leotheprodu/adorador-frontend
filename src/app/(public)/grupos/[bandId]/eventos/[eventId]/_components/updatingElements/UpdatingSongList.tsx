@@ -102,10 +102,11 @@ export const UpdatingSongList = ({
   return (
     <>
       <button
-        className="rounded-full p-2 duration-200 hover:bg-slate-300"
+        className="rounded-full p-2 transition-all duration-200 hover:bg-gradient-icon hover:shadow-md"
         onClick={onOpen}
+        aria-label="Editar canciones del evento"
       >
-        <EditIcon className="text-primary-500" />
+        <EditIcon className="text-brand-purple-600" />
       </button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

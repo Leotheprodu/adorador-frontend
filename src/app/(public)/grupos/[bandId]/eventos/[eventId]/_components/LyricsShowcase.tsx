@@ -68,16 +68,9 @@ export const LyricsShowcase = ({
   }, [selectedSongData, lyricSelected.position, isFullscreen]);
 
   return (
-    <div
-      style={{
-        scale: isFullscreen
-          ? eventConfig.lyricsScale * 1
-          : eventConfig.lyricsScale * 0.95,
-      }}
-      className="absolute inset-0 flex h-full w-full flex-col"
-    >
+    <div className="absolute inset-0 flex items-center justify-center">
       <AnimatePresence>
-        <div className="absolute bottom-1/2 w-full translate-y-1/2 transform">
+        <div className="flex w-full items-center justify-center">
           <motion.div
             key={lyricSelected.position}
             initial={{
@@ -90,6 +83,7 @@ export const LyricsShowcase = ({
               y: lyricSelected.action === 'forward' ? -200 : 200,
             }}
             transition={{ opacity: { duration: 0.2 }, y: { duration: 0.5 } }}
+            className="flex flex-col"
           >
             {/* Renderizar solo las líneas que realmente existen */}
             {visibleLyricsData.map((lyricData) => (
@@ -102,12 +96,15 @@ export const LyricsShowcase = ({
                     position: lyricData.position,
                   },
                   showStructureName: lyricData.showStructureName,
+                  lyricsScale: eventConfig.lyricsScale * 1,
                 }}
               />
             ))}
 
             {/* Vista previa de la siguiente línea (solo en fullscreen) */}
-            {nextLine && <NextLinePreview nextLine={nextLine} />}
+            {nextLine && eventConfig.showStructure && (
+              <NextLinePreview nextLine={nextLine} />
+            )}
           </motion.div>
         </div>
       </AnimatePresence>

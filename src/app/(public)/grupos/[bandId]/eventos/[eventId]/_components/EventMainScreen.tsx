@@ -1,4 +1,8 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
+import { ArrowLeftIcon } from '@global/icons/ArrowLeftIcon';
+import { ArrowRightIcon } from '@global/icons/ArrowRightIcon';
+import { ForwardIcon } from '@global/icons/ForwardIcon';
+import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { IOSFullscreenTip } from '@bands/[bandId]/eventos/[eventId]/_components/IOSFullscreenTip';
 import { useStore } from '@nanostores/react';
 import {
@@ -11,13 +15,14 @@ import {
   $eventLiveMessage,
 } from '@stores/event';
 import { $user } from '@stores/users';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { LyricsShowcase } from '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcase';
 import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useFullscreen } from '@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen';
 import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/_hooks/useHandleEventLeft';
+import { userRoles } from '@global/config/constants';
 
 export const EventMainScreen = () => {
   const { isFullscreen, isSupported, isIOS, activateFullscreen, divRef } =
@@ -32,9 +37,70 @@ export const EventMainScreen = () => {
   const { sendMessage } = useEventGateway();
   const { title, songs } = eventData;
 
-  // Verificación simple: usuario logueado y con permisos de banda
-  const checkAdminPermission =
-    user.isLoggedIn && user.membersofBands && user.membersofBands.length > 0;
+  // Verificar si es administrador de la app O event manager
+  const isEventManager = useMemo(() => {
+    // Si es admin de la app, siempre tiene acceso
+    if (user?.isLoggedIn && user?.roles.includes(userRoles.admin.id)) {
+      return true;
+    }
+
+    // Si no es admin, verificar si es event manager
+    if (user?.isLoggedIn && user?.membersofBands) {
+      return user.membersofBands.some(
+        (band) => band.band.id === eventData?.bandId && band.isEventManager,
+      );
+    }
+
+    return false;
+  }, [user, eventData]);
+
+  // Encontrar índice de la canción actual y verificar si hay anterior/siguiente
+  const currentSongIndex = songs.findIndex(
+    (song) => song.song.id === selectedSongId,
+  );
+  const hasPreviousSong = currentSongIndex > 0;
+  const hasNextSong =
+    currentSongIndex >= 0 && currentSongIndex < songs.length - 1;
+
+  // Funciones para navegar entre canciones
+  const goToPreviousSong = () => {
+    if (hasPreviousSong && isEventManager) {
+      const previousSong = songs[currentSongIndex - 1];
+      sendMessage({ type: 'eventSelectedSong', data: previousSong.song.id });
+      sendMessage({
+        type: 'lyricSelected',
+        data: {
+          position: 0,
+          action: 'forward',
+        },
+      });
+    }
+  };
+
+  const goToNextSong = () => {
+    if (hasNextSong && isEventManager) {
+      const nextSong = songs[currentSongIndex + 1];
+      sendMessage({ type: 'eventSelectedSong', data: nextSong.song.id });
+      sendMessage({
+        type: 'lyricSelected',
+        data: {
+          position: 0,
+          action: 'forward',
+        },
+      });
+    }
+  };
+
+  const startSong = () => {
+    sendMessage({
+      type: 'lyricSelected',
+      data: {
+        position: 1,
+        action: 'forward',
+      },
+    });
+  };
+
   useEffect(() => {
     const lyricsLength = selectedSongData?.song?.lyrics?.length || 0;
     if (lyricsLength > 0) {
@@ -66,6 +132,7 @@ export const EventMainScreen = () => {
   }, [eventLiveMessage]);
 
   const lyricSelected = useStore($lyricSelected);
+
   useEffect(() => {
     let startY = 0;
     let endY = 0;
@@ -79,11 +146,20 @@ export const EventMainScreen = () => {
     };
 
     const handleTouchEnd = () => {
-      if (isFullscreen && checkAdminPermission && !eventConfig.swipeLocked) {
+      if (isFullscreen && isEventManager && !eventConfig.swipeLocked) {
         if (startY - endY > 50) {
           // Deslizar hacia arriba
-          if (
-            lyricSelected.position <= selectedSongLyricLength &&
+          if (lyricSelected.position === selectedSongLyricLength) {
+            // Si estamos en la última letra, ir a "Fin"
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: selectedSongLyricLength + 1,
+                action: 'forward',
+              },
+            });
+          } else if (
+            lyricSelected.position < selectedSongLyricLength &&
             selectedSongLyricLength > 4 &&
             lyricSelected.position + 3 <= selectedSongLyricLength
           ) {
@@ -99,6 +175,7 @@ export const EventMainScreen = () => {
               },
             });
           } else if (
+            lyricSelected.position < selectedSongLyricLength &&
             selectedSongLyricLength > 0 &&
             selectedSongLyricLength < 4
           ) {
@@ -106,6 +183,18 @@ export const EventMainScreen = () => {
               type: 'lyricSelected',
               data: {
                 position: 1,
+                action: 'forward',
+              },
+            });
+          } else if (
+            lyricSelected.position < selectedSongLyricLength &&
+            lyricSelected.position + 3 > selectedSongLyricLength
+          ) {
+            // Si estamos cerca del final pero no podemos avanzar 4, ir a la última posición
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: selectedSongLyricLength,
                 action: 'forward',
               },
             });
@@ -140,6 +229,7 @@ export const EventMainScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isFullscreen,
+    isEventManager,
     lyricSelected,
     selectedSongLyricLength,
     eventConfig.swipeLocked,
@@ -147,10 +237,19 @@ export const EventMainScreen = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen && checkAdminPermission && !eventConfig.swipeLocked) {
+      if (isFullscreen && isEventManager && !eventConfig.swipeLocked) {
         if (event.key === 'ArrowDown') {
-          if (
-            lyricSelected.position <= selectedSongLyricLength &&
+          if (lyricSelected.position === selectedSongLyricLength) {
+            // Si estamos en la última letra, ir a "Fin"
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: selectedSongLyricLength + 1,
+                action: 'forward',
+              },
+            });
+          } else if (
+            lyricSelected.position < selectedSongLyricLength &&
             selectedSongLyricLength > 4 &&
             lyricSelected.position + 3 <= selectedSongLyricLength
           ) {
@@ -166,6 +265,7 @@ export const EventMainScreen = () => {
               },
             });
           } else if (
+            lyricSelected.position < selectedSongLyricLength &&
             selectedSongLyricLength > 0 &&
             selectedSongLyricLength < 4
           ) {
@@ -173,6 +273,18 @@ export const EventMainScreen = () => {
               type: 'lyricSelected',
               data: {
                 position: 1,
+                action: 'forward',
+              },
+            });
+          } else if (
+            lyricSelected.position < selectedSongLyricLength &&
+            lyricSelected.position + 3 > selectedSongLyricLength
+          ) {
+            // Si estamos cerca del final pero no podemos avanzar 4, ir a la última posición
+            sendMessage({
+              type: 'lyricSelected',
+              data: {
+                position: selectedSongLyricLength,
                 action: 'forward',
               },
             });
@@ -200,6 +312,7 @@ export const EventMainScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isFullscreen,
+    isEventManager,
     selectedSongData,
     lyricSelected,
     selectedSongLyricLength,
@@ -225,16 +338,118 @@ export const EventMainScreen = () => {
           </div>
         ))}
       {lyricSelected.position === 0 && (
-        <h1 className={`text-5xl ${isFullscreen ? 'text-8xl' : ''}`}>
-          {selectedSongData?.song.title}
-        </h1>
+        <div className="flex w-full flex-col items-center justify-center gap-8">
+          <h1
+            className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+          >
+            {selectedSongData?.song.title}
+          </h1>
+          {/* Botones de navegación al inicio de la canción */}
+          {isEventManager && (
+            <div className="flex w-full max-w-3xl items-center justify-center gap-4">
+              {/* Botón anterior */}
+              {hasPreviousSong && (
+                <button
+                  onClick={goToPreviousSong}
+                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
+                  title="Ir a canción anterior"
+                  aria-label="Ir a canción anterior"
+                >
+                  <div className="flex items-center gap-2">
+                    <ArrowLeftIcon className="transition-transform duration-300 group-hover:-translate-x-1" />
+                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
+                      Anterior
+                    </span>
+                  </div>
+                </button>
+              )}
+
+              {/* Botón principal de inicio (redondo) */}
+              <button
+                onClick={startSong}
+                className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-xl active:scale-95"
+                title="Iniciar Canción"
+                aria-label="Iniciar Canción"
+              >
+                <ForwardIcon className="h-8 w-8 text-white/90 transition-colors duration-300 group-hover:text-white" />
+              </button>
+
+              {/* Botón siguiente */}
+              {hasNextSong && (
+                <button
+                  onClick={goToNextSong}
+                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
+                  title="Ir a canción siguiente"
+                  aria-label="Ir a canción siguiente"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
+                      Siguiente
+                    </span>
+                    <ArrowRightIcon className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 && (
-        <h1
-          className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
-        >
-          Fin
-        </h1>
+        <div className="flex w-full flex-col items-center justify-center gap-8">
+          <h1
+            className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+          >
+            Fin
+          </h1>
+          {/* Botones de navegación al final de la canción */}
+          {isEventManager && (
+            <div className="flex w-full max-w-3xl items-center justify-center gap-4">
+              {/* Botón anterior */}
+              {hasPreviousSong && (
+                <button
+                  onClick={goToPreviousSong}
+                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
+                  title="Ir a canción anterior"
+                  aria-label="Ir a canción anterior"
+                >
+                  <div className="flex items-center gap-2">
+                    <ArrowLeftIcon className="transition-transform duration-300 group-hover:-translate-x-1" />
+                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
+                      Anterior
+                    </span>
+                  </div>
+                </button>
+              )}
+
+              {/* Botón de reiniciar (redondo) */}
+              <button
+                onClick={startSong}
+                className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-xl active:scale-95"
+                title="Reiniciar Canción"
+                aria-label="Reiniciar Canción"
+              >
+                <BackwardIcon className="h-8 w-8 text-white/90 transition-colors duration-300 group-hover:text-white" />
+              </button>
+
+              {/* Botón siguiente */}
+              {hasNextSong && (
+                <button
+                  onClick={goToNextSong}
+                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
+                  title="Ir a canción siguiente"
+                  aria-label="Ir a canción siguiente"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
+                      Siguiente
+                    </span>
+                    <ArrowRightIcon className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       )}
 
       {liveMessage !== '' && (

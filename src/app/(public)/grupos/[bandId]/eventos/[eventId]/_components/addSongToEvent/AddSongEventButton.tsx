@@ -18,8 +18,11 @@ export const AddSongEventButton = ({
       onOpenChange={(open) => setIsOpenPopover(open)}
     >
       <PopoverTrigger>
-        <button className="rounded-full p-2 transition-colors duration-200 hover:bg-slate-300">
-          <AddSongIcon className="text-primary-500" />
+        <button
+          className="rounded-full p-2 transition-all duration-200 hover:bg-gradient-icon hover:shadow-md"
+          aria-label="Agregar canción al evento"
+        >
+          <AddSongIcon className="text-brand-purple-600" />
         </button>
       </PopoverTrigger>
       <PopoverContent>
