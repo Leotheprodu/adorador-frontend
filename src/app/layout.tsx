@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     siteName: `${appName}`,
     images: [
       {
-        url: '/images/posts/adorar-en-espiritu.avif',
+        url: '/images/adoradorxyz.webp',
         width: 1200,
         height: 628,
-        alt: 'adorador.xyz - Herramientas para los grupos de alabanza e iglesias',
+        alt: 'Plataforma profesional para equipos de alabanza y liderazgo cristiano.',
       },
     ],
     locale: 'es_CR',
