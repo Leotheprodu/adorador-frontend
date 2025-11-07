@@ -250,13 +250,11 @@ export const EventMainScreen = () => {
       )}
       {lyricSelected.position > 0 &&
         lyricSelected.position < selectedSongLyricLength + 1 && (
-          <div className="">
-            <LyricsShowcase
-              lyricsShowcaseProps={{
-                isFullscreen,
-              }}
-            />
-          </div>
+          <LyricsShowcase
+            lyricsShowcaseProps={{
+              isFullscreen,
+            }}
+          />
         )}
 
       {!isFullscreen && isSupported && (

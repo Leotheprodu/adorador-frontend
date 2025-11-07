@@ -83,6 +83,7 @@ export const LyricsShowcase = ({
               y: lyricSelected.action === 'forward' ? -200 : 200,
             }}
             transition={{ opacity: { duration: 0.2 }, y: { duration: 0.5 } }}
+            className="flex flex-col"
           >
             {/* Renderizar solo las líneas que realmente existen */}
             {visibleLyricsData.map((lyricData) => (
@@ -95,9 +96,7 @@ export const LyricsShowcase = ({
                     position: lyricData.position,
                   },
                   showStructureName: lyricData.showStructureName,
-                  lyricsScale: isFullscreen
-                    ? eventConfig.lyricsScale * 1
-                    : eventConfig.lyricsScale * 0.95,
+                  lyricsScale: eventConfig.lyricsScale * 1,
                 }}
               />
             ))}
