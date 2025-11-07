@@ -52,19 +52,21 @@ export const LyricsGroupedCard = ({
       >
         {structureLib[structure].es}
       </h2>
-      {lyrics.map((lyric) => (
-        <LyricsCard
-          key={lyric.id}
-          lyric={lyric}
-          refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-          params={params}
-          chordPreferences={chordPreferences}
-          lyricsOfCurrentSong={lyricsOfCurrentSong}
-          transpose={transpose}
-          showChords={showChords}
-          lyricsScale={lyricsScale}
-        />
-      ))}
+      <div className="flex flex-col gap-1">
+        {lyrics.map((lyric) => (
+          <LyricsCard
+            key={lyric.id}
+            lyric={lyric}
+            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+            params={params}
+            chordPreferences={chordPreferences}
+            lyricsOfCurrentSong={lyricsOfCurrentSong}
+            transpose={transpose}
+            showChords={showChords}
+            lyricsScale={lyricsScale}
+          />
+        ))}
+      </div>
       <div className="mt-5">
         {addNewLyric ? (
           <AddOrUpdateLyricForm

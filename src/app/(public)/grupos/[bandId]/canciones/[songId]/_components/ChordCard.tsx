@@ -61,7 +61,7 @@ export const ChordCard = ({
         onClick={() => {
           setShowButtons(!showButtons);
         }}
-        className="flex h-full cursor-pointer items-center justify-center rounded-md border-primary-500 hover:border-1"
+        className="flex h-5 cursor-pointer items-center justify-center rounded-md border-primary-500 hover:border-1"
       >
         <div className="flex items-baseline">
           <span className="font-bold text-brand-purple-700">

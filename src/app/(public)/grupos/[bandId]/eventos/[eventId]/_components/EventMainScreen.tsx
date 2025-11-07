@@ -1,9 +1,6 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
-import { ArrowLeftIcon } from '@global/icons/ArrowLeftIcon';
-import { ArrowRightIcon } from '@global/icons/ArrowRightIcon';
-import { ForwardIcon } from '@global/icons/ForwardIcon';
-import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { IOSFullscreenTip } from '@bands/[bandId]/eventos/[eventId]/_components/IOSFullscreenTip';
+import { SongNavigationButtons } from '@bands/[bandId]/eventos/[eventId]/_components/SongNavigationButtons';
 import { useStore } from '@nanostores/react';
 import {
   $event,
@@ -337,7 +334,7 @@ export const EventMainScreen = () => {
             </h3>
           </div>
         ))}
-      {lyricSelected.position === 0 && (
+      {lyricSelected.position === 0 && selectedSongData && (
         <div className="flex w-full flex-col items-center justify-center gap-8">
           <h1
             className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
@@ -345,112 +342,37 @@ export const EventMainScreen = () => {
             {selectedSongData?.song.title}
           </h1>
           {/* Botones de navegación al inicio de la canción */}
-          {isEventManager && (
-            <div className="flex w-full max-w-3xl items-center justify-center gap-4">
-              {/* Botón anterior */}
-              {hasPreviousSong && (
-                <button
-                  onClick={goToPreviousSong}
-                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
-                  title="Ir a canción anterior"
-                  aria-label="Ir a canción anterior"
-                >
-                  <div className="flex items-center gap-2">
-                    <ArrowLeftIcon className="transition-transform duration-300 group-hover:-translate-x-1" />
-                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
-                      Anterior
-                    </span>
-                  </div>
-                </button>
-              )}
-
-              {/* Botón principal de inicio (redondo) */}
-              <button
-                onClick={startSong}
-                className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-xl active:scale-95"
-                title="Iniciar Canción"
-                aria-label="Iniciar Canción"
-              >
-                <ForwardIcon className="h-8 w-8 text-white/90 transition-colors duration-300 group-hover:text-white" />
-              </button>
-
-              {/* Botón siguiente */}
-              {hasNextSong && (
-                <button
-                  onClick={goToNextSong}
-                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
-                  title="Ir a canción siguiente"
-                  aria-label="Ir a canción siguiente"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
-                      Siguiente
-                    </span>
-                    <ArrowRightIcon className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </div>
-                </button>
-              )}
-            </div>
-          )}
+          <SongNavigationButtons
+            hasPreviousSong={hasPreviousSong}
+            hasNextSong={hasNextSong}
+            onPrevious={goToPreviousSong}
+            onNext={goToNextSong}
+            onMainAction={startSong}
+            mainActionIcon="start"
+            isEventManager={isEventManager}
+          />
         </div>
       )}
-      {lyricSelected.position === selectedSongLyricLength + 1 && (
-        <div className="flex w-full flex-col items-center justify-center gap-8">
-          <h1
-            className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
-          >
-            Fin
-          </h1>
-          {/* Botones de navegación al final de la canción */}
-          {isEventManager && (
-            <div className="flex w-full max-w-3xl items-center justify-center gap-4">
-              {/* Botón anterior */}
-              {hasPreviousSong && (
-                <button
-                  onClick={goToPreviousSong}
-                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
-                  title="Ir a canción anterior"
-                  aria-label="Ir a canción anterior"
-                >
-                  <div className="flex items-center gap-2">
-                    <ArrowLeftIcon className="transition-transform duration-300 group-hover:-translate-x-1" />
-                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
-                      Anterior
-                    </span>
-                  </div>
-                </button>
-              )}
-
-              {/* Botón de reiniciar (redondo) */}
-              <button
-                onClick={startSong}
-                className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-xl active:scale-95"
-                title="Reiniciar Canción"
-                aria-label="Reiniciar Canción"
-              >
-                <BackwardIcon className="h-8 w-8 text-white/90 transition-colors duration-300 group-hover:text-white" />
-              </button>
-
-              {/* Botón siguiente */}
-              {hasNextSong && (
-                <button
-                  onClick={goToNextSong}
-                  className="group relative overflow-hidden rounded-xl border-2 border-brand-purple-500/30 bg-gradient-to-br from-brand-purple-500/10 to-brand-blue-500/10 px-5 py-2.5 backdrop-blur-sm transition-all duration-300 hover:border-brand-purple-500/60 hover:from-brand-purple-500/20 hover:to-brand-blue-500/20 hover:shadow-lg active:scale-95"
-                  title="Ir a canción siguiente"
-                  aria-label="Ir a canción siguiente"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white/90 transition-colors duration-300 group-hover:text-white">
-                      Siguiente
-                    </span>
-                    <ArrowRightIcon className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </div>
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+      {lyricSelected.position === selectedSongLyricLength + 1 &&
+        selectedSongData && (
+          <div className="flex w-full flex-col items-center justify-center gap-8">
+            <h1
+              className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+            >
+              Fin
+            </h1>
+            {/* Botones de navegación al final de la canción */}
+            <SongNavigationButtons
+              hasPreviousSong={hasPreviousSong}
+              hasNextSong={hasNextSong}
+              onPrevious={goToPreviousSong}
+              onNext={goToNextSong}
+              onMainAction={startSong}
+              mainActionIcon="restart"
+              isEventManager={isEventManager}
+            />
+          </div>
+        )}
 
       {liveMessage !== '' && (
         <AnimatePresence>
