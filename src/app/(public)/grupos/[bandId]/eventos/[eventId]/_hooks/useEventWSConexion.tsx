@@ -464,15 +464,10 @@ export const useEventWSConexion = ({
           const { changeType, message } = data;
 
           // La invalidación de la query se manejará desde el componente padre
+          // NOTA: NO mostramos notificación aquí para evitar duplicados
+          // El evento songUpdated ya muestra notificaciones más específicas
 
-          // Mostrar notificación sobre el cambio
-          import('react-hot-toast').then((toast) => {
-            toast.default(
-              message || 'Se actualizaron las canciones del evento',
-            );
-          });
-
-          // Como alternativa, podemos disparar un evento personalizado que capture el componente padre
+          // Disparar evento personalizado para que el componente padre haga refetch
           window.dispatchEvent(
             new CustomEvent('eventSongsUpdated', {
               detail: { eventId: params.eventId, changeType, message },

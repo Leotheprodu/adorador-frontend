@@ -3,7 +3,6 @@ import { useEffect, useMemo } from 'react';
 import { EventControls } from '@bands/[bandId]/eventos/[eventId]/_components/EventControls';
 import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventMainScreen';
 import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventByIdPage';
-import { useEventWSConexion } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventWSConexion';
 import { EventSimpleTitle } from '@bands/[bandId]/eventos/[eventId]/_components/EventSimpleTitle';
 import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/EditEventButton';
 import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/DeleteEventButton';
@@ -24,10 +23,8 @@ export const EventByIdPage = ({
     params,
   });
 
-  // Inicializar conexión WebSocket con autenticación
-  useEventWSConexion({
-    params,
-  });
+  // NOTA: La conexión WebSocket se inicializa dentro de useEventByIdPage
+  // No llamar useEventWSConexion aquí para evitar conexiones duplicadas
 
   const user = useStore($user);
   const event = useStore($event);
@@ -50,15 +47,30 @@ export const EventByIdPage = ({
   }, [user, event]);
 
   // Escuchar cambios en las canciones del evento para hacer refetch automático
+  // con debounce para evitar múltiples refetches
   useEffect(() => {
+    let refetchTimeout: NodeJS.Timeout | null = null;
+
     const handleEventSongsUpdated = (event: CustomEvent) => {
       const { eventId, changeType } = event.detail;
 
       if (eventId === params.eventId) {
         console.log(
-          `[EventByIdPage] Refrescando evento por cambio: ${changeType}`,
+          `[EventByIdPage] Evento recibido: ${changeType}. Programando refetch...`,
         );
-        refetch();
+
+        // Limpiar timeout anterior si existe
+        if (refetchTimeout) {
+          clearTimeout(refetchTimeout);
+        }
+
+        // Debounce de 300ms para agrupar múltiples eventos
+        refetchTimeout = setTimeout(() => {
+          console.log(
+            `[EventByIdPage] Ejecutando refetch por cambio: ${changeType}`,
+          );
+          refetch();
+        }, 300);
       }
     };
 
@@ -68,6 +80,9 @@ export const EventByIdPage = ({
     );
 
     return () => {
+      if (refetchTimeout) {
+        clearTimeout(refetchTimeout);
+      }
       window.removeEventListener(
         'eventSongsUpdated',
         handleEventSongsUpdated as EventListener,
