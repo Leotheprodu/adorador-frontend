@@ -161,7 +161,7 @@ export const SongIdMainPage = ({
         )}
 
         {/* Lyrics Section - Vertical Layout */}
-        <section className="w-full px-4">
+        <section className="px-4">
           <div className="mx-auto flex max-w-4xl flex-col gap-6">
             {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 ? (
               <>

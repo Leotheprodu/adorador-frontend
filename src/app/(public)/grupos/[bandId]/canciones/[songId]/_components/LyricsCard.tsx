@@ -49,12 +49,12 @@ export const LyricsCard = ({
     <div
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}
-      className={`group relative flex flex-col items-start justify-center rounded-lg p-3 duration-100 hover:bg-slate-50 lyric-card${lyric.id}`}
+      className={`group relative flex flex-1 flex-col items-start justify-center rounded-lg p-1 duration-100 hover:bg-slate-50 lyric-card${lyric.id}`}
     >
       {/* Chords Section - Only show if showChords is true */}
       {showChords && (
         <div
-          className="grid grid-cols-5 gap-1"
+          className="grid h-5 w-full grid-cols-5 gap-1"
           style={{ fontSize: `${lyricsScale * 0.9}rem` }}
         >
           {sortedChords &&
@@ -100,7 +100,7 @@ export const LyricsCard = ({
         <button
           onClick={handleClickLyric}
           style={{ fontSize: `${lyricsScale}rem` }}
-          className="w-full text-left font-medium leading-relaxed text-slate-800 transition-all duration-100 hover:text-slate-900 hover:underline"
+          className="flex w-full flex-grow items-center text-left font-medium leading-relaxed text-slate-800 transition-all duration-100 hover:text-slate-900 hover:underline"
         >
           {lyric.lyrics}
         </button>

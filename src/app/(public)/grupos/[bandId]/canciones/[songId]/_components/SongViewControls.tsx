@@ -75,7 +75,7 @@ export const SongViewControls = ({ songId }: SongViewControlsProps) => {
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={() => handleTransposeChange(transpose - 1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
+            className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
           >
             <ArrowLeftIcon className="h-4 w-4" />
           </button>
@@ -87,7 +87,7 @@ export const SongViewControls = ({ songId }: SongViewControlsProps) => {
           </button>
           <button
             onClick={() => handleTransposeChange(transpose + 1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
+            className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
           >
             <ArrowRightIcon className="h-4 w-4" />
           </button>
@@ -122,9 +122,9 @@ export const SongViewControls = ({ songId }: SongViewControlsProps) => {
                 });
               }
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
+            className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-xl font-bold leading-none text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
           >
-            <span className="text-xl font-bold">-</span>
+            -
           </button>
           <button
             onClick={() => {
@@ -155,9 +155,9 @@ export const SongViewControls = ({ songId }: SongViewControlsProps) => {
                 });
               }
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
+            className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-xl font-bold leading-none text-white shadow-md transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
           >
-            <span className="text-xl font-bold">+</span>
+            +
           </button>
         </div>
       </div>
