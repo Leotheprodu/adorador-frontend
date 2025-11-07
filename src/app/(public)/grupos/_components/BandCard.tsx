@@ -4,6 +4,9 @@ import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { GuitarIcon } from '@global/icons/GuitarIcon';
 import { BandsWithMembersCount } from '@bands/_interfaces/bandsInterface';
 import { PrimaryButton, IconButton } from '@global/components/buttons';
+import { EditBandModal } from './EditBandModal';
+import { DeleteBandModal } from './DeleteBandModal';
+import { useDisclosure } from '@nextui-org/react';
 
 export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -14,6 +17,18 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
 
   //si el evento actual es igual a la fecha actual, el valor de la variable isCurrentEvent es verdadero
   const [isCurrentEvent, setIsCurrentEvent] = useState(false);
+
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
 
   useEffect(() => {
     setIsCurrentEvent(
@@ -26,6 +41,7 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
   const isUserAuthorized = CheckUserStatus({
     isLoggedIn: true,
     checkBandId: band.id,
+    checkBandAdmin: true,
   });
 
   return (
@@ -48,6 +64,29 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
             <h2 className="flex-1 text-2xl font-bold text-white">
               {band.name}
             </h2>
+            {/* Botones de administración */}
+            {isUserAuthorized && (
+              <div className="flex gap-2">
+                <IconButton
+                  onClick={onEditOpen}
+                  variant="circular"
+                  size="sm"
+                  ariaLabel="Editar grupo"
+                  className="bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                >
+                  <span className="text-lg">✏️</span>
+                </IconButton>
+                <IconButton
+                  onClick={onDeleteOpen}
+                  variant="circular"
+                  size="sm"
+                  ariaLabel="Eliminar grupo"
+                  className="bg-white/20 text-white backdrop-blur-sm hover:bg-red-500/50"
+                >
+                  <span className="text-lg">🗑️</span>
+                </IconButton>
+              </div>
+            )}
           </div>
 
           {/* Stats con badges modernos */}
@@ -168,6 +207,20 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
 
       {/* Efecto de hover en toda la card */}
       <div className="pointer-events-none absolute inset-0 rounded-3xl ring-2 ring-transparent transition-all duration-300 group-hover:ring-brand-purple-200"></div>
+
+      {/* Modales */}
+      <EditBandModal
+        isOpen={isEditOpen}
+        onClose={onEditClose}
+        bandId={band.id}
+        currentName={band.name}
+      />
+      <DeleteBandModal
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
+        bandId={band.id}
+        bandName={band.name}
+      />
     </div>
   );
 };

@@ -19,6 +19,13 @@ import { PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import { BandsProps } from '@bands/_interfaces/bandsInterface';
 import { PrimaryButton } from '@global/components/buttons';
+import { updateUserFromToken } from '@global/utils/updateUserFromToken';
+
+interface CreateBandResponse {
+  band: BandsProps;
+  accessToken: string;
+  refreshToken: string;
+}
 
 export const GruposCTASection = () => {
   const user = useStore($user);
@@ -27,10 +34,10 @@ export const GruposCTASection = () => {
   const [bandName, setBandName] = useState('');
 
   const {
-    data: newBand,
+    data: response,
     mutate: createBand,
     status: createBandStatus,
-  } = PostData<BandsProps, { name: string }>({
+  } = PostData<CreateBandResponse, { name: string }>({
     key: 'CreateBand',
     url: `${Server1API}/bands`,
     method: 'POST',
@@ -46,19 +53,39 @@ export const GruposCTASection = () => {
   };
 
   useEffect(() => {
-    if (createBandStatus === 'success' && newBand) {
-      toast.success('Grupo creado exitosamente');
-      router.push(`/grupos/${newBand.id}`);
-    }
+    const handleSuccess = async () => {
+      if (createBandStatus === 'success' && response) {
+        toast.success('Grupo creado exitosamente');
+
+        // Guardar los nuevos tokens que vienen del backend
+        if (typeof window !== 'undefined') {
+          const tokens = {
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+            expiresAt: Date.now() + 15 * 60 * 1000, // 15 minutos
+          };
+          localStorage.setItem('auth_tokens', JSON.stringify(tokens));
+        }
+
+        // Actualizar el store del usuario con los datos del nuevo token
+        updateUserFromToken();
+
+        // Redirigir a la página del grupo
+        router.push(`/grupos/${response.band.id}`);
+      }
+    };
+
+    handleSuccess();
+
     if (createBandStatus === 'error') {
       toast.error('Error al crear el grupo');
     }
-  }, [createBandStatus, newBand, router]);
+  }, [createBandStatus, response, router]);
 
   // Usuario NO logueado
   if (!user.isLoggedIn) {
     return (
-      <div className="border-brand-purple-200 bg-gradient-light mt-12 rounded-2xl border p-8 text-center shadow-lg">
+      <div className="mt-12 rounded-2xl border border-brand-purple-200 bg-gradient-light p-8 text-center shadow-lg">
         <h3 className="mb-3 text-2xl font-bold text-gray-900">
           ¿Quieres que tu grupo aparezca aquí?
         </h3>
@@ -79,7 +106,7 @@ export const GruposCTASection = () => {
   // Usuario LOGUEADO
   return (
     <>
-      <div className="bg-gradient-light mt-12 rounded-2xl border border-success-200 p-8 text-center shadow-lg">
+      <div className="mt-12 rounded-2xl border border-success-200 bg-gradient-light p-8 text-center shadow-lg">
         <h3 className="mb-3 text-2xl font-bold text-gray-900">
           ¿Listo para crear un nuevo grupo?
         </h3>

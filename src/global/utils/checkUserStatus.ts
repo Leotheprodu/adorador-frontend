@@ -13,6 +13,7 @@ export const CheckUserStatus = ({
   negativeChurchRoles,
   checkAdminEvent,
   checkBandId,
+  checkBandAdmin,
 }: AppSecurityProps): boolean => {
   const user = useStore($user);
   const event = useStore($event);
@@ -56,6 +57,19 @@ export const CheckUserStatus = ({
       return user.membersofBands?.some((band) => band.band.id === checkBandId);
     }
     return true;
+  };
+
+  const isBandAdminCheck = () => {
+    // Si no se está verificando el permiso de admin del grupo, retornar true
+    if (!checkBandAdmin) return true;
+
+    // Si se está verificando, el usuario debe estar logueado y tener el permiso
+    if (user?.isLoggedIn && user?.membersofBands) {
+      return user.membersofBands.some(
+        (band) => band.band.id === checkBandId && band.isAdmin,
+      );
+    }
+    return false;
   };
 
   const hasNegativeChurchRolesCheck = () =>
@@ -117,6 +131,10 @@ export const CheckUserStatus = ({
   }
   if (!hasBandMembershipCheck()) {
     console.log('User does not have the required band membership');
+    return false;
+  }
+  if (checkBandAdmin && !isBandAdminCheck()) {
+    console.log('User is not an admin of the band');
     return false;
   }
   if (negativeChurchRoles && hasNegativeChurchRolesCheck()) {
