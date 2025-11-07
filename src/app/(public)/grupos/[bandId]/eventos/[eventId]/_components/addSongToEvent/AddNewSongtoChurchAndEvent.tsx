@@ -120,23 +120,36 @@ export const AddNewSongtoChurchAndEvent = ({
           onOpen();
           setIsOpenPopover(false);
         }}
-        className="rounded-xl px-1 py-2 duration-200 hover:bg-slate-200"
+        className="group rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-gradient-to-r hover:from-brand-pink-50 hover:to-brand-purple-50 hover:shadow-sm"
       >
-        <div className="px-1 py-2">
-          <div className="text-left text-small font-bold">
-            Agregar nueva canción al catálogo
+        <div className="flex flex-col gap-0.5">
+          <div className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-left text-sm font-semibold text-transparent">
+            ✨ Nueva Canción
           </div>
-          <div className="text-left text-tiny">
-            Agrega una nueva canción al catálogo de la iglesia y al evento.
+          <div className="text-left text-xs text-slate-600">
+            Crea y agrega una canción al catálogo y evento
           </div>
         </div>
       </button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="lg"
+        scrollBehavior="inside"
+        classNames={{
+          base: 'bg-white max-h-[90vh]',
+          header: 'border-b border-slate-200 py-3',
+          body: 'py-3 px-4',
+          footer: 'border-t border-slate-200 py-3',
+        }}
+      >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Formulario de nueva canción
+                <span className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-lg font-bold text-transparent">
+                  ✨ Crear Nueva Canción
+                </span>
               </ModalHeader>
               <ModalBody>
                 <FormAddNewSong
@@ -145,19 +158,43 @@ export const AddNewSongtoChurchAndEvent = ({
                   handleChange={handleChange}
                 />
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-center">
                 <Checkbox
                   isSelected={goToSong}
                   onChange={() => setGoToSong(!goToSong)}
+                  classNames={{
+                    label: 'text-sm text-slate-700',
+                  }}
                 >
-                  <p className="text-sm">Al crear, ¿ir a canción?</p>
+                  Ir a la canción después de crear
                 </Checkbox>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Cerrar
-                </Button>
-                <Button color="primary" onPress={handleAddSongToChurchAndEvent}>
-                  Crear
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    color="danger"
+                    variant="light"
+                    onPress={onClose}
+                    className="font-medium"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onPress={handleAddSongToChurchAndEvent}
+                    isDisabled={
+                      statusAddSongToChurch === 'pending' ||
+                      statusAddSongToEvent === 'pending'
+                    }
+                    isLoading={
+                      statusAddSongToChurch === 'pending' ||
+                      statusAddSongToEvent === 'pending'
+                    }
+                    className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white"
+                  >
+                    {statusAddSongToChurch === 'pending' ||
+                    statusAddSongToEvent === 'pending'
+                      ? 'Creando...'
+                      : 'Crear Canción'}
+                  </Button>
+                </div>
               </ModalFooter>
             </>
           )}

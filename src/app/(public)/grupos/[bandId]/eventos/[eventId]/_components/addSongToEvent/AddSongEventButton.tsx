@@ -16,6 +16,9 @@ export const AddSongEventButton = ({
     <Popover
       className={isOpenPopover ? '' : 'hidden'}
       onOpenChange={(open) => setIsOpenPopover(open)}
+      classNames={{
+        content: 'p-1 bg-white/95 backdrop-blur-sm shadow-lg',
+      }}
     >
       <PopoverTrigger>
         <button
@@ -26,7 +29,7 @@ export const AddSongEventButton = ({
         </button>
       </PopoverTrigger>
       <PopoverContent>
-        <div className="flex flex-col justify-center gap-2">
+        <div className="flex min-w-[280px] flex-col gap-1 p-1">
           <AddSongEventBySavedSongs
             params={params}
             setIsOpenPopover={setIsOpenPopover}
