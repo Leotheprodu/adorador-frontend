@@ -37,19 +37,22 @@ export const SongLyricsWithChords = ({ data }: { data: EventSongsProps }) => {
   }, [data]);
 
   return (
-    <div>
+    <div className="w-full">
       {lyricsGrouped.map(([structure, lyrics], groupIndex) => (
         <div className="w-full" key={groupIndex}>
           <h2
             style={{
               borderColor: structureColors[structure],
             }}
-            className="my-6 rounded-l border-b-1 p-2 text-center text-lg text-slate-800"
+            className="my-6 rounded-lg border-l-4 bg-gradient-icon p-3 text-center text-lg font-semibold text-brand-purple-700"
           >
             {structureLib[structure].es}
           </h2>
           {lyrics?.map((lyric) => (
-            <div key={lyric.id} className="flex w-full flex-col items-start">
+            <div
+              key={lyric.id}
+              className="mb-4 flex w-full flex-col items-start"
+            >
               <div className="grid w-full grid-cols-5 rounded-md">
                 {eventConfig.showChords &&
                   lyric?.chords
@@ -61,24 +64,24 @@ export const SongLyricsWithChords = ({ data }: { data: EventSongsProps }) => {
                           gridColumnStart: chord.position,
                           gridColumnEnd: chord.position + 1,
                         }}
-                        className={`${chord.slashChord && 'rounded-md border-1 p-1'} col-span-1 flex items-center justify-center gap-1`}
+                        className={`${chord.slashChord && 'rounded-lg border-2 border-brand-purple-300 bg-gradient-light p-2'} col-span-1 flex items-center justify-center gap-1`}
                       >
                         <div className="flex items-end justify-center">
-                          <p className="w-full text-center text-base">
+                          <p className="w-full text-center text-base font-semibold text-brand-purple-600">
                             {getNoteByType(
                               chord.rootNote,
                               data?.transpose,
                               chordPreferences,
                             )}
                           </p>
-                          <p className="w-full text-center text-base">
+                          <p className="w-full text-center text-base font-medium text-brand-purple-600">
                             {chord.chordQuality}
                           </p>
                         </div>
                         {chord.slashChord && (
                           <>
-                            <div className="flex items-end justify-center rounded-sm bg-slate-300 px-3 text-primary-500">
-                              <p className="w-full text-center text-base">
+                            <div className="flex items-end justify-center rounded-md bg-brand-purple-600 px-3 text-white">
+                              <p className="w-full text-center text-base font-semibold">
                                 {getNoteByType(
                                   chord.slashChord,
                                   data?.transpose,
@@ -91,7 +94,9 @@ export const SongLyricsWithChords = ({ data }: { data: EventSongsProps }) => {
                       </div>
                     ))}
               </div>
-              <p className="text-lg text-slate-800">{lyric.lyrics}</p>
+              <p className="mt-2 text-lg leading-relaxed text-gray-700">
+                {lyric.lyrics}
+              </p>
             </div>
           ))}
         </div>
