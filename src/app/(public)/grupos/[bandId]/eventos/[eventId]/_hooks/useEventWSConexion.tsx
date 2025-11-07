@@ -23,9 +23,11 @@ import {
   toLegacyLyricFormat,
   toLegacyEventSongFormat,
   toLegacyLiveMessageFormat,
+  toLegacySongUpdateFormat,
   isValidLyricMessage,
   isValidEventSongMessage,
   isValidLiveMessage,
+  isValidSongUpdateMessage,
   isLegacyLyricMessage,
   isLegacyEventSongMessage,
 } from '@global/interfaces/websocket-messages.interface';
@@ -235,6 +237,7 @@ export const useEventWSConexion = ({
       socket.off(`eventSelectedSong-${params.eventId}`);
       socket.off(`eventManagerChanged-${params.eventId}`);
       socket.off(`eventSongsUpdated-${params.eventId}`);
+      socket.off(`songUpdated-${params.eventId}`);
       socket.off(`liveMessage-${params.eventId}`);
 
       // Listener optimizado para letras con soporte para formatos legacy y nuevos
@@ -478,6 +481,99 @@ export const useEventWSConexion = ({
         } catch (error) {
           console.warn(
             '[WebSocket] Error procesando cambio de canciones:',
+            error,
+          );
+        }
+      });
+
+      // Listener para actualizaciones de canciones individuales (letras, metadata, etc.)
+      socket.on(`songUpdated-${params.eventId}`, (data) => {
+        console.log(
+          `[WebSocket] 🎼 Canción actualizada en evento ${params.eventId}:`,
+          data,
+        );
+        try {
+          let songId: number;
+          let changeType: 'lyrics' | 'info' | 'all' = 'all';
+
+          // Detectar si es formato comprimido o legacy
+          if (isCompressedMessage(data)) {
+            const decompressed = decompressMessage(data);
+            if (isValidSongUpdateMessage(decompressed.message)) {
+              const songUpdate = toLegacySongUpdateFormat(decompressed.message);
+              songId = songUpdate.songId;
+              changeType = songUpdate.changeType;
+            } else {
+              console.warn('[WebSocket] Mensaje de actualización inválido');
+              return;
+            }
+          } else if (
+            data &&
+            typeof data === 'object' &&
+            'songId' in data &&
+            typeof data.songId === 'number'
+          ) {
+            // Formato legacy
+            songId = data.songId;
+            changeType =
+              'changeType' in data &&
+              (data.changeType === 'lyrics' ||
+                data.changeType === 'info' ||
+                data.changeType === 'all')
+                ? data.changeType
+                : 'all';
+          } else {
+            console.warn(
+              '[WebSocket] Formato de mensaje de actualización desconocido',
+            );
+            return;
+          }
+
+          // Verificar si la canción actualizada está en el evento actual
+          const event = $event.get();
+          const songInEvent = event.songs.find(
+            (eventSong) => eventSong.song.id === songId,
+          );
+
+          if (songInEvent) {
+            console.log(
+              `[WebSocket] ✅ Canción ID ${songId} está en el evento - tipo de cambio: ${changeType}`,
+            );
+
+            // Mostrar notificación según el tipo de cambio
+            const changeMessages: Record<typeof changeType, string> = {
+              lyrics: '🎵 Letras actualizadas',
+              info: 'ℹ️ Información actualizada',
+              all: '🔄 Canción actualizada',
+            };
+
+            import('react-hot-toast').then((toast) => {
+              toast.default(
+                `${changeMessages[changeType]}: "${songInEvent.song.title}"`,
+                { duration: 4000 },
+              );
+            });
+
+            // Disparar evento personalizado para refrescar el evento
+            window.dispatchEvent(
+              new CustomEvent('eventSongsUpdated', {
+                detail: {
+                  eventId: params.eventId,
+                  changeType: 'songUpdated',
+                  songId,
+                  updateType: changeType,
+                  message: `Canción "${songInEvent.song.title}" actualizada`,
+                },
+              }),
+            );
+          } else {
+            console.log(
+              `[WebSocket] ℹ️ Canción ID ${songId} actualizada pero no está en este evento`,
+            );
+          }
+        } catch (error) {
+          console.warn(
+            '[WebSocket] Error procesando actualización de canción:',
             error,
           );
         }

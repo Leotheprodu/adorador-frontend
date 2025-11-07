@@ -64,6 +64,9 @@ Una de las características más potentes de Adorador es su sistema de eventos e
 - **Socket.IO**: Comunicación bidireccional en tiempo real
 - **Eventos específicos por reunión**: Múltiples eventos pueden ejecutarse simultáneamente
 - **Sin latencia**: Cambios instantáneos entre pantallas
+- **🆕 Actualización automática de canciones**: Los cambios en letras y acordes se reflejan en todos los eventos activos sin recargar
+  - Frontend: ✅ Implementado
+  - Backend: Ver [HOW_TO_IMPLEMENT.md](./HOW_TO_IMPLEMENT.md) o [AI_BACKEND_PROMPT.md](./AI_BACKEND_PROMPT.md)
 
 ### 📚 Sección de Discipulado
 
