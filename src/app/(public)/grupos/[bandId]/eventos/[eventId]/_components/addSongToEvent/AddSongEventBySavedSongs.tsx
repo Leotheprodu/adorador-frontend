@@ -14,8 +14,6 @@ import toast from 'react-hot-toast';
 import { addSongsToEventService } from './services/AddSongsToEventService';
 import { songTypes } from '@global/config/constants';
 import { getSongsOfBand } from '@bands/[bandId]/canciones/_services/songsOfBandService';
-import { $user } from '@stores/users';
-import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { SearchIcon, MicrophoneIcon } from '@global/icons';
 
 export const AddSongEventBySavedSongs = ({

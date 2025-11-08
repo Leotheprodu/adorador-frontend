@@ -18,7 +18,13 @@ import {
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { InviteMemberModal } from './InviteMemberModal';
 import { EditMemberModal } from './EditMemberModal';
-import { CrownIcon, CalendarIcon, EditIcon, PlusIcon } from '@global/icons';
+import {
+  CrownIcon,
+  CalendarIcon,
+  EditIcon,
+  PlusIcon,
+  UsersIcon,
+} from '@global/icons';
 
 interface BandMembersProps {
   bandId: number;
@@ -57,19 +63,23 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
 
   return (
     <>
-      <Card className="w-full border border-slate-200 shadow-sm">
-        <CardHeader className="flex items-center justify-between border-b border-slate-100 bg-white pb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-slate-900">
-              Miembros del grupo
-            </h2>
-            <Chip
-              size="sm"
-              variant="flat"
-              className="bg-slate-100 text-slate-600"
-            >
-              {members?.length || 0}
-            </Chip>
+      <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <CardHeader className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-purple-600">
+              <UsersIcon className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">
+                Miembros del grupo
+              </h2>
+              {members && (
+                <p className="text-sm text-slate-500">
+                  {members.length}{' '}
+                  {members.length === 1 ? 'miembro' : 'miembros'}
+                </p>
+              )}
+            </div>
           </div>
           {isAdmin && (
             <Button
@@ -82,7 +92,7 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
             </Button>
           )}
         </CardHeader>
-        <CardBody className="gap-3">
+        <CardBody className="p-6">
           {members && members.length > 0 ? (
             <div className="space-y-2">
               {members.map((member) => (
@@ -137,9 +147,6 @@ const MemberCard = ({
             description={
               <div className="flex items-center gap-1">
                 <span className="text-xs">{member.role}</span>
-                {member.isAdmin && (
-                  <CrownIcon className="h-3 w-3 text-yellow-500" />
-                )}
               </div>
             }
             avatarProps={{
