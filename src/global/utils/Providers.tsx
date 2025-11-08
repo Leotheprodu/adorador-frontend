@@ -5,12 +5,19 @@ import { useIsClient } from '@global/hooks/useIsClient';
 import { initializeUserOnce } from '@global/services/userInitializer';
 import { useEffect } from 'react';
 import { useTokenRefresh } from '@global/hooks/useTokenRefresh';
+import { useBandInvitationListeners } from '@global/hooks/useBandInvitationListeners';
 
 // Componente separado para manejar el token refresh
 function TokenManager() {
   // Siempre llamar el hook - el hook maneja internamente cuándo ejecutar
   useTokenRefresh();
 
+  return null;
+}
+
+// Componente para listeners de WebSocket
+function WebSocketManager() {
+  useBandInvitationListeners();
   return null;
 }
 
@@ -32,6 +39,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       <TokenManager />
+      <WebSocketManager />
       {children}
     </>
   );

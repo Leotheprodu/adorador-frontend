@@ -1,6 +1,7 @@
 import { appName } from '@global/config/constants';
 import Link from 'next/link';
 import { ResponsiveNavBar } from '@ui/header/components/ResponsiveNavBar';
+import { NotificationBell } from '@ui/header/components/NotificationBell';
 import Image from 'next/image';
 
 export const Header = () => {
@@ -23,7 +24,10 @@ export const Header = () => {
           {appName}
         </h1>
       </Link>
-      <ResponsiveNavBar />
+      <div className="flex items-center gap-2">
+        <NotificationBell />
+        <ResponsiveNavBar />
+      </div>
     </header>
   );
 };

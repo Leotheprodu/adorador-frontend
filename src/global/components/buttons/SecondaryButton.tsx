@@ -58,7 +58,7 @@ export const SecondaryButton = ({
   ...props
 }: SecondaryButtonProps) => {
   const baseClasses =
-    'border-2 border-brand-purple-600 bg-transparent font-semibold text-brand-purple-600 transition-all hover:bg-brand-purple-600 hover:text-white';
+    'border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50';
 
   // Combinar disabled y isDisabled
   const isButtonDisabled = isDisabled || disabled;

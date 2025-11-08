@@ -1,6 +1,5 @@
 'use client';
-import { ArrowLeftIcon } from '@global/icons/ArrowLeftIcon';
-import { ArrowRightIcon } from '@global/icons/ArrowRightIcon';
+import { ArrowLeftIcon, ArrowRightIcon, LightBulbIcon } from '@global/icons';
 import { Checkbox } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { useStore } from '@nanostores/react';
@@ -209,8 +208,9 @@ export const SongViewControls = ({ songId }: SongViewControlsProps) => {
         )}
       </div>
 
-      <p className="mt-4 text-center text-xs text-slate-500">
-        💡 Los cambios de acordes y letra se sincronizan con eventos
+      <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-slate-500">
+        <LightBulbIcon className="h-4 w-4" />
+        Los cambios de acordes y letra se sincronizan con eventos
       </p>
     </div>
   );

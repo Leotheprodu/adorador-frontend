@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { addSongsToEventService } from './services/AddSongsToEventService';
 import { songTypes } from '@global/config/constants';
 import { getSongsOfBand } from '@bands/[bandId]/canciones/_services/songsOfBandService';
+import { SearchIcon, MicrophoneIcon } from '@global/icons';
 
 export const AddSongEventBySavedSongs = ({
   params,
@@ -192,12 +193,15 @@ export const AddSongEventBySavedSongs = ({
                 <div className="flex flex-col gap-3">
                   {/* Search input */}
                   <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <SearchIcon className="h-5 w-5 text-slate-400" />
+                    </div>
                     <input
                       type="text"
-                      placeholder="🔍 Buscar por título, artista, tonalidad o tipo..."
+                      placeholder="Buscar por título, artista, tonalidad o tipo..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full rounded-lg border-2 border-slate-200 px-4 py-2 text-sm transition-all duration-200 focus:border-brand-purple-600 focus:outline-none focus:ring-2 focus:ring-brand-purple-200"
+                      className="w-full rounded-lg border-2 border-slate-200 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-purple-600 focus:outline-none focus:ring-2 focus:ring-brand-purple-200"
                     />
                   </div>
 
@@ -261,7 +265,8 @@ export const AddSongEventBySavedSongs = ({
                                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600">
                                     {song.artist && (
                                       <span className="flex items-center gap-1">
-                                        🎤 {song.artist}
+                                        <MicrophoneIcon className="h-3 w-3" />{' '}
+                                        {song.artist}
                                       </span>
                                     )}
                                     {song.key && (

@@ -7,6 +7,7 @@ import { $eventAdminName, $event } from '@stores/event';
 import { $user } from '@stores/users';
 import { EventControlsHandleManager } from './EventControlsHandleManager';
 import { userRoles } from '@global/config/constants';
+import { LightBulbIcon } from '@global/icons';
 
 export const EventControls = ({
   params,
@@ -74,8 +75,9 @@ export const EventControls = ({
 
         {isBandMemberOnly && (
           <div className="w-full rounded-xl bg-gradient-to-r from-brand-blue-50 to-brand-purple-50 p-4 text-center shadow-sm">
-            <p className="text-sm font-medium text-brand-purple-700">
-              💡 Eres miembro del grupo. Solo el administrador del evento puede
+            <p className="flex items-center justify-center gap-2 text-sm font-medium text-brand-purple-700">
+              <LightBulbIcon className="h-5 w-5 text-brand-purple-500" />
+              Eres miembro del grupo. Solo el administrador del evento puede
               cambiar canciones.
             </p>
           </div>

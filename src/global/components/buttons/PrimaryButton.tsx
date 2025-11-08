@@ -58,7 +58,7 @@ export const PrimaryButton = ({
   ...props
 }: PrimaryButtonProps) => {
   const baseClasses =
-    'bg-gradient-primary font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl';
+    'border-2 border-brand-purple-300 bg-brand-purple-600 font-semibold text-white transition-all hover:border-brand-purple-400 hover:bg-brand-purple-700';
 
   // Combinar disabled y isDisabled
   const isButtonDisabled = isDisabled || disabled;

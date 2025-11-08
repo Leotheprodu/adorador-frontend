@@ -1,6 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { $PlayList, $SelectedSong } from '@stores/player';
 import { PlayIcon } from '@global/icons/PlayIcon';
+import { MicrophoneIcon, MusicNoteIcon } from '@global/icons';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
@@ -59,8 +60,8 @@ export const SongBasicInfo = ({
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-bold text-slate-800">{data?.title}</h1>
         {data?.artist && (
-          <span className="rounded-full bg-gradient-to-r from-brand-purple-100 to-brand-pink-100 px-3 py-1 text-sm font-medium text-brand-purple-700">
-            🎤 {data?.artist}
+          <span className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-purple-100 to-brand-pink-100 px-3 py-1 text-sm font-medium text-brand-purple-700">
+            <MicrophoneIcon className="h-4 w-4" /> {data?.artist}
           </span>
         )}
         {selectedSong?.id !== data?.id && data?.youtubeLink && (
@@ -79,7 +80,7 @@ export const SongBasicInfo = ({
       <div className="mb-5 flex flex-wrap gap-2">
         {data && (
           <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700">
-            <span>🎵</span>
+            <MusicNoteIcon className="h-4 w-4" />
             {songTypes[data.songType].es}
           </span>
         )}

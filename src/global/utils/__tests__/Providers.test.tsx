@@ -15,6 +15,7 @@ jest.mock('@nanostores/react', () => ({
 jest.mock('@global/hooks/useIsClient');
 jest.mock('@global/hooks/useTokenRefresh');
 jest.mock('@global/services/userInitializer');
+jest.mock('@global/hooks/useBandInvitationListeners');
 
 // Mock NextUIProvider
 jest.mock('@nextui-org/react', () => ({

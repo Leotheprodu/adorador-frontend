@@ -111,22 +111,23 @@ describe('SecondaryButton', () => {
   });
 
   describe('Styling', () => {
-    it('should apply border and brand purple classes to button', () => {
+    it('should apply border and white background classes to button', () => {
       render(<SecondaryButton onClick={() => {}}>Test</SecondaryButton>);
 
       const button = screen.getByRole('button');
       expect(button.className).toContain('border-2');
-      expect(button.className).toContain('border-brand-purple-600');
-      expect(button.className).toContain('text-brand-purple-600');
+      expect(button.className).toContain('border-slate-200');
+      expect(button.className).toContain('bg-white');
+      expect(button.className).toContain('text-slate-700');
       expect(button.className).toContain('font-semibold');
     });
 
-    it('should apply hover classes for background and text', () => {
+    it('should apply hover classes for background and border', () => {
       render(<SecondaryButton onClick={() => {}}>Test</SecondaryButton>);
 
       const button = screen.getByRole('button');
-      expect(button.className).toContain('hover:bg-brand-purple-600');
-      expect(button.className).toContain('hover:text-white');
+      expect(button.className).toContain('hover:bg-brand-purple-50');
+      expect(button.className).toContain('hover:border-brand-purple-300');
     });
 
     it('should merge custom className with base classes', () => {

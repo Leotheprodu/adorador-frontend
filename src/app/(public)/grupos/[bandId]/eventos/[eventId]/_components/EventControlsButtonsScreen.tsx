@@ -1,4 +1,5 @@
 import { backgroundImages } from '@global/config/constants';
+import { GearIcon } from '@global/icons';
 import { ArrowLeftIcon } from '@global/icons/ArrowLeftIcon';
 import { ArrowRightIcon } from '@global/icons/ArrowRightIcon';
 import {
@@ -24,8 +25,8 @@ export const EventControlsButtonsScreen = () => {
   }, []);
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-purple-50/30 p-3 shadow-sm">
-      <h3 className="text-center text-xs font-semibold text-brand-purple-700">
-        ⚙️ Pantalla
+      <h3 className="flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-brand-purple-700">
+        <GearIcon className="h-4 w-4" /> Pantalla
       </h3>
       <div className="flex items-center justify-center gap-2">
         <h4 className="text-sm font-medium text-slate-700">

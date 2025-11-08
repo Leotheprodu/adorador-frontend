@@ -8,6 +8,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { useDeleteSong } from '@bands/[bandId]/canciones/_hooks/useDeleteSong';
+import { TrashIcon } from '@global/icons';
 
 export const DeleteSongButton = ({
   bandId,
@@ -29,7 +30,7 @@ export const DeleteSongButton = ({
       <Button
         onClick={onOpen}
         className="bg-gradient-to-r from-red-500 to-pink-500 font-semibold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg active:scale-95"
-        startContent={<span className="text-lg">🗑️</span>}
+        startContent={<TrashIcon className="h-4 w-4" />}
       >
         Eliminar Canción
       </Button>
