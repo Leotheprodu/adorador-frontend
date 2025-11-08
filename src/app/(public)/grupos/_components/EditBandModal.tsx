@@ -12,6 +12,7 @@ import {
 } from '@nextui-org/react';
 import { useUpdateBand } from '../_hooks/useUpdateBand';
 import { useRouter } from 'next/navigation';
+import { EditIcon } from '@global/icons';
 
 interface EditBandModalProps {
   isOpen: boolean;
@@ -60,7 +61,9 @@ export const EditBandModal = ({
     >
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
-          <h3 className="text-lg font-bold text-slate-800">✏️ Editar Grupo</h3>
+          <h3 className="flex items-center gap-2 text-lg font-bold text-slate-800">
+            <EditIcon className="h-5 w-5 text-brand-purple-600" /> Editar Grupo
+          </h3>
           <p className="text-sm font-normal text-slate-600">
             Cambia el nombre del grupo
           </p>

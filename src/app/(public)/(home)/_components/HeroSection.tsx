@@ -1,20 +1,21 @@
 import { PrimaryButton, SecondaryButton } from '@global/components/buttons';
+import { MusicNoteIcon } from '@global/icons';
 
 export const HeroSection = () => {
   return (
-    <section className="bg-gradient-hero relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <section className="relative overflow-hidden bg-gradient-hero px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
           {/* Badge */}
-          <div className="bg-brand-purple-100 text-brand-purple-700 mb-6 inline-flex items-center rounded-full px-4 py-2 text-sm font-medium">
-            <span className="mr-2">🎵</span>
+          <div className="mb-6 inline-flex items-center rounded-full bg-brand-purple-100 px-4 py-2 text-sm font-medium text-brand-purple-700">
+            <MusicNoteIcon className="mr-2 h-5 w-5" />
             Gestión profesional para grupos de alabanza
           </div>
 
           {/* Main Headline */}
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl">
             Lleva tus eventos de alabanza
-            <span className="text-gradient-primary block pb-3">
+            <span className="block pb-3 text-gradient-primary">
               al siguiente nivel
             </span>
           </h1>
@@ -58,8 +59,8 @@ export const HeroSection = () => {
       </div>
 
       {/* Decorative elements */}
-      <div className="bg-brand-purple-300 absolute -left-4 top-20 h-72 w-72 animate-pulse rounded-full opacity-20 blur-3xl"></div>
-      <div className="bg-brand-blue-300 absolute -right-4 bottom-20 h-72 w-72 animate-pulse rounded-full opacity-20 blur-3xl"></div>
+      <div className="absolute -left-4 top-20 h-72 w-72 animate-pulse rounded-full bg-brand-purple-300 opacity-20 blur-3xl"></div>
+      <div className="absolute -right-4 bottom-20 h-72 w-72 animate-pulse rounded-full bg-brand-blue-300 opacity-20 blur-3xl"></div>
     </section>
   );
 };

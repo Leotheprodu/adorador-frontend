@@ -5,6 +5,7 @@ import { posts } from '@global/content/posts';
 import ContentRenderer from './_components/ContentRenderer';
 import Image from 'next/image';
 import { authors } from '@global/content/authors';
+import { LightBulbIcon } from '@global/icons';
 export async function generateMetadata({
   params,
 }: {
@@ -145,13 +146,16 @@ export default function DiscipuladoPage({
 
       {/* Footer Info */}
       <div className="mt-10 rounded-xl bg-slate-50/80 p-6 shadow-md ring-1 ring-slate-200 backdrop-blur-sm">
-        <p className="text-center text-sm leading-relaxed text-slate-600">
-          💡 Este artículo es parte de nuestra colección de recursos de
-          discipulado. Si deseas contribuir o sugerir un tema,{' '}
-          <span className="font-semibold text-brand-purple-500">
-            contáctanos
+        <p className="flex items-center justify-center gap-2 text-center text-sm leading-relaxed text-slate-600">
+          <LightBulbIcon className="h-5 w-5 text-brand-purple-500" />
+          <span>
+            Este artículo es parte de nuestra colección de recursos de
+            discipulado. Si deseas contribuir o sugerir un tema,{' '}
+            <span className="font-semibold text-brand-purple-500">
+              contáctanos
+            </span>
+            .
           </span>
-          .
         </p>
       </div>
     </main>

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { getAllTempLyrics, deleteTempLyrics } from '../_utils/lyricsStorage';
-import { CloseIcon } from '@global/icons/CloseIcon';
+import { CloseIcon, LightBulbIcon } from '@global/icons';
 import Link from 'next/link';
 
 export const StoredLyricsAlert = () => {
@@ -152,8 +152,9 @@ export const StoredLyricsAlert = () => {
               ))}
             </div>
 
-            <div className="mt-3 text-xs text-warning-800">
-              💡 Completa o elimina estos borradores para liberar espacio
+            <div className="mt-3 flex items-center gap-2 text-xs text-warning-800">
+              <LightBulbIcon className="h-4 w-4" />
+              Completa o elimina estos borradores para liberar espacio
             </div>
           </div>
         )}

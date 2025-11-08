@@ -6,6 +6,7 @@ import {
   setLocalStorage,
 } from '@global/utils/handleLocalStorage';
 import { useEffect } from 'react';
+import { LockClosedIcon, LockOpenIcon, CheckIcon } from '@global/icons';
 
 export const EventControlsButtonsSwipe = () => {
   const eventConfig = useStore($eventConfig);
@@ -28,8 +29,8 @@ export const EventControlsButtonsSwipe = () => {
 
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-pink-50/30 p-3 shadow-sm">
-      <h3 className="text-center text-xs font-semibold text-brand-pink-700">
-        🔐 Control Admin
+      <h3 className="flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-brand-pink-700">
+        <LockClosedIcon className="h-4 w-4" /> Control Admin
       </h3>
       <div className="flex flex-wrap items-center justify-center gap-1">
         <Checkbox
@@ -39,12 +40,16 @@ export const EventControlsButtonsSwipe = () => {
           aria-label="Bloquear swipe"
           onValueChange={toggleSwipeLock}
         >
-          <p className="text-xs font-medium">🔒 Bloquear Swipe</p>
+          <p className="flex items-center gap-1.5 text-xs font-medium">
+            <LockOpenIcon className="h-3.5 w-3.5" /> Bloquear Swipe
+          </p>
         </Checkbox>
       </div>
       <p className="text-center text-xs font-medium text-slate-600">
         {eventConfig.swipeLocked ? (
-          <span className="text-brand-pink-600">✓ Pantalla protegida</span>
+          <span className="flex items-center justify-center gap-1 text-brand-pink-600">
+            <CheckIcon className="h-3.5 w-3.5" /> Pantalla protegida
+          </span>
         ) : (
           <span className="text-slate-500">⚠️ Swipe activo</span>
         )}

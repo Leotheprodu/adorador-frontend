@@ -1,6 +1,9 @@
+import { BookOpenIcon } from '@global/icons';
+
 type ContentBlock = {
   type: 'paragraph' | 'image' | 'verse' | 'combined';
   title?: string;
+  titleIcon?: 'fire' | 'brain' | 'hands' | 'heart' | 'users' | 'musical';
   text?: string;
   image?: string;
 };
@@ -23,7 +26,7 @@ export default function ContentRenderer({
               <div className="ml-2">
                 {block.title && (
                   <p className="mb-2 flex items-center gap-2 font-bold text-brand-blue-600">
-                    <span>📖</span>
+                    <BookOpenIcon className="h-5 w-5" />
                     {block.title}
                   </p>
                 )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { LightBulbIcon } from '@global/icons';
 
 export const IOSFullscreenTip = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -16,8 +17,9 @@ export const IOSFullscreenTip = () => {
         >
           ×
         </button>
-        <div className="mb-2">
-          <strong>💡 Pantalla completa en iOS:</strong>
+        <div className="mb-2 flex items-center gap-2">
+          <LightBulbIcon className="h-5 w-5 text-yellow-400" />
+          <strong>Pantalla completa en iOS:</strong>
         </div>
         <ol className="list-inside list-decimal space-y-1">
           <li>

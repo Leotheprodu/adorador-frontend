@@ -2,6 +2,7 @@ import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsI
 import { addSongsToBandService } from '@bands/[bandId]/canciones/_services/songsOfBandService';
 import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
 import { handleOnChange } from '@global/utils/formUtils';
+import { MusicNoteIcon, PlusIcon } from '@global/icons';
 import {
   Button,
   Modal,
@@ -61,9 +62,10 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
         onClick={() => {
           onOpen();
         }}
-        className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
+        size="sm"
+        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
       >
-        <span className="text-lg">+</span> Añadir canción
+        <PlusIcon className="h-5 w-5" /> Añadir canción
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
         <ModalContent>
@@ -71,8 +73,8 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
             <>
               <ModalHeader className="flex flex-col gap-2 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-xl shadow-md">
-                    🎵
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 shadow-md">
+                    <MusicNoteIcon className="h-6 w-6 text-white" />
                   </div>
                   <div>
                     <h2 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-xl font-bold text-transparent">

@@ -2,6 +2,7 @@ import { Input, Select, SelectItem } from '@nextui-org/react';
 import { handleOnClear } from '@global/utils/formUtils';
 import { songKeys } from '@global/config/constants';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
+import { MicrophoneIcon, MusicNoteIcon } from '@global/icons';
 
 // Function to extract YouTube video ID from different URL formats
 const extractYouTubeId = (url: string): string => {
@@ -64,7 +65,7 @@ export const FormAddNewSong = ({ form, setForm, handleChange }) => {
             inputWrapper:
               'border-2 border-slate-200 hover:border-brand-purple-300 focus-within:border-brand-purple-600 transition-colors',
           }}
-          startContent={<span className="text-sm text-slate-400">🎵</span>}
+          startContent={<MusicNoteIcon className="h-4 w-4 text-slate-400" />}
         />
         <Input
           onChange={handleChange}
@@ -82,7 +83,7 @@ export const FormAddNewSong = ({ form, setForm, handleChange }) => {
             inputWrapper:
               'border-2 border-slate-200 hover:border-brand-purple-300 focus-within:border-brand-purple-600 transition-colors',
           }}
-          startContent={<span className="text-sm text-slate-400">🎤</span>}
+          startContent={<MicrophoneIcon className="h-4 w-4 text-slate-400" />}
         />
         <div className="grid grid-cols-2 gap-2.5">
           <Select

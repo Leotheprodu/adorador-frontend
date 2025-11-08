@@ -13,6 +13,7 @@ import {
 } from '@nextui-org/react';
 import { SongPropsWithCount } from '../_interfaces/songsInterface';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
+import { TrashIcon, CalendarIcon, MusicNoteIcon } from '@global/icons';
 import { songTypes } from '@global/config/constants';
 import Link from 'next/link';
 import { $SelectedSong } from '@stores/player';
@@ -77,7 +78,7 @@ export const SongOfBandCard = ({
                 as={Link}
                 href={`/grupos/${bandId}/canciones/${song.id}`}
                 key="Ir"
-                startContent={<span className="text-lg">🎵</span>}
+                startContent={<MusicNoteIcon className="h-5 w-5" />}
               >
                 Ir a canción
               </DropdownItem>
@@ -102,7 +103,7 @@ export const SongOfBandCard = ({
                 className="text-danger"
                 color="danger"
                 onClick={onOpen}
-                startContent={<span className="text-lg">🗑️</span>}
+                startContent={<TrashIcon className="h-4 w-4" />}
               >
                 Eliminar
               </DropdownItem>
@@ -116,7 +117,7 @@ export const SongOfBandCard = ({
             {songTypes[song.songType].es}
           </span>
           <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 shadow-sm">
-            📅 {song._count.events}
+            <CalendarIcon className="h-3 w-3" /> {song._count.events}
           </span>
           {song._count.lyrics === 0 && (
             <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-red-100 to-orange-100 px-2.5 py-1 text-xs font-medium text-red-700 shadow-sm">

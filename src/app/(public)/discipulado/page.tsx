@@ -2,6 +2,7 @@ import { posts } from '@global/content/posts';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { BookOpenIcon, CalendarIcon } from '@global/icons';
 
 export const metadata: Metadata = {
   title: 'Discipulados',
@@ -36,8 +37,9 @@ export default function DiscipuladoListPage() {
         <h1 className="mb-4 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 bg-clip-text text-5xl font-bold text-transparent">
           Discipulados
         </h1>
-        <p className="text-lg text-slate-600">
-          Recursos para tu crecimiento espiritual 📖✨
+        <p className="flex items-center justify-center gap-2 text-lg text-slate-600">
+          <BookOpenIcon className="h-6 w-6 text-brand-purple-500" />
+          Recursos para tu crecimiento espiritual
         </p>
       </div>
 
@@ -69,7 +71,7 @@ export default function DiscipuladoListPage() {
                 {post.title}
               </h2>
               <div className="mt-auto flex items-center gap-2 text-sm text-slate-500">
-                <span>📅</span>
+                <CalendarIcon className="h-6 w-6 text-brand-purple-500" />
                 <p>
                   {new Date(post.date).toLocaleDateString('es-ES', {
                     year: 'numeric',
