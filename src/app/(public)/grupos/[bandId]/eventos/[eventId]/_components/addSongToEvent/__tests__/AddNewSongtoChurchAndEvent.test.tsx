@@ -10,7 +10,9 @@ import {
 
 // Mock dependencies
 jest.mock('react-hot-toast');
-jest.mock('next/navigation');
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(),
+}));
 jest.mock('../services/AddSongsToEventService');
 jest.mock('@bands/[bandId]/canciones/_services/songsOfBandService');
 jest.mock('../FormAddNewSong', () => ({
@@ -76,7 +78,7 @@ describe('AddNewSongtoChurchAndEvent', () => {
     addSongsToEventService as jest.MockedFunction<
       typeof addSongsToEventService
     >;
-  const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+  const mockUseRouter = useRouter as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -303,7 +305,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
       />,
     );
 
-    const button = screen.getByText(/Nueva Canción/);
+    const buttons = screen.getAllByText(/Nueva Canción/);
+    const button = buttons[0]; // Get the first button
     fireEvent.click(button);
 
     await waitFor(() => {

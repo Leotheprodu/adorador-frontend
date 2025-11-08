@@ -143,10 +143,10 @@ describe('RootLayout', () => {
       it('should have correct OpenGraph images', () => {
         expect(metadata.openGraph?.images).toHaveLength(1);
         expect(metadata.openGraph?.images?.[0]).toEqual({
-          url: '/images/posts/adorar-en-espiritu.avif',
+          url: '/images/adoradorxyz.webp',
           width: 1200,
           height: 628,
-          alt: 'adorador.xyz - Herramientas para los grupos de alabanza e iglesias',
+          alt: 'Plataforma profesional para equipos de alabanza y liderazgo cristiano.',
         });
       });
     });

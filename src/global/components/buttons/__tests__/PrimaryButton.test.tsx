@@ -111,11 +111,12 @@ describe('PrimaryButton', () => {
   });
 
   describe('Styling', () => {
-    it('should apply gradient primary classes to button', () => {
+    it('should apply primary button classes', () => {
       render(<PrimaryButton onClick={() => {}}>Test</PrimaryButton>);
 
       const button = screen.getByRole('button');
-      expect(button.className).toContain('bg-gradient-primary');
+      expect(button.className).toContain('bg-brand-purple-600');
+      expect(button.className).toContain('border-brand-purple-300');
       expect(button.className).toContain('text-white');
       expect(button.className).toContain('font-semibold');
     });
@@ -124,8 +125,8 @@ describe('PrimaryButton', () => {
       render(<PrimaryButton onClick={() => {}}>Test</PrimaryButton>);
 
       const button = screen.getByRole('button');
-      expect(button.className).toContain('hover:scale-105');
-      expect(button.className).toContain('hover:shadow-xl');
+      expect(button.className).toContain('hover:bg-brand-purple-700');
+      expect(button.className).toContain('hover:border-brand-purple-400');
     });
 
     it('should merge custom className with base classes', () => {
@@ -136,7 +137,7 @@ describe('PrimaryButton', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.className).toContain('bg-gradient-primary');
+      expect(button.className).toContain('bg-brand-purple-600');
       expect(button.className).toContain('custom-class');
     });
 

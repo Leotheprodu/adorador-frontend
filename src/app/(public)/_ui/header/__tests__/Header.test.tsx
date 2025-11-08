@@ -1,3 +1,16 @@
+// Mock nanostores first - before any imports
+jest.mock('nanostores', () => ({
+  atom: jest.fn((initialValue) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  })),
+}));
+
+jest.mock('@nanostores/react', () => ({
+  useStore: jest.fn((store) => store?.get?.() || null),
+}));
+
 import { render, screen } from '@testing-library/react';
 import { Header } from '../Header';
 
@@ -54,6 +67,13 @@ jest.mock('next/image', () => ({
 jest.mock('@ui/header/components/ResponsiveNavBar', () => ({
   ResponsiveNavBar: () => (
     <nav data-testid="responsive-navbar">Responsive NavBar</nav>
+  ),
+}));
+
+// Mock NotificationBell
+jest.mock('@ui/header/components/NotificationBell', () => ({
+  NotificationBell: () => (
+    <div data-testid="notification-bell">Notification Bell</div>
   ),
 }));
 

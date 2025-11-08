@@ -105,10 +105,11 @@ describe('HowItWorksSection Component', () => {
       expect(button.closest('a')).toHaveAttribute('href', '/auth/login');
     });
 
-    it('should have gradient background', () => {
+    it('should have primary button styling', () => {
       render(<HowItWorksSection />);
       const button = screen.getByText('Empezar ahora');
-      expect(button).toHaveClass('bg-gradient-primary');
+      expect(button).toHaveClass('bg-brand-purple-600');
+      expect(button).toHaveClass('border-brand-purple-300');
     });
 
     it('should render arrow icon', () => {
