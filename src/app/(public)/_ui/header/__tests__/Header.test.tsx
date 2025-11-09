@@ -337,7 +337,7 @@ describe('Header Component', () => {
 
       // Ambos deben estar en el mismo contenedor padre
       const commonParent = notificationBell.parentElement;
-      expect(commonParent).toContain(navbar);
+      expect(commonParent).toContainElement(navbar);
 
       // El contenedor debe tener gap-3 para separarlos
       expect(commonParent).toHaveClass('gap-3');
