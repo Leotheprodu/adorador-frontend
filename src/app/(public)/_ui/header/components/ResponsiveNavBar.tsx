@@ -29,7 +29,7 @@ export const ResponsiveNavBar = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-        className={`fixed right-5 z-50 flex items-center justify-center rounded-lg p-2 transition-all duration-300 active:scale-95 md:hidden ${
+        className={`relative z-50 flex items-center justify-center rounded-lg p-2 transition-all duration-300 active:scale-95 md:hidden ${
           isOpen
             ? 'bg-gradient-primary text-white shadow-lg'
             : 'bg-gradient-icon text-brand-purple-600 hover:bg-gradient-light hover:shadow-md'

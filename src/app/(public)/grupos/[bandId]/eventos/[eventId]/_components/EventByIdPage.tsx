@@ -7,18 +7,21 @@ import { EventSimpleTitle } from '@bands/[bandId]/eventos/[eventId]/_components/
 import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/EditEventButton';
 import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/DeleteEventButton';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
-import { handleBackNavigation } from '@global/utils/navigationUtils';
 import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/_components/EventConnectedUsers';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { $event } from '@stores/event';
 import { userRoles } from '@global/config/constants';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const EventByIdPage = ({
   params,
 }: {
   params: { bandId: string; eventId: string };
 }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { isLoading, refetch } = useEventByIdPage({
     params,
   });
@@ -91,7 +94,12 @@ export const EventByIdPage = ({
   }, [params.eventId, refetch]);
 
   const handleBackToEvents = () => {
-    handleBackNavigation(`/grupos/${params.bandId}/eventos`);
+    // Invalidar queries relacionadas con eventos para que se actualicen los datos
+    queryClient.invalidateQueries({
+      queryKey: ['EventsOfBand', params.bandId],
+    });
+    // Usar router de Next.js para navegación sin recargar la página
+    router.push(`/grupos/${params.bandId}/eventos`);
   };
 
   return (

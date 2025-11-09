@@ -113,4 +113,106 @@ describe('HandleAPI - FetchData', () => {
       }),
     );
   });
+
+  it('should accept array as query key for unique cache per resource', async () => {
+    const mockData = { id: 1, name: 'Band 1' };
+    mockedFetchAPI.mockResolvedValueOnce(mockData);
+
+    const { result } = renderHook(
+      () =>
+        FetchData({
+          key: ['BandById', '123'],
+          url: '/api/bands/123',
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toEqual(mockData);
+  });
+
+  it('should cache independently when using different IDs in query key', async () => {
+    const mockDataBand1 = { id: 1, name: 'Band 1' };
+    const mockDataBand2 = { id: 2, name: 'Band 2' };
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    // Fetch para banda 1
+    mockedFetchAPI.mockResolvedValueOnce(mockDataBand1);
+    const { result: result1 } = renderHook(
+      () =>
+        FetchData({
+          key: ['BandById', '1'],
+          url: '/api/bands/1',
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result1.current.isSuccess).toBe(true));
+    expect(result1.current.data).toEqual(mockDataBand1);
+
+    // Fetch para banda 2
+    mockedFetchAPI.mockResolvedValueOnce(mockDataBand2);
+    const { result: result2 } = renderHook(
+      () =>
+        FetchData({
+          key: ['BandById', '2'],
+          url: '/api/bands/2',
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result2.current.isSuccess).toBe(true));
+    expect(result2.current.data).toEqual(mockDataBand2);
+
+    // Verificar que ambos tienen datos diferentes (no comparten caché)
+    expect(result1.current.data).not.toEqual(result2.current.data);
+    expect(mockedFetchAPI).toHaveBeenCalledTimes(2);
+  });
+
+  it('should use same cache when query key is identical', async () => {
+    const mockData = { id: 1, name: 'Band 1' };
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    // Primera llamada
+    mockedFetchAPI.mockResolvedValueOnce(mockData);
+    const { result: result1 } = renderHook(
+      () =>
+        FetchData({
+          key: ['BandById', '1'],
+          url: '/api/bands/1',
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result1.current.isSuccess).toBe(true));
+
+    // Segunda llamada con la misma key - debería usar caché
+    const { result: result2 } = renderHook(
+      () =>
+        FetchData({
+          key: ['BandById', '1'],
+          url: '/api/bands/1',
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result2.current.isSuccess).toBe(true));
+
+    // Solo debe haber hecho 1 llamada al API (la segunda usa caché)
+    expect(mockedFetchAPI).toHaveBeenCalledTimes(1);
+    expect(result1.current.data).toEqual(result2.current.data);
+  });
 });

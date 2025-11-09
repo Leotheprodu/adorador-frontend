@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 // Extender interfaces para soporte de navegadores
 interface DocumentWithFullscreen extends Document {
@@ -14,7 +15,10 @@ interface DocumentWithFullscreen extends Document {
 }
 
 interface ElementWithFullscreen extends HTMLElement {
-  webkitRequestFullscreen?: () => Promise<void>;
+  webkitRequestFullscreen?: (options?: {
+    navigationUI?: string;
+  }) => Promise<void>;
+  webkitEnterFullscreen?: () => Promise<void>;
   mozRequestFullScreen?: () => Promise<void>;
   msRequestFullscreen?: () => Promise<void>;
 }
@@ -31,29 +35,15 @@ const isIOS = () => {
   );
 };
 
-// Detectar soporte para fullscreen
-const hasFullscreenSupport = () => {
-  // Verificar que estamos en el cliente antes de acceder a document
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return false;
-  }
-  const doc = document as DocumentWithFullscreen;
-  return !!(
-    document.fullscreenEnabled ||
-    doc.webkitFullscreenEnabled ||
-    doc.mozFullScreenEnabled ||
-    doc.msFullscreenEnabled
-  );
-};
-
 export const useFullscreen = () => {
   const divRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
-    // Verificar soporte en el cliente
-    setIsSupported(hasFullscreenSupport() && !isIOS());
+    // En iOS siempre será soportado con webkitRequestFullscreen
+    // En otros navegadores verificar hasFullscreenSupport
+    setIsSupported(true);
 
     // Agregar listeners para todos los navegadores
     const events = [
@@ -61,6 +51,8 @@ export const useFullscreen = () => {
       'webkitfullscreenchange',
       'mozfullscreenchange',
       'msfullscreenchange',
+      'webkitendfullscreen',
+      'webkitbeginfullscreen',
     ];
 
     events.forEach((event) => {
@@ -75,20 +67,24 @@ export const useFullscreen = () => {
   }, []);
 
   const activateFullscreen = async () => {
-    if (!divRef.current || !isSupported) {
-      // Para iOS, mostrar instrucciones o usar alternativa
-      if (isIOS()) {
-        alert(
-          'En iOS, usa el botón de pantalla completa de Safari (ícono de cuadrados en la barra de navegación) o rota el dispositivo a landscape.',
-        );
-        return;
-      }
-      console.warn('Pantalla completa no soportada en este dispositivo');
+    if (!divRef.current) {
+      console.warn('Elemento no disponible');
       return;
     }
 
     try {
       const element = divRef.current as ElementWithFullscreen;
+
+      // Para iOS Safari, usar webkitRequestFullscreen con opciones específicas
+      if (isIOS() && element.webkitRequestFullscreen) {
+        try {
+          // iOS requiere que se llame con navigationUI: 'hide' para mejor experiencia
+          await element.webkitRequestFullscreen({ navigationUI: 'hide' });
+          return;
+        } catch {
+          console.log('Método iOS moderno falló, intentando alternativa');
+        }
+      }
 
       // Intentar diferentes métodos según el navegador
       if (element.requestFullscreen) {
@@ -102,6 +98,16 @@ export const useFullscreen = () => {
       }
     } catch (error) {
       console.error('Error activating fullscreen:', error);
+      // En iOS, si falla, sugerir rotación del dispositivo
+      if (isIOS()) {
+        toast.error(
+          'Para una mejor experiencia, rota tu dispositivo a modo horizontal.',
+          {
+            duration: 4000,
+            position: 'bottom-center',
+          },
+        );
+      }
     }
   };
 

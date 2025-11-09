@@ -47,8 +47,8 @@ export const getTokens = (): TokenStorage | null => {
 export const isTokenExpired = (token: TokenStorage): boolean => {
   if (!token) return true;
   const now = Date.now();
-  // Buffer reducido a 1 minuto para evitar invalidaciones prematuras
-  const bufferTime = 1 * 60 * 1000; // 1 minuto en millisegundos
+  // Buffer de 3 minutos - más conservador para dar tiempo a renovación proactiva
+  const bufferTime = 3 * 60 * 1000; // 3 minutos en millisegundos
   const result = now >= token.expiresAt - bufferTime;
 
   if (result) {
@@ -87,10 +87,10 @@ export const getValidAccessToken = async (): Promise<string | null> => {
 
   // Si el token no está expirado, verificar si necesita renovación proactiva
   if (!isTokenExpired(tokens)) {
-    // Renovar proactivamente si está cerca de expirar (2 minutos antes)
+    // Renovar proactivamente si está cerca de expirar (5 minutos antes)
     const now = Date.now();
     const timeUntilExpiry = tokens.expiresAt - now;
-    const proactiveRenewalThreshold = 2 * 60 * 1000; // 2 minutos
+    const proactiveRenewalThreshold = 5 * 60 * 1000; // 5 minutos
 
     if (timeUntilExpiry <= proactiveRenewalThreshold && timeUntilExpiry > 0) {
       console.log('[JWT] Renovación proactiva iniciada');
@@ -155,7 +155,7 @@ export const scheduleTokenRenewal = (tokens: TokenStorage) => {
 
   const now = Date.now();
   const timeUntilExpiry = tokens.expiresAt - now;
-  const renewalTime = Math.max(timeUntilExpiry - 3 * 60 * 1000, 30000); // 3 min antes o mín 30s
+  const renewalTime = Math.max(timeUntilExpiry - 5 * 60 * 1000, 30000); // 5 min antes o mín 30s
 
   if (renewalTime > 0) {
     renewalTimeoutId = setTimeout(() => {
@@ -189,9 +189,9 @@ export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
 
     console.log('[JWT] Llamando a /auth/refresh...');
 
-    // Configuración optimizada para renovación rápida
+    // Configuración optimizada para renovación con mejor tolerancia a cold starts
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // Timeout de 8s
+    const timeoutId = setTimeout(() => controller.abort(), 20000); // Timeout de 20s para cold starts
 
     const response = await fetch(`${apiUrl}/auth/refresh`, {
       method: 'POST',

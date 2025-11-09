@@ -13,16 +13,19 @@ import { $chordPreferences, $eventConfig } from '@stores/event';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { LyricsGroupedCard } from './LyricsGroupedCard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
-import { handleBackNavigation } from '@global/utils/navigationUtils';
 import { StoredLyricsAlert } from './StoredLyricsAlert';
 import { EditLyricsOptions } from './EditLyricsOptions';
 import { SongViewControls } from './SongViewControls';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const SongIdMainPage = ({
   params,
 }: {
   params: { bandId: string; songId: string };
 }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [lyricsSorted, setLyricsSorted] = useState<LyricsProps[]>([]);
   const [lyricsGrouped, setLyricsGrouped] = useState<[string, LyricsProps[]][]>(
     [],
@@ -115,7 +118,12 @@ export const SongIdMainPage = ({
   }, [lyricsSorted]);
 
   const handleBackToSongs = () => {
-    handleBackNavigation(`/grupos/${params.bandId}/canciones`);
+    // Invalidar queries relacionadas con canciones para que se actualicen los datos
+    queryClient.invalidateQueries({ queryKey: ['SongsOfBand', params.bandId] });
+    // También invalidar BandById para que se actualice la vista del grupo
+    queryClient.invalidateQueries({ queryKey: ['BandById', params.bandId] });
+    // Usar router de Next.js para navegación sin recargar la página
+    router.push(`/grupos/${params.bandId}/canciones`);
   };
 
   return (

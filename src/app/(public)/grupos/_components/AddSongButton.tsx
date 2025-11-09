@@ -15,8 +15,10 @@ import {
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AddSongButton = ({ bandId }: { bandId: string }) => {
+  const queryClient = useQueryClient();
   const formInit: SongPropsWithoutId = {
     title: '',
     artist: '',
@@ -48,6 +50,10 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
 
   useEffect(() => {
     if (statusAddSongToChurch === 'success') {
+      // Invalidar queries para que se actualicen las listas de canciones
+      queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      // Redirigir a la nueva canción
       router.push(`/grupos/${bandId}/canciones/${newSong?.id}`);
     }
     if (statusAddSongToChurch === 'error') {

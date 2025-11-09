@@ -14,8 +14,10 @@ import { addEventsToBandService } from '@bands/[bandId]/eventos/_services/events
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { handleOnChange } from '@global/utils/formUtils';
 import { CalendarIcon, PlusIcon } from '@global/icons';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AddEventButton = ({ bandId }: { bandId: string }) => {
+  const queryClient = useQueryClient();
   const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
   const formInit = {
     title: '',
@@ -51,6 +53,10 @@ export const AddEventButton = ({ bandId }: { bandId: string }) => {
 
   useEffect(() => {
     if (statusAddEventToBand === 'success') {
+      // Invalidar queries para que se actualicen las listas de eventos
+      queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      // Redirigir al nuevo evento
       router.push(`/grupos/${bandId}/eventos/${newEvent?.id}`);
     }
     if (statusAddEventToBand === 'error') {

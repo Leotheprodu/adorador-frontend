@@ -27,12 +27,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   // Inicializar usuario una vez en toda la aplicación
   useEffect(() => {
     if (isClient) {
-      // Usar timeout para asegurar que todo esté cargado
-      const timeoutId = setTimeout(() => {
-        initializeUserOnce();
-      }, 200);
-
-      return () => clearTimeout(timeoutId);
+      // Eliminar timeout - ejecutar inmediatamente para mejor UX
+      // El retry logic interno de initializeUserOnce manejará cold starts
+      initializeUserOnce();
     }
   }, [isClient]);
 
@@ -54,10 +51,11 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      retry: 1,
+      retry: 3, // Aumentado de 1 a 3 para mejor tolerancia a cold starts
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 8000), // Exponential backoff: 1s, 2s, 4s, 8s
     },
     mutations: {
-      retry: 1,
+      retry: 1, // Mutations generalmente no deben reintentar (pueden duplicar acciones)
     },
   },
 });

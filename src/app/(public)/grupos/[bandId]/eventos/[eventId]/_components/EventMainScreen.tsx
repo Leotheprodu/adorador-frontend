@@ -1,5 +1,4 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
-import { IOSFullscreenTip } from '@bands/[bandId]/eventos/[eventId]/_components/IOSFullscreenTip';
 import { SongNavigationButtons } from '@bands/[bandId]/eventos/[eventId]/_components/SongNavigationButtons';
 import { useStore } from '@nanostores/react';
 import {
@@ -22,7 +21,7 @@ import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/_hooks/use
 import { userRoles } from '@global/config/constants';
 
 export const EventMainScreen = () => {
-  const { isFullscreen, isSupported, isIOS, activateFullscreen, divRef } =
+  const { isFullscreen, isSupported, activateFullscreen, divRef } =
     useFullscreen();
   const { eventDateLeft } = useHandleEventLeft();
   const eventData = useStore($event);
@@ -404,8 +403,6 @@ export const EventMainScreen = () => {
           <FullscreenIcon />
         </button>
       )}
-
-      {!isFullscreen && isIOS && <IOSFullscreenTip />}
     </div>
   );
 };

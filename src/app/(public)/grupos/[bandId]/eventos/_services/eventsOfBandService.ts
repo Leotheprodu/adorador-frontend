@@ -9,7 +9,7 @@ export interface EventPropsWithoutId {
 
 export const getEventsOfBand = ({ bandId }: { bandId: string }) => {
   return FetchData<EventsProps[]>({
-    key: 'EventsOfBand',
+    key: ['EventsOfBand', bandId],
     url: `${Server1API}/bands/${bandId}/events`,
     refetchOnMount: true,
   });

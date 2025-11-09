@@ -1,6 +1,32 @@
 // Flag global para evitar múltiples inicializaciones
 let globalInitFlag = false;
 
+// Función auxiliar para retry con backoff
+const retryWithBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries = 3,
+  baseDelay = 1000,
+): Promise<T> => {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      if (attempt < maxRetries) {
+        const delay = Math.min(baseDelay * Math.pow(2, attempt), 8000);
+        console.log(
+          `[UserInit] Reintento ${attempt + 1}/${maxRetries} en ${delay}ms...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError || new Error('Max retries reached');
+};
+
 // Función simple y directa para inicializar el usuario
 export const initializeUserOnce = async () => {
   // Si ya se ejecutó, no hacer nada
@@ -82,12 +108,21 @@ export const initializeUserOnce = async () => {
           $user.set(localUser);
         }
       } else if (localUser.isLoggedIn) {
-        // Si no hay token válido pero el usuario aparece como logueado, intentar renovarlo
-        console.log('[UserInit] Token inválido, intentando renovar...');
+        // Si no hay token válido pero el usuario aparece como logueado, intentar renovarlo con retry
+        console.log(
+          '[UserInit] Token inválido, intentando renovar con retry para cold starts...',
+        );
         try {
-          const newTokens = await jwtUtils.refreshAccessToken();
+          const newTokens = await retryWithBackoff(
+            () => jwtUtils.refreshAccessToken(),
+            3, // 3 intentos
+            2000, // 2 segundos base
+          );
+
           if (newTokens) {
-            console.log('[UserInit] Token renovado exitosamente');
+            console.log(
+              '[UserInit] Token renovado exitosamente (posible cold start recuperado)',
+            );
             // Mantener al usuario logueado con token renovado
             $user.set(localUser);
           } else {
@@ -99,7 +134,10 @@ export const initializeUserOnce = async () => {
             $user.set(loggedOutUser);
           }
         } catch (error) {
-          console.log('[UserInit] Error renovando token:', error);
+          console.log(
+            '[UserInit] Error renovando token después de retries:',
+            error,
+          );
           console.log('[UserInit] Deslogueando usuario');
           const loggedOutUser = { ...localUser, isLoggedIn: false };
           setLocalStorage('user', loggedOutUser);

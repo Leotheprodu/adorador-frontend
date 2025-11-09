@@ -30,7 +30,9 @@ export const useUpdateBand = (bandId: number) => {
       // Invalidar queries para refrescar la lista de grupos
       queryClient.invalidateQueries({ queryKey: ['Bands'] });
       queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
-      queryClient.invalidateQueries({ queryKey: ['BandById'] });
+      queryClient.invalidateQueries({
+        queryKey: ['BandById', bandId.toString()],
+      });
 
       return true;
     } catch {

@@ -8,7 +8,7 @@ import { Server1API } from '@global/config/constants';
 
 export const getSongsOfBand = ({ bandId }: { bandId: string }) => {
   return FetchData<SongPropsWithCount[]>({
-    key: 'SongsOfBand',
+    key: ['SongsOfBand', bandId],
     url: `${Server1API}/bands/${bandId}/songs`,
     refetchOnMount: true,
   });

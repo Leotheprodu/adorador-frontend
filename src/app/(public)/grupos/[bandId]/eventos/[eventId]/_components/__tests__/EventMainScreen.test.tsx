@@ -131,8 +131,8 @@ jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen', () => ({
   useFullscreen: () => ({
     isFullscreen: false,
     isSupported: true,
-    isIOS: false,
     activateFullscreen: mockActivateFullscreen,
+    exitFullscreen: jest.fn(),
     divRef: { current: null },
   }),
 }));
@@ -150,13 +150,6 @@ jest.mock(
   '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcase',
   () => ({
     LyricsShowcase: () => <div data-testid="lyrics-showcase">Lyrics</div>,
-  }),
-);
-
-jest.mock(
-  '@bands/[bandId]/eventos/[eventId]/_components/IOSFullscreenTip',
-  () => ({
-    IOSFullscreenTip: () => <div data-testid="ios-tip">iOS Tip</div>,
   }),
 );
 

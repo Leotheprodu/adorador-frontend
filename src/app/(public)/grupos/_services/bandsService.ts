@@ -20,7 +20,7 @@ export const getBandsOfUser = (isEnabled: boolean = true) => {
 };
 export const getBandById = (bandId: string) => {
   return FetchData<BandWithSongsProps>({
-    key: 'BandById',
+    key: ['BandById', bandId],
     url: `${Server1API}/bands/${bandId}`,
     refetchOnMount: true,
   });

@@ -320,4 +320,29 @@ describe('Header Component', () => {
       expect(header).toHaveClass('backdrop-blur-md');
     });
   });
+
+  describe('Mobile Component Visibility Integration', () => {
+    it('should render both NotificationBell and ResponsiveNavBar', () => {
+      render(<Header />);
+
+      expect(screen.getByTestId('notification-bell')).toBeInTheDocument();
+      expect(screen.getByTestId('responsive-navbar')).toBeInTheDocument();
+    });
+
+    it('should place both components in the same container with gap', () => {
+      render(<Header />);
+
+      const notificationBell = screen.getByTestId('notification-bell');
+      const navbar = screen.getByTestId('responsive-navbar');
+
+      // Ambos deben estar en el mismo contenedor padre
+      const commonParent = notificationBell.parentElement;
+      expect(commonParent).toContain(navbar);
+
+      // El contenedor debe tener gap-3 para separarlos
+      expect(commonParent).toHaveClass('gap-3');
+      expect(commonParent).toHaveClass('flex');
+      expect(commonParent).toHaveClass('items-center');
+    });
+  });
 });

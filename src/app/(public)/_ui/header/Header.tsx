@@ -24,7 +24,7 @@ export const Header = () => {
           {appName}
         </h1>
       </Link>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <NotificationBell />
         <ResponsiveNavBar />
       </div>
