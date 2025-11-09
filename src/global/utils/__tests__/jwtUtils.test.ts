@@ -170,14 +170,24 @@ describe('jwtUtils', () => {
       expect(isTokenExpired(tokens)).toBe(true);
     });
 
-    it('should not expire token with more than 1 minute remaining', () => {
-      // Token expires in 2 minutes
+    it('should not expire token with more than 3 minutes remaining', () => {
+      // Token expires in 4 minutes (más que el buffer de 3 minutos)
+      const tokens: TokenStorage = {
+        accessToken: 'token',
+        refreshToken: 'refresh',
+        expiresAt: Date.now() + 4 * 60 * 1000,
+      };
+      expect(isTokenExpired(tokens)).toBe(false);
+    });
+
+    it('should expire token with less than 3 minutes remaining (within buffer)', () => {
+      // Token expires in 2 minutes (dentro del buffer de 3 minutos)
       const tokens: TokenStorage = {
         accessToken: 'token',
         refreshToken: 'refresh',
         expiresAt: Date.now() + 2 * 60 * 1000,
       };
-      expect(isTokenExpired(tokens)).toBe(false);
+      expect(isTokenExpired(tokens)).toBe(true);
     });
   });
 
@@ -279,16 +289,17 @@ describe('jwtUtils', () => {
       expect(global.fetch).toHaveBeenCalled();
     });
 
-    it('should initiate proactive renewal when token is close to expiry', async () => {
-      // Token expires in 1.5 minutes (below 2 minute threshold)
-      const tokens = createTokenStorage(1.5);
+    it('should return token without renewal when it has more than 3 minutes', async () => {
+      // Token expires in 6 minutes (fuera del buffer de 3min)
+      const tokens = createTokenStorage(6);
+
       localStorage.setItem('auth_tokens', JSON.stringify(tokens));
 
       const token = await getValidAccessToken();
+      // Como el token tiene más de 3 minutos, debe retornarlo directamente (no renovar)
       expect(token).toBe(tokens.accessToken);
-
-      // Should have scheduled a background refresh
-      expect(jest.getTimerCount()).toBeGreaterThan(0);
+      // No debe haber llamadas a fetch porque no se necesita renovar
+      expect(global.fetch).not.toHaveBeenCalled();
     });
   });
 

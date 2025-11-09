@@ -4,40 +4,46 @@
  * incluso cuando el servidor tarda en responder (cold start)
  */
 
-import { initializeUserOnce } from '../userInitializer';
+// Mock nanostores PRIMERO - antes de cualquier import
+jest.mock('nanostores', () => ({
+  atom: jest.fn((initialValue) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  })),
+}));
+
+// Mock de stores y utilidades
+const mockUserSet = jest.fn();
+const mockGetLocalStorage = jest.fn();
+const mockSetLocalStorage = jest.fn();
+
+jest.mock('@/global/stores/users', () => ({
+  $user: {
+    get: jest.fn(),
+    set: mockUserSet,
+  },
+}));
+
+jest.mock('../../utils/handleLocalStorage', () => ({
+  getLocalStorage: mockGetLocalStorage,
+  setLocalStorage: mockSetLocalStorage,
+}));
+
+import { initializeUserOnce, __resetInitFlag__ } from '../userInitializer';
 import * as jwtUtils from '../../utils/jwtUtils';
 
 // Mock de jwtUtils
 jest.mock('../../utils/jwtUtils');
 
-// Mock de localStorage
-const mockLocalStorage = (() => {
-  let store: Record<string, string> = {};
-
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value;
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage,
-});
-
 describe('Session Persistence with Cold Starts', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockLocalStorage.clear();
-    // Reset global flag
-    (globalThis as Record<string, unknown>)['globalInitFlag'] = false;
+    mockUserSet.mockClear();
+    mockGetLocalStorage.mockClear();
+    mockSetLocalStorage.mockClear();
+    // Reset global flag usando función exportada
+    __resetInitFlag__();
   });
 
   describe('Token Refresh with Retry on Cold Start', () => {
@@ -62,7 +68,7 @@ describe('Session Persistence with Cold Starts', () => {
       };
 
       // Configurar localStorage con usuario logueado
-      mockLocalStorage.setItem('user', JSON.stringify(loggedUser));
+      mockGetLocalStorage.mockReturnValue(loggedUser);
 
       // Mock: Token válido en localStorage
       (jwtUtils.getTokens as jest.Mock).mockReturnValue(validTokens);
@@ -71,9 +77,9 @@ describe('Session Persistence with Cold Starts', () => {
       await initializeUserOnce();
 
       // Verificar que el usuario permanece logueado
-      const storedUser = JSON.parse(mockLocalStorage.getItem('user') || '{}');
-      expect(storedUser.isLoggedIn).toBe(true);
-      expect(storedUser.id).toBe(1);
+      expect(mockUserSet).toHaveBeenCalledWith(
+        expect.objectContaining({ isLoggedIn: true, id: 1 }),
+      );
     });
 
     it('should recover session when token expired but refresh succeeds after retry', async () => {
@@ -102,7 +108,7 @@ describe('Session Persistence with Cold Starts', () => {
         birthdate: '1990-01-01',
       };
 
-      mockLocalStorage.setItem('user', JSON.stringify(loggedUser));
+      mockGetLocalStorage.mockReturnValue(loggedUser);
 
       // Mock: Token expirado pero refresh exitoso después de retry
       (jwtUtils.getTokens as jest.Mock).mockReturnValue(expiredTokens);
@@ -112,12 +118,15 @@ describe('Session Persistence with Cold Starts', () => {
       await initializeUserOnce();
 
       // Verificar que el usuario permanece logueado
-      const storedUser = JSON.parse(mockLocalStorage.getItem('user') || '{}');
-      expect(storedUser.isLoggedIn).toBe(true);
+      expect(mockUserSet).toHaveBeenCalledWith(
+        expect.objectContaining({ isLoggedIn: true }),
+      );
       expect(jwtUtils.refreshAccessToken).toHaveBeenCalled();
     });
 
     it('should logout user when refresh fails after all retries', async () => {
+      jest.useFakeTimers();
+
       const expiredTokens: jwtUtils.TokenStorage = {
         accessToken: 'expired-access-token',
         refreshToken: 'expired-refresh-token',
@@ -137,7 +146,7 @@ describe('Session Persistence with Cold Starts', () => {
         birthdate: '1990-01-01',
       };
 
-      mockLocalStorage.setItem('user', JSON.stringify(loggedUser));
+      mockGetLocalStorage.mockReturnValue(loggedUser);
 
       // Mock: Token expirado y refresh falla
       (jwtUtils.getTokens as jest.Mock).mockReturnValue(expiredTokens);
@@ -146,12 +155,21 @@ describe('Session Persistence with Cold Starts', () => {
         new Error('Network error'),
       );
 
-      await initializeUserOnce();
+      const promise = initializeUserOnce();
+
+      // Avanzar timers para los reintentos (2s + 4s + 8s = 14s)
+      await jest.advanceTimersByTimeAsync(15000);
+
+      await promise;
 
       // Verificar que el usuario fue deslogueado
-      const storedUser = JSON.parse(mockLocalStorage.getItem('user') || '{}');
-      expect(storedUser.isLoggedIn).toBe(false);
-    });
+      expect(mockSetLocalStorage).toHaveBeenCalledWith(
+        'user',
+        expect.objectContaining({ isLoggedIn: false }),
+      );
+
+      jest.useRealTimers();
+    }, 20000); // Timeout de 20 segundos
   });
 
   describe('Session Consistency', () => {
@@ -175,7 +193,7 @@ describe('Session Persistence with Cold Starts', () => {
         birthdate: '1990-01-01',
       };
 
-      mockLocalStorage.setItem('user', JSON.stringify(inconsistentUser));
+      mockGetLocalStorage.mockReturnValue(inconsistentUser);
 
       (jwtUtils.getTokens as jest.Mock).mockReturnValue(validTokens);
       (jwtUtils.isTokenActuallyExpired as jest.Mock).mockReturnValue(false);
@@ -183,8 +201,10 @@ describe('Session Persistence with Cold Starts', () => {
       await initializeUserOnce();
 
       // Verificar que se corrigió el estado
-      const storedUser = JSON.parse(mockLocalStorage.getItem('user') || '{}');
-      expect(storedUser.isLoggedIn).toBe(true);
+      expect(mockSetLocalStorage).toHaveBeenCalledWith(
+        'user',
+        expect.objectContaining({ isLoggedIn: true }),
+      );
     });
 
     it('should maintain logged out state when no tokens exist', async () => {
@@ -201,29 +221,37 @@ describe('Session Persistence with Cold Starts', () => {
         birthdate: '',
       };
 
-      mockLocalStorage.setItem('user', JSON.stringify(loggedOutUser));
+      mockGetLocalStorage.mockReturnValue(loggedOutUser);
 
       (jwtUtils.getTokens as jest.Mock).mockReturnValue(null);
       (jwtUtils.isTokenActuallyExpired as jest.Mock).mockReturnValue(true);
 
       await initializeUserOnce();
 
-      const storedUser = JSON.parse(mockLocalStorage.getItem('user') || '{}');
-      expect(storedUser.isLoggedIn).toBe(false);
+      expect(mockUserSet).toHaveBeenCalledWith(
+        expect.objectContaining({ isLoggedIn: false }),
+      );
     });
   });
 
   describe('Cold Start Scenarios', () => {
     it('should initialize user even without localStorage (new user)', async () => {
-      // No hay usuario en localStorage
+      // Mock: No hay usuario en localStorage
+      mockGetLocalStorage.mockReturnValue(null);
+
+      // Mock: No tokens
       (jwtUtils.getTokens as jest.Mock).mockReturnValue(null);
 
       await initializeUserOnce();
 
       // Debe crear usuario por defecto
-      const storedUser = JSON.parse(mockLocalStorage.getItem('user') || '{}');
-      expect(storedUser.isLoggedIn).toBe(false);
-      expect(storedUser.id).toBe(0);
+      expect(mockSetLocalStorage).toHaveBeenCalledWith(
+        'user',
+        expect.objectContaining({
+          isLoggedIn: false,
+          id: 0,
+        }),
+      );
     });
 
     it('should only initialize once even if called multiple times', async () => {

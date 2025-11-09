@@ -125,6 +125,11 @@ export async function fetchAPI<TResponse, TBody = undefined>({
         throw lastError;
       }
 
+      // Si es un error de API (statusCode-message), no reintentar
+      if (lastError.message.match(/^\d{3}-/)) {
+        throw lastError;
+      }
+
       // Si es posible cold start y aún quedan intentos, reintentar
       if (isColdStartError(error) && attempt < maxRetries) {
         const backoffTime = Math.min(1000 * Math.pow(2, attempt), 8000); // Max 8 segundos
@@ -135,7 +140,7 @@ export async function fetchAPI<TResponse, TBody = undefined>({
         continue;
       }
 
-      // Si no quedan intentos o no es error de cold start, lanzar error
+      // Si no es cold start error o no quedan intentos, lanzar error
       if (attempt === maxRetries) {
         console.error(
           `[FetchAPI] Falló después de ${maxRetries} reintentos:`,

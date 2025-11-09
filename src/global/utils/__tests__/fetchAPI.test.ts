@@ -393,10 +393,8 @@ describe('fetchAPI', () => {
     });
 
     it('should handle network errors', async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error('Network error'),
-      );
-      (jwtUtils.getValidAccessToken as jest.Mock).mockResolvedValueOnce(
+      (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
+      (jwtUtils.getValidAccessToken as jest.Mock).mockResolvedValue(
         'valid-token',
       );
 
