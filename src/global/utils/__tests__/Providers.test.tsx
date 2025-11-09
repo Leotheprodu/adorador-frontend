@@ -223,7 +223,7 @@ describe('Providers Component', () => {
       });
     });
 
-    it('should initialize user with 200ms delay', async () => {
+    it('should initialize user immediately on mount', async () => {
       mockUseIsClient.mockReturnValue(true);
 
       render(
@@ -232,27 +232,13 @@ describe('Providers Component', () => {
         </Providers>,
       );
 
-      // Before delay
-      expect(mockInitializeUserOnce).not.toHaveBeenCalled();
-
-      // After 199ms - still not called
-      act(() => {
-        jest.advanceTimersByTime(199);
-      });
-
-      expect(mockInitializeUserOnce).not.toHaveBeenCalled();
-
-      // After 200ms - should be called
-      act(() => {
-        jest.advanceTimersByTime(1);
-      });
-
+      // Should be called immediately (no delay)
       await waitFor(() => {
         expect(mockInitializeUserOnce).toHaveBeenCalled();
       });
     });
 
-    it('should cleanup timeout on unmount', async () => {
+    it('should handle unmount correctly', async () => {
       mockUseIsClient.mockReturnValue(true);
 
       const { unmount } = render(
@@ -261,15 +247,13 @@ describe('Providers Component', () => {
         </Providers>,
       );
 
-      // Unmount before timeout completes
-      unmount();
-
-      act(() => {
-        jest.advanceTimersByTime(200);
+      // Wait for initialization
+      await waitFor(() => {
+        expect(mockInitializeUserOnce).toHaveBeenCalled();
       });
 
-      // Should not call after unmount
-      expect(mockInitializeUserOnce).not.toHaveBeenCalled();
+      // Unmount should not cause errors
+      expect(() => unmount()).not.toThrow();
     });
 
     it('should only initialize once even with multiple renders', async () => {
@@ -507,20 +491,13 @@ describe('Providers Component', () => {
         </Providers>,
       );
 
-      // Unmount after 100ms (before initialization completes)
-      act(() => {
-        jest.advanceTimersByTime(100);
+      // Wait for initialization to be called (no delay anymore)
+      await waitFor(() => {
+        expect(mockInitializeUserOnce).toHaveBeenCalled();
       });
 
-      unmount();
-
-      // Complete the timer
-      act(() => {
-        jest.advanceTimersByTime(100);
-      });
-
-      // Should not initialize after unmount
-      expect(mockInitializeUserOnce).not.toHaveBeenCalled();
+      // Unmount should not cause errors
+      expect(() => unmount()).not.toThrow();
     });
   });
 });

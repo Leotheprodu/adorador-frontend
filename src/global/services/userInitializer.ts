@@ -1,6 +1,11 @@
 // Flag global para evitar múltiples inicializaciones
 let globalInitFlag = false;
 
+// Función para resetear el flag (solo para tests)
+export const __resetInitFlag__ = () => {
+  globalInitFlag = false;
+};
+
 // Función auxiliar para retry con backoff
 const retryWithBackoff = async <T>(
   fn: () => Promise<T>,
