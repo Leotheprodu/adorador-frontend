@@ -79,6 +79,10 @@ export const useRemoveMember = (bandId: number, userId: number) => {
       queryClient.invalidateQueries({
         queryKey: ['BandMembers', bandId.toString()],
       });
+      // Invalidar la lista de grupos del usuario (donde se muestra el contador de miembros)
+      queryClient.invalidateQueries({
+        queryKey: ['BandsOfUser'],
+      });
 
       setIsRemoving(false);
       return true;

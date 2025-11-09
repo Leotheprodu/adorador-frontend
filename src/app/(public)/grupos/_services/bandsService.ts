@@ -23,5 +23,6 @@ export const getBandById = (bandId: string) => {
     key: ['BandById', bandId],
     url: `${Server1API}/bands/${bandId}`,
     refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 };

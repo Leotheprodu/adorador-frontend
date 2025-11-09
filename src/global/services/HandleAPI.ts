@@ -12,12 +12,14 @@ export const FetchData = <TResponse>({
   isEnabled = true,
   skipAuth = false,
   refetchOnMount = false,
+  refetchOnWindowFocus = false,
 }: {
   key: string | string[];
   url: string;
   isEnabled?: boolean;
   skipAuth?: boolean;
   refetchOnMount?: boolean;
+  refetchOnWindowFocus?: boolean;
 }): UseQueryResult<TResponse, Error> => {
   return useQuery<TResponse, Error>({
     queryKey: Array.isArray(key) ? key : [key],
@@ -25,7 +27,7 @@ export const FetchData = <TResponse>({
     enabled: !!isEnabled,
     staleTime: 1000 * 60 * 5, // 5 minutos
     gcTime: 1000 * 60 * 10, // 10 minutos
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: refetchOnWindowFocus,
     refetchOnMount: refetchOnMount,
     refetchOnReconnect: false,
     // retry está heredado de QueryClient defaultOptions (3 intentos con exponential backoff)

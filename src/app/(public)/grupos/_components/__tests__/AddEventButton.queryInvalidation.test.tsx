@@ -128,7 +128,7 @@ describe('AddEventButton - Query Invalidation', () => {
     });
   });
 
-  it('should invalidate both queries even if navigating away immediately', async () => {
+  it('should invalidate all three queries even if navigating away immediately', async () => {
     const { rerender } = render(<AddEventButton bandId={mockBandId} />);
 
     mockStatus = 'success';
@@ -141,8 +141,8 @@ describe('AddEventButton - Query Invalidation', () => {
     rerender(<AddEventButton bandId={mockBandId} />);
 
     await waitFor(() => {
-      // Ambas queries deberían ser invalidadas
-      expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+      // Las tres queries deberían ser invalidadas (EventsOfBand, BandById, BandsOfUser)
+      expect(mockInvalidateQueries).toHaveBeenCalledTimes(3);
     });
   });
 });

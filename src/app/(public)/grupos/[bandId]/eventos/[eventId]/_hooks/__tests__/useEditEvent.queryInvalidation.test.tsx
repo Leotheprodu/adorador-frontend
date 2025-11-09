@@ -109,17 +109,24 @@ describe('useEditEvent - Query Invalidation', () => {
     await waitFor(() => {
       expect(mockInvalidateQueries).toHaveBeenCalledWith({
         queryKey: ['EventsOfBand', mockBandId],
+        refetchType: 'all',
       });
       expect(mockInvalidateQueries).toHaveBeenCalledWith({
         queryKey: ['BandById', mockBandId],
+        refetchType: 'all',
       });
       expect(mockInvalidateQueries).toHaveBeenCalledWith({
         queryKey: ['Event', mockBandId, mockEventId],
+        refetchType: 'all',
+      });
+      expect(mockInvalidateQueries).toHaveBeenCalledWith({
+        queryKey: ['BandsOfUser'],
+        refetchType: 'all',
       });
     });
   });
 
-  it('should invalidate all three queries', async () => {
+  it('should invalidate all four queries', async () => {
     const { rerender } = renderHook(() =>
       useEditEvent({
         bandId: mockBandId,
@@ -138,8 +145,8 @@ describe('useEditEvent - Query Invalidation', () => {
     rerender();
 
     await waitFor(() => {
-      // Debe invalidar exactamente 3 queries
-      expect(mockInvalidateQueries).toHaveBeenCalledTimes(3);
+      // Debe invalidar exactamente 4 queries
+      expect(mockInvalidateQueries).toHaveBeenCalledTimes(4);
     });
   });
 
