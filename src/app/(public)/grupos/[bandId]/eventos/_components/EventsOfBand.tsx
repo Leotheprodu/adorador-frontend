@@ -2,18 +2,24 @@
 
 import { UIGuard } from '@global/utils/UIGuard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
-import { handleBackNavigation } from '@global/utils/navigationUtils';
 import { getEventsOfBand } from '../_services/eventsOfBandService';
 import { EventOfBandCard } from './EventOfBandCard';
 import { AddEventButton } from '@bands/_components/AddEventButton';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const EventsOfBand = ({ params }: { params: { bandId: string } }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading, status } = getEventsOfBand({
     bandId: params.bandId,
   });
 
   const handleBackToGroup = () => {
-    handleBackNavigation(`/grupos/${params.bandId}`);
+    // Invalidar queries relacionadas con el grupo para que se actualicen los datos
+    queryClient.invalidateQueries({ queryKey: ['BandById', params.bandId] });
+    // Usar router de Next.js para navegación sin recargar la página
+    router.push(`/grupos/${params.bandId}`);
   };
 
   // Separar eventos pasados y próximos

@@ -5,6 +5,7 @@ import { updateEventService } from '@bands/[bandId]/eventos/_services/eventsOfBa
 import { handleOnChange } from '@global/utils/formUtils';
 import { useStore } from '@nanostores/react';
 import { $event } from '@stores/event';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useEditEvent = ({
   bandId,
@@ -15,6 +16,7 @@ export const useEditEvent = ({
   eventId: string;
   refetch: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const eventData = useStore($event);
   const [form, setForm] = useState({
     title: '',
@@ -74,6 +76,12 @@ export const useEditEvent = ({
   useEffect(() => {
     if (statusUpdateEvent === 'success') {
       toast.success('Evento actualizado correctamente');
+
+      // Invalidar las queries relacionadas para forzar refetch
+      queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['Event', bandId, eventId] });
+
       refetch();
       reset();
       onOpenChange();

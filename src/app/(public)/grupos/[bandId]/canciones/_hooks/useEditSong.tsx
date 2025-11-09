@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { updateSongService } from '@bands/[bandId]/canciones/_services/songsOfBandService';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 import { handleOnChange } from '@global/utils/formUtils';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useEditSong = ({
   bandId,
@@ -16,6 +17,7 @@ export const useEditSong = ({
   refetch: () => void;
   songData: SongPropsWithoutId | undefined;
 }) => {
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<SongPropsWithoutId>({
     title: '',
     artist: '',
@@ -61,6 +63,12 @@ export const useEditSong = ({
   useEffect(() => {
     if (statusUpdateSong === 'success') {
       toast.success('Canción actualizada correctamente');
+
+      // Invalidar las queries relacionadas para forzar refetch
+      queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['SongData', bandId, songId] });
+
       refetch();
       reset();
       onOpenChange();

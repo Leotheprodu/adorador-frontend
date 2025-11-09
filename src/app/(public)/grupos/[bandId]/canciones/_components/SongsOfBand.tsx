@@ -4,11 +4,14 @@ import { useEffect } from 'react';
 import { $PlayList } from '@stores/player';
 import { UIGuard } from '@global/utils/UIGuard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
-import Link from 'next/link';
 import { getSongsOfBand } from '../_services/songsOfBandService';
 import { SongOfBandCard } from './SongOfBandCard';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading, status, refetch } = getSongsOfBand({
     bandId: params.bandId,
   });
@@ -36,6 +39,13 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
       ?.filter((song) => song.songType === 'praise')
       .sort((a, b) => a.title.localeCompare(b.title)) || [];
 
+  const handleBackToGroup = () => {
+    // Invalidar query del grupo para que se actualice con nuevas canciones
+    queryClient.invalidateQueries({ queryKey: ['BandById', params.bandId] });
+    // Usar router de Next.js para navegación sin recargar la página
+    router.push(`/grupos/${params.bandId}`);
+  };
+
   return (
     <UIGuard
       isLoggedIn={true}
@@ -46,15 +56,15 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
       <div className="mb-6 rounded-2xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-6 shadow-lg backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link
-              href={`/grupos/${params.bandId}`}
+            <button
+              onClick={handleBackToGroup}
               className="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-purple-50 hover:shadow-md active:scale-95"
             >
               <BackwardIcon />
               <small className="hidden text-xs font-medium text-brand-purple-700 sm:group-hover:block">
                 Volver al grupo
               </small>
-            </Link>
+            </button>
             <div>
               <h1 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
                 Repertorio Musical
