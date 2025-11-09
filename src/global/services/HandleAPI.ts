@@ -28,7 +28,8 @@ export const FetchData = <TResponse>({
     refetchOnWindowFocus: false,
     refetchOnMount: refetchOnMount,
     refetchOnReconnect: false,
-    retry: 1,
+    // retry está heredado de QueryClient defaultOptions (3 intentos con exponential backoff)
+    // Si se necesita diferente, se puede override aquí
   });
 };
 
