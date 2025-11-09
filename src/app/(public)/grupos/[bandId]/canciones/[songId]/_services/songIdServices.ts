@@ -12,7 +12,7 @@ export const getSongData = ({
   params: { bandId: string; songId: string };
 }) => {
   return FetchData<SongPropsWithCount>({
-    key: 'SongData',
+    key: ['SongData', params.bandId, params.songId],
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}`,
   });
 };
@@ -23,7 +23,7 @@ export const getSongLyrics = ({
   params: { bandId: string; songId: string };
 }) => {
   return FetchData<LyricsProps[]>({
-    key: 'SongLyrics',
+    key: ['SongLyrics', params.bandId, params.songId],
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics`,
   });
 };

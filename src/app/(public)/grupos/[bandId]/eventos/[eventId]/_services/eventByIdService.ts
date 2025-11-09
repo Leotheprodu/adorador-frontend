@@ -10,7 +10,7 @@ export const getEventsById = ({
   eventId: string;
 }) => {
   return FetchData<EventByIdInterface>({
-    key: 'Event',
+    key: ['Event', bandId, eventId],
     url: `${Server1API}/bands/${bandId}/events/${eventId}`,
   });
 };

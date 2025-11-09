@@ -21,7 +21,7 @@ export interface BandMember {
 
 export const useBandMembers = (bandId: number) => {
   return FetchData<BandMember[]>({
-    key: `BandMembers-${bandId}`,
+    key: ['BandMembers', bandId.toString()],
     url: `${Server1API}/bands/${bandId}/members`,
   });
 };

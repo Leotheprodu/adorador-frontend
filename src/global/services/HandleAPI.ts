@@ -13,14 +13,14 @@ export const FetchData = <TResponse>({
   skipAuth = false,
   refetchOnMount = false,
 }: {
-  key: string;
+  key: string | string[];
   url: string;
   isEnabled?: boolean;
   skipAuth?: boolean;
   refetchOnMount?: boolean;
 }): UseQueryResult<TResponse, Error> => {
   return useQuery<TResponse, Error>({
-    queryKey: [key],
+    queryKey: Array.isArray(key) ? key : [key],
     queryFn: () => fetchAPI<TResponse>({ url, skipAuth }),
     enabled: !!isEnabled,
     staleTime: 1000 * 60 * 5, // 5 minutos

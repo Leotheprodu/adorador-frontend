@@ -33,7 +33,9 @@ export const useUpdateMember = (bandId: number, userId: number) => {
       toast.success('Miembro actualizado exitosamente');
 
       // Invalidar miembros de la banda
-      queryClient.invalidateQueries({ queryKey: [`BandMembers-${bandId}`] });
+      queryClient.invalidateQueries({
+        queryKey: ['BandMembers', bandId.toString()],
+      });
 
       setIsUpdating(false);
       return true;
@@ -74,7 +76,9 @@ export const useRemoveMember = (bandId: number, userId: number) => {
       toast.success('Miembro removido exitosamente');
 
       // Invalidar miembros de la banda
-      queryClient.invalidateQueries({ queryKey: [`BandMembers-${bandId}`] });
+      queryClient.invalidateQueries({
+        queryKey: ['BandMembers', bandId.toString()],
+      });
 
       setIsRemoving(false);
       return true;

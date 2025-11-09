@@ -33,8 +33,8 @@ export const useDeleteSong = ({
       reset();
 
       // Invalidar las queries relacionadas para forzar refetch
-      queryClient.invalidateQueries({ queryKey: ['SongsOfBand'] });
-      queryClient.invalidateQueries({ queryKey: ['BandById'] });
+      queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {

@@ -33,8 +33,8 @@ export const useDeleteEvent = ({
       reset();
 
       // Invalidar las queries relacionadas para forzar refetch
-      queryClient.invalidateQueries({ queryKey: ['BandById'] });
-      queryClient.invalidateQueries({ queryKey: ['EventsOfBand'] });
+      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {
