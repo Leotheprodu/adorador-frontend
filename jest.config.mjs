@@ -18,6 +18,7 @@ const customJestConfig = {
     '^@ui/(.*)$': '<rootDir>/src/app/(public)/_ui/$1',
     '^@stores/(.*)$': '<rootDir>/src/global/stores/$1',
     '^@global/(.*)$': '<rootDir>/src/global/$1',
+    '^@app/(.*)$': '<rootDir>/src/app/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [

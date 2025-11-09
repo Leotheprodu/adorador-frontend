@@ -30,18 +30,25 @@ export const NotificationBell = () => {
         <Button
           isIconOnly
           variant="light"
-          className="relative"
+          className="relative z-50"
           aria-label="Notificaciones"
+          data-testid="notification-bell-button"
         >
           <BellIcon className="text-2xl text-brand-purple-600" />
           {pendingCount > 0 && (
-            <span className="absolute right-0 top-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white shadow-lg">
+            <span
+              className="absolute right-0 top-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white shadow-lg"
+              data-testid="notification-badge"
+            >
               {pendingCount}
             </span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4">
+      <PopoverContent
+        className="z-50 w-80 max-w-[calc(100vw-2rem)] p-4"
+        data-testid="notification-popover"
+      >
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Invitaciones</h3>
@@ -49,13 +56,16 @@ export const NotificationBell = () => {
           </div>
 
           {!isLoading && pendingCount === 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500" data-testid="no-invitations">
               No tienes invitaciones pendientes
             </p>
           )}
 
           {invitations && invitations.length > 0 && (
-            <div className="max-h-96 space-y-3 overflow-y-auto">
+            <div
+              className="max-h-96 space-y-3 overflow-y-auto"
+              data-testid="invitations-list"
+            >
               {invitations.map((invitation) => (
                 <InvitationCard key={invitation.id} invitation={invitation} />
               ))}
@@ -103,14 +113,24 @@ const InvitationCard = ({ invitation }: InvitationCardProps) => {
     expiresDate.getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000; // 7 días
 
   return (
-    <div className="space-y-2 rounded-lg border border-gray-200 p-3">
+    <div
+      className="space-y-2 rounded-lg border border-gray-200 p-3"
+      data-testid={`invitation-card-${invitation.id}`}
+    >
       <div>
-        <p className="text-sm font-medium">{invitation.band.name}</p>
-        <p className="text-xs text-gray-500">
+        <p className="text-sm font-medium" data-testid="band-name">
+          {invitation.band.name}
+        </p>
+        <p className="text-xs text-gray-500" data-testid="inviter-name">
           Invitado por {invitation.inviter.name}
         </p>
         {isExpiringSoon && (
-          <p className="mt-1 text-xs text-orange-500">Expira pronto</p>
+          <p
+            className="mt-1 text-xs text-orange-500"
+            data-testid="expiring-warning"
+          >
+            Expira pronto
+          </p>
         )}
       </div>
 
@@ -122,6 +142,7 @@ const InvitationCard = ({ invitation }: InvitationCardProps) => {
           onPress={handleAccept}
           isLoading={isAccepting}
           isDisabled={isRejecting}
+          data-testid="accept-button"
         >
           Aceptar
         </Button>
@@ -133,6 +154,7 @@ const InvitationCard = ({ invitation }: InvitationCardProps) => {
           onPress={handleReject}
           isLoading={isRejecting}
           isDisabled={isAccepting}
+          data-testid="reject-button"
         >
           Rechazar
         </Button>
