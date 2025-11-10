@@ -64,9 +64,9 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
   return (
     <>
       <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <CardHeader className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+        <CardHeader className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-purple-600">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-purple-600">
               <UsersIcon className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -88,7 +88,7 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
               startContent={<PlusIcon className="h-4 w-4" />}
               className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
             >
-              Invitar miembro
+              <span className="whitespace-nowrap">Invitar miembro</span>
             </Button>
           )}
         </CardHeader>

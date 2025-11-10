@@ -13,6 +13,9 @@ import { EditIcon } from '../EditIcon';
 import { CopyIcon } from '../CopyIcon';
 import { MenuButtonIcon } from '../MenuButtonIcon';
 import { KeyIcon } from '../KeyIcon';
+import { UsersIcon } from '../UsersIcon';
+import { MusicNoteIcon } from '../MusicNoteIcon';
+import { CalendarIcon } from '../CalendarIcon';
 
 describe('Icon Components', () => {
   describe('ArrowLeftIcon', () => {
@@ -144,6 +147,59 @@ describe('Icon Components', () => {
     it('should render without crashing', () => {
       const { container } = render(<KeyIcon />);
       expect(container.querySelector('svg')).toBeInTheDocument();
+    });
+  });
+
+  describe('UsersIcon', () => {
+    it('should render without crashing', () => {
+      const { container } = render(<UsersIcon />);
+      expect(container.querySelector('svg')).toBeInTheDocument();
+    });
+
+    it('should have proper ARIA attributes for accessibility', () => {
+      const { container } = render(<UsersIcon />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveAttribute('aria-hidden', 'true');
+      expect(svg).toHaveAttribute('role', 'presentation');
+      expect(svg).toHaveAttribute('focusable', 'false');
+    });
+
+    it('should have viewBox for responsive scaling', () => {
+      const { container } = render(<UsersIcon />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveAttribute('viewBox', '0 0 24 24');
+    });
+
+    it('should accept custom className for sizing', () => {
+      const { container } = render(<UsersIcon className="h-5 w-5" />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveClass('h-5', 'w-5');
+    });
+  });
+
+  describe('MusicNoteIcon', () => {
+    it('should render without crashing', () => {
+      const { container } = render(<MusicNoteIcon />);
+      expect(container.querySelector('svg')).toBeInTheDocument();
+    });
+
+    it('should have viewBox for responsive scaling', () => {
+      const { container } = render(<MusicNoteIcon />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveAttribute('viewBox', '0 0 24 24');
+    });
+  });
+
+  describe('CalendarIcon', () => {
+    it('should render without crashing', () => {
+      const { container } = render(<CalendarIcon />);
+      expect(container.querySelector('svg')).toBeInTheDocument();
+    });
+
+    it('should have viewBox for responsive scaling', () => {
+      const { container } = render(<CalendarIcon />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveAttribute('viewBox', '0 0 24 24');
     });
   });
 });

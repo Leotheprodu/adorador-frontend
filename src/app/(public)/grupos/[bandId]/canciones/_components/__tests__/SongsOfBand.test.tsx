@@ -430,6 +430,62 @@ describe('SongsOfBand - Search and Filters', () => {
   });
 });
 
+describe('SongsOfBand - Responsive Layout', () => {
+  const mockPush = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+    (getSongsOfBand as jest.Mock).mockReturnValue({
+      data: mockSongs,
+      isLoading: false,
+      status: 'success',
+      refetch: jest.fn(),
+    });
+  });
+
+  it('should have filter buttons with flex-wrap for mobile responsiveness', () => {
+    const { container } = render(<SongsOfBand params={{ bandId: '1' }} />, {
+      wrapper: createWrapper(),
+    });
+
+    // Verificar que el contenedor de botones de filtro tiene flex-wrap
+    const filterContainer = container.querySelector('.flex.flex-wrap.gap-2');
+    expect(filterContainer).toBeInTheDocument();
+  });
+
+  it('should have whitespace-nowrap on filter buttons to prevent text wrapping', () => {
+    render(<SongsOfBand params={{ bandId: '1' }} />, {
+      wrapper: createWrapper(),
+    });
+
+    // Buscar botones de filtro y verificar que tengan whitespace-nowrap
+    const allButton = screen.getByText('Todas').closest('button');
+    const worshipButton = screen.getByText('🙏 Adoración').closest('button');
+    const praiseButton = screen.getByText('🎉 Alabanza').closest('button');
+
+    expect(allButton).toHaveClass('whitespace-nowrap');
+    expect(worshipButton).toHaveClass('whitespace-nowrap');
+    expect(praiseButton).toHaveClass('whitespace-nowrap');
+  });
+
+  it('should have table with max-w-full and overflow-x-auto for mobile scrolling', () => {
+    const { container } = render(<SongsOfBand params={{ bandId: '1' }} />, {
+      wrapper: createWrapper(),
+    });
+
+    // Verificar el contenedor de la tabla
+    const tableContainer = container.querySelector(
+      '.max-w-full.overflow-x-auto',
+    );
+    expect(tableContainer).toBeInTheDocument();
+
+    // Verificar que la tabla tiene min-w-full
+    const table = container.querySelector('table');
+    expect(table).toHaveClass('min-w-full', 'w-full');
+  });
+});
+
 describe('SongsOfBand - Empty State', () => {
   const mockPush = jest.fn();
 

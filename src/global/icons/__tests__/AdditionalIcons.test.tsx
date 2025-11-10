@@ -99,6 +99,26 @@ describe('Additional Icon Components', () => {
       const { container } = render(<GuitarIcon />);
       expect(container.querySelector('svg')).toBeInTheDocument();
     });
+
+    it('should not have fixed width and height attributes', () => {
+      const { container } = render(<GuitarIcon />);
+      const svg = container.querySelector('svg');
+      // El SVG no debe tener width/height fijos para ser responsive
+      expect(svg).not.toHaveAttribute('width', '1em');
+      expect(svg).not.toHaveAttribute('height', '1em');
+    });
+
+    it('should have viewBox for proper scaling', () => {
+      const { container } = render(<GuitarIcon />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16');
+    });
+
+    it('should accept custom className for sizing', () => {
+      const { container } = render(<GuitarIcon className="h-7 w-7" />);
+      const svg = container.querySelector('svg');
+      expect(svg).toHaveClass('h-7', 'w-7');
+    });
   });
 
   describe('PrintIcon', () => {

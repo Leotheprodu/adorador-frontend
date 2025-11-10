@@ -398,6 +398,61 @@ describe('EventsOfBand - Empty State', () => {
   });
 });
 
+describe('EventsOfBand - Responsive Layout', () => {
+  const mockPush = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+    (getEventsOfBand as jest.Mock).mockReturnValue({
+      data: mockEvents,
+      isLoading: false,
+      status: 'success',
+    });
+  });
+
+  it('should have filter buttons with flex-wrap for mobile responsiveness', () => {
+    const { container } = render(<EventsOfBand params={{ bandId: '1' }} />, {
+      wrapper: createWrapper(),
+    });
+
+    // Verificar que el contenedor de botones de filtro tiene flex-wrap
+    const filterContainer = container.querySelector('.flex.flex-wrap.gap-2');
+    expect(filterContainer).toBeInTheDocument();
+  });
+
+  it('should have whitespace-nowrap on filter buttons to prevent text wrapping', () => {
+    render(<EventsOfBand params={{ bandId: '1' }} />, {
+      wrapper: createWrapper(),
+    });
+
+    // Buscar botones de filtro y verificar que tengan whitespace-nowrap
+    const allButton = screen.getByText('Todos').closest('button');
+    const upcomingButton = screen.getByText('🎯 Próximos').closest('button');
+    const pastButton = screen.getByText('✓ Pasados').closest('button');
+
+    expect(allButton).toHaveClass('whitespace-nowrap');
+    expect(upcomingButton).toHaveClass('whitespace-nowrap');
+    expect(pastButton).toHaveClass('whitespace-nowrap');
+  });
+
+  it('should have table with max-w-full and overflow-x-auto for mobile scrolling', () => {
+    const { container } = render(<EventsOfBand params={{ bandId: '1' }} />, {
+      wrapper: createWrapper(),
+    });
+
+    // Verificar el contenedor de la tabla
+    const tableContainer = container.querySelector(
+      '.max-w-full.overflow-x-auto',
+    );
+    expect(tableContainer).toBeInTheDocument();
+
+    // Verificar que la tabla tiene min-w-full
+    const table = container.querySelector('table');
+    expect(table).toHaveClass('min-w-full', 'w-full');
+  });
+});
+
 describe('EventsOfBand - Sorting', () => {
   const mockPush = jest.fn();
 

@@ -139,10 +139,10 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
             </div>
 
             {/* Filter buttons */}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSongTypeFilter('all')}
-                className={`rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+                className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                   songTypeFilter === 'all'
                     ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
                     : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
@@ -152,7 +152,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
               </button>
               <button
                 onClick={() => setSongTypeFilter('worship')}
-                className={`rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+                className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                   songTypeFilter === 'worship'
                     ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
                     : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
@@ -162,7 +162,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
               </button>
               <button
                 onClick={() => setSongTypeFilter('praise')}
-                className={`rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+                className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                   songTypeFilter === 'praise'
                     ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
                     : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
@@ -183,8 +183,8 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
       {/* Tabla única de canciones */}
       {filteredSongs && filteredSongs.length > 0 ? (
         <div className="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="max-w-full overflow-x-auto">
+            <table className="w-full min-w-full">
               <thead className="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group">
                 <tr>
                   <th className="px-4 py-3 text-left">Título</th>
