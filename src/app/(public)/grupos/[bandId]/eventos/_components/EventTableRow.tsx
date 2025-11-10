@@ -17,6 +17,7 @@ import {
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEditEvent';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
+import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 
 export const EventTableRow = ({
   event,
@@ -48,6 +49,7 @@ export const EventTableRow = ({
 
   const currentDate = new Date();
   const isUpcoming = currentDate < new Date(event.date);
+  const { eventTimeLeft } = useEventTimeLeft(event.date);
 
   return (
     <>
@@ -100,6 +102,13 @@ export const EventTableRow = ({
                 {formatTime(event.date)}
               </span>
             </div>
+            {/* Tiempo restante - Solo mobile y eventos futuros */}
+            {isUpcoming && eventTimeLeft && (
+              <div className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-purple-600 sm:hidden">
+                <span>⏱️</span>
+                <span>{eventTimeLeft}</span>
+              </div>
+            )}
           </Link>
         </td>
 
@@ -117,6 +126,16 @@ export const EventTableRow = ({
             <ClockIcon className="h-4 w-4 text-slate-400" />
             <span>{formatTime(event.date)}</span>
           </div>
+        </td>
+
+        {/* Tiempo restante - Solo Desktop y eventos futuros */}
+        <td className="hidden px-4 py-3.5 sm:table-cell">
+          {isUpcoming && eventTimeLeft && (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 px-3 py-1.5 text-xs font-semibold text-brand-purple-700 ring-1 ring-brand-purple-200/50">
+              <span>⏱️</span>
+              <span>{eventTimeLeft}</span>
+            </div>
+          )}
         </td>
 
         {/* Acciones */}

@@ -1,122 +1,47 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
 import { SongNavigationButtons } from '@bands/[bandId]/eventos/[eventId]/_components/SongNavigationButtons';
 import { useStore } from '@nanostores/react';
-import {
-  $event,
-  $eventSelectedSongId,
-  $lyricSelected,
-  $selectedSongData,
-  $selectedSongLyricLength,
-  $eventConfig,
-  $eventLiveMessage,
-} from '@stores/event';
-import { $user } from '@stores/users';
-import { useEffect, useState, useMemo } from 'react';
+import { $lyricSelected, $eventLiveMessage } from '@stores/event';
+import { useEffect, useState } from 'react';
 import { LyricsShowcase } from '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcase';
-import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
-
 import { AnimatePresence, motion } from 'framer-motion';
 import { useFullscreen } from '@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen';
 import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/_hooks/useHandleEventLeft';
-import { userRoles } from '@global/config/constants';
+import { useEventSongNavigation } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventSongNavigation';
+import { useEventControls } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventControls';
 
 export const EventMainScreen = () => {
   const { isFullscreen, isSupported, activateFullscreen, divRef } =
     useFullscreen();
   const { eventDateLeft } = useHandleEventLeft();
-  const eventData = useStore($event);
-  const eventConfig = useStore($eventConfig);
-  const selectedSongId = useStore($eventSelectedSongId);
-  const selectedSongData = useStore($selectedSongData);
-  const selectedSongLyricLength = useStore($selectedSongLyricLength);
-  const user = useStore($user);
-  const { sendMessage } = useEventGateway();
-  const { title, songs } = eventData;
 
-  // Verificar si es administrador de la app O event manager
-  const isEventManager = useMemo(() => {
-    // Si es admin de la app, siempre tiene acceso
-    if (user?.isLoggedIn && user?.roles.includes(userRoles.admin.id)) {
-      return true;
-    }
+  // Hook de navegación de canciones
+  const {
+    eventData,
+    eventConfig,
+    selectedSongData,
+    selectedSongLyricLength,
+    isEventManager,
+    hasPreviousSong,
+    hasNextSong,
+    goToPreviousSong,
+    goToNextSong,
+    startSong,
+  } = useEventSongNavigation();
 
-    // Si no es admin, verificar si es event manager
-    if (user?.isLoggedIn && user?.membersofBands) {
-      return user.membersofBands.some(
-        (band) => band.band.id === eventData?.bandId && band.isEventManager,
-      );
-    }
+  const { title } = eventData;
+  const lyricSelected = useStore($lyricSelected);
 
-    return false;
-  }, [user, eventData]);
+  // Hook de controles (swipe y keyboard)
+  useEventControls({
+    isFullscreen,
+    isEventManager,
+    selectedSongLyricLength,
+  });
 
-  // Encontrar índice de la canción actual y verificar si hay anterior/siguiente
-  const currentSongIndex = songs.findIndex(
-    (song) => song.song.id === selectedSongId,
-  );
-  const hasPreviousSong = currentSongIndex > 0;
-  const hasNextSong =
-    currentSongIndex >= 0 && currentSongIndex < songs.length - 1;
-
-  // Funciones para navegar entre canciones
-  const goToPreviousSong = () => {
-    if (hasPreviousSong && isEventManager) {
-      const previousSong = songs[currentSongIndex - 1];
-      sendMessage({ type: 'eventSelectedSong', data: previousSong.song.id });
-      sendMessage({
-        type: 'lyricSelected',
-        data: {
-          position: 0,
-          action: 'forward',
-        },
-      });
-    }
-  };
-
-  const goToNextSong = () => {
-    if (hasNextSong && isEventManager) {
-      const nextSong = songs[currentSongIndex + 1];
-      sendMessage({ type: 'eventSelectedSong', data: nextSong.song.id });
-      sendMessage({
-        type: 'lyricSelected',
-        data: {
-          position: 0,
-          action: 'forward',
-        },
-      });
-    }
-  };
-
-  const startSong = () => {
-    sendMessage({
-      type: 'lyricSelected',
-      data: {
-        position: 1,
-        action: 'forward',
-      },
-    });
-  };
-
-  useEffect(() => {
-    const lyricsLength = selectedSongData?.song?.lyrics?.length || 0;
-    if (lyricsLength > 0) {
-      $selectedSongLyricLength.set(lyricsLength);
-    } else {
-      $selectedSongLyricLength.set(0);
-    }
-  }, [selectedSongData]);
-
-  useEffect(() => {
-    if (songs) {
-      const songId = selectedSongId;
-      const song = songs.find((song) => song.song.id === songId);
-      if (song) {
-        $selectedSongData.set(song);
-      }
-    }
-  }, [songs, selectedSongId]);
   const eventLiveMessage = useStore($eventLiveMessage);
   const [liveMessage, setLiveMessage] = useState('');
+
   useEffect(() => {
     if (eventLiveMessage !== '') {
       setLiveMessage(eventLiveMessage);
@@ -127,193 +52,6 @@ export const EventMainScreen = () => {
     }
   }, [eventLiveMessage]);
 
-  const lyricSelected = useStore($lyricSelected);
-
-  useEffect(() => {
-    let startY = 0;
-    let endY = 0;
-
-    const handleTouchStart = (event: TouchEvent) => {
-      startY = event.touches[0].clientY;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      endY = event.touches[0].clientY;
-    };
-
-    const handleTouchEnd = () => {
-      if (isFullscreen && isEventManager && !eventConfig.swipeLocked) {
-        if (startY - endY > 50) {
-          // Deslizar hacia arriba
-          if (lyricSelected.position === selectedSongLyricLength) {
-            // Si estamos en la última letra, ir a "Fin"
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position: selectedSongLyricLength + 1,
-                action: 'forward',
-              },
-            });
-          } else if (
-            lyricSelected.position < selectedSongLyricLength &&
-            selectedSongLyricLength > 4 &&
-            lyricSelected.position + 3 <= selectedSongLyricLength
-          ) {
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position:
-                  lyricSelected.position < selectedSongLyricLength - 3 &&
-                  lyricSelected.position < 1
-                    ? lyricSelected.position + 1
-                    : lyricSelected.position + 4,
-                action: 'forward',
-              },
-            });
-          } else if (
-            lyricSelected.position < selectedSongLyricLength &&
-            selectedSongLyricLength > 0 &&
-            selectedSongLyricLength < 4
-          ) {
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position: 1,
-                action: 'forward',
-              },
-            });
-          } else if (
-            lyricSelected.position < selectedSongLyricLength &&
-            lyricSelected.position + 3 > selectedSongLyricLength
-          ) {
-            // Si estamos cerca del final pero no podemos avanzar 4, ir a la última posición
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position: selectedSongLyricLength,
-                action: 'forward',
-              },
-            });
-          }
-        } else if (endY - startY > 50) {
-          // Deslizar hacia abajo
-          if (lyricSelected.position > 0) {
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position:
-                  lyricSelected.position <= 4
-                    ? lyricSelected.position - 1
-                    : lyricSelected.position - 4,
-                action: 'backward',
-              },
-            });
-          }
-        }
-      }
-    };
-
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    isFullscreen,
-    isEventManager,
-    lyricSelected,
-    selectedSongLyricLength,
-    eventConfig.swipeLocked,
-  ]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (isFullscreen && isEventManager && !eventConfig.swipeLocked) {
-        if (event.key === 'ArrowDown') {
-          if (lyricSelected.position === selectedSongLyricLength) {
-            // Si estamos en la última letra, ir a "Fin"
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position: selectedSongLyricLength + 1,
-                action: 'forward',
-              },
-            });
-          } else if (
-            lyricSelected.position < selectedSongLyricLength &&
-            selectedSongLyricLength > 4 &&
-            lyricSelected.position + 3 <= selectedSongLyricLength
-          ) {
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position:
-                  lyricSelected.position < selectedSongLyricLength - 3 &&
-                  lyricSelected.position < 1
-                    ? lyricSelected.position + 1
-                    : lyricSelected.position + 4,
-                action: 'forward',
-              },
-            });
-          } else if (
-            lyricSelected.position < selectedSongLyricLength &&
-            selectedSongLyricLength > 0 &&
-            selectedSongLyricLength < 4
-          ) {
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position: 1,
-                action: 'forward',
-              },
-            });
-          } else if (
-            lyricSelected.position < selectedSongLyricLength &&
-            lyricSelected.position + 3 > selectedSongLyricLength
-          ) {
-            // Si estamos cerca del final pero no podemos avanzar 4, ir a la última posición
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position: selectedSongLyricLength,
-                action: 'forward',
-              },
-            });
-          }
-        } else if (event.key === 'ArrowUp') {
-          if (lyricSelected.position > 0)
-            sendMessage({
-              type: 'lyricSelected',
-              data: {
-                position:
-                  lyricSelected.position <= 4
-                    ? lyricSelected.position - 1
-                    : lyricSelected.position - 4,
-                action: 'backward',
-              },
-            });
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    isFullscreen,
-    isEventManager,
-    selectedSongData,
-    lyricSelected,
-    selectedSongLyricLength,
-    eventConfig.swipeLocked,
-  ]);
   return (
     <div
       style={{

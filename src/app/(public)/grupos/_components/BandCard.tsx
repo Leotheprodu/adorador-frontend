@@ -17,6 +17,7 @@ import { PrimaryButton, IconButton } from '@global/components/buttons';
 import { EditBandModal } from './EditBandModal';
 import { DeleteBandModal } from './DeleteBandModal';
 import { useDisclosure } from '@nextui-org/react';
+import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 
 export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -27,6 +28,9 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
 
   //si el evento actual es igual a la fecha actual, el valor de la variable isCurrentEvent es verdadero
   const [isCurrentEvent, setIsCurrentEvent] = useState(false);
+
+  // Hook para calcular tiempo restante del evento actual
+  const { eventTimeLeft } = useEventTimeLeft(events[currentEventIndex]?.date);
 
   const {
     isOpen: isEditOpen,
@@ -176,6 +180,15 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
                   </span>
                 </div>
               )}
+              {/* Tiempo restante - Solo para eventos futuros */}
+              {eventTimeLeft &&
+                new Date(events[currentEventIndex].date) > new Date() && (
+                  <div className="mt-2 rounded-lg bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 px-3 py-2 ring-1 ring-brand-purple-200/50">
+                    <p className="text-center text-xs font-semibold text-brand-purple-700">
+                      ⏱️ {eventTimeLeft}
+                    </p>
+                  </div>
+                )}
             </div>
 
             {/* Botón siguiente */}

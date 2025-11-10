@@ -2,6 +2,7 @@ import { formatDate, formatTime } from '@global/utils/dataFormat';
 import Link from 'next/link';
 import { EventsProps } from '../_interfaces/eventsInterface';
 import { CalendarIcon, ClockIcon, CheckIcon } from '@global/icons';
+import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 
 export const EventOfBandCard = ({
   event,
@@ -12,6 +13,7 @@ export const EventOfBandCard = ({
 }) => {
   const currentDate = new Date();
   const isUpcoming = currentDate < new Date(event.date);
+  const { eventTimeLeft } = useEventTimeLeft(event.date);
 
   return (
     <li className="flex">
@@ -62,6 +64,15 @@ export const EventOfBandCard = ({
               <span>{formatTime(event.date)}</span>
             </div>
           </div>
+
+          {/* Tiempo restante - Solo para eventos futuros */}
+          {isUpcoming && eventTimeLeft && (
+            <div className="mt-3 rounded-lg bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 px-3 py-2 ring-1 ring-brand-purple-200/50">
+              <p className="text-center text-xs font-semibold text-brand-purple-700">
+                ⏱️ {eventTimeLeft}
+              </p>
+            </div>
+          )}
         </div>
       </Link>
     </li>

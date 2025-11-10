@@ -188,6 +188,7 @@ export const EventsOfBand = ({ params }: { params: { bandId: string } }) => {
                   <th className="px-4 py-3 text-left">Evento</th>
                   <th className="px-4 py-3 text-left">Fecha</th>
                   <th className="px-4 py-3 text-left">Hora</th>
+                  <th className="px-4 py-3 text-left">Tiempo restante</th>
                   <th className="px-4 py-3 text-right">Acción</th>
                 </tr>
               </thead>
