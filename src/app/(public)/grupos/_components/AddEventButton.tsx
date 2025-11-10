@@ -56,6 +56,8 @@ export const AddEventButton = ({ bandId }: { bandId: string }) => {
       // Invalidar queries para que se actualicen las listas de eventos
       queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
       queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      // Invalidar la lista de grupos del usuario (donde se muestran los eventos en las cards)
+      queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
       // Redirigir al nuevo evento
       router.push(`/grupos/${bandId}/eventos/${newEvent?.id}`);
     }

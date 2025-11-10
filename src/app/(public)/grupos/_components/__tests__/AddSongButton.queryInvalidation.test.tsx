@@ -71,7 +71,7 @@ describe('AddSongButton - Query Invalidation', () => {
     }));
   });
 
-  it('should invalidate SongsOfBand and BandById queries after successful song creation', async () => {
+  it('should invalidate SongsOfBand, BandById and BandsOfUser queries after successful song creation', async () => {
     // Renderizar componente
     const { rerender } = render(<AddSongButton bandId={mockBandId} />);
 
@@ -93,6 +93,9 @@ describe('AddSongButton - Query Invalidation', () => {
       });
       expect(mockInvalidateQueries).toHaveBeenCalledWith({
         queryKey: ['BandById', mockBandId],
+      });
+      expect(mockInvalidateQueries).toHaveBeenCalledWith({
+        queryKey: ['BandsOfUser'],
       });
     });
   });
@@ -148,7 +151,7 @@ describe('AddSongButton - Query Invalidation', () => {
     });
   });
 
-  it('should invalidate both queries even if one of them is not cached', async () => {
+  it('should invalidate all three queries even if some are not cached', async () => {
     const { rerender } = render(<AddSongButton bandId={mockBandId} />);
 
     mockStatus = 'success';
@@ -161,8 +164,8 @@ describe('AddSongButton - Query Invalidation', () => {
     rerender(<AddSongButton bandId={mockBandId} />);
 
     await waitFor(() => {
-      // Ambas queries deberían ser invalidadas
-      expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+      // Las tres queries deberían ser invalidadas
+      expect(mockInvalidateQueries).toHaveBeenCalledTimes(3);
     });
   });
 });

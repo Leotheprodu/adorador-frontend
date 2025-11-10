@@ -35,6 +35,8 @@ export const useDeleteSong = ({
       // Invalidar las queries relacionadas para forzar refetch
       queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
       queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      // Invalidar la lista de grupos del usuario (donde se muestra el contador de canciones)
+      queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {

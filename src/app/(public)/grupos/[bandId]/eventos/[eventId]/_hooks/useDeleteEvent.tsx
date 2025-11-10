@@ -35,6 +35,8 @@ export const useDeleteEvent = ({
       // Invalidar las queries relacionadas para forzar refetch
       queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
       queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
+      // Invalidar la lista de grupos del usuario (donde se muestran los eventos en las cards)
+      queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {

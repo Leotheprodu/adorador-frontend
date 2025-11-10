@@ -53,6 +53,8 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
       // Invalidar queries para que se actualicen las listas de canciones
       queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
       queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+      // Invalidar la lista de grupos del usuario (donde se muestra el contador de canciones)
+      queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
       // Redirigir a la nueva canción
       router.push(`/grupos/${bandId}/canciones/${newSong?.id}`);
     }

@@ -77,10 +77,24 @@ export const useEditEvent = ({
     if (statusUpdateEvent === 'success') {
       toast.success('Evento actualizado correctamente');
 
-      // Invalidar las queries relacionadas para forzar refetch
-      queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
-      queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
-      queryClient.invalidateQueries({ queryKey: ['Event', bandId, eventId] });
+      // Invalidar y refetchear inmediatamente las queries relacionadas
+      queryClient.invalidateQueries({
+        queryKey: ['EventsOfBand', bandId],
+        refetchType: 'all',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['BandById', bandId],
+        refetchType: 'all',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['Event', bandId, eventId],
+        refetchType: 'all',
+      });
+      // Invalidar la lista de grupos del usuario (donde se muestran los eventos en las cards)
+      queryClient.invalidateQueries({
+        queryKey: ['BandsOfUser'],
+        refetchType: 'all',
+      });
 
       refetch();
       reset();
