@@ -47,7 +47,7 @@ export const addNewLyricService = ({
   params: { bandId: string; songId: string };
 }) => {
   return PostData<
-    { message: string },
+    LyricsProps,
     { structureId: number; lyrics: string; position: number }
   >({
     key: 'CreateNewLyric',
@@ -181,5 +181,19 @@ export const normalizeLyricsService = ({
     key: 'NormalizeLyrics',
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics/normalize`,
     method: 'POST',
+  });
+};
+
+export const parseAndUpdateSingleLyricService = ({
+  params,
+  lyricId,
+}: {
+  params: { bandId: string; songId: string };
+  lyricId: number;
+}) => {
+  return PostData<LyricsProps, { textContent: string }>({
+    key: 'ParseAndUpdateSingleLyric',
+    url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics/${lyricId}/parse-and-update`,
+    method: 'PATCH',
   });
 };

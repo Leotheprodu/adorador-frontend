@@ -1,11 +1,12 @@
 import { structureColors, structureLib } from '@global/config/constants';
 import React, { useEffect, useState } from 'react';
 import { LyricsCard } from './LyricsCard';
-import { AddOrUpdateLyricForm } from './AddOrUpdateLyricForm';
-import { AddSongIcon } from '@global/icons/AddSongIcon';
+import { MiniLyricsCreator } from './MiniLyricsCreator';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { useStore } from '@nanostores/react';
-import { TertiaryButton } from '@global/components/buttons';
+import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
+import { updateLyricsPositionsService } from '../_services/songIdServices';
+import toast from 'react-hot-toast';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -28,14 +29,58 @@ export const LyricsGroupedCard = ({
   showChords?: boolean;
   lyricsScale?: number;
 }) => {
-  const [addNewLyric, setAddNewLyric] = useState(false);
-  const [newPosition, setNewPosition] = useState(1);
+  const [insertPosition, setInsertPosition] = useState<number | null>(null);
+  const [lyricsOrder, setLyricsOrder] = useState<LyricsProps[]>([]);
+
+  const {
+    mutate: mutateUpdateLyricsPositions,
+    status: statusUpdateLyricsPositions,
+  } = updateLyricsPositionsService({ params });
 
   useEffect(() => {
-    if (lyrics.length > 0) {
-      setNewPosition(lyrics[lyrics.length - 1].position + 1);
-    }
+    setLyricsOrder([...lyrics].sort((a, b) => a.position - b.position));
   }, [lyrics]);
+
+  useEffect(() => {
+    if (statusUpdateLyricsPositions === 'success') {
+      toast.success('Orden actualizado');
+      refetchLyricsOfCurrentSong();
+    }
+  }, [statusUpdateLyricsPositions, refetchLyricsOfCurrentSong]);
+
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const updatedLyrics = [...lyricsOrder];
+    const [removed] = updatedLyrics.splice(result.source.index, 1);
+    updatedLyrics.splice(result.destination.index, 0, removed);
+
+    // Encontrar la posición base (la menor posición en este grupo)
+    const basePosition = Math.min(...lyricsOrder.map((l) => l.position));
+
+    // Actualizar las posiciones manteniendo el orden relativo al grupo
+    const reorderedLyrics = updatedLyrics.map((lyric, index) => ({
+      ...lyric,
+      position: basePosition + index,
+    }));
+
+    setLyricsOrder(reorderedLyrics);
+
+    // Enviar solo las letras que cambiaron de posición
+    const newPositions = reorderedLyrics
+      .filter((lyric, index) => {
+        const originalLyric = lyricsOrder[index];
+        return originalLyric.id !== lyric.id; // Cambió de posición
+      })
+      .map((lyric) => ({
+        id: lyric.id,
+        position: lyric.position,
+      }));
+
+    if (newPositions.length > 0) {
+      mutateUpdateLyricsPositions(newPositions);
+    }
+  };
 
   return (
     <div
@@ -52,43 +97,70 @@ export const LyricsGroupedCard = ({
       >
         {structureLib[structure].es}
       </h2>
-      <div className="flex flex-col gap-1">
-        {lyrics.map((lyric) => (
-          <LyricsCard
-            key={lyric.id}
-            lyric={lyric}
-            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-            params={params}
-            chordPreferences={chordPreferences}
-            lyricsOfCurrentSong={lyricsOfCurrentSong}
-            transpose={transpose}
-            showChords={showChords}
-            lyricsScale={lyricsScale}
-          />
-        ))}
-      </div>
-      <div className="mt-5">
-        {addNewLyric ? (
-          <AddOrUpdateLyricForm
-            LyricsOfCurrentSong={lyricsOfCurrentSong}
-            params={params}
-            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-            setAddNewLyric={setAddNewLyric}
-            newPosition={newPosition}
-            type="add"
-          />
-        ) : (
-          <TertiaryButton
-            onClick={() => setAddNewLyric(true)}
-            startContent={
-              <AddSongIcon className="h-4 w-4 transition-transform group-hover:rotate-90" />
-            }
-            className="w-auto text-sm"
-          >
-            Agregar línea de letra
-          </TertiaryButton>
-        )}
-      </div>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId={`lyrics-${structure}`}>
+          {(provided) => (
+            <div
+              className="flex flex-col gap-1"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {lyricsOrder.map((lyric, index) => (
+                <div key={lyric.id} className="group/lyric-wrapper relative">
+                  {/* Botón para insertar ANTES de esta letra */}
+                  {index === 0 && !insertPosition && (
+                    <button
+                      onClick={() => {
+                        setInsertPosition(lyric.position);
+                      }}
+                      className="mb-1 w-full rounded border-2 border-dashed border-transparent py-1 text-xs text-slate-400 opacity-0 transition-all hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 group-hover/lyric-wrapper:opacity-100"
+                    >
+                      + Insertar letra aquí
+                    </button>
+                  )}
+
+                  {insertPosition === lyric.position ? (
+                    <MiniLyricsCreator
+                      params={params}
+                      refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                      onClose={() => setInsertPosition(null)}
+                      lyricsOfCurrentSong={lyricsOfCurrentSong}
+                      newPosition={lyric.position}
+                      structureId={lyric.structure.id}
+                      lyricsScale={lyricsScale}
+                    />
+                  ) : (
+                    <LyricsCard
+                      lyric={lyric}
+                      index={index}
+                      refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                      params={params}
+                      chordPreferences={chordPreferences}
+                      lyricsOfCurrentSong={lyricsOfCurrentSong}
+                      transpose={transpose}
+                      showChords={showChords}
+                      lyricsScale={lyricsScale}
+                    />
+                  )}
+
+                  {/* Botón para insertar DESPUÉS de esta letra */}
+                  {!insertPosition && (
+                    <button
+                      onClick={() => {
+                        setInsertPosition(lyric.position + 1);
+                      }}
+                      className="mt-1 w-full rounded border-2 border-dashed border-transparent py-1 text-xs text-slate-400 opacity-0 transition-all hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 group-hover/lyric-wrapper:opacity-100"
+                    >
+                      + Insertar letra aquí
+                    </button>
+                  )}
+                </div>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };
