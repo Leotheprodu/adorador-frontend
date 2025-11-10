@@ -82,14 +82,30 @@ describe('useEventTimeLeft', () => {
 
   describe('Casos de eventos que ya comenzaron', () => {
     it('debe mostrar "El evento ha comenzado" para eventos de hoy que ya pasaron su hora', () => {
-      const today = new Date();
-      // Evento hoy, pero 1 hora atrás
-      const pastEventToday = new Date(today.setHours(today.getHours() - 1));
+      // Mockear la fecha actual para que sea 15:00 (3 PM) de hoy
+      const mockNow = new Date();
+      mockNow.setHours(15, 0, 0, 0);
+      jest.setSystemTime(mockNow);
+
+      // Crear evento de hoy a las 14:00 (1 hora atrás)
+      const pastEventToday = new Date(
+        mockNow.getFullYear(),
+        mockNow.getMonth(),
+        mockNow.getDate(),
+        14,
+        0,
+        0,
+        0,
+      );
 
       const { result } = renderHook(() => useEventTimeLeft(pastEventToday));
 
       expect(result.current.eventTimeLeft).toBe('El evento ha comenzado');
       expect(result.current.timeLeft).toBeLessThanOrEqual(0);
+
+      // Restaurar el tiempo real
+      jest.useRealTimers();
+      jest.useFakeTimers();
     });
 
     it('debe mostrar "El evento ya ha pasado" para eventos de días anteriores', () => {

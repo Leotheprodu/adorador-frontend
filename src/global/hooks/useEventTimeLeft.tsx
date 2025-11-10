@@ -39,13 +39,18 @@ export const useEventTimeLeft = (date: string | Date | undefined) => {
       if (timeLeft <= 0) {
         const now = new Date();
         const eventDate = new Date(date);
-        if (now.toDateString() === eventDate.toDateString()) {
-          if (now.getTime() < eventDate.getTime()) {
-            return formatTimeLeft(timeLeft);
-          } else {
-            return 'El evento ha comenzado';
-          }
+
+        // Comparar solo las fechas (año, mes, día) en hora local
+        const isSameDay =
+          now.getFullYear() === eventDate.getFullYear() &&
+          now.getMonth() === eventDate.getMonth() &&
+          now.getDate() === eventDate.getDate();
+
+        // Si es el mismo día (hoy), el evento ya comenzó
+        if (isSameDay) {
+          return 'El evento ha comenzado';
         } else {
+          // Si es un día diferente (ayer o anterior), el evento ya pasó
           return 'El evento ya ha pasado';
         }
       } else if (timeLeft <= 60000) {

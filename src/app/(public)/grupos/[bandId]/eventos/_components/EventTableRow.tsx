@@ -1,7 +1,13 @@
 import { formatDate, formatTime } from '@global/utils/dataFormat';
 import Link from 'next/link';
 import { EventsProps } from '../_interfaces/eventsInterface';
-import { CalendarIcon, ClockIcon, CheckIcon, EditIcon } from '@global/icons';
+import {
+  CalendarIcon,
+  ClockIcon,
+  CheckIcon,
+  EditIcon,
+  ArrowRightIcon,
+} from '@global/icons';
 import {
   Dropdown,
   DropdownTrigger,
@@ -71,7 +77,9 @@ export const EventTableRow = ({
               <>
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
                 <span className="hidden sm:inline">Próximo</span>
-                <span className="sm:hidden">📍</span>
+                <span className="sm:hidden">
+                  <CalendarIcon className="h-3 w-3" />
+                </span>
               </>
             ) : (
               <>
@@ -105,7 +113,7 @@ export const EventTableRow = ({
             {/* Tiempo restante - Solo mobile y eventos futuros */}
             {isUpcoming && eventTimeLeft && (
               <div className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-purple-600 sm:hidden">
-                <span>⏱️</span>
+                <ClockIcon className="h-3 w-3" />
                 <span>{eventTimeLeft}</span>
               </div>
             )}
@@ -132,7 +140,7 @@ export const EventTableRow = ({
         <td className="hidden px-4 py-3.5 sm:table-cell">
           {isUpcoming && eventTimeLeft && (
             <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 px-3 py-1.5 text-xs font-semibold text-brand-purple-700 ring-1 ring-brand-purple-200/50">
-              <span>⏱️</span>
+              <ClockIcon className="h-3 w-3" />
               <span>{eventTimeLeft}</span>
             </div>
           )}
@@ -152,19 +160,40 @@ export const EventTableRow = ({
                 <MenuButtonIcon />
               </Button>
             </DropdownTrigger>
-            <DropdownMenu>
+            <DropdownMenu
+              classNames={{
+                base: 'p-2 min-w-[220px]',
+                list: 'gap-1',
+              }}
+            >
               <DropdownItem
                 as={Link}
                 href={`/grupos/${bandId}/eventos/${event.id}`}
                 key="ver"
-                startContent={<span>→</span>}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple-100 to-brand-blue-100">
+                    <ArrowRightIcon className="h-4 w-4 text-brand-purple-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-brand-purple-50 data-[hover=true]:to-brand-blue-50',
+                  title: 'text-sm font-medium text-slate-700',
+                }}
               >
                 Ir a evento
               </DropdownItem>
               <DropdownItem
                 key="editar"
                 onClick={handleOpenModal}
-                startContent={<EditIcon className="h-5 w-5" />}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
+                    <EditIcon className="h-4 w-4 text-blue-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-blue-50 data-[hover=true]:to-indigo-50',
+                  title: 'text-sm font-medium text-slate-700',
+                }}
               >
                 Editar evento
               </DropdownItem>

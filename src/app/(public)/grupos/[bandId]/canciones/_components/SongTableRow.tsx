@@ -13,7 +13,15 @@ import {
 } from '@nextui-org/react';
 import { SongPropsWithCount } from '../_interfaces/songsInterface';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
-import { TrashIcon, MusicNoteIcon, EditIcon } from '@global/icons';
+import {
+  TrashIcon,
+  MusicNoteIcon,
+  EditIcon,
+  PlayIcon,
+  CalendarIcon,
+  XMarkIcon,
+  CheckIcon,
+} from '@global/icons';
 import { songTypes } from '@global/config/constants';
 import Link from 'next/link';
 import { $SelectedSong } from '@stores/player';
@@ -21,6 +29,8 @@ import { useStore } from '@nanostores/react';
 import { useDeleteSong } from '../_hooks/useDeleteSong';
 import { useEditSong } from '../_hooks/useEditSong';
 import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
+import { useAddSongToEvent } from '../_hooks/useAddSongToEvent';
+import { AddSongToEventModal } from './AddSongToEventModal';
 
 export const SongTableRow = ({
   song,
@@ -39,6 +49,21 @@ export const SongTableRow = ({
     songId: song.id.toString(),
     onSuccess: refetch,
     redirectOnDelete: false,
+  });
+
+  // Hook para agregar canción a evento
+  const {
+    isOpen: isAddToEventOpen,
+    onOpen: onAddToEventOpen,
+    onOpenChange: onAddToEventOpenChange,
+    upcomingEvents,
+    hasUpcomingEvents,
+    handleAddSongToEvent,
+    isAdding,
+  } = useAddSongToEvent({
+    bandId,
+    songId: song.id,
+    songTitle: song.title,
   });
 
   // Preparar datos para edición (convertir SongPropsWithCount a SongPropsWithoutId)
@@ -148,10 +173,12 @@ export const SongTableRow = ({
         <td className="hidden px-4 py-3.5 sm:table-cell">
           {song._count.lyrics === 0 ? (
             <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-red-100 to-orange-100 px-2.5 py-1 text-xs font-medium text-red-700">
-              ⚠️ Sin letra
+              <XMarkIcon className="h-3 w-3" /> Sin letra
             </span>
           ) : (
-            <span className="text-sm text-emerald-600">✓</span>
+            <span className="inline-flex items-center gap-1 text-sm text-emerald-600">
+              <CheckIcon className="h-4 w-4" />
+            </span>
           )}
         </td>
 
@@ -170,13 +197,33 @@ export const SongTableRow = ({
               </Button>
             </DropdownTrigger>
             <DropdownMenu
-              disabledKeys={song._count.lyrics > 0 ? ['delete'] : []}
+              disabledKeys={
+                song._count.lyrics > 0
+                  ? hasUpcomingEvents
+                    ? ['delete']
+                    : ['delete', 'add-to-event']
+                  : hasUpcomingEvents
+                    ? []
+                    : ['add-to-event']
+              }
+              classNames={{
+                base: 'p-2 min-w-[220px]',
+                list: 'gap-1',
+              }}
             >
               <DropdownItem
                 as={Link}
                 href={`/grupos/${bandId}/canciones/${song.id}`}
                 key="Ir"
-                startContent={<MusicNoteIcon className="h-5 w-5" />}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple-100 to-brand-blue-100">
+                    <MusicNoteIcon className="h-4 w-4 text-brand-purple-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-brand-purple-50 data-[hover=true]:to-brand-blue-50',
+                  title: 'text-sm font-medium text-slate-700',
+                }}
               >
                 Ir a canción
               </DropdownItem>
@@ -192,23 +239,61 @@ export const SongTableRow = ({
                   });
                 }}
                 key="escuchar"
-                startContent={<span className="text-lg">▶️</span>}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-100 to-green-100">
+                    <PlayIcon className="h-4 w-4 text-emerald-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-emerald-50 data-[hover=true]:to-green-50',
+                  title: 'text-sm font-medium text-slate-700',
+                }}
               >
                 Escuchar
               </DropdownItem>
               <DropdownItem
                 key="editar"
                 onClick={handleOpenModal}
-                startContent={<EditIcon className="h-5 w-5" />}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
+                    <EditIcon className="h-4 w-4 text-blue-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-blue-50 data-[hover=true]:to-indigo-50',
+                  title: 'text-sm font-medium text-slate-700',
+                }}
               >
                 Editar canción
               </DropdownItem>
               <DropdownItem
+                key="add-to-event"
+                onClick={onAddToEventOpen}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-orange-100">
+                    <CalendarIcon className="h-4 w-4 text-amber-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-amber-50 data-[hover=true]:to-orange-50 data-[disabled=true]:opacity-50',
+                  title: 'text-sm font-medium text-slate-700',
+                }}
+              >
+                Agregar a evento
+              </DropdownItem>
+              <DropdownItem
                 key="delete"
-                className="text-danger"
-                color="danger"
                 onClick={onOpen}
-                startContent={<TrashIcon className="h-4 w-4" />}
+                startContent={
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-red-100 to-rose-100">
+                    <TrashIcon className="h-4 w-4 text-red-700" />
+                  </div>
+                }
+                classNames={{
+                  base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-red-50 data-[hover=true]:to-rose-50 data-[disabled=true]:opacity-50',
+                  title:
+                    'text-sm font-medium text-slate-700 data-[hover=true]:text-red-700',
+                }}
               >
                 Eliminar
               </DropdownItem>
@@ -224,8 +309,8 @@ export const SongTableRow = ({
             <>
               <ModalHeader className="flex flex-col gap-2 bg-gradient-to-r from-red-50 to-orange-50 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-orange-500 text-xl shadow-md">
-                    ⚠️
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-orange-500 shadow-md">
+                    <TrashIcon className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <h2 className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-xl font-bold text-transparent">
@@ -246,8 +331,9 @@ export const SongTableRow = ({
                   ?
                 </p>
                 <div className="mt-2 rounded-lg bg-red-50 p-3">
-                  <p className="text-sm font-medium text-red-700">
-                    ⚠️ Esta acción no se puede deshacer
+                  <p className="flex items-center gap-2 text-sm font-medium text-red-700">
+                    <XMarkIcon className="h-4 w-4" /> Esta acción no se puede
+                    deshacer
                   </p>
                 </div>
               </ModalBody>
@@ -306,6 +392,16 @@ export const SongTableRow = ({
           )}
         </ModalContent>
       </Modal>
+
+      {/* Modal de agregar a evento */}
+      <AddSongToEventModal
+        isOpen={isAddToEventOpen}
+        onOpenChange={onAddToEventOpenChange}
+        upcomingEvents={upcomingEvents}
+        onSelectEvent={handleAddSongToEvent}
+        isLoading={isAdding}
+        songTitle={song.title}
+      />
     </>
   );
 };
