@@ -7,17 +7,24 @@ import { useStore } from '@nanostores/react';
 import { $event } from '@stores/event';
 import { useQueryClient } from '@tanstack/react-query';
 
+interface EventDataForEdit {
+  title: string;
+  date: string | Date;
+}
+
 export const useEditEvent = ({
   bandId,
   eventId,
   refetch,
+  eventData,
 }: {
   bandId: string;
   eventId: string;
   refetch: () => void;
+  eventData?: EventDataForEdit;
 }) => {
   const queryClient = useQueryClient();
-  const eventData = useStore($event);
+  const eventDataFromStore = useStore($event);
   const [form, setForm] = useState({
     title: '',
     date: '',
@@ -29,9 +36,12 @@ export const useEditEvent = ({
     reset,
   } = updateEventService({ bandId, eventId });
 
+  // Usar eventData si está disponible, de lo contrario usar el store
+  const currentEventData = eventData || eventDataFromStore;
+
   // Verificar si el evento ya pasó
-  const eventHasPassed = eventData.date
-    ? new Date(eventData.date) < new Date()
+  const eventHasPassed = currentEventData.date
+    ? new Date(currentEventData.date) < new Date()
     : false;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,8 +65,8 @@ export const useEditEvent = ({
 
   // Pre-cargar datos del evento cuando se abre el modal
   const handleOpenModal = () => {
-    if (eventData.title && eventData.date) {
-      const eventDate = new Date(eventData.date);
+    if (currentEventData.title && currentEventData.date) {
+      const eventDate = new Date(currentEventData.date);
       // Ajustar la fecha a la zona horaria local para evitar desfase
       const year = eventDate.getFullYear();
       const month = String(eventDate.getMonth() + 1).padStart(2, '0');
@@ -66,7 +76,7 @@ export const useEditEvent = ({
       const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
       setForm({
-        title: eventData.title,
+        title: currentEventData.title,
         date: localDateTime,
       });
     }

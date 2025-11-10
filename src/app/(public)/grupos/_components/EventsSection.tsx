@@ -10,9 +10,9 @@ export const EventsSection = ({ data, bandId }) => {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       {/* Header de la sección */}
-      <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+      <div className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-purple-600">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-purple-600">
             <CalendarIcon className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -24,7 +24,7 @@ export const EventsSection = ({ data, bandId }) => {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {hasMany && (
             <Button
               as={Link}
@@ -32,7 +32,9 @@ export const EventsSection = ({ data, bandId }) => {
               size="sm"
               className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
             >
-              Ver todos ({data?._count.events})
+              <span className="whitespace-nowrap">
+                Ver todos ({data?._count.events})
+              </span>
             </Button>
           )}
           <AddEventButton bandId={bandId} />

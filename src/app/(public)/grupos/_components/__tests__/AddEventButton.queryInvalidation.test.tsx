@@ -90,7 +90,7 @@ describe('AddEventButton - Query Invalidation', () => {
     });
   });
 
-  it('should invalidate queries BEFORE redirecting to new event', async () => {
+  it('should invalidate queries and close modal after successful event creation (no redirect)', async () => {
     const { rerender } = render(<AddEventButton bandId={mockBandId} />);
 
     mockStatus = 'success';
@@ -104,9 +104,8 @@ describe('AddEventButton - Query Invalidation', () => {
 
     await waitFor(() => {
       expect(mockInvalidateQueries).toHaveBeenCalled();
-      expect(mockRouterPush).toHaveBeenCalledWith(
-        `/grupos/${mockBandId}/eventos/${mockNewEventId}`,
-      );
+      // Ya NO debe redirigir - el usuario elige cuándo ir al evento
+      expect(mockRouterPush).not.toHaveBeenCalled();
     });
   });
 
