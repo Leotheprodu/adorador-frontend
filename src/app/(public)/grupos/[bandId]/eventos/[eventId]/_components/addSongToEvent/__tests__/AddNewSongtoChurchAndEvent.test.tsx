@@ -276,28 +276,33 @@ describe('AddNewSongtoChurchAndEvent', () => {
   });
 
   it('should navigate to song when checkbox is selected', async () => {
-    mockAddSongsToBandService.mockReturnValue(
-      createMutationMock({
-        mutate: mockMutateAddSong,
-        status: 'success',
-        isSuccess: true,
-        isIdle: false,
-        data: { id: 456 },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }) as any,
+    let addSongStatus = 'idle';
+    let addToEventStatus = 'idle';
+
+    mockAddSongsToBandService.mockImplementation(
+      () =>
+        createMutationMock({
+          mutate: mockMutateAddSong,
+          status: addSongStatus,
+          isSuccess: addSongStatus === 'success',
+          isIdle: addSongStatus === 'idle',
+          data: addSongStatus === 'success' ? { id: 456 } : undefined,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }) as any,
     );
 
-    mockAddSongsToEventService.mockReturnValue(
-      createMutationMock({
-        mutate: mockMutateAddToEvent,
-        status: 'success',
-        isSuccess: true,
-        isIdle: false,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }) as any,
+    mockAddSongsToEventService.mockImplementation(
+      () =>
+        createMutationMock({
+          mutate: mockMutateAddToEvent,
+          status: addToEventStatus,
+          isSuccess: addToEventStatus === 'success',
+          isIdle: addToEventStatus === 'idle',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }) as any,
     );
 
-    render(
+    const { rerender } = render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
         setIsOpenPopover={mockSetIsOpenPopover}
@@ -306,16 +311,43 @@ describe('AddNewSongtoChurchAndEvent', () => {
     );
 
     const buttons = screen.getAllByText(/Nueva Canción/);
-    const button = buttons[0]; // Get the first button
+    const button = buttons[0];
     fireEvent.click(button);
 
     await waitFor(() => {
       expect(screen.getByText(/Crear Nueva Canción/)).toBeInTheDocument();
     });
 
+    // Seleccionar el checkbox
     const checkbox = screen.getByText(/Ir a la canción después de crear/);
     fireEvent.click(checkbox);
 
+    // Simular creación exitosa de la canción
+    addSongStatus = 'success';
+    rerender(
+      <AddNewSongtoChurchAndEvent
+        params={mockParams}
+        setIsOpenPopover={mockSetIsOpenPopover}
+        refetch={mockRefetch}
+      />,
+    );
+
+    // Esperar a que se agregue al evento
+    await waitFor(() => {
+      expect(mockMutateAddToEvent).toHaveBeenCalled();
+    });
+
+    // Simular que se agregó al evento exitosamente
+    addToEventStatus = 'success';
+    rerender(
+      <AddNewSongtoChurchAndEvent
+        params={mockParams}
+        setIsOpenPopover={mockSetIsOpenPopover}
+        refetch={mockRefetch}
+      />,
+    );
+
+    // Verificar que se redirige
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith('/grupos/1/canciones/456');
     });

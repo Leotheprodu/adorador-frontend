@@ -1,12 +1,12 @@
 import {
   Button,
+  Checkbox,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  Checkbox,
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { addSongsToEventService } from './services/AddSongsToEventService';
@@ -14,13 +14,13 @@ import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsI
 import toast from 'react-hot-toast';
 import { useStore } from '@nanostores/react';
 import { $event } from '@stores/event';
-import { useRouter } from 'next/navigation';
 import {
   addSongsToBandService,
   getSongsOfBand,
 } from '@bands/[bandId]/canciones/_services/songsOfBandService';
 import { handleOnChange } from '@global/utils/formUtils';
 import { FormAddNewSong } from './FormAddNewSong';
+import { useRouter } from 'next/navigation';
 export const AddNewSongtoChurchAndEvent = ({
   params,
   setIsOpenPopover,
@@ -39,11 +39,11 @@ export const AddNewSongtoChurchAndEvent = ({
     tempo: 0,
   };
   const [form, setForm] = useState<SongPropsWithoutId>(formInit);
-  const router = useRouter();
-  const event = useStore($event);
   const [goToSong, setGoToSong] = useState(false);
+  const event = useStore($event);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { bandId } = params;
+  const router = useRouter();
   const { data: songsOfChurch, status: statusGetSongs } = getSongsOfBand({
     bandId,
   });
@@ -83,13 +83,16 @@ export const AddNewSongtoChurchAndEvent = ({
     if (statusAddSongToEvent === 'success') {
       toast.success('Canción agregada al evento');
       refetch();
-      if (goToSong) {
-        router.push(`/grupos/${params.bandId}/canciones/${newSong?.id}`);
-      }
       onOpenChange();
+      setForm(formInit);
+
+      // Si el usuario eligió ir a la canción, redirigir
+      if (goToSong && newSong?.id) {
+        router.push(`/grupos/${bandId}/canciones/${newSong.id}`);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusAddSongToEvent, newSong, goToSong, params]);
+  }, [statusAddSongToEvent]);
 
   const handleAddSongToChurchAndEvent = () => {
     if (form.title === '') {
@@ -157,44 +160,44 @@ export const AddNewSongtoChurchAndEvent = ({
                   setForm={setForm}
                   handleChange={handleChange}
                 />
-              </ModalBody>
-              <ModalFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-center">
                 <Checkbox
                   isSelected={goToSong}
-                  onChange={() => setGoToSong(!goToSong)}
+                  onValueChange={setGoToSong}
+                  size="sm"
+                  className="mt-2"
                   classNames={{
-                    label: 'text-sm text-slate-700',
+                    label: 'text-sm text-slate-600',
                   }}
                 >
                   Ir a la canción después de crear
                 </Checkbox>
-                <div className="flex gap-2">
-                  <Button
-                    color="danger"
-                    variant="light"
-                    onPress={onClose}
-                    className="font-medium"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    onPress={handleAddSongToChurchAndEvent}
-                    isDisabled={
-                      statusAddSongToChurch === 'pending' ||
-                      statusAddSongToEvent === 'pending'
-                    }
-                    isLoading={
-                      statusAddSongToChurch === 'pending' ||
-                      statusAddSongToEvent === 'pending'
-                    }
-                    className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white"
-                  >
-                    {statusAddSongToChurch === 'pending' ||
+              </ModalBody>
+              <ModalFooter className="flex gap-2">
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  className="font-medium"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onPress={handleAddSongToChurchAndEvent}
+                  isDisabled={
+                    statusAddSongToChurch === 'pending' ||
                     statusAddSongToEvent === 'pending'
-                      ? 'Creando...'
-                      : 'Crear Canción'}
-                  </Button>
-                </div>
+                  }
+                  isLoading={
+                    statusAddSongToChurch === 'pending' ||
+                    statusAddSongToEvent === 'pending'
+                  }
+                  className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white"
+                >
+                  {statusAddSongToChurch === 'pending' ||
+                  statusAddSongToEvent === 'pending'
+                    ? 'Creando...'
+                    : 'Crear Canción'}
+                </Button>
               </ModalFooter>
             </>
           )}

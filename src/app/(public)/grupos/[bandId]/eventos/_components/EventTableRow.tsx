@@ -1,0 +1,191 @@
+import { formatDate, formatTime } from '@global/utils/dataFormat';
+import Link from 'next/link';
+import { EventsProps } from '../_interfaces/eventsInterface';
+import { CalendarIcon, ClockIcon, CheckIcon, EditIcon } from '@global/icons';
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from '@nextui-org/react';
+import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
+import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEditEvent';
+import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
+
+export const EventTableRow = ({
+  event,
+  bandId,
+  refetch,
+}: {
+  event: EventsProps;
+  bandId: string;
+  refetch?: () => void;
+}) => {
+  const {
+    form,
+    setForm,
+    isOpen,
+    onOpenChange,
+    handleChange,
+    handleUpdateEvent,
+    handleOpenModal,
+    statusUpdateEvent,
+  } = useEditEvent({
+    bandId,
+    eventId: event.id.toString(),
+    refetch: refetch || (() => {}),
+    eventData: {
+      title: event.title,
+      date: event.date,
+    },
+  });
+
+  const currentDate = new Date();
+  const isUpcoming = currentDate < new Date(event.date);
+
+  return (
+    <>
+      <tr
+        className={`group border-b border-slate-100 transition-colors duration-150 hover:bg-slate-50 ${
+          isUpcoming ? 'bg-emerald-50/30' : ''
+        }`}
+      >
+        {/* Estado - Visible en mobile y desktop */}
+        <td className="px-3 py-3 sm:px-4 sm:py-3.5">
+          <div
+            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold sm:px-2.5 ${
+              isUpcoming
+                ? 'bg-emerald-100 text-emerald-700'
+                : 'bg-slate-100 text-slate-600'
+            }`}
+          >
+            {isUpcoming ? (
+              <>
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+                <span className="hidden sm:inline">Próximo</span>
+                <span className="sm:hidden">📍</span>
+              </>
+            ) : (
+              <>
+                <CheckIcon className="h-3 w-3" />
+                <span className="hidden sm:inline">Finalizado</span>
+              </>
+            )}
+          </div>
+        </td>
+
+        {/* Título y fecha/hora en mobile */}
+        <td className="px-3 py-3 sm:px-4 sm:py-3.5">
+          <Link
+            href={`/grupos/${bandId}/eventos/${event.id}`}
+            className="flex flex-col gap-1"
+          >
+            <span className="font-medium text-slate-900 transition-colors group-hover:text-brand-purple-600">
+              {event.title}
+            </span>
+            {/* Info adicional solo en mobile */}
+            <div className="flex flex-wrap gap-2 text-xs text-slate-600 sm:hidden">
+              <span className="flex items-center gap-1">
+                <CalendarIcon className="h-3 w-3" />
+                {formatDate(event.date)}
+              </span>
+              <span className="flex items-center gap-1">
+                <ClockIcon className="h-3 w-3" />
+                {formatTime(event.date)}
+              </span>
+            </div>
+          </Link>
+        </td>
+
+        {/* Fecha - Solo Desktop */}
+        <td className="hidden px-4 py-3.5 sm:table-cell">
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <CalendarIcon className="h-4 w-4 text-slate-400" />
+            <span>{formatDate(event.date)}</span>
+          </div>
+        </td>
+
+        {/* Hora - Solo Desktop */}
+        <td className="hidden px-4 py-3.5 sm:table-cell">
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <ClockIcon className="h-4 w-4 text-slate-400" />
+            <span>{formatTime(event.date)}</span>
+          </div>
+        </td>
+
+        {/* Acciones */}
+        <td className="px-3 py-3 text-right sm:px-4 sm:py-3.5">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button
+                isIconOnly
+                variant="light"
+                size="sm"
+                className="min-w-0 rounded-lg p-1.5 transition-all hover:bg-brand-purple-100 active:scale-95"
+                aria-label="Menú de opciones"
+              >
+                <MenuButtonIcon />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              <DropdownItem
+                as={Link}
+                href={`/grupos/${bandId}/eventos/${event.id}`}
+                key="ver"
+                startContent={<span>→</span>}
+              >
+                Ir a evento
+              </DropdownItem>
+              <DropdownItem
+                key="editar"
+                onClick={handleOpenModal}
+                startContent={<EditIcon className="h-5 w-5" />}
+              >
+                Editar evento
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </td>
+      </tr>
+
+      {/* Modal de edición */}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Editar evento
+              </ModalHeader>
+              <ModalBody>
+                <FormAddNewEvent
+                  form={form}
+                  setForm={setForm}
+                  handleChange={handleChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="warning" variant="light" onPress={onClose}>
+                  Cerrar
+                </Button>
+                <Button
+                  isLoading={statusUpdateEvent === 'pending'}
+                  disabled={statusUpdateEvent === 'success'}
+                  color="primary"
+                  onPress={handleUpdateEvent}
+                >
+                  Actualizar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
