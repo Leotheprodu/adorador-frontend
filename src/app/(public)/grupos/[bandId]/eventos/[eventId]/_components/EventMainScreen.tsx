@@ -349,6 +349,7 @@ export const EventMainScreen = () => {
             onMainAction={startSong}
             mainActionIcon="start"
             isEventManager={isEventManager}
+            isFullscreen={isFullscreen}
           />
         </div>
       )}
@@ -369,6 +370,7 @@ export const EventMainScreen = () => {
               onMainAction={startSong}
               mainActionIcon="restart"
               isEventManager={isEventManager}
+              isFullscreen={isFullscreen}
             />
           </div>
         )}

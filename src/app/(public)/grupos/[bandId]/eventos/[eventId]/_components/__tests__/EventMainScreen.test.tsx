@@ -121,6 +121,10 @@ jest.mock('@stores/event', () => {
 const mockSendMessage = jest.fn();
 const mockActivateFullscreen = jest.fn();
 
+// Variable controlable para isFullscreen
+// eslint-disable-next-line prefer-const
+let mockIsFullscreen = false;
+
 jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway', () => ({
   useEventGateway: () => ({
     sendMessage: mockSendMessage,
@@ -129,7 +133,7 @@ jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway', () => ({
 
 jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen', () => ({
   useFullscreen: () => ({
-    isFullscreen: false,
+    isFullscreen: mockIsFullscreen,
     isSupported: true,
     activateFullscreen: mockActivateFullscreen,
     exitFullscreen: jest.fn(),
@@ -288,6 +292,8 @@ const mockEventData = {
 describe('EventMainScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Reset fullscreen state
+    mockIsFullscreen = true; // Por defecto en fullscreen para los tests existentes
     // Reset stores
     $event.set(mockEventData);
     $eventSelectedSongId.set(2);
@@ -400,6 +406,84 @@ describe('EventMainScreen', () => {
       ).not.toBeInTheDocument();
       expect(screen.queryByText('Anterior')).not.toBeInTheDocument();
       expect(screen.queryByText('Siguiente')).not.toBeInTheDocument();
+    });
+
+    it('NO debería mostrar botones cuando NO está en fullscreen (aunque sea admin)', () => {
+      mockIsFullscreen = false;
+      $lyricSelected.set({ position: 0, action: 'forward' });
+      render(<EventMainScreen />);
+
+      expect(
+        screen.queryByRole('button', { name: /iniciar canción/i }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Anterior')).not.toBeInTheDocument();
+      expect(screen.queryByText('Siguiente')).not.toBeInTheDocument();
+    });
+
+    it('NO debería mostrar botones cuando NO está en fullscreen (aunque sea event manager)', () => {
+      mockIsFullscreen = false;
+      $user.set({
+        id: 1,
+        name: 'Test User',
+        email: 'test@example.com',
+        phone: '',
+        birthdate: '',
+        status: 'active',
+        isLoggedIn: true,
+        roles: [],
+        memberships: [],
+        membersofBands: [
+          {
+            id: 1,
+            isActive: true,
+            isAdmin: false,
+            isEventManager: true,
+            role: 'member',
+            band: { id: 1, name: 'Mi Banda' },
+          },
+        ],
+      });
+      $lyricSelected.set({ position: 0, action: 'forward' });
+      render(<EventMainScreen />);
+
+      expect(
+        screen.queryByRole('button', { name: /iniciar canción/i }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Anterior')).not.toBeInTheDocument();
+      expect(screen.queryByText('Siguiente')).not.toBeInTheDocument();
+    });
+
+    it('debería mostrar botones SOLO cuando está en fullscreen Y es event manager', () => {
+      mockIsFullscreen = true;
+      $user.set({
+        id: 1,
+        name: 'Test User',
+        email: 'test@example.com',
+        phone: '',
+        birthdate: '',
+        status: 'active',
+        isLoggedIn: true,
+        roles: [],
+        memberships: [],
+        membersofBands: [
+          {
+            id: 1,
+            isActive: true,
+            isAdmin: false,
+            isEventManager: true,
+            role: 'member',
+            band: { id: 1, name: 'Mi Banda' },
+          },
+        ],
+      });
+      $lyricSelected.set({ position: 0, action: 'forward' });
+      render(<EventMainScreen />);
+
+      expect(
+        screen.getByRole('button', { name: /iniciar canción/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByText('Anterior')).toBeInTheDocument();
+      expect(screen.getByText('Siguiente')).toBeInTheDocument();
     });
   });
 
@@ -554,6 +638,38 @@ describe('EventMainScreen', () => {
         },
       });
     });
+
+    it('NO debería mostrar botones en pantalla "Fin" cuando NO está en fullscreen', () => {
+      mockIsFullscreen = false;
+      $eventSelectedSongId.set(2);
+      $selectedSongData.set(mockEventData.songs[1]);
+      $selectedSongLyricLength.set(2);
+      $lyricSelected.set({ position: 3, action: 'forward' });
+      render(<EventMainScreen />);
+
+      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /reiniciar canción/i }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Anterior')).not.toBeInTheDocument();
+      expect(screen.queryByText('Siguiente')).not.toBeInTheDocument();
+    });
+
+    it('debería mostrar botones en pantalla "Fin" SOLO cuando está en fullscreen Y es event manager', () => {
+      mockIsFullscreen = true;
+      $eventSelectedSongId.set(2);
+      $selectedSongData.set(mockEventData.songs[1]);
+      $selectedSongLyricLength.set(2);
+      $lyricSelected.set({ position: 3, action: 'forward' });
+      render(<EventMainScreen />);
+
+      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /reiniciar canción/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByText('Anterior')).toBeInTheDocument();
+      expect(screen.getByText('Siguiente')).toBeInTheDocument();
+    });
   });
 
   describe('Visualización de letras', () => {
@@ -623,6 +739,7 @@ describe('EventMainScreen', () => {
 
   describe('Botón de pantalla completa', () => {
     it('debería mostrar botón de pantalla completa cuando no está en fullscreen', () => {
+      mockIsFullscreen = false; // Asegurar que NO está en fullscreen
       render(<EventMainScreen />);
 
       const fullscreenButton = screen.getByLabelText(
@@ -632,6 +749,7 @@ describe('EventMainScreen', () => {
     });
 
     it('debería llamar activateFullscreen al hacer clic', () => {
+      mockIsFullscreen = false; // Asegurar que NO está en fullscreen
       render(<EventMainScreen />);
 
       const fullscreenButton = screen.getByLabelText(

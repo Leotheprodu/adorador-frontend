@@ -11,6 +11,7 @@ interface SongNavigationButtonsProps {
   onMainAction: () => void;
   mainActionIcon: 'start' | 'restart';
   isEventManager: boolean;
+  isFullscreen: boolean;
 }
 
 export const SongNavigationButtons = ({
@@ -21,8 +22,10 @@ export const SongNavigationButtons = ({
   onMainAction,
   mainActionIcon,
   isEventManager,
+  isFullscreen,
 }: SongNavigationButtonsProps) => {
-  if (!isEventManager) return null;
+  // Solo mostrar los botones si el usuario es event manager Y está en fullscreen
+  if (!isEventManager || !isFullscreen) return null;
 
   const MainIcon = mainActionIcon === 'start' ? ForwardIcon : BackwardIcon;
   const mainTitle =
