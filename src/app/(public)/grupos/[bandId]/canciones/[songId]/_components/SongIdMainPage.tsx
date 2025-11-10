@@ -15,7 +15,6 @@ import { LyricsGroupedCard } from './LyricsGroupedCard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { StoredLyricsAlert } from './StoredLyricsAlert';
 import { EditLyricsOptions } from './EditLyricsOptions';
-import { SongViewControls } from './SongViewControls';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -158,15 +157,10 @@ export const SongIdMainPage = ({
             data={data}
             status={status}
             refetch={refetch}
+            lyrics={LyricsOfCurrentSong}
+            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
           />
         </section>
-
-        {/* Controls Section - Only show when lyrics exist */}
-        {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 && (
-          <section className="mb-6 w-full px-4">
-            <SongViewControls songId={params.songId} />
-          </section>
-        )}
 
         {/* Lyrics Section - Vertical Layout */}
         <section className="px-4">

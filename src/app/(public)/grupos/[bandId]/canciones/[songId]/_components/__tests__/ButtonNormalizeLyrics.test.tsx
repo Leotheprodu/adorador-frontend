@@ -58,7 +58,7 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    expect(screen.getByText('Normalizar Letras')).toBeInTheDocument();
+    expect(screen.getByText('Normalizar')).toBeInTheDocument();
   });
 
   it('should not render when lyrics array is empty', () => {
@@ -82,7 +82,7 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
+    const button = screen.getByText('Normalizar');
     fireEvent.click(button);
 
     expect(
@@ -99,7 +99,7 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
+    const button = screen.getByText('Normalizar');
     fireEvent.click(button);
 
     expect(screen.getByText(/2 letras/)).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
+    const button = screen.getByText('Normalizar');
     fireEvent.click(button);
 
     expect(screen.getByText(/¿Qué hace la normalización?/)).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
+    const button = screen.getByText('Normalizar');
     fireEvent.click(button);
 
     expect(
@@ -148,7 +148,7 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
+    const button = screen.getByText('Normalizar');
     fireEvent.click(button);
 
     expect(
@@ -168,11 +168,11 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
+    const button = screen.getByText('Normalizar');
     expect(button).not.toBeDisabled();
   });
 
-  it('should show emoji icon', () => {
+  it('should not show emoji icon (removed for minimalist design)', () => {
     render(
       <ButtonNormalizeLyrics
         params={mockParams}
@@ -181,10 +181,10 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    expect(screen.getByText('✨')).toBeInTheDocument();
+    expect(screen.queryByText('✨')).not.toBeInTheDocument();
   });
 
-  it('should apply correct CSS classes', () => {
+  it('should apply correct minimalist CSS classes', () => {
     render(
       <ButtonNormalizeLyrics
         params={mockParams}
@@ -193,11 +193,10 @@ describe('ButtonNormalizeLyrics', () => {
       />,
     );
 
-    const button = screen.getByText('Normalizar Letras');
-    expect(button.parentElement).toHaveClass(
-      'border-primary-300',
-      'bg-primary-50',
-      'text-primary-700',
-    );
+    const button = screen.getByText('Normalizar');
+    expect(button).toHaveClass('border-2');
+    expect(button).toHaveClass('border-slate-200');
+    expect(button).toHaveClass('hover:border-brand-purple-300');
+    expect(button).toHaveClass('bg-white');
   });
 });

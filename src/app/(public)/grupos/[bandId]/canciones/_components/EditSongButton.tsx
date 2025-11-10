@@ -9,6 +9,7 @@ import {
 import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
 import { useEditSong } from '@bands/[bandId]/canciones/_hooks/useEditSong';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
+import { EditIcon } from '@global/icons';
 
 export const EditSongButton = ({
   bandId,
@@ -35,11 +36,12 @@ export const EditSongButton = ({
   return (
     <>
       <Button
+        size="sm"
         onClick={handleOpenModal}
-        className="bg-gradient-to-r from-brand-purple-500 to-brand-blue-500 font-semibold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg active:scale-95"
-        startContent={<span className="text-lg">✏️</span>}
+        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+        startContent={<EditIcon className="h-4 w-4" />}
       >
-        Editar Información
+        Editar
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
