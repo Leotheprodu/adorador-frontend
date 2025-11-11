@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react';
-import { LyricsShowcaseCard } from '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcaseCard';
-import { NextLinePreview } from '@bands/[bandId]/eventos/[eventId]/_components/NextLinePreview';
+import { LyricsShowcaseCard } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/LyricsShowcaseCard';
+import { NextLinePreview } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/NextLinePreview';
 import { AnimatePresence, motion } from 'framer-motion';
 import { $eventConfig, $lyricSelected, $selectedSongData } from '@stores/event';
 import { useMemo } from 'react';

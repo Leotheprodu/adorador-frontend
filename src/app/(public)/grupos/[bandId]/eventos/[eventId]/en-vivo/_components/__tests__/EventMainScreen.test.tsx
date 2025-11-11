@@ -125,13 +125,13 @@ const mockActivateFullscreen = jest.fn();
 // eslint-disable-next-line prefer-const
 let mockIsFullscreen = false;
 
-jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway', () => ({
+jest.mock('@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway', () => ({
   useEventGateway: () => ({
     sendMessage: mockSendMessage,
   }),
 }));
 
-jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen', () => ({
+jest.mock('@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useFullscreen', () => ({
   useFullscreen: () => ({
     isFullscreen: mockIsFullscreen,
     isSupported: true,
@@ -142,7 +142,7 @@ jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen', () => ({
 }));
 
 jest.mock(
-  '@bands/[bandId]/eventos/[eventId]/_hooks/useHandleEventLeft',
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useHandleEventLeft',
   () => ({
     useHandleEventLeft: () => ({
       eventDateLeft: '2 horas',
@@ -151,7 +151,7 @@ jest.mock(
 );
 
 jest.mock(
-  '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcase',
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/LyricsShowcase',
   () => ({
     LyricsShowcase: () => <div data-testid="lyrics-showcase">Lyrics</div>,
   }),

@@ -20,18 +20,21 @@ jest.mock('@bands/_components/AddEventButton', () => ({
     <button data-testid="add-event-button">Add Event {bandId}</button>
   ),
 }));
-jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useEditEvent', () => ({
-  useEditEvent: () => ({
-    form: { title: '', date: '' },
-    setForm: jest.fn(),
-    isOpen: false,
-    onOpenChange: jest.fn(),
-    handleChange: jest.fn(),
-    handleUpdateEvent: jest.fn(),
-    handleOpenModal: jest.fn(),
-    statusUpdateEvent: 'idle',
+jest.mock(
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEditEvent',
+  () => ({
+    useEditEvent: () => ({
+      form: { title: '', date: '' },
+      setForm: jest.fn(),
+      isOpen: false,
+      onOpenChange: jest.fn(),
+      handleChange: jest.fn(),
+      handleUpdateEvent: jest.fn(),
+      handleOpenModal: jest.fn(),
+      statusUpdateEvent: 'idle',
+    }),
   }),
-}));
+);
 jest.mock('@bands/[bandId]/eventos/_components/FormAddNewEvent', () => ({
   FormAddNewEvent: () => <div data-testid="form-add-new-event">Form</div>,
 }));

@@ -1,9 +1,9 @@
 import { songTypes } from '@global/config/constants';
-import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
+import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
 import { $event, $eventSelectedSongId } from '@stores/event';
 import { useStore } from '@nanostores/react';
-import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
-import { UpdatingSongList } from '@bands/[bandId]/eventos/[eventId]/_components/updatingElements/UpdatingSongList';
+import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway';
+import { UpdatingSongList } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/UpdatingSongList';
 import { AddSongEventButton } from './addSongToEvent/AddSongEventButton';
 import { Spinner } from '@nextui-org/react';
 

@@ -4,7 +4,7 @@ import {
   $selectedSongData,
   $selectedSongLyricLength,
 } from '@stores/event';
-import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
+import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway';
 import { useStore } from '@nanostores/react';
 import { useEffect } from 'react';
 

@@ -1,6 +1,6 @@
-/* import { EventControlsButtonsLiveMessages } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtonsLiveMessages'; */
-import { EventControlsButtonsScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtonsScreen';
-import { EventControlsButtonsSwipe } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtonsSwipe';
+/* import { EventControlsButtonsLiveMessages } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtonsLiveMessages'; */
+import { EventControlsButtonsScreen } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtonsScreen';
+import { EventControlsButtonsSwipe } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtonsSwipe';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { userRoles } from '@global/config/constants';

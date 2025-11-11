@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useStore } from '@nanostores/react';
 import { $lyricSelected, $eventConfig } from '@stores/event';
-import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
+import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway';
 
 interface UseEventControlsProps {
   isFullscreen: boolean;

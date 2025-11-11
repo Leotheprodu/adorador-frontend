@@ -1,14 +1,14 @@
 import { FullscreenIcon } from '@global/icons/FullScreenIcon';
-import { SongNavigationButtons } from '@bands/[bandId]/eventos/[eventId]/_components/SongNavigationButtons';
+import { SongNavigationButtons } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/SongNavigationButtons';
 import { useStore } from '@nanostores/react';
 import { $lyricSelected, $eventLiveMessage } from '@stores/event';
 import { useEffect, useState } from 'react';
-import { LyricsShowcase } from '@bands/[bandId]/eventos/[eventId]/_components/LyricsShowcase';
+import { LyricsShowcase } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/LyricsShowcase';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useFullscreen } from '@bands/[bandId]/eventos/[eventId]/_hooks/useFullscreen';
-import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/_hooks/useHandleEventLeft';
-import { useEventSongNavigation } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventSongNavigation';
-import { useEventControls } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventControls';
+import { useFullscreen } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useFullscreen';
+import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useHandleEventLeft';
+import { useEventSongNavigation } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventSongNavigation';
+import { useEventControls } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventControls';
 
 export const EventMainScreen = () => {
   const { isFullscreen, isSupported, activateFullscreen, divRef } =

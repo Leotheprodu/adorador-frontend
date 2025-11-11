@@ -11,7 +11,7 @@ import {
 } from '@nextui-org/react';
 import { EditIcon } from '@global/icons/EditIcon';
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { UpdateElementCard } from '@bands/[bandId]/eventos/[eventId]/_components/updatingElements/components/UpdateElementCard';
+import { UpdateElementCard } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/components/UpdateElementCard';
 import {
   eventDeleteSongs,
   eventUpdateSongs,

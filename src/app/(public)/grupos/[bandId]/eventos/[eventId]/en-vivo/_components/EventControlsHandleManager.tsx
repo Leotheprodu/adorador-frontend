@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { $eventAdminName } from '@stores/event';
-import { eventAdminChange } from '@bands/[bandId]/eventos/[eventId]/_services/eventByIdService';
+import { eventAdminChange } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_services/eventByIdService';
 import { refreshAccessToken } from '@global/utils/jwtUtils';
 import toast from 'react-hot-toast';
 import { useEffect } from 'react';

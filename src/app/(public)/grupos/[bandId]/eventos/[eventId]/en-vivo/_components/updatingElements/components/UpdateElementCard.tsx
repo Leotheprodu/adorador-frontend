@@ -1,6 +1,6 @@
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
-import { TransposeChanger } from '@bands/[bandId]/eventos/[eventId]/_components/updatingElements/components/TransposeChanger';
+import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
+import { TransposeChanger } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/components/TransposeChanger';
 import { songTypes } from '@global/config/constants';
 import { Draggable } from '@hello-pangea/dnd';
 import Link from 'next/link';

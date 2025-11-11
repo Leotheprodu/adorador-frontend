@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
-import { useDeleteEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useDeleteEvent';
+import { useDeleteEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useDeleteEvent';
 import { useStore } from '@nanostores/react';
 import { $event } from '@stores/event';
 import { $user } from '@stores/users';

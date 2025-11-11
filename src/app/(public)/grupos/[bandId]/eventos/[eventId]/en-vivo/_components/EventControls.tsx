@@ -1,6 +1,6 @@
-import { EventControlsButtons } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsButtons';
-import { EventControlsSongsList } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsSongsList';
-import { EventControlsLyricsSelect } from '@bands/[bandId]/eventos/[eventId]/_components/EventControlsLyricsSelect';
+import { EventControlsButtons } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtons';
+import { EventControlsSongsList } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsSongsList';
+import { EventControlsLyricsSelect } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsLyricsSelect';
 import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $eventAdminName, $event } from '@stores/event';

@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { addSongsToBandService } from '../_services/songsOfBandService';
-import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
+import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong';
 import { handleOnChange } from '@global/utils/formUtils';
 import { PlusIcon, MusicNoteIcon } from '@global/icons';
 import { useQueryClient } from '@tanstack/react-query';

@@ -8,7 +8,7 @@ import {
 } from '@nextui-org/react';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { EditIcon } from '@global/icons/EditIcon';
-import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEditEvent';
+import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEditEvent';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { userRoles } from '@global/config/constants';

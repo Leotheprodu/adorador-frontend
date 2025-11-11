@@ -7,7 +7,7 @@ import {
 } from '@nextui-org/react';
 
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
+import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
 
 export const TransposeChanger = ({
   data,

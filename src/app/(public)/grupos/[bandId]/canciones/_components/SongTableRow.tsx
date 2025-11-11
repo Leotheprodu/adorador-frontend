@@ -28,7 +28,7 @@ import { $SelectedSong } from '@stores/player';
 import { useStore } from '@nanostores/react';
 import { useDeleteSong } from '../_hooks/useDeleteSong';
 import { useEditSong } from '../_hooks/useEditSong';
-import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
+import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong';
 import { useAddSongToEvent } from '../_hooks/useAddSongToEvent';
 import { AddSongToEventModal } from './AddSongToEventModal';
 

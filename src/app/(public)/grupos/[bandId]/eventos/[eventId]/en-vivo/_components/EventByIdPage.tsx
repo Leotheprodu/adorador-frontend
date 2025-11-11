@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useMemo } from 'react';
-import { EventControls } from '@bands/[bandId]/eventos/[eventId]/_components/EventControls';
-import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/_components/EventMainScreen';
-import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventByIdPage';
-import { EventSimpleTitle } from '@bands/[bandId]/eventos/[eventId]/_components/EventSimpleTitle';
-import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/EditEventButton';
-import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/_components/DeleteEventButton';
+import { EventControls } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControls';
+import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventMainScreen';
+import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventByIdPage';
+import { EventSimpleTitle } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventSimpleTitle';
+import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EditEventButton';
+import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/DeleteEventButton';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
-import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/_components/EventConnectedUsers';
+import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventConnectedUsers';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { $event } from '@stores/event';
@@ -98,8 +98,11 @@ export const EventByIdPage = ({
     queryClient.invalidateQueries({
       queryKey: ['EventsOfBand', params.bandId],
     });
-    // Usar router de Next.js para navegación sin recargar la página
-    router.push(`/grupos/${params.bandId}/eventos`);
+    queryClient.invalidateQueries({
+      queryKey: ['EventById', params.eventId],
+    });
+    // Regresar a la página de administración del evento
+    router.push(`/grupos/${params.bandId}/eventos/${params.eventId}`);
   };
 
   return (

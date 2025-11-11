@@ -21,7 +21,7 @@ import {
   ModalFooter,
 } from '@nextui-org/react';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
-import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEditEvent';
+import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEditEvent';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 

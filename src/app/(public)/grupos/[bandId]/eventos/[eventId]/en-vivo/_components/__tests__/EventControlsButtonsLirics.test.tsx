@@ -35,7 +35,7 @@ jest.mock('@stores/event', () => {
 
 // Mock del hook useEventGateway
 const mockSendMessage = jest.fn();
-jest.mock('@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway', () => ({
+jest.mock('@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway', () => ({
   useEventGateway: () => ({
     sendMessage: mockSendMessage,
   }),

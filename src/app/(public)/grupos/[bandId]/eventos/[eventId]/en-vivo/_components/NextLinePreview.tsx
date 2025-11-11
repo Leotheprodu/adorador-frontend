@@ -5,7 +5,7 @@ import {
   $chordPreferences,
 } from '@stores/event';
 import { structureColors, structureLib } from '@global/config/constants';
-import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/_utils/getNoteByType';
+import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/getNoteByType';
 import type { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 
 interface NextLinePreviewProps {

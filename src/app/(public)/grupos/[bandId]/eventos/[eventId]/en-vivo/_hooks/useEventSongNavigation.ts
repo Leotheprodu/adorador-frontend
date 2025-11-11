@@ -9,7 +9,7 @@ import {
 } from '@stores/event';
 import { $user } from '@stores/users';
 import { userRoles } from '@global/config/constants';
-import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
+import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway';
 
 export function useEventSongNavigation() {
   const eventData = useStore($event);
@@ -92,12 +92,20 @@ export function useEventSongNavigation() {
   }, [selectedSongData]);
 
   useEffect(() => {
-    if (songs) {
+    if (songs && songs.length > 0) {
       const songId = selectedSongId;
       const song = songs.find((song) => song.song.id === songId);
       if (song) {
         $selectedSongData.set(song);
+      } else if (selectedSongId !== 0) {
+        // Si hay un selectedSongId pero no se encuentra en las canciones del evento actual,
+        // significa que es de un evento anterior, así que lo reseteamos
+        $selectedSongData.set(undefined);
+        $eventSelectedSongId.set(0);
       }
+    } else {
+      // Si no hay canciones, limpiar el estado
+      $selectedSongData.set(undefined);
     }
   }, [songs, selectedSongId]);
 

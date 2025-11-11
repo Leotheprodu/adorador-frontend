@@ -5,8 +5,8 @@ import {
   $chordPreferences,
 } from '@stores/event';
 import { useStore } from '@nanostores/react';
-import { useDataOfLyricSelected } from '@bands/[bandId]/eventos/[eventId]/_hooks/useDataOfLyricSelected';
-import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/_utils/getNoteByType';
+import { useDataOfLyricSelected } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useDataOfLyricSelected';
+import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/getNoteByType';
 import { structureColors, structureLib } from '@global/config/constants';
 export const LyricsShowcaseCard = ({
   lyricsShowcaseCardProps,

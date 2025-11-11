@@ -1,10 +1,10 @@
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { churchRoles, structureLib } from '@global/config/constants';
 import { Button } from '@nextui-org/react';
-import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventGateway';
+import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway';
 import { $lyricSelected } from '@stores/event';
 import { useStore } from '@nanostores/react';
-import { useDataOfLyricSelected } from '@bands/[bandId]/eventos/[eventId]/_hooks/useDataOfLyricSelected';
+import { useDataOfLyricSelected } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useDataOfLyricSelected';
 
 export const EventControlsButtonsLiveMessages = ({
   churchId,

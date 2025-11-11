@@ -1,5 +1,5 @@
 import { ChordProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/_utils/getNoteByType';
+import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/getNoteByType';
 import { useStore } from '@nanostores/react';
 
 interface ChordDisplayProps {

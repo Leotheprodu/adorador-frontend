@@ -38,7 +38,7 @@ jest.mock('../../_hooks/useEditSong', () => ({
 }));
 
 jest.mock(
-  '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong',
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong',
   () => ({
     FormAddNewSong: () => <div data-testid="form-add-new-song">Form</div>,
   }),
