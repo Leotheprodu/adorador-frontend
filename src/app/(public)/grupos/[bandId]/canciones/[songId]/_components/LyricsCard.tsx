@@ -2,8 +2,8 @@ import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface
 import React, { useState, useEffect, useRef } from 'react';
 import { useStore } from '@nanostores/react';
 import { MiniLyricsEditor } from './MiniLyricsEditor';
-import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/_utils/getNoteByType';
 import { Draggable } from '@hello-pangea/dnd';
+import { ChordDisplay } from './ChordDisplay';
 
 export const LyricsCard = ({
   lyric,
@@ -42,7 +42,6 @@ export const LyricsCard = ({
   useEffect(() => {
     // Si estaba arrastrando y ya no lo está (drag terminado)
     if (prevIsDragging.current && !isDragging) {
-      console.log('Drag terminado - cerrando editor');
       setUpdateLyric(false);
     }
     prevIsDragging.current = isDragging;
@@ -57,47 +56,12 @@ export const LyricsCard = ({
           <div style={{ width: 'fit-content' }}>
             {/* Chords Section */}
             {showChords && lyric.chords && lyric.chords.length > 0 && (
-              <div
-                className="grid grid-cols-5 gap-1"
-                style={{ fontSize: `${lyricsScale * 0.9}rem` }}
-              >
-                {lyric.chords
-                  .sort((a, b) => a.position - b.position)
-                  .map((chord) => (
-                    <div
-                      key={chord.id}
-                      style={{
-                        gridColumnStart: chord.position,
-                        gridColumnEnd: chord.position + 1,
-                      }}
-                      className="col-span-1 flex items-end gap-1"
-                    >
-                      <div className="flex items-end">
-                        <p className="font-semibold text-primary-600">
-                          {getNoteByType(
-                            chord.rootNote,
-                            transpose,
-                            chordPreferences,
-                          )}
-                        </p>
-                        <p className="font-medium text-primary-600">
-                          {chord.chordQuality}
-                        </p>
-                      </div>
-                      {chord.slashChord && (
-                        <div className="flex items-end rounded-sm bg-primary-100 px-1">
-                          <p className="text-xs font-semibold text-primary-700">
-                            {getNoteByType(
-                              chord.slashChord,
-                              transpose,
-                              chordPreferences,
-                            )}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-              </div>
+              <ChordDisplay
+                chords={lyric.chords}
+                transpose={transpose}
+                chordPreferences={chordPreferences}
+                lyricsScale={lyricsScale}
+              />
             )}
 
             {/* Lyrics Section */}
@@ -161,47 +125,12 @@ export const LyricsCard = ({
                   showChords &&
                   lyric.chords &&
                   lyric.chords.length > 0 && (
-                    <div
-                      className="grid grid-cols-5 gap-1"
-                      style={{ fontSize: `${lyricsScale * 0.9}rem` }}
-                    >
-                      {lyric.chords
-                        .sort((a, b) => a.position - b.position)
-                        .map((chord) => (
-                          <div
-                            key={chord.id}
-                            style={{
-                              gridColumnStart: chord.position,
-                              gridColumnEnd: chord.position + 1,
-                            }}
-                            className="col-span-1 flex items-end gap-1"
-                          >
-                            <div className="flex items-end">
-                              <p className="font-semibold text-primary-600">
-                                {getNoteByType(
-                                  chord.rootNote,
-                                  transpose,
-                                  chordPreferences,
-                                )}
-                              </p>
-                              <p className="font-medium text-primary-600">
-                                {chord.chordQuality}
-                              </p>
-                            </div>
-                            {chord.slashChord && (
-                              <div className="flex items-end rounded-sm bg-primary-100 px-1">
-                                <p className="text-xs font-semibold text-primary-700">
-                                  {getNoteByType(
-                                    chord.slashChord,
-                                    transpose,
-                                    chordPreferences,
-                                  )}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                    </div>
+                    <ChordDisplay
+                      chords={lyric.chords}
+                      transpose={transpose}
+                      chordPreferences={chordPreferences}
+                      lyricsScale={lyricsScale}
+                    />
                   )}
 
                 {/* Lyrics Section */}

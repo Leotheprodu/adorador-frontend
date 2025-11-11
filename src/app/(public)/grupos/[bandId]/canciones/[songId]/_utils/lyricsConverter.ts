@@ -1,4 +1,5 @@
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
+import { structureLib } from '@global/config/constants';
 
 /**
  * Converts lyrics data structure back to plain text format
@@ -26,6 +27,9 @@ export const convertLyricsToPlainText = (lyrics: LyricsProps[]): string => {
 
   sortedLyrics.forEach((lyric, index) => {
     const structureName = lyric.structure.title.toLowerCase();
+    // Get Spanish name from structureLib, fallback to English name
+    const structureDisplayName =
+      structureLib[structureName]?.es.toLowerCase() || structureName;
 
     // Add structure label if it's a new structure
     if (currentStructure !== structureName) {
@@ -33,7 +37,7 @@ export const convertLyricsToPlainText = (lyrics: LyricsProps[]): string => {
       if (index > 0) {
         plainText += '\n\n';
       }
-      plainText += `(${structureName})\n`;
+      plainText += `(${structureDisplayName})\n`;
       currentStructure = structureName;
     }
 
