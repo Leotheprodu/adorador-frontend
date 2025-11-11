@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useDisclosure } from '@nextui-org/react';
 import { getEventsOfBand } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
-import { getEventsById } from '@bands/[bandId]/eventos/[eventId]/_services/eventByIdService';
-import { addSongsToEventService } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/services/AddSongsToEventService';
+import { getEventsById } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_services/eventByIdService';
+import { addSongsToEventService } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/services/AddSongsToEventService';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 

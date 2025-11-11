@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
@@ -14,9 +15,13 @@ import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewE
 import { handleOnChange } from '@global/utils/formUtils';
 import { PlusIcon, CalendarIcon } from '@global/icons';
 import { useQueryClient } from '@tanstack/react-query';
+import { useStore } from '@nanostores/react';
+import { $user } from '@stores/users';
+import { userRoles } from '@global/config/constants';
 
 export const AddEventButton = ({ bandId }: { bandId: string }) => {
   const queryClient = useQueryClient();
+  const user = useStore($user);
   const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
   const formInit = {
     title: '',
@@ -26,6 +31,15 @@ export const AddEventButton = ({ bandId }: { bandId: string }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { mutate: mutateAddEventToBand, status: statusAddEventToBand } =
     addEventsToBandService({ bandId });
+
+  // Verificar si el usuario es admin de la banda
+  const isAdminBand =
+    user.isLoggedIn &&
+    user.membersofBands.some(
+      (band) => band.band.id === Number(bandId) && band.isAdmin,
+    );
+  const isSystemAdmin = user?.roles.includes(userRoles.admin.id);
+  const hasPermission = isAdminBand || isSystemAdmin;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleOnChange(setForm, e);
@@ -66,15 +80,24 @@ export const AddEventButton = ({ bandId }: { bandId: string }) => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          onOpen();
-        }}
-        size="sm"
-        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+      <Tooltip
+        content={
+          hasPermission
+            ? 'Crear evento'
+            : 'Solo los administradores de la banda pueden crear eventos'
+        }
       >
-        <PlusIcon className="h-5 w-5" /> Crear evento
-      </Button>
+        <div className="inline-block">
+          <Button
+            onClick={hasPermission ? onOpen : undefined}
+            size="sm"
+            isDisabled={!hasPermission}
+            className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+          >
+            <PlusIcon className="h-5 w-5" /> Crear evento
+          </Button>
+        </div>
+      </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
         <ModalContent>
           {(onClose) => (

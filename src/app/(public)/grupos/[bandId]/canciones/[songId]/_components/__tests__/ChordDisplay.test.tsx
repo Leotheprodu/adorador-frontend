@@ -3,13 +3,16 @@ import { ChordDisplay } from '../ChordDisplay';
 import { ChordProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 
 // Mock de getNoteByType
-jest.mock('@bands/[bandId]/eventos/[eventId]/_utils/getNoteByType', () => ({
-  getNoteByType: jest.fn((note: string, transpose: number) => {
-    // Simulación simple de transposición para tests
-    if (transpose === 0) return note;
-    return `${note}+${transpose}`;
+jest.mock(
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/getNoteByType',
+  () => ({
+    getNoteByType: jest.fn((note: string, transpose: number) => {
+      // Simulación simple de transposición para tests
+      if (transpose === 0) return note;
+      return `${note}+${transpose}`;
+    }),
   }),
-}));
+);
 
 describe('ChordDisplay', () => {
   const mockChordPreferences = {

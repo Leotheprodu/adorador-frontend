@@ -212,7 +212,7 @@ export const BandCard = ({ band }: { band: BandsWithMembersCount }) => {
       {/* Footer - Botones de acción */}
       <div className="px-6 py-5">
         <div className="flex flex-col gap-3">
-          {events.length > 0 && (isCurrentEvent || isUserAuthorized) && (
+          {events.length > 0 && (
             <PrimaryButton
               href={`/grupos/${band.id}/eventos/${events[currentEventIndex].id}`}
               startContent={<MicrophoneIcon className="h-4 w-4" />}

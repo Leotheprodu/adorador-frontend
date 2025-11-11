@@ -9,7 +9,7 @@ import {
   MusicNoteIcon,
   EditIcon,
 } from '@global/icons';
-import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
+import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
 import { SongPropsWithCount } from '../../_interfaces/songsInterface';

@@ -150,9 +150,18 @@ export const useBandInvitationListeners = () => {
           queryKey: ['BandMembers', data.bandId.toString()],
         });
 
-        // Si soy yo el actualizado, mostrar toast
+        // Si soy yo el actualizado, mostrar toast SOLO si NO es cambio de isEventManager
+        // (el toast de isEventManager ya se muestra en EventControlsHandleManager)
         if (data.userId === user.id) {
-          toast.success('Tu rol en el grupo fue actualizado');
+          const isOnlyEventManagerChange =
+            data.changes.isEventManager !== undefined &&
+            data.changes.role === undefined &&
+            data.changes.isAdmin === undefined &&
+            data.changes.active === undefined;
+
+          if (!isOnlyEventManagerChange) {
+            toast.success('Tu rol en el grupo fue actualizado');
+          }
         }
       },
     );

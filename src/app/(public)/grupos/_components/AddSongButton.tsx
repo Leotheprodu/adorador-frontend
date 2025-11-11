@@ -1,6 +1,6 @@
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 import { addSongsToBandService } from '@bands/[bandId]/canciones/_services/songsOfBandService';
-import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
+import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong';
 import { handleOnChange } from '@global/utils/formUtils';
 import { MusicNoteIcon, PlusIcon } from '@global/icons';
 import {

@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from '@nextui-org/react';
-import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/FormAddNewSong';
+import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong';
 import { useEditSong } from '@bands/[bandId]/canciones/_hooks/useEditSong';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 import { EditIcon } from '@global/icons';

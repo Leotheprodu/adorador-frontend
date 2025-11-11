@@ -30,7 +30,7 @@ jest.mock('@bands/[bandId]/eventos/_services/eventsOfBandService', () => ({
 }));
 
 jest.mock(
-  '@bands/[bandId]/eventos/[eventId]/_services/eventByIdService',
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_services/eventByIdService',
   () => ({
     getEventsById: jest.fn(() => ({
       data: {
@@ -47,7 +47,7 @@ jest.mock(
 );
 
 jest.mock(
-  '@bands/[bandId]/eventos/[eventId]/_components/addSongToEvent/services/AddSongsToEventService',
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/services/AddSongsToEventService',
   () => ({
     addSongsToEventService: jest.fn(() => ({
       mutate: jest.fn(),

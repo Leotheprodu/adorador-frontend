@@ -1,4 +1,4 @@
-import { EventByIdPage } from '@bands/[bandId]/eventos/[eventId]/_components/EventByIdPage';
+import { EventAdminPage } from '@bands/[bandId]/eventos/[eventId]/_components/EventAdminPage';
 
 export default function EventId({
   params,
@@ -7,7 +7,7 @@ export default function EventId({
 }) {
   return (
     <div className="flex h-full w-full flex-col items-center p-8 pb-20 sm:p-20">
-      <EventByIdPage params={params} />
+      <EventAdminPage params={params} />
     </div>
   );
 }
