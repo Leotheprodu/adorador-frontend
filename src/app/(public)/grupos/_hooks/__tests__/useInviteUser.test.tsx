@@ -107,7 +107,9 @@ describe('useSearchUsers', () => {
   });
 
   it('should handle network errors', async () => {
-    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+    (global.fetch as jest.Mock).mockRejectedValueOnce(
+      new Error('Network error'),
+    );
 
     const { result } = renderHook(() => useSearchUsers(100));
 
@@ -169,8 +171,8 @@ describe('useSearchUsers', () => {
       resolveSearch = resolve;
     });
 
-    (global.fetch as jest.Mock).mockImplementationOnce(
-      () => searchPromise.then(() => ({ ok: true, json: async () => [] })),
+    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+      searchPromise.then(() => ({ ok: true, json: async () => [] })),
     );
 
     const { result } = renderHook(() => useSearchUsers(100));
@@ -281,7 +283,9 @@ describe('useInviteUser', () => {
 
   it('should handle errors when inviting user', async () => {
     const errorMessage = 'Usuario ya tiene invitación pendiente';
-    const mockMutateAsync = jest.fn().mockRejectedValue(new Error(errorMessage));
+    const mockMutateAsync = jest
+      .fn()
+      .mockRejectedValue(new Error(errorMessage));
 
     mockPostData.mockReturnValue({
       mutateAsync: mockMutateAsync,
@@ -357,7 +361,9 @@ describe('useInviteUser', () => {
   });
 
   it('should reset isInviting to false even on error', async () => {
-    const mockMutateAsync = jest.fn().mockRejectedValue(new Error('Test error'));
+    const mockMutateAsync = jest
+      .fn()
+      .mockRejectedValue(new Error('Test error'));
 
     mockPostData.mockReturnValue({
       mutateAsync: mockMutateAsync,

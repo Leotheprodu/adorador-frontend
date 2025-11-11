@@ -83,7 +83,9 @@ describe('useRejectInvitation', () => {
 
   it('should handle errors when rejecting invitation', async () => {
     const errorMessage = 'Error al rechazar la invitación';
-    const mockMutateAsync = jest.fn().mockRejectedValue(new Error(errorMessage));
+    const mockMutateAsync = jest
+      .fn()
+      .mockRejectedValue(new Error(errorMessage));
 
     mockPostData.mockReturnValue({
       mutateAsync: mockMutateAsync,
@@ -175,7 +177,9 @@ describe('useRejectInvitation', () => {
   });
 
   it('should reset isRejecting to false even on error', async () => {
-    const mockMutateAsync = jest.fn().mockRejectedValue(new Error('Test error'));
+    const mockMutateAsync = jest
+      .fn()
+      .mockRejectedValue(new Error('Test error'));
 
     mockPostData.mockReturnValue({
       mutateAsync: mockMutateAsync,

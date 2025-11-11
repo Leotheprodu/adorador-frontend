@@ -87,9 +87,7 @@ describe('useAcceptInvitation', () => {
         refreshToken: 'new-refresh-token',
         expiresAt: expect.any(Number),
       });
-      expect(mockToast.success).toHaveBeenCalledWith(
-        'Te uniste a Test Band!',
-      );
+      expect(mockToast.success).toHaveBeenCalledWith('Te uniste a Test Band!');
     });
   });
 
@@ -126,7 +124,9 @@ describe('useAcceptInvitation', () => {
 
   it('should handle errors when accepting invitation', async () => {
     const errorMessage = 'Error al aceptar la invitación';
-    const mockMutateAsync = jest.fn().mockRejectedValue(new Error(errorMessage));
+    const mockMutateAsync = jest
+      .fn()
+      .mockRejectedValue(new Error(errorMessage));
 
     mockPostData.mockReturnValue({
       mutateAsync: mockMutateAsync,
