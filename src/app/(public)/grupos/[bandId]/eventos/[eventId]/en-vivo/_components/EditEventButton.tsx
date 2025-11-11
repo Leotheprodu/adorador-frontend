@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tooltip,
 } from '@nextui-org/react';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { EditIcon } from '@global/icons/EditIcon';
@@ -17,10 +18,12 @@ export const EditEventButton = ({
   bandId,
   eventId,
   refetch,
+  isAdminEvent,
 }: {
   bandId: string;
   eventId: string;
   refetch: () => void;
+  isAdminEvent?: boolean;
 }) => {
   const {
     form,
@@ -37,23 +40,33 @@ export const EditEventButton = ({
   const user = useStore($user);
   const isAdmin = user?.roles.includes(userRoles.admin.id);
 
-  // Si el evento ya pasó Y el usuario NO es admin, no mostrar el botón
-  if (eventHasPassed && !isAdmin) {
-    return null;
-  }
+  // Determinar si el botón debe estar deshabilitado
+  const isDisabled = eventHasPassed && !isAdmin;
+  const hasPermission = isAdminEvent !== undefined ? isAdminEvent : true;
+
+  const tooltipContent = !hasPermission
+    ? 'Solo los administradores de la banda pueden editar eventos'
+    : isDisabled
+      ? 'No se pueden editar eventos que ya pasaron'
+      : 'Editar evento';
 
   return (
     <>
-      <Button
-        onClick={handleOpenModal}
-        className="ml-4"
-        color="primary"
-        variant="light"
-        size="md"
-        isIconOnly
-      >
-        <EditIcon />
-      </Button>
+      <Tooltip content={tooltipContent}>
+        <div className="inline-block">
+          <Button
+            onClick={handleOpenModal}
+            className="ml-4"
+            color="primary"
+            variant="light"
+            size="md"
+            isIconOnly
+            isDisabled={!hasPermission || isDisabled}
+          >
+            <EditIcon />
+          </Button>
+        </div>
+      </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

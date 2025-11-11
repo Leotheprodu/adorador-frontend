@@ -1,3 +1,51 @@
+// Mock nanostores FIRST - before any imports
+jest.mock('nanostores', () => ({
+  atom: jest.fn((initialValue) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  })),
+}));
+
+jest.mock('@nanostores/react', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  useStore: jest.fn((store: any) => store?.get?.() || null),
+}));
+
+// Mock stores with inline factory
+jest.mock('@global/stores/users', () => {
+  let value = {
+    id: 1,
+    name: 'Test User',
+    isLoggedIn: true,
+    email: 'test@test.com',
+    phone: '+1234567890',
+    roles: [1], // Admin role
+    membersofBands: [
+      {
+        id: 1,
+        role: 'Admin',
+        isAdmin: true,
+        isEventManager: false,
+        band: {
+          id: 123,
+          name: 'Test Band',
+        },
+      },
+    ],
+  };
+
+  return {
+    $user: {
+      get: () => value,
+      set: (newValue: typeof value) => {
+        value = newValue;
+      },
+      subscribe: jest.fn(),
+    },
+  };
+});
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EventsOfBand } from '../EventsOfBand';

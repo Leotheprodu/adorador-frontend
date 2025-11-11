@@ -6,7 +6,20 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 jest.mock(
   '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/AddSongEventButton',
   () => ({
-    AddSongEventButton: () => <button>Add Song</button>,
+    AddSongEventButton: ({
+      isAdminEvent,
+    }: {
+      isAdminEvent?: boolean;
+      params: { bandId: string; eventId: string };
+      refetch: () => void;
+    }) => (
+      <button
+        aria-label="Agregar canción al evento"
+        disabled={isAdminEvent === false}
+      >
+        Add Song
+      </button>
+    ),
   }),
 );
 
@@ -205,7 +218,7 @@ describe('SongListDisplay', () => {
   });
 
   describe('Permisos de administración', () => {
-    test('debe mostrar el botón de agregar canción para administradores', () => {
+    test('debe mostrar el botón de agregar canción habilitado para administradores', () => {
       renderWithQueryClient(
         <SongListDisplay
           songs={mockSongs}
@@ -215,10 +228,15 @@ describe('SongListDisplay', () => {
         />,
       );
 
-      expect(screen.getByText('Add Song')).toBeInTheDocument();
+      // El botón está dentro del componente AddSongEventButton
+      const addButton = screen.getByRole('button', {
+        name: /agregar canción al evento/i,
+      });
+      expect(addButton).toBeInTheDocument();
+      expect(addButton).not.toBeDisabled();
     });
 
-    test('no debe mostrar el botón de agregar canción para usuarios regulares', () => {
+    test('debe mostrar el botón de agregar canción deshabilitado para usuarios regulares', () => {
       renderWithQueryClient(
         <SongListDisplay
           songs={mockSongs}
@@ -228,7 +246,12 @@ describe('SongListDisplay', () => {
         />,
       );
 
-      expect(screen.queryByText('Add Song')).not.toBeInTheDocument();
+      // El botón está dentro del componente AddSongEventButton
+      const addButton = screen.getByRole('button', {
+        name: /agregar canción al evento/i,
+      });
+      expect(addButton).toBeInTheDocument();
+      expect(addButton).toBeDisabled();
     });
   });
 

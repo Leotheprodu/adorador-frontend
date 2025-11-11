@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useBandMembers,
   type BandMember,
@@ -25,6 +25,7 @@ import {
   PlusIcon,
   UsersIcon,
 } from '@global/icons';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface BandMembersProps {
   bandId: number;
@@ -32,6 +33,7 @@ interface BandMembersProps {
 
 export const BandMembers = ({ bandId }: BandMembersProps) => {
   const user = useStore($user);
+  const queryClient = useQueryClient();
   const { data: members, isLoading, error } = useBandMembers(bandId);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
@@ -40,6 +42,37 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
     checkBandId: bandId,
     checkBandAdmin: true,
   });
+
+  // Escuchar cambios de roles de miembros via WebSocket
+  useEffect(() => {
+    const handleMemberRoleChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        bandId: number;
+        userId: number;
+        newEventManagerName: string;
+      }>;
+
+      // Solo invalidar si es el mismo bandId
+      if (customEvent.detail.bandId === bandId) {
+        console.log(
+          '[BandMembers] Invalidando query por cambio de rol:',
+          customEvent.detail,
+        );
+        queryClient.invalidateQueries({
+          queryKey: ['BandMembers', bandId.toString()],
+        });
+      }
+    };
+
+    window.addEventListener('bandMemberRoleChanged', handleMemberRoleChange);
+
+    return () => {
+      window.removeEventListener(
+        'bandMemberRoleChanged',
+        handleMemberRoleChange,
+      );
+    };
+  }, [bandId, queryClient]);
 
   if (isLoading) {
     return (

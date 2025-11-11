@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from '@nextui-org/react';
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
@@ -17,9 +18,11 @@ import { userRoles } from '@global/config/constants';
 export const DeleteEventButton = ({
   bandId,
   eventId,
+  isAdminEvent,
 }: {
   bandId: string;
   eventId: string;
+  isAdminEvent?: boolean;
 }) => {
   const event = useStore($event);
   const user = useStore($user);
@@ -32,24 +35,33 @@ export const DeleteEventButton = ({
 
   const isAdmin = user?.roles.includes(userRoles.admin.id);
 
-  // Solo mostrar el botón si el evento no tiene canciones
-  // Los administradores pueden eliminar eventos incluso con canciones
-  if (event.songs.length > 0 && !isAdmin) {
-    return null;
-  }
+  // Determinar si el botón debe estar deshabilitado
+  const hasPermission = isAdminEvent !== undefined ? isAdminEvent : true;
+  const canDeleteWithSongs = event.songs.length > 0 && !isAdmin;
+
+  const tooltipContent = !hasPermission
+    ? 'Solo los administradores de la banda pueden eliminar eventos'
+    : canDeleteWithSongs
+      ? 'No se pueden eliminar eventos con canciones'
+      : 'Eliminar evento';
 
   return (
     <>
-      <Button
-        onClick={onOpen}
-        className="ml-4"
-        color="danger"
-        variant="light"
-        size="md"
-        isIconOnly
-      >
-        <DeleteMusicIcon />
-      </Button>
+      <Tooltip content={tooltipContent}>
+        <div className="inline-block">
+          <Button
+            onClick={onOpen}
+            className="ml-4"
+            color="danger"
+            variant="light"
+            size="md"
+            isIconOnly
+            isDisabled={!hasPermission || canDeleteWithSongs}
+          >
+            <DeleteMusicIcon />
+          </Button>
+        </div>
+      </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

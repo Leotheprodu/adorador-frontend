@@ -24,6 +24,9 @@ import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEditEvent';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
+import { useStore } from '@nanostores/react';
+import { $user } from '@stores/users';
+import { userRoles } from '@global/config/constants';
 
 export const EventTableRow = ({
   event,
@@ -34,6 +37,7 @@ export const EventTableRow = ({
   bandId: string;
   refetch?: () => void;
 }) => {
+  const user = useStore($user);
   const {
     form,
     setForm,
@@ -56,6 +60,15 @@ export const EventTableRow = ({
   const currentDate = new Date();
   const isUpcoming = currentDate < new Date(event.date);
   const { eventTimeLeft } = useEventTimeLeft(event.date);
+
+  // Verificar si el usuario es admin de la banda
+  const isAdminEvent =
+    user.isLoggedIn &&
+    user.membersofBands.some(
+      (band) => band.band.id === Number(bandId) && band.isAdmin,
+    );
+  const isSystemAdmin = user?.roles.includes(userRoles.admin.id);
+  const hasPermission = isAdminEvent || isSystemAdmin;
 
   return (
     <>
@@ -184,7 +197,13 @@ export const EventTableRow = ({
               </DropdownItem>
               <DropdownItem
                 key="editar"
-                onClick={handleOpenModal}
+                onClick={hasPermission ? handleOpenModal : undefined}
+                isDisabled={!hasPermission}
+                description={
+                  !hasPermission
+                    ? 'Solo los administradores de la banda pueden editar eventos'
+                    : undefined
+                }
                 startContent={
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
                     <EditIcon className="h-4 w-4 text-blue-700" />
@@ -193,6 +212,7 @@ export const EventTableRow = ({
                 classNames={{
                   base: 'rounded-lg px-3 py-2.5 data-[hover=true]:bg-gradient-to-r data-[hover=true]:from-blue-50 data-[hover=true]:to-indigo-50',
                   title: 'text-sm font-medium text-slate-700',
+                  description: 'text-xs text-slate-500',
                 }}
               >
                 Editar evento

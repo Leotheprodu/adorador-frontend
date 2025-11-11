@@ -17,10 +17,12 @@ import { $user } from '@stores/users';
 export const EventControlsHandleManager = ({
   params,
   checkAdminEvent,
+  isEventManager,
   isSystemAdmin,
 }: {
   params: { bandId: string; eventId: string };
   checkAdminEvent: boolean;
+  isEventManager: boolean;
   isSystemAdmin: boolean;
 }) => {
   const { mutate, error, status, data } = eventAdminChange({
@@ -57,6 +59,17 @@ export const EventControlsHandleManager = ({
         setLocalStorage('user', updatedUser);
         console.log('[EventAdmin] Usuario guardado en localStorage');
       });
+
+      // Disparar evento para actualizar la tabla de miembros de banda
+      window.dispatchEvent(
+        new CustomEvent('bandMemberRoleChanged', {
+          detail: {
+            bandId: parseInt(params.bandId),
+            userId: currentUser.id,
+            newEventManagerName: data?.eventManager || currentUser.name,
+          },
+        }),
+      );
 
       toast.success('Ahora eres el administrador de este evento');
 
@@ -100,7 +113,13 @@ export const EventControlsHandleManager = ({
                 : 'Nadie maneja los eventos'}
           </h2>
         )}
-        {!checkAdminEvent && user.isLoggedIn && (
+        {user.isLoggedIn && isEventManager && (
+          <h2 className="text-xs text-slate-400">
+            Eres el event manager - Puedes cambiar canciones durante el evento,
+            pero solo el admin de la banda puede modificar el evento
+          </h2>
+        )}
+        {!checkAdminEvent && !isEventManager && user.isLoggedIn && (
           <div className="flex items-center justify-center gap-1 text-xs">
             <p>¿Quieres Manejar los eventos de tu grupo?</p>
             <Button onPress={onOpen} variant="light" color="danger" size="sm">

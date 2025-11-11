@@ -1,7 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { $lyricSelected, $selectedSongData } from '@stores/event';
 import { useEffect, useRef, useState } from 'react';
-import { LyricsProps } from '../../_interfaces/eventsInterface';
+import { LyricsProps } from '../../../_interfaces/eventsInterface';
 import { structureColors, structureLib } from '@global/config/constants';
 import { useEventGateway } from '../_hooks/useEventGateway';
 import { EventControlsButtonsLirics } from './EventControlsButtonsLirics';

@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalFooter,
   Button,
+  Tooltip,
   useDisclosure,
 } from '@nextui-org/react';
 import { EditIcon } from '@global/icons/EditIcon';
@@ -22,10 +23,12 @@ export const UpdatingSongList = ({
   songs,
   params,
   refetch,
+  isAdminEvent,
 }: {
   songs: EventSongsProps[];
   params: { bandId: string; eventId: string };
   refetch: () => void;
+  isAdminEvent?: boolean;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [songOrder, setSongOrder] = useState<EventSongsProps[]>([]);
@@ -132,16 +135,37 @@ export const UpdatingSongList = ({
     }
   };
 
+  const hasPermission = isAdminEvent !== undefined ? isAdminEvent : true;
+
   return (
     <>
-      <button
-        className="group relative overflow-hidden rounded-full p-2 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
-        onClick={handleOpen}
-        aria-label="Editar canciones del evento"
+      <Tooltip
+        content={
+          !hasPermission
+            ? 'Solo los administradores de la banda pueden editar canciones'
+            : 'Editar canciones del evento'
+        }
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-purple-100 via-brand-pink-50 to-brand-blue-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-        <EditIcon className="relative z-10 text-brand-purple-600 transition-colors duration-300 group-hover:text-brand-purple-700" />
-      </button>
+        <div className="inline-block">
+          <Button
+            isIconOnly
+            radius="full"
+            variant="light"
+            size="sm"
+            onClick={hasPermission ? handleOpen : undefined}
+            isDisabled={!hasPermission}
+            className={`group relative overflow-hidden shadow-sm transition-all duration-300 ${
+              hasPermission
+                ? 'hover:scale-105 hover:shadow-lg active:scale-95'
+                : 'cursor-not-allowed opacity-50'
+            }`}
+            aria-label="Editar canciones del evento"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-purple-100 via-brand-pink-50 to-brand-blue-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <EditIcon className="relative z-10 text-brand-purple-600 transition-colors duration-300 group-hover:text-brand-purple-700" />
+          </Button>
+        </div>
+      </Tooltip>
       <Modal
         isOpen={isOpen}
         onOpenChange={handleModalChange}

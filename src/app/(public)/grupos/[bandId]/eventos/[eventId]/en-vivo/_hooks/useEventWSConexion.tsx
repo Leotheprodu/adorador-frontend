@@ -427,13 +427,22 @@ export const useEventWSConexion = ({
             );
           }
 
-          // Mostrar notificación si el usuario actual es el nuevo admin
-          if (currentUser && currentUser.id === newEventManagerId) {
-            import('react-hot-toast').then((toast) => {
-              toast.default.success('¡Ahora eres el administrador del evento!');
-            });
-          } else if (
+          // Invalidar la query de miembros de la banda para actualizar la tabla
+          window.dispatchEvent(
+            new CustomEvent('bandMemberRoleChanged', {
+              detail: {
+                bandId: parseInt(bandId),
+                userId: newEventManagerId,
+                newEventManagerName,
+              },
+            }),
+          );
+
+          // Mostrar notificación SOLO si otro usuario cambió y yo perdí el rol
+          // NO mostrar si soy yo quien se convirtió en event manager (ya hay toast en EventControlsHandleManager)
+          if (
             currentUser &&
+            currentUser.id !== newEventManagerId &&
             currentUser.membersofBands?.some(
               (band) =>
                 band.band.id === parseInt(bandId) && band.isEventManager,

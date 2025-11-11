@@ -33,7 +33,7 @@ export const EventControls = ({
   const isSystemAdmin =
     user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
 
-  // Verificación precisa: usuario debe ser específicamente admin de este evento
+  // Verificación precisa: usuario debe ser específicamente admin de la banda
   // Primero verificar si es miembro de la banda del evento
   const bandMembership =
     user.isLoggedIn && user.membersofBands
@@ -42,15 +42,23 @@ export const EventControls = ({
         )
       : undefined;
 
-  // Verificar si es administrador específico del evento O administrador del sistema
+  // Verificar si es administrador de la banda (NO solo event manager) O administrador del sistema
   const checkAdminEvent = Boolean(
-    (bandMembership && bandMembership.isEventManager) || isSystemAdmin,
+    (bandMembership && bandMembership.isAdmin) || isSystemAdmin,
   );
 
-  // Verificar si es miembro del grupo pero NO admin (puede ver canciones pero no cambiarlas)
+  // Verificar si es event manager (puede cambiar canciones durante el evento pero no modificar el evento)
+  const isEventManager = Boolean(
+    bandMembership && bandMembership.isEventManager && !bandMembership.isAdmin,
+  );
+
+  // Verificar si es miembro del grupo pero NO admin ni event manager (solo puede ver)
   // Los admins del sistema NO deben aparecer como "solo miembros"
   const isBandMemberOnly = Boolean(
-    bandMembership && !bandMembership.isEventManager && !isSystemAdmin,
+    bandMembership &&
+      !bandMembership.isAdmin &&
+      !bandMembership.isEventManager &&
+      !isSystemAdmin,
   );
 
   return (
@@ -63,10 +71,11 @@ export const EventControls = ({
           refetch={refetch}
           isLoading={isLoading}
           checkAdminEvent={checkAdminEvent}
+          isEventManager={isEventManager}
           isBandMemberOnly={isBandMemberOnly}
         />
 
-        {checkAdminEvent && <EventControlsLyricsSelect />}
+        {(checkAdminEvent || isEventManager) && <EventControlsLyricsSelect />}
 
         <EventControlsButtons
           bandId={parseInt(bandId)}
@@ -77,8 +86,8 @@ export const EventControls = ({
           <div className="w-full rounded-xl bg-gradient-to-r from-brand-blue-50 to-brand-purple-50 p-4 text-center shadow-sm">
             <p className="flex items-center justify-center gap-2 text-sm font-medium text-brand-purple-700">
               <LightBulbIcon className="h-5 w-5 text-brand-purple-500" />
-              Eres miembro del grupo. Solo el administrador del evento puede
-              cambiar canciones.
+              Eres miembro del grupo. Solo el administrador de la banda puede
+              modificar el evento.
             </p>
           </div>
         )}
@@ -86,6 +95,7 @@ export const EventControls = ({
 
       <EventControlsHandleManager
         checkAdminEvent={checkAdminEvent}
+        isEventManager={isEventManager}
         isSystemAdmin={isSystemAdmin}
         params={params}
       />

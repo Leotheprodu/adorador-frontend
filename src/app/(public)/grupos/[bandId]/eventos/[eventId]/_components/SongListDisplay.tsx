@@ -123,9 +123,11 @@ export const SongListDisplay = ({
               </Button>
             </div>
           )}
-          {isAdminEvent && (
-            <AddSongEventButton params={params} refetch={refetch} />
-          )}
+          <AddSongEventButton
+            params={params}
+            refetch={refetch}
+            isAdminEvent={isAdminEvent}
+          />
         </div>
       </div>
 

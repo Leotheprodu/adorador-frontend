@@ -35,12 +35,30 @@ export const EventAdminPage = ({
 
     if (user?.isLoggedIn && user?.membersofBands) {
       return user.membersofBands.some(
-        (band) => band.band.id === eventStore?.bandId && band.isEventManager,
+        (band) => band.band.id === eventStore?.bandId && band.isAdmin,
       );
     }
 
     return false;
   }, [user, eventStore]);
+
+  // Verificar si es event manager (para mostrar botones deshabilitados)
+  const isEventManager = useMemo(() => {
+    if (user?.isLoggedIn && user?.membersofBands) {
+      const bandMembership = user.membersofBands.find(
+        (band) => band.band.id === eventStore?.bandId,
+      );
+      return Boolean(
+        bandMembership &&
+          bandMembership.isEventManager &&
+          !bandMembership.isAdmin,
+      );
+    }
+    return false;
+  }, [user, eventStore]);
+
+  // Determinar si mostrar botones (admin o event manager)
+  const showActionButtons = isAdminEvent || isEventManager;
 
   // Escuchar eventos de actualización de canciones y hacer refetch
   useEffect(() => {
@@ -105,21 +123,21 @@ export const EventAdminPage = ({
           <span>Volver a eventos</span>
         </button>
 
-        <div className="flex items-center gap-2">
-          {isAdminEvent && (
-            <>
-              <EditEventButton
-                bandId={params.bandId}
-                eventId={params.eventId}
-                refetch={refetch}
-              />
-              <DeleteEventButton
-                bandId={params.bandId}
-                eventId={params.eventId}
-              />
-            </>
-          )}
-        </div>
+        {showActionButtons && (
+          <div className="flex items-center gap-2">
+            <EditEventButton
+              bandId={params.bandId}
+              eventId={params.eventId}
+              refetch={refetch}
+              isAdminEvent={isAdminEvent}
+            />
+            <DeleteEventButton
+              bandId={params.bandId}
+              eventId={params.eventId}
+              isAdminEvent={isAdminEvent}
+            />
+          </div>
+        )}
       </div>
 
       {/* Información del evento */}

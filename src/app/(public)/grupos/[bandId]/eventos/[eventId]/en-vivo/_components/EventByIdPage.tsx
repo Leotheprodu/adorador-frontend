@@ -39,15 +39,33 @@ export const EventByIdPage = ({
       return true;
     }
 
-    // Si no es admin, verificar si es event manager
+    // Si no es admin, verificar si es admin de la banda (NO event manager)
     if (user?.isLoggedIn && user?.membersofBands) {
       return user.membersofBands.some(
-        (band) => band.band.id === event?.bandId && band.isEventManager,
+        (band) => band.band.id === event?.bandId && band.isAdmin,
       );
     }
 
     return false;
   }, [user, event]);
+
+  // Verificar si es event manager (para mostrar botones deshabilitados)
+  const isEventManager = useMemo(() => {
+    if (user?.isLoggedIn && user?.membersofBands) {
+      const bandMembership = user.membersofBands.find(
+        (band) => band.band.id === event?.bandId,
+      );
+      return Boolean(
+        bandMembership &&
+          bandMembership.isEventManager &&
+          !bandMembership.isAdmin,
+      );
+    }
+    return false;
+  }, [user, event]);
+
+  // Determinar si mostrar botones (admin o event manager)
+  const showActionButtons = isAdminEvent || isEventManager;
 
   // Escuchar cambios en las canciones del evento para hacer refetch automático
   // con debounce para evitar múltiples refetches
@@ -133,16 +151,18 @@ export const EventByIdPage = ({
             </div>
 
             {/* Botones de admin con mejor diseño */}
-            {isAdminEvent && (
+            {showActionButtons && (
               <div className="flex items-center gap-2">
                 <EditEventButton
                   bandId={params.bandId}
                   eventId={params.eventId}
                   refetch={refetch}
+                  isAdminEvent={isAdminEvent}
                 />
                 <DeleteEventButton
                   bandId={params.bandId}
                   eventId={params.eventId}
+                  isAdminEvent={isAdminEvent}
                 />
               </div>
             )}
