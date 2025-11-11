@@ -15,6 +15,7 @@ export const LyricsCard = ({
   transpose = 0,
   showChords = true,
   lyricsScale = 1,
+  isPracticeMode = false,
 }: {
   lyric: LyricsProps;
   index: number;
@@ -25,12 +26,15 @@ export const LyricsCard = ({
   transpose?: number;
   showChords?: boolean;
   lyricsScale?: number;
+  isPracticeMode?: boolean;
 }) => {
   const [updateLyric, setUpdateLyric] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const prevIsDragging = useRef(false);
 
   const handleClickLyric = () => {
+    // No permitir edición en modo práctica
+    if (isPracticeMode) return;
     setUpdateLyric(!updateLyric);
   };
 
@@ -43,6 +47,71 @@ export const LyricsCard = ({
     }
     prevIsDragging.current = isDragging;
   }, [isDragging]);
+
+  // En modo práctica o cuando index es -1, no usar Draggable
+  if (isPracticeMode || index === -1) {
+    return (
+      <div className="group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 hover:bg-slate-50">
+        {/* Contenido de la letra */}
+        <div className="flex flex-1 flex-col">
+          <div style={{ width: 'fit-content' }}>
+            {/* Chords Section */}
+            {showChords && lyric.chords && lyric.chords.length > 0 && (
+              <div
+                className="grid grid-cols-5 gap-1"
+                style={{ fontSize: `${lyricsScale * 0.9}rem` }}
+              >
+                {lyric.chords
+                  .sort((a, b) => a.position - b.position)
+                  .map((chord) => (
+                    <div
+                      key={chord.id}
+                      style={{
+                        gridColumnStart: chord.position,
+                        gridColumnEnd: chord.position + 1,
+                      }}
+                      className="col-span-1 flex items-end gap-1"
+                    >
+                      <div className="flex items-end">
+                        <p className="font-semibold text-primary-600">
+                          {getNoteByType(
+                            chord.rootNote,
+                            transpose,
+                            chordPreferences,
+                          )}
+                        </p>
+                        <p className="font-medium text-primary-600">
+                          {chord.chordQuality}
+                        </p>
+                      </div>
+                      {chord.slashChord && (
+                        <div className="flex items-end rounded-sm bg-primary-100 px-1">
+                          <p className="text-xs font-semibold text-primary-700">
+                            {getNoteByType(
+                              chord.slashChord,
+                              transpose,
+                              chordPreferences,
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            )}
+
+            {/* Lyrics Section */}
+            <div
+              style={{ fontSize: `${lyricsScale}rem` }}
+              className="font-medium leading-relaxed text-slate-800"
+            >
+              {lyric.lyrics}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Draggable

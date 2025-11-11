@@ -31,6 +31,8 @@ export const saveTempLyrics = (
       `${STORAGE_KEY}_${bandId}_${songId}`,
       JSON.stringify(storedLyric),
     );
+    // Dispatch custom event for same-window changes
+    window.dispatchEvent(new Event('lyricsStorageChange'));
   } catch (error) {
     console.error('Error saving lyrics to localStorage:', error);
   }
@@ -59,6 +61,8 @@ export const getTempLyrics = (
 export const deleteTempLyrics = (bandId: string, songId: string): void => {
   try {
     localStorage.removeItem(`${STORAGE_KEY}_${bandId}_${songId}`);
+    // Dispatch custom event for same-window changes
+    window.dispatchEvent(new Event('lyricsStorageChange'));
   } catch (error) {
     console.error('Error deleting lyrics from localStorage:', error);
   }
@@ -106,6 +110,8 @@ export const clearAllTempLyrics = (): void => {
       }
     }
     keysToRemove.forEach((key) => localStorage.removeItem(key));
+    // Dispatch custom event for same-window changes
+    window.dispatchEvent(new Event('lyricsStorageChange'));
   } catch (error) {
     console.error('Error clearing all lyrics from localStorage:', error);
   }

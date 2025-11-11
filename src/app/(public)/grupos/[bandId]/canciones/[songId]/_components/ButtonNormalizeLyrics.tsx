@@ -63,6 +63,7 @@ export const ButtonNormalizeLyrics = ({
         onClick={onOpen}
         disabled={isProcessing}
         className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 disabled:cursor-not-allowed disabled:opacity-50"
+        startContent={<span className="text-base">🔧</span>}
       >
         Normalizar
       </Button>

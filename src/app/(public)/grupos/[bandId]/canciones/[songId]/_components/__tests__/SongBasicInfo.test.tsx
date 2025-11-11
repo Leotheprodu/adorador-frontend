@@ -80,7 +80,7 @@ jest.mock('../RehearsalControlsModal', () => ({
 }));
 
 jest.mock('@bands/[bandId]/canciones/_components/EditSongButton', () => ({
-  EditSongButton: () => <button>Editar</button>,
+  EditSongButton: () => <button>Editar Detalles</button>,
 }));
 
 jest.mock('@bands/[bandId]/canciones/_components/DeleteSongButton', () => ({
@@ -94,6 +94,8 @@ jest.mock('../ButtonNormalizeLyrics', () => ({
 describe('SongBasicInfo', () => {
   const mockRefetch = jest.fn();
   const mockRefetchLyrics = jest.fn();
+  const mockOnPracticeModeChange = jest.fn();
+  const mockOnEditModeChange = jest.fn();
 
   const mockSongData: SongPropsWithCount = {
     id: 1,
@@ -231,6 +233,8 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={true}
+        onPracticeModeChange={mockOnPracticeModeChange}
       />,
     );
 
@@ -245,6 +249,8 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={true}
+        onPracticeModeChange={mockOnPracticeModeChange}
       />,
     );
 
@@ -285,13 +291,25 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={true}
+        onPracticeModeChange={mockOnPracticeModeChange}
       />,
     );
 
     expect(screen.getByText('Controles')).toBeInTheDocument();
   });
 
-  it('should render edit button', () => {
+  it('should render edit button in edit mode', () => {
+    const mockLyrics: LyricsProps[] = [
+      {
+        id: 1,
+        position: 1,
+        lyrics: 'Test lyrics',
+        structure: { id: 1, title: 'verso' },
+        chords: [],
+      },
+    ];
+
     render(
       <SongBasicInfo
         data={mockSongData}
@@ -299,10 +317,13 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={false}
+        onPracticeModeChange={mockOnPracticeModeChange}
+        lyrics={mockLyrics}
       />,
     );
 
-    expect(screen.getByText('Editar')).toBeInTheDocument();
+    expect(screen.getByText('Editar Detalles')).toBeInTheDocument();
   });
 
   it('should render normalize button when lyrics exist', () => {
@@ -392,6 +413,8 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={true}
+        onPracticeModeChange={mockOnPracticeModeChange}
       />,
     );
 
@@ -413,6 +436,8 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={true}
+        onPracticeModeChange={mockOnPracticeModeChange}
       />,
     );
 
@@ -431,6 +456,8 @@ describe('SongBasicInfo', () => {
         bandId="1"
         songId="1"
         refetch={mockRefetch}
+        isPracticeMode={true}
+        onPracticeModeChange={mockOnPracticeModeChange}
       />,
     );
 
@@ -470,5 +497,167 @@ describe('SongBasicInfo', () => {
     expect(screen.getByText('Adoración')).toBeInTheDocument();
     // Should not show metadata that doesn't exist
     expect(screen.queryByText('BPM')).not.toBeInTheDocument();
+  });
+
+  describe('Practice/Edit Mode Toggle', () => {
+    const mockLyrics: LyricsProps[] = [
+      {
+        id: 1,
+        position: 1,
+        lyrics: 'Test lyrics',
+        structure: { id: 1, title: 'verso' },
+        chords: [],
+      },
+    ];
+
+    it('should render toggle button when in practice mode', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={true}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+        />,
+      );
+
+      expect(screen.getByText('Modo Práctica')).toBeInTheDocument();
+      expect(screen.getByText('Haz clic para editar')).toBeInTheDocument();
+    });
+
+    it('should render toggle button when in edit mode', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={false}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+        />,
+      );
+
+      expect(screen.getByText('Modo Edición')).toBeInTheDocument();
+      expect(screen.getByText('Haz clic para practicar')).toBeInTheDocument();
+    });
+
+    it('should call onPracticeModeChange when toggle button is clicked', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={true}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+        />,
+      );
+
+      const toggleButton = screen.getByText('Modo Práctica');
+      fireEvent.click(toggleButton);
+
+      expect(mockOnPracticeModeChange).toHaveBeenCalledWith(false);
+    });
+
+    it('should show practice mode buttons when isPracticeMode is true', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={true}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+        />,
+      );
+
+      expect(screen.getByText('Reproducir')).toBeInTheDocument();
+      expect(screen.getByText('Ver en YouTube')).toBeInTheDocument();
+      expect(screen.getByText('Controles')).toBeInTheDocument();
+
+      // Edit mode buttons should not be visible
+      expect(screen.queryByText('Editar Letra')).not.toBeInTheDocument();
+      expect(screen.queryByText('Editar Detalles')).not.toBeInTheDocument();
+    });
+
+    it('should show edit mode buttons when isPracticeMode is false', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={false}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+          isEditMode={false}
+          onEditModeChange={mockOnEditModeChange}
+          refetchLyricsOfCurrentSong={mockRefetchLyrics}
+        />,
+      );
+
+      expect(screen.getByText('Editar Letra')).toBeInTheDocument();
+      expect(screen.getByText('Editar Detalles')).toBeInTheDocument();
+      expect(screen.getByText('Normalizar')).toBeInTheDocument();
+
+      // Practice mode buttons should not be visible
+      expect(screen.queryByText('Reproducir')).not.toBeInTheDocument();
+      expect(screen.queryByText('Ver en YouTube')).not.toBeInTheDocument();
+      expect(screen.queryByText('Controles')).not.toBeInTheDocument();
+    });
+
+    it('should show "Ver Letra" button when in edit mode and isEditMode is true', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={false}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+          isEditMode={true}
+          onEditModeChange={mockOnEditModeChange}
+          refetchLyricsOfCurrentSong={mockRefetchLyrics}
+        />,
+      );
+
+      expect(screen.getByText('Ver Letra')).toBeInTheDocument();
+      expect(screen.queryByText('Editar Letra')).not.toBeInTheDocument();
+    });
+
+    it('should call onEditModeChange when "Editar Letra" button is clicked', () => {
+      render(
+        <SongBasicInfo
+          data={mockSongData}
+          status="success"
+          bandId="1"
+          songId="1"
+          refetch={mockRefetch}
+          isPracticeMode={false}
+          onPracticeModeChange={mockOnPracticeModeChange}
+          lyrics={mockLyrics}
+          isEditMode={false}
+          onEditModeChange={mockOnEditModeChange}
+          refetchLyricsOfCurrentSong={mockRefetchLyrics}
+        />,
+      );
+
+      const editLyricsButton = screen.getByText('Editar Letra');
+      fireEvent.click(editLyricsButton);
+
+      expect(mockOnEditModeChange).toHaveBeenCalledWith(true);
+    });
   });
 });

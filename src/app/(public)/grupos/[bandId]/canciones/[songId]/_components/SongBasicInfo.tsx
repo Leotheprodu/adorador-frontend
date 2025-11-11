@@ -1,6 +1,14 @@
 import { useStore } from '@nanostores/react';
 import { $PlayList, $SelectedSong } from '@stores/player';
-import { PlayIcon, GearIcon } from '@global/icons';
+import {
+  PlayIcon,
+  GearIcon,
+  YoutubeIcon,
+  DocumentEditIcon,
+  EyeIcon,
+  MusicNoteIcon,
+  EditIcon,
+} from '@global/icons';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
@@ -22,6 +30,10 @@ export const SongBasicInfo = ({
   refetch,
   lyrics,
   refetchLyricsOfCurrentSong,
+  onEditModeChange,
+  isEditMode,
+  isPracticeMode,
+  onPracticeModeChange,
 }: {
   data: SongPropsWithCount | undefined;
   status: QueryStatus;
@@ -30,6 +42,10 @@ export const SongBasicInfo = ({
   refetch: (options?: RefetchOptions | undefined) => Promise<unknown>;
   lyrics?: LyricsProps[];
   refetchLyricsOfCurrentSong?: () => void;
+  onEditModeChange?: (isEdit: boolean) => void;
+  isEditMode?: boolean;
+  isPracticeMode?: boolean;
+  onPracticeModeChange?: (isPractice: boolean) => void;
 }) => {
   const playlist = useStore($PlayList);
   const selectedSong = useStore($SelectedSong);
@@ -119,63 +135,130 @@ export const SongBasicInfo = ({
             </div>
 
             {/* Botones de acción */}
-            <div className="flex flex-wrap gap-2">
-              {data?.youtubeLink && (
-                <>
-                  <Button
-                    size="sm"
-                    onClick={handleClickPlay}
-                    disabled={selectedSong?.id === data?.id}
-                    className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
-                    startContent={<PlayIcon className="h-4 w-4" />}
-                  >
-                    Reproducir
-                  </Button>
-                  <Button
-                    size="sm"
-                    as={'a'}
-                    target="_blank"
-                    href={`https://youtu.be/${data.youtubeLink}`}
-                    className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-red-300 hover:bg-red-50"
-                  >
-                    Ver en YouTube
-                  </Button>
-                </>
-              )}
+            <div className="flex flex-col gap-3">
+              {/* Toggle Modo Práctica / Edición - Un solo botón intuitivo */}
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => onPracticeModeChange?.(!isPracticeMode)}
+                  className={`border-2 font-semibold transition-all ${
+                    isPracticeMode
+                      ? 'border-green-500 bg-green-100 text-green-700 hover:bg-green-200'
+                      : 'border-orange-500 bg-orange-100 text-orange-700 hover:bg-orange-200'
+                  }`}
+                  startContent={
+                    isPracticeMode ? (
+                      <MusicNoteIcon className="h-4 w-4" />
+                    ) : (
+                      <EditIcon className="h-4 w-4" />
+                    )
+                  }
+                >
+                  {isPracticeMode ? 'Modo Práctica' : 'Modo Edición'}
+                </Button>
+                <span className="text-xs text-slate-500">
+                  {isPracticeMode
+                    ? 'Haz clic para editar'
+                    : 'Haz clic para practicar'}
+                </span>
+              </div>
 
-              <Button
-                size="sm"
-                onClick={onOpen}
-                className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
-                startContent={<GearIcon className="h-4 w-4" />}
-              >
-                Controles
-              </Button>
+              {/* Botones según el modo */}
+              <div className="flex flex-wrap gap-2">
+                {/* Botones de Práctica (siempre visibles en modo práctica) */}
+                {isPracticeMode && (
+                  <>
+                    {data?.youtubeLink && (
+                      <>
+                        <Button
+                          size="sm"
+                          onClick={handleClickPlay}
+                          disabled={selectedSong?.id === data?.id}
+                          className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+                          startContent={<PlayIcon className="h-4 w-4" />}
+                        >
+                          Reproducir
+                        </Button>
+                        <Button
+                          size="sm"
+                          as={'a'}
+                          target="_blank"
+                          href={`https://youtu.be/${data.youtubeLink}`}
+                          className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-red-300 hover:bg-red-50"
+                          startContent={<YoutubeIcon className="h-4 w-4" />}
+                        >
+                          Ver en YouTube
+                        </Button>
+                      </>
+                    )}
 
-              <EditSongButton
-                bandId={bandId}
-                songId={songId}
-                refetch={refetch}
-                songData={data}
-              />
-
-              {lyrics && lyrics.length > 0 && refetchLyricsOfCurrentSong && (
-                <ButtonNormalizeLyrics
-                  params={{ bandId, songId }}
-                  lyrics={lyrics}
-                  refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-                />
-              )}
-
-              {data &&
-                data._count &&
-                (data._count.lyrics === 0 || data._count.lyrics === null) && (
-                  <DeleteSongButton
-                    bandId={bandId}
-                    songId={songId}
-                    songTitle={data.title}
-                  />
+                    <Button
+                      size="sm"
+                      onClick={onOpen}
+                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+                      startContent={<GearIcon className="h-4 w-4" />}
+                    >
+                      Controles
+                    </Button>
+                  </>
                 )}
+
+                {/* Botones de Edición (solo visibles en modo edición) */}
+                {!isPracticeMode && (
+                  <>
+                    {lyrics && lyrics.length > 0 && onEditModeChange && (
+                      <Button
+                        size="sm"
+                        onClick={() => onEditModeChange(!isEditMode)}
+                        className={`border-2 font-semibold transition-all ${
+                          isEditMode
+                            ? 'border-brand-purple-500 bg-brand-purple-100 text-brand-purple-700 hover:bg-brand-purple-200'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-brand-purple-300 hover:bg-brand-purple-50'
+                        }`}
+                        startContent={
+                          isEditMode ? (
+                            <EyeIcon className="h-4 w-4" />
+                          ) : (
+                            <DocumentEditIcon className="h-4 w-4" />
+                          )
+                        }
+                      >
+                        {isEditMode ? 'Ver Letra' : 'Editar Letra'}
+                      </Button>
+                    )}
+
+                    <EditSongButton
+                      bandId={bandId}
+                      songId={songId}
+                      refetch={refetch}
+                      songData={data}
+                    />
+
+                    {lyrics &&
+                      lyrics.length > 0 &&
+                      refetchLyricsOfCurrentSong && (
+                        <ButtonNormalizeLyrics
+                          params={{ bandId, songId }}
+                          lyrics={lyrics}
+                          refetchLyricsOfCurrentSong={
+                            refetchLyricsOfCurrentSong
+                          }
+                        />
+                      )}
+
+                    {data &&
+                      data._count &&
+                      (data._count.lyrics === 0 ||
+                        data._count.lyrics === null) && (
+                        <DeleteSongButton
+                          bandId={bandId}
+                          songId={songId}
+                          songTitle={data.title}
+                        />
+                      )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>

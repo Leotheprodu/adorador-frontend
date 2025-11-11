@@ -11,6 +11,8 @@ interface EditLyricsOptionsProps {
   refetchLyricsOfCurrentSong: () => void;
   mutateUploadLyricsByFile: (formData: FormData) => void;
   existingLyrics: LyricsProps[];
+  isExpanded?: boolean;
+  onClose?: () => void;
 }
 
 export const EditLyricsOptions = ({
@@ -19,11 +21,16 @@ export const EditLyricsOptions = ({
   refetchLyricsOfCurrentSong,
   mutateUploadLyricsByFile,
   existingLyrics,
+  isExpanded: controlledIsExpanded,
+  onClose: controlledOnClose,
 }: EditLyricsOptionsProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [internalIsExpanded, setInternalIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'upload'>('editor');
   const [isDragging, setIsDragging] = useState(false);
   const [initialText, setInitialText] = useState<string>('');
+
+  // Use controlled prop if provided, otherwise use internal state
+  const isExpanded = controlledIsExpanded ?? internalIsExpanded;
 
   const { mutate: mutateDeleteAllLyrics, status: statusDeleteAllLyrics } =
     deleteAllLyricsService({ params });
@@ -32,9 +39,10 @@ export const EditLyricsOptions = ({
   useEffect(() => {
     if (
       typeof window !== 'undefined' &&
-      window.location.hash === '#edit-lyrics'
+      window.location.hash === '#edit-lyrics' &&
+      !controlledIsExpanded
     ) {
-      setIsExpanded(true);
+      setInternalIsExpanded(true);
       // Remove the hash after using it
       window.history.replaceState(
         null,
@@ -42,6 +50,7 @@ export const EditLyricsOptions = ({
         window.location.pathname + window.location.search,
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Convert existing lyrics to plain text when component mounts or lyrics change
@@ -113,7 +122,7 @@ export const EditLyricsOptions = ({
       {/* Collapsed Button */}
       {!isExpanded && (
         <button
-          onClick={() => setIsExpanded(true)}
+          onClick={() => setInternalIsExpanded(true)}
           className="group w-full rounded-lg border-2 border-dashed border-primary-300 bg-primary-50 p-4 transition-all hover:border-primary-500 hover:bg-primary-100"
         >
           <div className="flex items-center justify-center gap-3">
@@ -148,7 +157,11 @@ export const EditLyricsOptions = ({
         <div className="flex w-full flex-col items-center gap-6 rounded-lg border-2 border-primary-200 bg-white p-6 shadow-md">
           {/* Close Button */}
           <button
-            onClick={() => setIsExpanded(false)}
+            onClick={() =>
+              controlledOnClose
+                ? controlledOnClose()
+                : setInternalIsExpanded(false)
+            }
             className="ml-auto flex items-center gap-2 rounded-md px-3 py-1 text-sm text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
           >
             <span>Cerrar</span>
@@ -210,7 +223,11 @@ export const EditLyricsOptions = ({
                   refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
                   initialText={initialText}
                   isEditMode={true}
-                  onClose={() => setIsExpanded(false)}
+                  onClose={() =>
+                    controlledOnClose
+                      ? controlledOnClose()
+                      : setInternalIsExpanded(false)
+                  }
                 />
               </div>
             ) : (
