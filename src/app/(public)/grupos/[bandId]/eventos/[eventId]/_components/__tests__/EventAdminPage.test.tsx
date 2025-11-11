@@ -9,6 +9,7 @@ import type { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
 import { userRoles } from '@global/config/constants';
 import { $user } from '@stores/users';
 import { $event } from '@stores/event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock @nanostores/react FIRST
 jest.mock('@nanostores/react', () => ({
@@ -101,6 +102,13 @@ jest.mock(
     DeleteEventButton: () => <button>Delete Event</button>,
   }),
 );
+jest.mock('../SongListDisplay', () => ({
+  SongListDisplay: ({ songs }: { songs: unknown[] }) => (
+    <div data-testid="song-list-display">
+      <div>Canciones: {songs.length}</div>
+    </div>
+  ),
+}));
 
 const mockUseEventAdminPage = useEventAdminPage as jest.MockedFunction<
   typeof useEventAdminPage
@@ -109,6 +117,19 @@ const mockUseEventTimeLeft = useEventTimeLeft as jest.MockedFunction<
   typeof useEventTimeLeft
 >;
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+
+// Helper para renderizar con QueryClientProvider
+const renderWithQueryClient = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+};
 
 describe('EventAdminPage', () => {
   const mockParams = {
@@ -157,6 +178,8 @@ describe('EventAdminPage', () => {
     replace: jest.fn(),
     prefetch: jest.fn(),
   };
+
+  const mockRefetch = jest.fn();
 
   const mockAdminUser: LoggedUser = {
     id: 1,
@@ -227,6 +250,14 @@ describe('EventAdminPage', () => {
     // Reset stores to default values
     $user.set(mockRegularUser);
     $event.set({ bandId: 123, id: 456, title: '', date: '', songs: [] });
+
+    // Mock default return with refetch
+    mockUseEventAdminPage.mockReturnValue({
+      event: undefined,
+      isLoading: false,
+      error: null,
+      refetch: jest.fn(),
+    });
   });
 
   describe('Estados de carga', () => {
@@ -235,9 +266,10 @@ describe('EventAdminPage', () => {
         event: undefined,
         isLoading: true,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       const spinner = document.querySelector('.animate-spin');
       expect(spinner).toBeInTheDocument();
@@ -249,9 +281,10 @@ describe('EventAdminPage', () => {
         event: undefined,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('Evento no encontrado')).toBeInTheDocument();
       expect(screen.getByText('Volver a eventos')).toBeInTheDocument();
@@ -263,9 +296,10 @@ describe('EventAdminPage', () => {
         event: undefined,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       const backButton = screen.getByText('Volver a eventos');
       await user.click(backButton);
@@ -280,11 +314,12 @@ describe('EventAdminPage', () => {
         event: mockEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
     });
 
     test('debe renderizar la información básica del evento', () => {
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('Evento de Prueba')).toBeInTheDocument();
       expect(screen.getByText(/jueves/i)).toBeInTheDocument(); // formato de fecha con día
@@ -302,9 +337,10 @@ describe('EventAdminPage', () => {
         event: futureEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('Próximo')).toBeInTheDocument();
       expect(screen.getByText(/Tiempo restante: 5 días/)).toBeInTheDocument();
@@ -320,16 +356,17 @@ describe('EventAdminPage', () => {
         event: pastEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('Finalizado')).toBeInTheDocument();
       expect(screen.queryByText(/Tiempo restante/)).not.toBeInTheDocument();
     });
 
     test('debe renderizar el link al evento en vivo', () => {
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       const liveLink = screen.getByRole('link', { name: /Evento en Vivo/i });
       expect(liveLink).toHaveAttribute(
@@ -345,6 +382,7 @@ describe('EventAdminPage', () => {
         event: mockEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
     });
 
@@ -352,7 +390,7 @@ describe('EventAdminPage', () => {
       $user.set(mockAdminUser);
       $event.set({ bandId: 123, id: 456, title: '', date: '', songs: [] });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('Edit Event')).toBeInTheDocument();
       expect(screen.getByText('Delete Event')).toBeInTheDocument();
@@ -362,14 +400,14 @@ describe('EventAdminPage', () => {
       $user.set(mockEventManagerUser);
       $event.set({ bandId: 123, id: 456, title: '', date: '', songs: [] });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('Edit Event')).toBeInTheDocument();
       expect(screen.getByText('Delete Event')).toBeInTheDocument();
     });
 
     test('no debe mostrar botones de edición/eliminación para usuarios regulares', () => {
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.queryByText('Edit Event')).not.toBeInTheDocument();
       expect(screen.queryByText('Delete Event')).not.toBeInTheDocument();
@@ -382,12 +420,13 @@ describe('EventAdminPage', () => {
         event: mockEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
     });
 
     test('debe navegar de vuelta a la lista de eventos', async () => {
       const user = userEvent.setup();
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       const backButton = screen.getByRole('button', {
         name: /Volver a eventos/i,
@@ -404,9 +443,10 @@ describe('EventAdminPage', () => {
         event: mockEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       // Verifica que la sección de "Información del Evento" esté presente
       expect(screen.getByText('Información del Evento')).toBeInTheDocument();
@@ -419,9 +459,10 @@ describe('EventAdminPage', () => {
         event: mockEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       // Verifica que muestre el estado activo
       expect(screen.getByText(/🟢 Activo/)).toBeInTheDocument();
@@ -432,11 +473,60 @@ describe('EventAdminPage', () => {
         event: mockEvent,
         isLoading: false,
         error: null,
+        refetch: mockRefetch,
       });
 
-      render(<EventAdminPage params={mockParams} />);
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
 
       expect(screen.getByText('#456')).toBeInTheDocument();
+    });
+  });
+
+  describe('Lista de canciones', () => {
+    test('debe renderizar el componente SongListDisplay', () => {
+      mockUseEventAdminPage.mockReturnValue({
+        event: mockEvent,
+        isLoading: false,
+        error: null,
+        refetch: mockRefetch,
+      });
+
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
+
+      const songList = screen.getByTestId('song-list-display');
+      expect(songList).toBeInTheDocument();
+    });
+
+    test('debe pasar las canciones correctamente al componente SongListDisplay', () => {
+      mockUseEventAdminPage.mockReturnValue({
+        event: mockEvent,
+        isLoading: false,
+        error: null,
+        refetch: mockRefetch,
+      });
+
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
+
+      // Verifica que se pase el número correcto de canciones (2 en mockEvent)
+      expect(screen.getByText('Canciones: 2')).toBeInTheDocument();
+    });
+
+    test('debe pasar un array vacío cuando no hay canciones', () => {
+      const eventWithoutSongs: EventByIdInterface = {
+        ...mockEvent,
+        songs: [],
+      };
+
+      mockUseEventAdminPage.mockReturnValue({
+        event: eventWithoutSongs,
+        isLoading: false,
+        error: null,
+        refetch: mockRefetch,
+      });
+
+      renderWithQueryClient(<EventAdminPage params={mockParams} />);
+
+      expect(screen.getByText('Canciones: 0')).toBeInTheDocument();
     });
   });
 });

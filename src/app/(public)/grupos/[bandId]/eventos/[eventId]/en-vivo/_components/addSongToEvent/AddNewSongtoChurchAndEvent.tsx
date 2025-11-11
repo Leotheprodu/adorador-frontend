@@ -84,7 +84,19 @@ export const AddNewSongtoChurchAndEvent = ({
       toast.success('Canción agregada al evento');
       refetch();
       onOpenChange();
+
+      // Resetear formulario solo cuando se agrega exitosamente
       setForm(formInit);
+      setGoToSong(false);
+
+      // Emitir evento global para que otras partes de la app actualicen
+      const event = new CustomEvent('eventSongsUpdated', {
+        detail: {
+          eventId: params.eventId,
+          changeType: 'song-created-and-added',
+        },
+      });
+      window.dispatchEvent(event);
 
       // Si el usuario eligió ir a la canción, redirigir
       if (goToSong && newSong?.id) {
@@ -101,6 +113,13 @@ export const AddNewSongtoChurchAndEvent = ({
     }
     mutateAddSongToChurch(form);
   };
+
+  const handleClearForm = () => {
+    setForm(formInit);
+    setGoToSong(false);
+    toast.success('Formulario limpiado');
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleOnChange(setForm, e);
   };
@@ -149,10 +168,22 @@ export const AddNewSongtoChurchAndEvent = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex items-center justify-between border-b border-slate-200">
                 <span className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-lg font-bold text-transparent">
                   ✨ Crear Nueva Canción
                 </span>
+                {(form.title ||
+                  form.artist ||
+                  form.youtubeLink ||
+                  form.key) && (
+                  <button
+                    onClick={handleClearForm}
+                    className="text-xs text-slate-500 transition-colors hover:text-brand-pink-600"
+                    title="Limpiar formulario"
+                  >
+                    🗑️ Limpiar
+                  </button>
+                )}
               </ModalHeader>
               <ModalBody>
                 <FormAddNewSong

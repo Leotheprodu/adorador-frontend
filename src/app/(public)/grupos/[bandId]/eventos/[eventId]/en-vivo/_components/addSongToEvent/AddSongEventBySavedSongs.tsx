@@ -102,12 +102,34 @@ export const AddSongEventBySavedSongs = ({
       refetch();
       setIsOpenPopover(false);
       onOpenChange();
+
+      // Resetear estados después de agregar exitosamente
+      setSelectedSongs([]);
+      setSearchTerm('');
+      setSongTypeFilter('all');
+
+      // Emitir evento global para que otras partes de la app actualicen
+      const event = new CustomEvent('eventSongsUpdated', {
+        detail: { eventId: params.eventId, changeType: 'songs-added' },
+      });
+      window.dispatchEvent(event);
     }
     if (status === 'error') {
       toast.error('Error al agregar canciones al evento');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
+
+  // Resetear estados cuando se cierra el modal (cancelar o cerrar)
+  useEffect(() => {
+    if (!isOpen) {
+      // Resetear todo el estado cuando se cierra el modal
+      setSelectedSongs([]);
+      setSearchTerm('');
+      setSongTypeFilter('all');
+    }
+  }, [isOpen]);
+
   const handleSelectSong = (songId: number) => {
     const eventSongsLength = eventSongs.length;
     if (songId) {

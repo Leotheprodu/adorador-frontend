@@ -2,13 +2,7 @@
 import { useEventAdminPage } from '@bands/[bandId]/eventos/[eventId]/_hooks/useEventAdminPage';
 import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 import { formatDate, formatTime } from '@global/utils/dataFormat';
-import {
-  CalendarIcon,
-  ClockIcon,
-  PlayIcon,
-  GearIcon,
-  UsersIcon,
-} from '@global/icons';
+import { CalendarIcon, ClockIcon, PlayIcon, UsersIcon } from '@global/icons';
 import Link from 'next/link';
 import { EditEventButton } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EditEventButton';
 import { DeleteEventButton } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/DeleteEventButton';
@@ -17,8 +11,10 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@nanostores/react';
 import { $user } from '@stores/users';
 import { userRoles } from '@global/config/constants';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { $event } from '@stores/event';
+import { SongListDisplay } from './SongListDisplay';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const EventAdminPage = ({
   params,
@@ -26,7 +22,8 @@ export const EventAdminPage = ({
   params: { bandId: string; eventId: string };
 }) => {
   const router = useRouter();
-  const { event, isLoading } = useEventAdminPage({ params });
+  const queryClient = useQueryClient();
+  const { event, isLoading, refetch } = useEventAdminPage({ params });
   const { eventTimeLeft } = useEventTimeLeft(event?.date || '');
   const user = useStore($user);
   const eventStore = useStore($event);
@@ -44,6 +41,32 @@ export const EventAdminPage = ({
 
     return false;
   }, [user, eventStore]);
+
+  // Escuchar eventos de actualización de canciones y hacer refetch
+  useEffect(() => {
+    const handleInvalidateQueries = () => {
+      console.log('[EventAdminPage] Invalidando queries del evento...');
+      // Invalidar la query para forzar refetch
+      queryClient.invalidateQueries({
+        queryKey: ['Event', params.bandId, params.eventId],
+      });
+      // También hacer refetch directo
+      refetch();
+    };
+
+    // Escuchar el evento global que se dispara cuando se agregan canciones
+    window.addEventListener(
+      'eventSongsUpdated',
+      handleInvalidateQueries as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        'eventSongsUpdated',
+        handleInvalidateQueries as EventListener,
+      );
+    };
+  }, [params.bandId, params.eventId, queryClient, refetch]);
 
   if (isLoading) {
     return (
@@ -70,11 +93,6 @@ export const EventAdminPage = ({
   const currentDate = new Date();
   const isUpcoming = currentDate < new Date(event.date);
 
-  // Mock refetch function
-  const mockRefetch = () => {
-    console.log('Refetch called from admin page');
-  };
-
   return (
     <div className="flex h-full w-full flex-col gap-6">
       {/* Header con navegación */}
@@ -93,7 +111,7 @@ export const EventAdminPage = ({
               <EditEventButton
                 bandId={params.bandId}
                 eventId={params.eventId}
-                refetch={mockRefetch}
+                refetch={refetch}
               />
               <DeleteEventButton
                 bandId={params.bandId}
@@ -179,21 +197,6 @@ export const EventAdminPage = ({
           </div>
         </Link>
 
-        {/* Gestionar canciones (próximamente) */}
-        <div className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6 opacity-60 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-slate-100 p-3">
-              <GearIcon className="h-6 w-6 text-slate-500" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-700">
-                Gestionar Canciones
-              </h3>
-              <p className="text-sm text-slate-500">Próximamente</p>
-            </div>
-          </div>
-        </div>
-
         {/* Participantes (próximamente) */}
         <div className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6 opacity-60 shadow-sm">
           <div className="flex items-center gap-4">
@@ -206,6 +209,16 @@ export const EventAdminPage = ({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Listado de canciones del evento */}
+      <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <SongListDisplay
+          songs={event.songs || []}
+          params={params}
+          refetch={refetch}
+          isAdminEvent={isAdminEvent}
+        />
       </div>
 
       {/* Estadísticas del evento */}

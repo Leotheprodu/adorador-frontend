@@ -6,11 +6,12 @@ export const useEventAdminPage = ({
 }: {
   params: { bandId: string; eventId: string };
 }) => {
-  const { data: event, isLoading, error } = getEventsById(params);
+  const { data: event, isLoading, error, refetch } = getEventsById(params);
 
   return {
     event,
     isLoading,
     error,
+    refetch,
   };
 };
