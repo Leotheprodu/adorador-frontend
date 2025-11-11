@@ -58,6 +58,10 @@ export const useAcceptInvitation = (invitationId: number) => {
       queryClient.invalidateQueries({ queryKey: ['PendingInvitations'] });
       queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
       queryClient.invalidateQueries({ queryKey: ['Bands'] });
+      // Invalidar los miembros de la banda a la que se acaba de unir
+      queryClient.invalidateQueries({
+        queryKey: ['BandMembers', response.membership.bandId.toString()],
+      });
 
       toast.success(`Te uniste a ${response.membership.band.name}!`);
 
