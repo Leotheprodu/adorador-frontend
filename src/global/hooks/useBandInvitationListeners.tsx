@@ -85,7 +85,7 @@ export const useBandInvitationListeners = () => {
 
           // Invalidar miembros de la banda
           queryClient.invalidateQueries({
-            queryKey: [`BandMembers-${data.bandId}`],
+            queryKey: ['BandMembers', data.bandId.toString()],
           });
         }
       },
@@ -126,7 +126,7 @@ export const useBandInvitationListeners = () => {
       }) => {
         // Invalidar queries relacionadas con la banda
         queryClient.invalidateQueries({
-          queryKey: [`BandMembers-${data.bandId}`],
+          queryKey: ['BandMembers', data.bandId.toString()],
         });
         queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
       },
@@ -147,7 +147,7 @@ export const useBandInvitationListeners = () => {
       }) => {
         // Invalidar miembros de la banda
         queryClient.invalidateQueries({
-          queryKey: [`BandMembers-${data.bandId}`],
+          queryKey: ['BandMembers', data.bandId.toString()],
         });
 
         // Si soy yo el actualizado, mostrar toast
@@ -174,7 +174,7 @@ export const useBandInvitationListeners = () => {
       }) => {
         // Invalidar queries
         queryClient.invalidateQueries({
-          queryKey: [`BandMembers-${data.bandId}`],
+          queryKey: ['BandMembers', data.bandId.toString()],
         });
 
         // Si me removieron a mí
