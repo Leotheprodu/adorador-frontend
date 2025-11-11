@@ -20,7 +20,7 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: 'Me has tomado en Tus Brazos',
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [],
         },
       ];
@@ -35,7 +35,7 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: 'Me has tomado en Tus Brazos',
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [
             {
               id: 1,
@@ -68,7 +68,7 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: 'Asombroso amor',
-          structure: { id: 1, title: 'coro' },
+          structure: { id: 4, title: 'chorus' },
           chords: [
             {
               id: 1,
@@ -91,14 +91,14 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: 'Primera línea',
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [],
         },
         {
           id: 2,
           position: 2,
           lyrics: 'Segunda línea',
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [],
         },
       ];
@@ -113,14 +113,14 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: 'Verso línea',
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [],
         },
         {
           id: 2,
           position: 2,
           lyrics: 'Coro línea',
-          structure: { id: 2, title: 'coro' },
+          structure: { id: 4, title: 'chorus' },
           chords: [],
         },
       ];
@@ -137,7 +137,7 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: 'Me has tomado en Tus Brazos fuertemente',
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [
             {
               id: 1,
@@ -194,7 +194,7 @@ describe('lyricsConverter', () => {
           id: 1,
           position: 1,
           lyrics: '12345678901234567890', // 20 characters
-          structure: { id: 1, title: 'verso' },
+          structure: { id: 2, title: 'verse' },
           chords: [
             {
               id: 1,

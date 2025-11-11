@@ -15,9 +15,9 @@ import { LyricsGroupedCard } from './LyricsGroupedCard';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { StoredLyricsAlert } from './StoredLyricsAlert';
 import { EditLyricsOptions } from './EditLyricsOptions';
-import { SongViewControls } from './SongViewControls';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { hasTempLyrics } from '../_utils/lyricsStorage';
 
 export const SongIdMainPage = ({
   params,
@@ -30,12 +30,48 @@ export const SongIdMainPage = ({
   const [lyricsGrouped, setLyricsGrouped] = useState<[string, LyricsProps[]][]>(
     [],
   );
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isPracticeMode, setIsPracticeMode] = useState(true); // Por defecto en modo práctica
 
   // Transpose específico de esta canción
   const [transpose, setTranspose] = useState(0);
 
   const chordPreferences = useStore($chordPreferences);
   const eventConfig = useStore($eventConfig);
+
+  // Detectar si hay letra guardada en localStorage y activar modo edición automáticamente
+  useEffect(() => {
+    // Solo al montar el componente, verificar si hay letra guardada
+    const hasStored = hasTempLyrics(params.bandId, params.songId);
+    if (hasStored) {
+      setIsEditMode(true);
+      setIsPracticeMode(false); // Cambiar a modo edición si hay letra guardada
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.bandId, params.songId]);
+
+  // Escuchar cambios en el storage (cuando se elimina la letra guardada)
+  useEffect(() => {
+    const handleLyricsStorageChange = () => {
+      const hasStored = hasTempLyrics(params.bandId, params.songId);
+      // Solo salir del modo edición si se eliminó la letra guardada
+      if (!hasStored && isEditMode) {
+        setIsEditMode(false);
+        setIsPracticeMode(true); // Volver a modo práctica cuando se elimina la letra guardada
+      }
+    };
+
+    window.addEventListener('lyricsStorageChange', handleLyricsStorageChange);
+    window.addEventListener('storage', handleLyricsStorageChange);
+
+    return () => {
+      window.removeEventListener(
+        'lyricsStorageChange',
+        handleLyricsStorageChange,
+      );
+      window.removeEventListener('storage', handleLyricsStorageChange);
+    };
+  }, [params.bandId, params.songId, isEditMode]);
 
   // Cargar transposición específica de esta canción
   useEffect(() => {
@@ -158,35 +194,48 @@ export const SongIdMainPage = ({
             data={data}
             status={status}
             refetch={refetch}
+            lyrics={LyricsOfCurrentSong}
+            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+            onEditModeChange={setIsEditMode}
+            isEditMode={isEditMode}
+            isPracticeMode={isPracticeMode}
+            onPracticeModeChange={setIsPracticeMode}
           />
         </section>
-
-        {/* Controls Section - Only show when lyrics exist */}
-        {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 && (
-          <section className="mb-6 w-full px-4">
-            <SongViewControls songId={params.songId} />
-          </section>
-        )}
 
         {/* Lyrics Section - Vertical Layout */}
         <section className="px-4">
           <div className="mx-auto flex max-w-4xl flex-col gap-6">
             {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 ? (
               <>
-                {lyricsGrouped?.map(([structure, lyrics], groupIndex) => (
-                  <LyricsGroupedCard
-                    key={groupIndex}
-                    structure={structure}
-                    lyrics={lyrics}
-                    refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                {/* Show editor if in edit mode, otherwise show lyrics */}
+                {isEditMode ? (
+                  <EditLyricsOptions
                     params={params}
-                    chordPreferences={chordPreferences}
-                    lyricsOfCurrentSong={LyricsOfCurrentSong}
-                    transpose={transpose}
-                    showChords={eventConfig.showChords}
-                    lyricsScale={eventConfig.lyricsScale}
+                    songTitle={data?.title}
+                    refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                    mutateUploadLyricsByFile={mutateUploadLyricsByFile}
+                    existingLyrics={LyricsOfCurrentSong}
+                    isExpanded={true}
+                    onClose={() => setIsEditMode(false)}
                   />
-                ))}
+                ) : (
+                  lyricsGrouped?.map(([structure, lyrics], groupIndex) => (
+                    <LyricsGroupedCard
+                      key={groupIndex}
+                      structure={structure}
+                      lyrics={lyrics}
+                      refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                      params={params}
+                      chordPreferences={chordPreferences}
+                      lyricsOfCurrentSong={LyricsOfCurrentSong}
+                      transpose={transpose}
+                      showChords={eventConfig.showChords}
+                      lyricsScale={eventConfig.lyricsScale}
+                      isPracticeMode={isPracticeMode}
+                    />
+                  ))
+                )}
               </>
             ) : (
               <NoLyricsSong
@@ -199,19 +248,6 @@ export const SongIdMainPage = ({
             )}
           </div>
         </section>
-
-        {/* Edit/Replace Lyrics Options - Available even when lyrics exist */}
-        {LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0 && (
-          <section className="mt-8 flex w-full justify-center px-4">
-            <EditLyricsOptions
-              params={params}
-              songTitle={data?.title}
-              refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-              mutateUploadLyricsByFile={mutateUploadLyricsByFile}
-              existingLyrics={LyricsOfCurrentSong}
-            />
-          </section>
-        )}
       </div>
     </UIGuard>
   );

@@ -58,14 +58,15 @@ export const ButtonNormalizeLyrics = ({
 
   return (
     <>
-      <button
+      <Button
+        size="sm"
         onClick={onOpen}
         disabled={isProcessing}
-        className="flex items-center gap-2 rounded-lg border-2 border-primary-300 bg-primary-50 px-4 py-2 font-semibold text-primary-700 transition-all hover:border-primary-500 hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 disabled:cursor-not-allowed disabled:opacity-50"
+        startContent={<span className="text-base">🔧</span>}
       >
-        <span className="text-xl">✨</span>
-        <span>Normalizar Letras</span>
-      </button>
+        Normalizar
+      </Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

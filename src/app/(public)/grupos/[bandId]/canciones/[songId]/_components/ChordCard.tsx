@@ -66,17 +66,12 @@ export const ChordCard = ({
         <div className="flex items-baseline">
           <span className="font-bold text-brand-purple-700">
             {getNoteByType(chord.rootNote, transpose, chordPreferences)}
-          </span>
-          <span className="ml-0.5 text-xs text-slate-500">
             {chord.chordQuality}
           </span>
           {chord.slashChord && (
-            <>
-              <span className="mx-0.5 text-slate-600">/</span>
-              <span className="font-bold text-brand-purple-700">
-                {getNoteByType(chord.slashChord, transpose, chordPreferences)}
-              </span>
-            </>
+            <span className="font-bold text-brand-purple-700">
+              /{getNoteByType(chord.slashChord, transpose, chordPreferences)}
+            </span>
           )}
         </div>
       </div>
