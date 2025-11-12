@@ -193,7 +193,8 @@ export const SongQuickViewModal = ({
                   onPress={() => {
                     // Sin transposición, copiar con tono y tempo originales
                     const suggestedTempo = post.sharedSong?.tempo || undefined;
-                    onCopySong(post.id, undefined, suggestedTempo);
+                    const suggestedKey = post.sharedSong?.key || undefined;
+                    onCopySong(post.id, suggestedKey, suggestedTempo);
                     // NO cerrar el modal para que el usuario pueda seleccionar la banda
                   }}
                 >

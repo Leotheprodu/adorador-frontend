@@ -102,13 +102,17 @@ export const ShareSongCommentModal = ({
               }}
               isLoading={isLoadingSongs}
               isDisabled={!selectedBandId}
+              items={songsData ?? []}
             >
-              {songsData?.map((song) => (
-                <SelectItem key={song.id.toString()} value={song.id.toString()}>
+              {(song) => (
+                <SelectItem
+                  key={song.id.toString()}
+                  textValue={`${song.title}${song.artist ? ` - ${song.artist}` : ''}`}
+                >
                   {song.title}
                   {song.artist && ` - ${song.artist}`}
                 </SelectItem>
-              )) ?? []}
+              )}
             </Select>
           )}
 

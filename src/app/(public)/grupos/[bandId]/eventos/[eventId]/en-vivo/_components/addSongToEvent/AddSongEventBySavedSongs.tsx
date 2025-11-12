@@ -14,6 +14,7 @@ import { addSongsToEventService } from './services/AddSongsToEventService';
 import { songTypes } from '@global/config/constants';
 import { getSongsOfBand } from '@bands/[bandId]/canciones/_services/songsOfBandService';
 import { SearchIcon, MicrophoneIcon } from '@global/icons';
+import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
 
 export const AddSongEventBySavedSongs = ({
   params,
@@ -37,6 +38,12 @@ export const AddSongEventBySavedSongs = ({
 
   const { bandId } = params;
   const { data } = getSongsOfBand({ bandId });
+
+  // Conectar al WebSocket para actualizaciones en tiempo real
+  useBandSongsWebSocket({
+    bandId: parseInt(bandId),
+    enabled: isOpen,
+  });
   const [selectedSongs, setSelectedSongs] = useState<
     { songId: number; order: number; transpose: number }[]
   >([]);

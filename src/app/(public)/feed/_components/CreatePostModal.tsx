@@ -15,6 +15,7 @@ import {
 } from '@nextui-org/react';
 import { CreatePostDto, PostType } from '../_interfaces/feedInterface';
 import { extractYouTubeId, isValidYouTubeId } from '@global/utils/formUtils';
+import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -41,6 +42,12 @@ export const CreatePostModal = ({
   const [bandId, setBandId] = useState<string>(
     selectedBandId?.toString() || '',
   );
+
+  // Conectar al WebSocket para actualizaciones en tiempo real de canciones
+  useBandSongsWebSocket({
+    bandId: selectedBandId,
+    enabled: isOpen && !!selectedBandId,
+  });
   const [content, setContent] = useState('');
   const [sharedSongId, setSharedSongId] = useState('');
   const [requestedSongTitle, setRequestedSongTitle] = useState('');

@@ -190,10 +190,16 @@ export const FeedClient = () => {
     // Si postId es 0, significa que es una vista desde comentario
     // Usar selectedViewSong directamente
     if (postId === 0 && selectedViewSong) {
-      const tempPost = { ...selectedViewSong } as Post & {
+      const tempPost = {
+        ...selectedViewSong,
+      } as Post & {
         _isFromComment?: boolean;
+        _commentId?: number;
       };
       tempPost._isFromComment = true;
+      // Preservar el commentId si existe
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tempPost._commentId = (selectedViewSong as any)._commentId;
       setSelectedCopySong(tempPost);
       setCopySongId(selectedViewSong.sharedSongId || 0);
       setSuggestedKey(newSuggestedKey);
@@ -235,9 +241,13 @@ export const FeedClient = () => {
     onViewSongClose();
   };
 
-  const handleViewSongFromComment = (songId: number, bandId: number) => {
+  const handleViewSongFromComment = (
+    songId: number,
+    bandId: number,
+    commentId?: number,
+  ) => {
     // Crear un objeto Post temporal para abrir el modal de vista rápida
-    const tempPost: Post = {
+    const tempPost: Post & { _commentId?: number } = {
       id: 0,
       type: 'SONG_SHARE',
       status: 'ACTIVE',
@@ -264,6 +274,7 @@ export const FeedClient = () => {
       },
       _count: { blessings: 0, comments: 0, songCopies: 0 },
       userBlessing: [],
+      _commentId: commentId,
     };
     setSelectedViewSong(tempPost);
     onViewSongOpen();
@@ -273,11 +284,12 @@ export const FeedClient = () => {
     postId: number,
     songId: number,
     bandId: number,
+    commentId: number,
     key?: string | null,
     tempo?: number | null,
   ) => {
     // Crear un objeto Post temporal con la canción del comentario
-    const tempPost: Post = {
+    const tempPost: Post & { _isFromComment?: boolean; _commentId?: number } = {
       id: songId, // Usar songId como identificador temporal
       type: 'SONG_SHARE',
       status: 'ACTIVE',
@@ -304,9 +316,9 @@ export const FeedClient = () => {
       },
       _count: { blessings: 0, comments: 0, songCopies: 0 },
       userBlessing: [],
-    } as Post & { _isFromComment?: boolean };
-
-    (tempPost as Post & { _isFromComment?: boolean })._isFromComment = true;
+      _isFromComment: true,
+      _commentId: commentId,
+    };
 
     setSelectedCopySong(tempPost);
     setCopySongId(songId); // Guardar el songId para usar el servicio correcto
@@ -319,11 +331,17 @@ export const FeedClient = () => {
     // Verificar si es una copia desde comentario
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isFromComment = (selectedCopySong as any)._isFromComment;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const commentId = (selectedCopySong as any)._commentId;
 
     if (isFromComment) {
       // Usar el servicio directo para copiar por songId
       setCopySongId(selectedCopySong.sharedSongId!);
-      copySongDirect.mutate(copyData, {
+      const copyDataWithComment = {
+        ...copyData,
+        commentId: commentId,
+      };
+      copySongDirect.mutate(copyDataWithComment, {
         onSuccess: () => {
           handleCloseCopySong();
           queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });

@@ -268,6 +268,36 @@ export const useFeedWebSocket = ({
         }
       });
 
+      newSocket.on(
+        'songCopiedFromComment',
+        (data: {
+          commentId: number;
+          postId?: number;
+          userId: number;
+          userName: string;
+          targetBandName: string;
+          count: number;
+        }) => {
+          console.log(
+            '[FeedWebSocket] Canción copiada desde comentario:',
+            data,
+          );
+
+          // Si tenemos el postId, invalidar solo los comentarios de ese post
+          if (data.postId) {
+            queryClient.invalidateQueries({
+              queryKey: ['comments', data.postId.toString()],
+            });
+          } else {
+            // Fallback: invalidar todas las queries de comentarios
+            queryClient.invalidateQueries({ queryKey: ['comments'] });
+          }
+
+          // También invalidar el feed por si acaso
+          queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+        },
+      );
+
       isConnectingRef.current = false;
       return newSocket;
     } catch (error) {

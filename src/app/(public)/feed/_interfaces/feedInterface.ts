@@ -100,6 +100,7 @@ export interface Comment {
   replies?: Comment[];
   _count?: {
     blessings: number;
+    songCopies?: number;
   };
   userBlessing?: CommentBlessing[]; // Blessings del usuario actual
 }
@@ -155,6 +156,7 @@ export interface CopySongDto {
   targetBandId: number;
   newKey?: string;
   newTempo?: number;
+  commentId?: number;
 }
 
 // WebSocket event types

@@ -25,11 +25,12 @@ interface CommentSectionProps {
   isLoadingComments: boolean;
   isSubmitting?: boolean;
   post?: Post;
-  onViewSong?: (songId: number, bandId: number) => void;
+  onViewSong?: (songId: number, bandId: number, commentId?: number) => void;
   onCopySong?: (
     postId: number,
     songId: number,
     bandId: number,
+    commentId: number,
     key?: string | null,
     tempo?: number | null,
   ) => void;
@@ -188,11 +189,12 @@ export const CommentSection = ({
 interface CommentItemProps {
   comment: Comment;
   onReply: (commentId: number) => void;
-  onViewSong?: (songId: number, bandId: number) => void;
+  onViewSong?: (songId: number, bandId: number, commentId?: number) => void;
   onCopySong?: (
     postId: number,
     songId: number,
     bandId: number,
+    commentId: number,
     key?: string | null,
     tempo?: number | null,
   ) => void;
@@ -335,6 +337,7 @@ const CommentItem = ({
                           onViewSong?.(
                             comment.sharedSong!.id,
                             comment.sharedSong!.bandId,
+                            comment.id,
                           )
                         }
                         className="flex-1"
@@ -352,6 +355,7 @@ const CommentItem = ({
                               postId!,
                               comment.sharedSong!.id,
                               comment.sharedSong!.bandId,
+                              comment.id,
                               comment.sharedSong!.key,
                               comment.sharedSong!.tempo,
                             )
@@ -362,6 +366,17 @@ const CommentItem = ({
                         </Button>
                       )}
                     </div>
+                    {/* Contador de copias */}
+                    {(comment._count?.songCopies ?? 0) > 0 && (
+                      <div className="mt-2 flex items-center justify-center gap-1 text-tiny text-success-600">
+                        <DownloadIcon className="h-3 w-3" />
+                        <span>
+                          {comment._count!.songCopies === 1
+                            ? '1 persona guardó esta canción'
+                            : `${comment._count!.songCopies} personas guardaron esta canción`}
+                        </span>
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               )}
