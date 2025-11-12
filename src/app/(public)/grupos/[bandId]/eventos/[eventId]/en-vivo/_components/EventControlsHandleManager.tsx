@@ -155,11 +155,20 @@ export const EventControlsHandleManager = ({
                         </p>
                       </div>
                     </ModalBody>
-                    <ModalFooter>
-                      <Button color="danger" variant="light" onPress={onClose}>
+                    <ModalFooter className="flex-wrap gap-2">
+                      <Button
+                        color="danger"
+                        variant="light"
+                        onPress={onClose}
+                        className="whitespace-nowrap"
+                      >
                         Cerrar
                       </Button>
-                      <Button color="primary" onPress={handleChangeEventAdmin}>
+                      <Button
+                        color="primary"
+                        onPress={handleChangeEventAdmin}
+                        className="whitespace-nowrap"
+                      >
                         Aceptar
                       </Button>
                     </ModalFooter>

@@ -69,7 +69,7 @@ export const EventControlsLyricsSelect = () => {
       <h4 className="mb-3 bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
         Letras
       </h4>
-      <div className="flex h-full w-full items-center justify-center gap-3 rounded-xl bg-white/70 p-3 shadow-inner backdrop-blur-sm">
+      <div className="flex h-full w-full flex-wrap items-center justify-center gap-3 rounded-xl bg-white/70 p-3 shadow-inner backdrop-blur-sm">
         <div
           ref={scrollContainerRef}
           className="flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-xl bg-gradient-to-br from-slate-50 to-brand-purple-50/20 p-3 shadow-sm sm:h-[22rem]"

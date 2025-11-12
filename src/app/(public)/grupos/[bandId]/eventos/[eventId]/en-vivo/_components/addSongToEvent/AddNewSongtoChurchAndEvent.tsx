@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { addSongsToEventService } from './services/AddSongsToEventService';
@@ -21,14 +20,18 @@ import {
 import { handleOnChange } from '@global/utils/formUtils';
 import { FormAddNewSong } from './FormAddNewSong';
 import { useRouter } from 'next/navigation';
+
 export const AddNewSongtoChurchAndEvent = ({
   params,
-  setIsOpenPopover,
   refetch,
+  isOpen,
+  onClose,
 }: {
   params: { bandId: string; eventId: string };
-  setIsOpenPopover: (open: boolean) => void;
   refetch: () => void;
+  eventSongs?: { order: number; transpose: number; song: { id: number } }[];
+  isOpen: boolean;
+  onClose: () => void;
 }) => {
   const formInit: SongPropsWithoutId = {
     title: '',
@@ -41,7 +44,6 @@ export const AddNewSongtoChurchAndEvent = ({
   const [form, setForm] = useState<SongPropsWithoutId>(formInit);
   const [goToSong, setGoToSong] = useState(false);
   const event = useStore($event);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { bandId } = params;
   const router = useRouter();
   const { data: songsOfChurch, status: statusGetSongs } = getSongsOfBand({
@@ -54,11 +56,6 @@ export const AddNewSongtoChurchAndEvent = ({
   } = addSongsToBandService({ bandId });
   const { status: statusAddSongToEvent, mutate: mutateAddSongToEvent } =
     addSongsToEventService({ params });
-  useEffect(() => {
-    if (!isOpen) {
-      setIsOpenPopover(true);
-    }
-  }, [isOpen, setIsOpenPopover]);
 
   useEffect(() => {
     if (statusAddSongToChurch === 'success') {
@@ -83,7 +80,7 @@ export const AddNewSongtoChurchAndEvent = ({
     if (statusAddSongToEvent === 'success') {
       toast.success('Canción agregada al evento');
       refetch();
-      onOpenChange();
+      onClose();
 
       // Resetear formulario solo cuando se agrega exitosamente
       setForm(formInit);
@@ -120,6 +117,13 @@ export const AddNewSongtoChurchAndEvent = ({
     toast.success('Formulario limpiado');
   };
 
+  const handleModalClose = () => {
+    // Resetear formulario cuando se cierra el modal
+    setForm(formInit);
+    setGoToSong(false);
+    onClose();
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleOnChange(setForm, e);
   };
@@ -136,104 +140,88 @@ export const AddNewSongtoChurchAndEvent = ({
   }, [statusGetSongs, songsOfChurch, form.title]);
 
   return (
-    <>
-      <button
-        onClick={() => {
-          onOpen();
-          setIsOpenPopover(false);
-        }}
-        className="group rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-gradient-to-r hover:from-brand-pink-50 hover:to-brand-purple-50 hover:shadow-sm"
-      >
-        <div className="flex flex-col gap-0.5">
-          <div className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-left text-sm font-semibold text-transparent">
-            ✨ Nueva Canción
-          </div>
-          <div className="text-left text-xs text-slate-600">
-            Crea y agrega una canción al catálogo y evento
-          </div>
-        </div>
-      </button>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        size="lg"
-        scrollBehavior="inside"
-        classNames={{
-          base: 'bg-white max-h-[90vh]',
-          header: 'border-b border-slate-200 py-3',
-          body: 'py-3 px-4',
-          footer: 'border-t border-slate-200 py-3',
-        }}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex items-center justify-between border-b border-slate-200">
-                <span className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-lg font-bold text-transparent">
-                  ✨ Crear Nueva Canción
-                </span>
-                {(form.title ||
-                  form.artist ||
-                  form.youtubeLink ||
-                  form.key) && (
-                  <button
-                    onClick={handleClearForm}
-                    className="text-xs text-slate-500 transition-colors hover:text-brand-pink-600"
-                    title="Limpiar formulario"
-                  >
-                    🗑️ Limpiar
-                  </button>
-                )}
-              </ModalHeader>
-              <ModalBody>
-                <FormAddNewSong
-                  form={form}
-                  setForm={setForm}
-                  handleChange={handleChange}
-                />
-                <Checkbox
-                  isSelected={goToSong}
-                  onValueChange={setGoToSong}
-                  size="sm"
-                  className="mt-2"
-                  classNames={{
-                    label: 'text-sm text-slate-600',
-                  }}
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          handleModalClose();
+          onClose();
+        }
+      }}
+      size="lg"
+      scrollBehavior="inside"
+      classNames={{
+        base: 'bg-white max-h-[90vh]',
+        header: 'border-b border-slate-200 py-3',
+        body: 'py-3 px-4',
+        footer: 'border-t border-slate-200 py-3',
+      }}
+    >
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex items-center justify-between border-b border-slate-200">
+              <span className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-lg font-bold text-transparent">
+                ✨ Crear Nueva Canción
+              </span>
+              {(form.title || form.artist || form.youtubeLink || form.key) && (
+                <button
+                  onClick={handleClearForm}
+                  className="text-xs text-slate-500 transition-colors hover:text-brand-pink-600"
+                  title="Limpiar formulario"
                 >
-                  Ir a la canción después de crear
-                </Checkbox>
-              </ModalBody>
-              <ModalFooter className="flex gap-2">
-                <Button
-                  color="danger"
-                  variant="light"
-                  onPress={onClose}
-                  className="font-medium"
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  onPress={handleAddSongToChurchAndEvent}
-                  isDisabled={
-                    statusAddSongToChurch === 'pending' ||
-                    statusAddSongToEvent === 'pending'
-                  }
-                  isLoading={
-                    statusAddSongToChurch === 'pending' ||
-                    statusAddSongToEvent === 'pending'
-                  }
-                  className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white"
-                >
-                  {statusAddSongToChurch === 'pending' ||
+                  🗑️ Limpiar
+                </button>
+              )}
+            </ModalHeader>
+            <ModalBody>
+              <FormAddNewSong
+                form={form}
+                setForm={setForm}
+                handleChange={handleChange}
+              />
+              <Checkbox
+                isSelected={goToSong}
+                onValueChange={setGoToSong}
+                size="sm"
+                className="mt-2"
+                classNames={{
+                  label: 'text-sm text-slate-600',
+                }}
+              >
+                Ir a la canción después de crear
+              </Checkbox>
+            </ModalBody>
+            <ModalFooter className="flex flex-wrap gap-2">
+              <Button
+                color="danger"
+                variant="light"
+                onPress={onClose}
+                className="whitespace-nowrap font-medium"
+              >
+                Cancelar
+              </Button>
+              <Button
+                onPress={handleAddSongToChurchAndEvent}
+                isDisabled={
+                  statusAddSongToChurch === 'pending' ||
                   statusAddSongToEvent === 'pending'
-                    ? 'Creando...'
-                    : 'Crear Canción'}
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+                }
+                isLoading={
+                  statusAddSongToChurch === 'pending' ||
+                  statusAddSongToEvent === 'pending'
+                }
+                className="whitespace-nowrap bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white"
+              >
+                {statusAddSongToChurch === 'pending' ||
+                statusAddSongToEvent === 'pending'
+                  ? 'Creando...'
+                  : 'Crear Canción'}
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 };

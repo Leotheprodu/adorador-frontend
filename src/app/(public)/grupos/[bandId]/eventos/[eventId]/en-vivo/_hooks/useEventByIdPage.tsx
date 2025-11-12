@@ -35,7 +35,7 @@ export const useEventByIdPage = ({
     });
   }, [params.eventId]);
 
-  const { data, isLoading, status, refetch, isRefetching } = getEventsById({
+  const { data, isLoading, status, refetch } = getEventsById({
     bandId: params.bandId,
     eventId: params.eventId,
   });
@@ -50,7 +50,7 @@ export const useEventByIdPage = ({
     if (status === 'success' && data) {
       $event.set(data);
     }
-  }, [status, data, isRefetching]);
+  }, [status, data]);
 
   return {
     isLoading,

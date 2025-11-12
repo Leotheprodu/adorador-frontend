@@ -92,7 +92,7 @@ export const SongListDisplay = ({
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <MusicNoteIcon className="h-5 w-5 text-brand-purple-600" />
           <h3 className="text-lg font-semibold text-slate-900">
@@ -102,14 +102,14 @@ export const SongListDisplay = ({
             {songs.length}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {hasChanges && isAdminEvent && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 size="sm"
                 variant="flat"
                 onPress={handleCancelChanges}
-                className="bg-slate-100 text-slate-700 hover:bg-slate-200"
+                className="whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200"
               >
                 Cancelar
               </Button>
@@ -117,7 +117,7 @@ export const SongListDisplay = ({
                 size="sm"
                 isLoading={isPending}
                 onPress={handleSaveChanges}
-                className="bg-gradient-to-r from-brand-purple-500 to-brand-blue-500 font-semibold text-white shadow-md hover:shadow-lg"
+                className="whitespace-nowrap bg-gradient-to-r from-brand-purple-500 to-brand-blue-500 font-semibold text-white shadow-md hover:shadow-lg"
               >
                 Guardar Cambios
               </Button>
@@ -127,6 +127,7 @@ export const SongListDisplay = ({
             params={params}
             refetch={refetch}
             isAdminEvent={isAdminEvent}
+            eventSongs={songs}
           />
         </div>
       </div>
