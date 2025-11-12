@@ -78,8 +78,13 @@ export const DeleteEventButton = ({
                   Esta acción no se puede deshacer.
                 </p>
               </ModalBody>
-              <ModalFooter>
-                <Button color="default" variant="light" onPress={onClose}>
+              <ModalFooter className="flex-wrap gap-2">
+                <Button
+                  color="default"
+                  variant="light"
+                  onPress={onClose}
+                  className="whitespace-nowrap"
+                >
                   Cancelar
                 </Button>
                 <Button
@@ -90,6 +95,7 @@ export const DeleteEventButton = ({
                     handleDeleteEvent();
                     onClose();
                   }}
+                  className="whitespace-nowrap"
                 >
                   Eliminar
                 </Button>

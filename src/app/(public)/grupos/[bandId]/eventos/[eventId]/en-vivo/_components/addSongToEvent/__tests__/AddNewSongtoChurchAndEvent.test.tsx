@@ -63,7 +63,7 @@ const createMutationMock = (overrides = {}) => ({
 
 describe('AddNewSongtoChurchAndEvent', () => {
   const mockRefetch = jest.fn();
-  const mockSetIsOpenPopover = jest.fn();
+  const mockOnClose = jest.fn();
   const mockParams = { bandId: '1', eventId: '2' };
   const mockPush = jest.fn();
   const mockMutateAddSong = jest.fn();
@@ -98,46 +98,41 @@ describe('AddNewSongtoChurchAndEvent', () => {
     );
   });
 
-  it('should render the new song button', () => {
+  it('should render modal when isOpen is true', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
 
-    expect(screen.getByText(/Nueva Canción/)).toBeInTheDocument();
+    expect(screen.getByText(/Crear Nueva Canción/)).toBeInTheDocument();
   });
 
-  it('should open modal when clicking the button', async () => {
+  it('should not render modal when isOpen is false', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={false}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
 
-    const button = screen.getByText(/Nueva Canción/);
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Crear Nueva Canción/)).toBeInTheDocument();
-    });
+    expect(screen.queryByText(/Crear Nueva Canción/)).not.toBeInTheDocument();
   });
 
   it('should display form inside modal', async () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
-
-    const button = screen.getByText(/Nueva Canción/);
-    fireEvent.click(button);
 
     await waitFor(() => {
       expect(screen.getByTestId('form-add-new-song')).toBeInTheDocument();
@@ -148,13 +143,11 @@ describe('AddNewSongtoChurchAndEvent', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
-
-    const button = screen.getByText(/Nueva Canción/);
-    fireEvent.click(button);
 
     await waitFor(() => {
       expect(screen.getByText(/Crear Nueva Canción/)).toBeInTheDocument();
@@ -172,13 +165,11 @@ describe('AddNewSongtoChurchAndEvent', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
-
-    const button = screen.getByText(/Nueva Canción/);
-    fireEvent.click(button);
 
     await waitFor(() => {
       expect(screen.getByTestId('title-input')).toBeInTheDocument();
@@ -212,7 +203,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
@@ -238,7 +230,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
@@ -264,7 +257,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
@@ -305,7 +299,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
     const { rerender } = render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
@@ -327,7 +322,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
     rerender(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
@@ -342,7 +338,8 @@ describe('AddNewSongtoChurchAndEvent', () => {
     rerender(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
@@ -367,33 +364,30 @@ describe('AddNewSongtoChurchAndEvent', () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
-
-    const button = screen.getByText(/Nueva Canción/);
-    fireEvent.click(button);
 
     await waitFor(() => {
       expect(screen.getByText(/Creando.../)).toBeInTheDocument();
     });
   });
 
-  it('should close popover when opening modal', async () => {
+  it('should call onClose when clicking cancel button', async () => {
     render(
       <AddNewSongtoChurchAndEvent
         params={mockParams}
-        setIsOpenPopover={mockSetIsOpenPopover}
+        isOpen={true}
+        onClose={mockOnClose}
         refetch={mockRefetch}
       />,
     );
 
-    const button = screen.getByText(/Nueva Canción/);
-    fireEvent.click(button);
+    const cancelButton = screen.getByRole('button', { name: /Cancelar/ });
+    fireEvent.click(cancelButton);
 
-    await waitFor(() => {
-      expect(mockSetIsOpenPopover).toHaveBeenCalledWith(false);
-    });
+    expect(mockOnClose).toHaveBeenCalled();
   });
 });

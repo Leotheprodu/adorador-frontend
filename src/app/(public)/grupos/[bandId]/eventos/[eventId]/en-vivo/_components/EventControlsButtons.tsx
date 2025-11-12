@@ -25,7 +25,7 @@ export const EventControlsButtons = ({
       <h3 className="mb-3 bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
         Panel de Control
       </h3>
-      <div className="flex items-center justify-center gap-3 rounded-xl bg-white/70 p-4 shadow-inner backdrop-blur-sm">
+      <div className="flex flex-wrap items-center justify-center gap-3 rounded-xl bg-white/70 p-4 shadow-inner backdrop-blur-sm">
         <EventControlsButtonsScreen />
         {isSystemAdmin && <EventControlsButtonsSwipe />}
         {/* <EventControlsButtonsLiveMessages bandId={bandId} /> */}

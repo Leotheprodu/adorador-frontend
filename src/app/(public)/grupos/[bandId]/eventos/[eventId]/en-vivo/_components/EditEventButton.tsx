@@ -81,8 +81,13 @@ export const EditEventButton = ({
                   handleChange={handleChange}
                 />
               </ModalBody>
-              <ModalFooter>
-                <Button color="warning" variant="light" onPress={onClose}>
+              <ModalFooter className="flex-wrap gap-2">
+                <Button
+                  color="warning"
+                  variant="light"
+                  onPress={onClose}
+                  className="whitespace-nowrap"
+                >
                   Cerrar
                 </Button>
                 <Button
@@ -90,6 +95,7 @@ export const EditEventButton = ({
                   disabled={statusUpdateEvent === 'success'}
                   color="primary"
                   onPress={handleUpdateEvent}
+                  className="whitespace-nowrap"
                 >
                   Actualizar
                 </Button>

@@ -1,21 +1,32 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { AddSongEventButton } from '../AddSongEventButton';
+import '@testing-library/jest-dom';
 
 // Mock child components
 jest.mock('../AddSongEventBySavedSongs', () => ({
-  AddSongEventBySavedSongs: ({ params }) => (
-    <div data-testid="add-from-catalog">
-      AddSongEventBySavedSongs - {params.bandId} - {params.eventId}
-    </div>
-  ),
+  AddSongEventBySavedSongs: ({ isOpen, onClose, params }) =>
+    isOpen ? (
+      <div data-testid="add-from-catalog-modal">
+        Modal Catalog - {params.bandId} - {params.eventId}
+        <button onClick={onClose}>Close Catalog Modal</button>
+      </div>
+    ) : null,
 }));
 
 jest.mock('../AddNewSongtoChurchAndEvent', () => ({
-  AddNewSongtoChurchAndEvent: ({ params }) => (
-    <div data-testid="add-new-song">
-      AddNewSongtoChurchAndEvent - {params.bandId} - {params.eventId}
-    </div>
-  ),
+  AddNewSongtoChurchAndEvent: ({ isOpen, onClose, params }) =>
+    isOpen ? (
+      <div data-testid="add-new-song-modal">
+        Modal New Song - {params.bandId} - {params.eventId}
+        <button onClick={onClose}>Close New Song Modal</button>
+      </div>
+    ) : null,
+}));
+
+jest.mock('@nanostores/react', () => ({
+  useStore: jest.fn(() => ({
+    songs: [],
+  })),
 }));
 
 describe('AddSongEventButton', () => {
@@ -40,41 +51,124 @@ describe('AddSongEventButton', () => {
     fireEvent.click(button);
 
     await waitFor(() => {
-      expect(screen.getByTestId('add-from-catalog')).toBeInTheDocument();
-      expect(screen.getByTestId('add-new-song')).toBeInTheDocument();
+      expect(screen.getByText(/Catálogo de Canciones/)).toBeInTheDocument();
+      expect(screen.getByText(/Nueva Canción/)).toBeInTheDocument();
     });
   });
 
-  it('should show both child components in popover', async () => {
+  it('should open catalog modal when clicking catalog button', async () => {
     render(<AddSongEventButton params={mockParams} refetch={mockRefetch} />);
 
     const button = screen.getByLabelText('Agregar canción al evento');
     fireEvent.click(button);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/AddSongEventBySavedSongs - 1 - 2/),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(/AddNewSongtoChurchAndEvent - 1 - 2/),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Catálogo de Canciones/)).toBeInTheDocument();
+    });
+
+    const catalogButton = screen.getByText(/Catálogo de Canciones/);
+    fireEvent.click(catalogButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('add-from-catalog-modal')).toBeInTheDocument();
+      expect(screen.getByText(/Modal Catalog - 1 - 2/)).toBeInTheDocument();
     });
   });
 
-  it('should pass correct params to child components', async () => {
+  it('should open new song modal when clicking new song button', async () => {
     render(<AddSongEventButton params={mockParams} refetch={mockRefetch} />);
 
     const button = screen.getByLabelText('Agregar canción al evento');
     fireEvent.click(button);
 
     await waitFor(() => {
-      const catalogComponent = screen.getByTestId('add-from-catalog');
-      const newSongComponent = screen.getByTestId('add-new-song');
+      expect(screen.getByText(/Nueva Canción/)).toBeInTheDocument();
+    });
 
-      expect(catalogComponent).toHaveTextContent('1');
-      expect(catalogComponent).toHaveTextContent('2');
-      expect(newSongComponent).toHaveTextContent('1');
-      expect(newSongComponent).toHaveTextContent('2');
+    const newSongButton = screen.getByText(/Nueva Canción/);
+    fireEvent.click(newSongButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('add-new-song-modal')).toBeInTheDocument();
+      expect(screen.getByText(/Modal New Song - 1 - 2/)).toBeInTheDocument();
+    });
+  });
+
+  it('should close catalog modal when close button is clicked', async () => {
+    render(<AddSongEventButton params={mockParams} refetch={mockRefetch} />);
+
+    const button = screen.getByLabelText('Agregar canción al evento');
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Catálogo de Canciones/)).toBeInTheDocument();
+    });
+
+    const catalogButton = screen.getByText(/Catálogo de Canciones/);
+    fireEvent.click(catalogButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('add-from-catalog-modal')).toBeInTheDocument();
+    });
+
+    const closeButton = screen.getByText(/Close Catalog Modal/);
+    fireEvent.click(closeButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('add-from-catalog-modal'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('should close new song modal when close button is clicked', async () => {
+    render(<AddSongEventButton params={mockParams} refetch={mockRefetch} />);
+
+    const button = screen.getByLabelText('Agregar canción al evento');
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Nueva Canción/)).toBeInTheDocument();
+    });
+
+    const newSongButton = screen.getByText(/Nueva Canción/);
+    fireEvent.click(newSongButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('add-new-song-modal')).toBeInTheDocument();
+    });
+
+    const closeButton = screen.getByText(/Close New Song Modal/);
+    fireEvent.click(closeButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('add-new-song-modal'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('should render modals outside popover in the component tree', async () => {
+    const { container } = render(
+      <AddSongEventButton params={mockParams} refetch={mockRefetch} />,
+    );
+
+    const button = screen.getByLabelText('Agregar canción al evento');
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Catálogo de Canciones/)).toBeInTheDocument();
+    });
+
+    const catalogButton = screen.getByText(/Catálogo de Canciones/);
+    fireEvent.click(catalogButton);
+
+    await waitFor(() => {
+      const modal = screen.getByTestId('add-from-catalog-modal');
+      expect(modal).toBeInTheDocument();
+      // El modal no debe estar dentro del popover
+      const popover = container.querySelector('[data-slot="trigger"]');
+      expect(popover).not.toContainElement(modal);
     });
   });
 });

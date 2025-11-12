@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { EventControls } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControls';
 import { EventMainScreen } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventMainScreen';
 import { useEventByIdPage } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventByIdPage';
@@ -22,9 +22,23 @@ export const EventByIdPage = ({
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // Memo izar params y refetch para evitar re-renders innecesarios causados por el contador
+  const memoizedParams = useMemo(
+    () => ({
+      bandId: params.bandId,
+      eventId: params.eventId,
+    }),
+    [params.bandId, params.eventId],
+  );
+
   const { isLoading, refetch } = useEventByIdPage({
-    params,
+    params: memoizedParams,
   });
+
+  const memoizedRefetch = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   // NOTA: La conexión WebSocket se inicializa dentro de useEventByIdPage
   // No llamar useEventWSConexion aquí para evitar conexiones duplicadas
@@ -154,14 +168,14 @@ export const EventByIdPage = ({
             {showActionButtons && (
               <div className="flex items-center gap-2">
                 <EditEventButton
-                  bandId={params.bandId}
-                  eventId={params.eventId}
-                  refetch={refetch}
+                  bandId={memoizedParams.bandId}
+                  eventId={memoizedParams.eventId}
+                  refetch={memoizedRefetch}
                   isAdminEvent={isAdminEvent}
                 />
                 <DeleteEventButton
-                  bandId={params.bandId}
-                  eventId={params.eventId}
+                  bandId={memoizedParams.bandId}
+                  eventId={memoizedParams.eventId}
                   isAdminEvent={isAdminEvent}
                 />
               </div>
@@ -187,8 +201,8 @@ export const EventByIdPage = ({
         {/* Controles con diseño mejorado */}
         <div className="w-full">
           <EventControls
-            refetch={refetch}
-            params={params}
+            refetch={memoizedRefetch}
+            params={memoizedParams}
             isLoading={isLoading}
           />
         </div>

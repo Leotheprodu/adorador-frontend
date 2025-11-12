@@ -251,20 +251,20 @@ export const UpdatingSongList = ({
                   )}
                 </div>
               </ModalBody>
-              <ModalFooter className="gap-2">
+              <ModalFooter className="flex-wrap gap-2">
                 <Button
                   color="danger"
                   variant="light"
                   isDisabled={isPending || isPendingDeleteSongs}
                   onPress={handleCancel}
-                  className="font-semibold"
+                  className="whitespace-nowrap font-semibold"
                 >
                   Cancelar
                 </Button>
                 <Button
                   isLoading={isPending || isPendingDeleteSongs}
                   onPress={handleSaveChanges}
-                  className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  className="whitespace-nowrap bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
                 >
                   {isPending || isPendingDeleteSongs
                     ? 'Guardando...'
