@@ -2,6 +2,7 @@ import { LinksProps } from '../interfaces/AppSecurityInterfaces';
 /* import { userRoles } from './constants'; */
 export const links: LinksProps[] = [
   { name: 'Grupos', href: '/grupos' },
+  { name: 'Feed Social', href: '/feed', isLoggedIn: true },
   { name: 'Discipulado', href: '/discipulado' },
   {
     name: 'Crear cuenta',

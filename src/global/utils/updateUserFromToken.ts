@@ -28,6 +28,16 @@ export const updateUserFromToken = () => {
 
     console.log('[UpdateUser] Token decodificado:', payload);
 
+    // Mapear membersofBands para asegurar que tenga isActive
+    const membersofBands = (payload.membersofBands || []).map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (membership: any) => ({
+        ...membership,
+        // Si viene 'active' del backend, usarlo. Si no, defaultear a true (backward compatibility)
+        isActive: membership.active !== undefined ? membership.active : true,
+      }),
+    );
+
     // Actualizar el store del usuario con los datos del token
     const updatedUser = {
       id: payload.sub || 0,
@@ -37,7 +47,7 @@ export const updateUserFromToken = () => {
       status: payload.status || 'inactive',
       roles: payload.roles || [],
       memberships: payload.memberships || [],
-      membersofBands: payload.membersofBands || [],
+      membersofBands,
       phone: payload.phone || '',
       birthdate: payload.birthdate || '',
     };
