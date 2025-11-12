@@ -14,6 +14,7 @@ import {
   Input,
 } from '@nextui-org/react';
 import { CreatePostDto, PostType } from '../_interfaces/feedInterface';
+import { extractYouTubeId, isValidYouTubeId } from '@global/utils/formUtils';
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -46,6 +47,11 @@ export const CreatePostModal = ({
   const [requestedSongArtist, setRequestedSongArtist] = useState('');
   const [requestedYoutubeUrl, setRequestedYoutubeUrl] = useState('');
 
+  const handleYouTubeChange = (value: string) => {
+    const videoId = extractYouTubeId(value);
+    setRequestedYoutubeUrl(videoId);
+  };
+
   const handleSubmit = () => {
     let title = '';
 
@@ -55,12 +61,10 @@ export const CreatePostModal = ({
       const selectedSong = bandSongs.find(
         (song) => song.id === parseInt(sharedSongId),
       );
-      title = selectedSong
-        ? `Compartiendo: ${selectedSong.title}`
-        : 'Canción compartida';
+      title = selectedSong ? selectedSong.title : 'Canción compartida';
     } else if (postType === 'SONG_REQUEST' && requestedSongTitle) {
       // Para SONG_REQUEST: usar el título solicitado
-      title = `Buscando: ${requestedSongTitle}`;
+      title = requestedSongTitle;
     }
 
     const data: CreatePostDto = {
@@ -225,10 +229,23 @@ export const CreatePostModal = ({
               />
               <Input
                 label="Link de YouTube (opcional)"
-                placeholder="Ej: https://www.youtube.com/watch?v=..."
+                placeholder="https://youtube.com/watch?v=... o dQw4w9WgXcQ"
                 value={requestedYoutubeUrl}
-                onValueChange={setRequestedYoutubeUrl}
-                description="Puedes pegar el link completo o solo el ID del video"
+                onValueChange={handleYouTubeChange}
+                isClearable
+                onClear={() => setRequestedYoutubeUrl('')}
+                description={
+                  requestedYoutubeUrl && isValidYouTubeId(requestedYoutubeUrl)
+                    ? '✓ ID válido'
+                    : 'Pega el link completo o solo el ID del video'
+                }
+                classNames={{
+                  description:
+                    requestedYoutubeUrl && isValidYouTubeId(requestedYoutubeUrl)
+                      ? 'text-green-600 font-medium'
+                      : 'text-default-500',
+                }}
+                startContent={<span className="text-sm">🎬</span>}
               />
             </>
           )}

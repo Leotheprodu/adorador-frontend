@@ -13,11 +13,45 @@ export interface BandBasic {
 
 export interface SongBasic {
   id: number;
+  bandId: number;
   title: string;
   artist: string | null;
   key: string | null;
   tempo: number | null;
   songType: 'worship' | 'praise';
+  youtubeLink?: string | null;
+}
+
+// Tipos para la vista completa de la canción
+export interface ChordProps {
+  id: number;
+  rootNote: string;
+  chordQuality?: string;
+  slashChord?: string;
+  position: number;
+}
+
+export interface StructureProps {
+  id: number;
+  title: string;
+}
+
+export interface LyricsProps {
+  id: number;
+  position: number;
+  lyrics: string;
+  structure: StructureProps;
+  chords: ChordProps[];
+}
+
+export interface SongWithLyrics {
+  id: number;
+  title: string;
+  artist: string | null;
+  key: string | null;
+  tempo: number | null;
+  songType: 'worship' | 'praise';
+  lyrics: LyricsProps[];
 }
 
 export interface Blessing {
@@ -31,7 +65,7 @@ export interface Post {
   title: string; // Título del post
   description: string | null; // Descripción/contenido del post
   requestedSongTitle: string | null;
-  requestedSongArtist: string | null;
+  requestedArtist: string | null;
   requestedYoutubeUrl: string | null; // URL de YouTube para solicitudes
   authorId: number;
   bandId: number;
@@ -49,15 +83,25 @@ export interface Post {
   userBlessing: Blessing[];
 }
 
+export interface CommentBlessing {
+  id: number;
+}
+
 export interface Comment {
   id: number;
   content: string;
   postId: number;
   authorId: number;
   parentId: number | null;
+  sharedSongId: number | null; // Para compartir canción en respuesta
   createdAt: string;
   author: UserBasic;
+  sharedSong?: SongBasic | null; // Canción compartida en el comentario
   replies?: Comment[];
+  _count?: {
+    blessings: number;
+  };
+  userBlessing?: CommentBlessing[]; // Blessings del usuario actual
 }
 
 export interface FeedResponse {
@@ -67,6 +111,11 @@ export interface FeedResponse {
 }
 
 export interface BlessingResponse {
+  blessed: boolean;
+  count: number;
+}
+
+export interface CommentBlessingResponse {
   blessed: boolean;
   count: number;
 }
@@ -99,6 +148,7 @@ export interface UpdatePostDto {
 export interface CreateCommentDto {
   content: string;
   parentId?: number;
+  sharedSongId?: number; // Para compartir canción en respuesta
 }
 
 export interface CopySongDto {
@@ -127,6 +177,12 @@ export interface WebSocketNewCommentEvent {
 
 export interface WebSocketBlessingEvent {
   postId: number;
+  userId: number;
+  count: number;
+}
+
+export interface WebSocketCommentBlessingEvent {
+  commentId: number;
   userId: number;
   count: number;
 }

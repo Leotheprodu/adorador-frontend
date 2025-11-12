@@ -221,6 +221,27 @@ export const useFeedWebSocket = ({
         }
       });
 
+      newSocket.on(
+        'commentBlessed',
+        (data: { commentId: number; userId: number; count: number }) => {
+          console.log('[FeedWebSocket] Comentario blessed:', data);
+
+          // Invalidar queries de comentarios para actualizar el contador
+          // Como no sabemos el postId aquí, invalidamos todas las queries de comentarios
+          queryClient.invalidateQueries({ queryKey: ['comments'] });
+        },
+      );
+
+      newSocket.on(
+        'commentBlessingRemoved',
+        (data: { commentId: number; userId: number; count: number }) => {
+          console.log('[FeedWebSocket] Blessing de comentario removido:', data);
+
+          // Invalidar queries de comentarios
+          queryClient.invalidateQueries({ queryKey: ['comments'] });
+        },
+      );
+
       newSocket.on('songCopied', (data: WebSocketSongCopiedEvent) => {
         console.log('[FeedWebSocket] Canción copiada:', data);
 

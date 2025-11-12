@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -11,26 +12,45 @@ import {
 } from '@nextui-org/react';
 import { Post } from '../_interfaces/feedInterface';
 import { formatRelativeTime } from '@global/utils/datesUtils';
-import { HeartIcon, ChatIcon, DownloadIcon } from '@global/icons';
+import { ChatIcon, DownloadIcon } from '@global/icons';
+import { BlessingButton } from './BlessingButton';
+import { toggleBlessingService } from '../_services/feedService';
+import { useQueryClient } from '@tanstack/react-query';
+import { getYouTubeThumbnail } from '@global/utils/formUtils';
 
 interface PostCardProps {
   post: Post;
-  onToggleBlessing: (postId: number) => void;
   onComment: (postId: number) => void;
   onCopySong?: (postId: number) => void;
-  isLoadingBlessing?: boolean;
+  onViewSong?: (postId: number) => void;
 }
 
 export const PostCard = ({
   post,
-  onToggleBlessing,
   onComment,
   onCopySong,
-  isLoadingBlessing,
+  onViewSong,
 }: PostCardProps) => {
+  const queryClient = useQueryClient();
+  const [blessingPostId, setBlessingPostId] = useState<number | null>(null);
+  const toggleBlessing = toggleBlessingService({ postId: blessingPostId || 0 });
+
   const isBlessed = post.userBlessing && post.userBlessing.length > 0;
   const isSongShare = post.type === 'SONG_SHARE';
   const isSongRequest = post.type === 'SONG_REQUEST';
+
+  const handleToggleBlessing = () => {
+    setBlessingPostId(post.id);
+    toggleBlessing.mutate(null, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+        queryClient.invalidateQueries({
+          queryKey: ['post', post.id.toString()],
+        });
+        setBlessingPostId(null);
+      },
+    });
+  };
 
   return (
     <Card className="w-full">
@@ -66,55 +86,82 @@ export const PostCard = ({
 
         {/* Si comparte una canción */}
         {isSongShare && post.sharedSong && (
-          <div className="mb-2 rounded-lg bg-default-100 p-3">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1">
-                <h3 className="text-base font-semibold">
-                  {post.sharedSong.title}
-                </h3>
-                {post.sharedSong.artist && (
-                  <p className="text-small text-default-500">
-                    {post.sharedSong.artist}
-                  </p>
-                )}
-                <div className="mt-2 flex gap-2">
-                  {post.sharedSong.key && (
-                    <Chip size="sm" variant="flat">
-                      Tono: {post.sharedSong.key}
-                    </Chip>
-                  )}
-                  {post.sharedSong.tempo && (
-                    <Chip size="sm" variant="flat">
-                      BPM: {post.sharedSong.tempo}
-                    </Chip>
-                  )}
-                  <Chip
-                    size="sm"
-                    variant="flat"
-                    color={
-                      post.sharedSong.songType === 'worship'
-                        ? 'primary'
-                        : 'secondary'
-                    }
-                  >
-                    {post.sharedSong.songType === 'worship'
-                      ? 'Adoración'
-                      : 'Alabanza'}
-                  </Chip>
+          <div
+            className="group mb-2 cursor-pointer rounded-lg bg-default-100 p-3 transition-all hover:bg-default-200 hover:shadow-md"
+            onClick={() => onViewSong && onViewSong(post.id)}
+            title="Click para ver letra y acordes"
+          >
+            <div className="flex items-start gap-3">
+              {/* Thumbnail de YouTube si existe */}
+              {post.sharedSong.youtubeLink && (
+                <div className="flex-shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={getYouTubeThumbnail(
+                      post.sharedSong.youtubeLink,
+                      'mqdefault',
+                    )}
+                    alt={post.sharedSong.title}
+                    className="h-[90px] w-[120px] rounded-lg object-cover"
+                  />
                 </div>
-              </div>
-              {onCopySong && (
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="flat"
-                  color="primary"
-                  onPress={() => onCopySong(post.id)}
-                  aria-label="Copiar canción"
-                >
-                  <DownloadIcon className="h-5 w-5" />
-                </Button>
               )}
+              <div className="flex flex-1 items-start justify-between gap-2">
+                <div className="flex-1">
+                  <div className="mb-1 flex items-center gap-2">
+                    <h3 className="text-base font-semibold">
+                      {post.sharedSong.title}
+                    </h3>
+                    <span className="text-xs text-default-400 opacity-0 transition-opacity group-hover:opacity-100">
+                      Ver
+                    </span>
+                  </div>
+                  {post.sharedSong.artist && (
+                    <p className="text-small text-default-500">
+                      {post.sharedSong.artist}
+                    </p>
+                  )}
+                  <div className="mt-2 flex gap-2">
+                    {post.sharedSong.key && (
+                      <Chip size="sm" variant="flat">
+                        Tono: {post.sharedSong.key}
+                      </Chip>
+                    )}
+                    {post.sharedSong.tempo && (
+                      <Chip size="sm" variant="flat">
+                        BPM: {post.sharedSong.tempo}
+                      </Chip>
+                    )}
+                    <Chip
+                      size="sm"
+                      variant="flat"
+                      color={
+                        post.sharedSong.songType === 'worship'
+                          ? 'primary'
+                          : 'secondary'
+                      }
+                    >
+                      {post.sharedSong.songType === 'worship'
+                        ? 'Adoración'
+                        : 'Alabanza'}
+                    </Chip>
+                  </div>
+                </div>
+                {onCopySong && (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="flat"
+                      color="primary"
+                      onPress={() => onCopySong(post.id)}
+                      aria-label="Copiar canción"
+                    >
+                      <DownloadIcon className="h-5 w-5" />
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -122,26 +169,50 @@ export const PostCard = ({
         {/* Si solicita una canción */}
         {isSongRequest && (
           <div className="mb-2 rounded-lg bg-default-100 p-3">
-            <p className="text-small text-default-600">
-              🎵 Buscando:{' '}
-              <span className="font-semibold">{post.requestedSongTitle}</span>
-              {post.requestedSongArtist && (
-                <span className="text-default-500">
-                  {' '}
-                  - {post.requestedSongArtist}
-                </span>
+            <div className="flex gap-3">
+              {/* Thumbnail de YouTube si existe */}
+              {post.requestedYoutubeUrl && (
+                <div className="flex-shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={getYouTubeThumbnail(
+                      post.requestedYoutubeUrl,
+                      'mqdefault',
+                    )}
+                    alt={post.requestedSongTitle || 'Video solicitado'}
+                    className="h-[90px] w-[120px] rounded-lg object-cover"
+                  />
+                </div>
               )}
-            </p>
-            {post.requestedYoutubeUrl && (
-              <a
-                href={post.requestedYoutubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-1 text-small text-primary hover:underline"
-              >
-                🎥 Ver en YouTube
-              </a>
-            )}
+              <div className="flex flex-1 flex-col justify-center">
+                <p className="text-small text-default-600">
+                  🎵 Buscando:{' '}
+                  <span className="font-semibold">
+                    {post.requestedSongTitle}
+                  </span>
+                  {post.requestedArtist && (
+                    <span className="text-default-500">
+                      {' '}
+                      - {post.requestedArtist}
+                    </span>
+                  )}
+                </p>
+                {post.requestedYoutubeUrl && (
+                  <a
+                    href={
+                      post.requestedYoutubeUrl.startsWith('http')
+                        ? post.requestedYoutubeUrl
+                        : `https://www.youtube.com/watch?v=${post.requestedYoutubeUrl}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-small text-primary hover:underline"
+                  >
+                    🎥 Ver en YouTube
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -153,20 +224,12 @@ export const PostCard = ({
 
       <CardFooter className="gap-3">
         {/* Botón de Blessing */}
-        <Button
-          size="sm"
-          variant="light"
-          startContent={
-            <HeartIcon
-              className={`h-5 w-5 ${isBlessed ? 'fill-red-500 text-red-500' : ''}`}
-            />
-          }
-          onPress={() => onToggleBlessing(post.id)}
-          isLoading={isLoadingBlessing}
-          className={isBlessed ? 'text-red-500' : ''}
-        >
-          {post._count.blessings}
-        </Button>
+        <BlessingButton
+          isBlessed={isBlessed}
+          count={post._count.blessings}
+          onPress={handleToggleBlessing}
+          isLoading={toggleBlessing.isPending && blessingPostId === post.id}
+        />
 
         {/* Botón de Comentarios */}
         <Button

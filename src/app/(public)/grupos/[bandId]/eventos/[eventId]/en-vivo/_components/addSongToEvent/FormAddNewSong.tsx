@@ -1,39 +1,12 @@
 import { Input, Select, SelectItem } from '@nextui-org/react';
-import { handleOnClear } from '@global/utils/formUtils';
+import {
+  handleOnClear,
+  extractYouTubeId,
+  isValidYouTubeId,
+} from '@global/utils/formUtils';
 import { songKeys } from '@global/config/constants';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 import { MicrophoneIcon, MusicNoteIcon } from '@global/icons';
-
-// Function to extract YouTube video ID from different URL formats
-const extractYouTubeId = (url: string): string => {
-  if (!url) return '';
-
-  // Remove whitespace
-  url = url.trim();
-
-  // If it's already just an ID (no URL format), return it
-  if (url.length === 11 && !url.includes('/') && !url.includes('=')) {
-    return url;
-  }
-
-  // Pattern for youtube.com/watch?v=VIDEO_ID
-  const standardPattern = /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/;
-  // Pattern for youtu.be/VIDEO_ID
-  const shortPattern = /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-  // Pattern for youtube.com/embed/VIDEO_ID
-  const embedPattern = /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/;
-
-  const standardMatch = url.match(standardPattern);
-  if (standardMatch) return standardMatch[1];
-
-  const shortMatch = url.match(shortPattern);
-  if (shortMatch) return shortMatch[1];
-
-  const embedMatch = url.match(embedPattern);
-  if (embedMatch) return embedMatch[1];
-
-  return url; // Return original if no pattern matches
-};
 
 export const FormAddNewSong = ({ form, setForm, handleChange }) => {
   const handleYouTubeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +141,7 @@ export const FormAddNewSong = ({ form, setForm, handleChange }) => {
           onClear={() => handleOnClear('youtubeLink', setForm)}
           size="sm"
           description={
-            form.youtubeLink && form.youtubeLink.length === 11
+            form.youtubeLink && isValidYouTubeId(form.youtubeLink)
               ? '✓ ID válido'
               : 'Pega el link completo o solo el ID del video'
           }
@@ -178,7 +151,7 @@ export const FormAddNewSong = ({ form, setForm, handleChange }) => {
             inputWrapper:
               'border-2 border-slate-200 hover:border-brand-purple-300 focus-within:border-brand-purple-600 transition-colors',
             description:
-              form.youtubeLink && form.youtubeLink.length === 11
+              form.youtubeLink && isValidYouTubeId(form.youtubeLink)
                 ? 'text-green-600 font-medium'
                 : 'text-slate-500',
           }}

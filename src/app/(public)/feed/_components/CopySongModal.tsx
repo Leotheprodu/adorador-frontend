@@ -10,7 +10,6 @@ import {
   Button,
   Select,
   SelectItem,
-  Input,
 } from '@nextui-org/react';
 import { CopySongDto } from '../_interfaces/feedInterface';
 
@@ -23,6 +22,8 @@ interface CopySongModalProps {
   songTitle: string;
   currentKey?: string | null;
   currentTempo?: number | null;
+  suggestedKey?: string;
+  suggestedTempo?: number | null;
 }
 
 export const CopySongModal = ({
@@ -34,22 +35,24 @@ export const CopySongModal = ({
   songTitle,
   currentKey,
   currentTempo,
+  suggestedKey,
+  suggestedTempo,
 }: CopySongModalProps) => {
   const [targetBandId, setTargetBandId] = useState('');
-  const [newKey, setNewKey] = useState('');
-  const [newTempo, setNewTempo] = useState('');
 
   const handleSubmit = () => {
     const data: CopySongDto = {
       targetBandId: parseInt(targetBandId),
     };
 
-    if (newKey.trim()) {
-      data.newKey = newKey.trim();
+    // Si hay tono sugerido (transpuesto), usarlo
+    if (suggestedKey) {
+      data.newKey = suggestedKey;
     }
 
-    if (newTempo.trim()) {
-      data.newTempo = parseInt(newTempo);
+    // Si hay tempo sugerido, usarlo
+    if (suggestedTempo) {
+      data.newTempo = suggestedTempo;
     }
 
     onSubmit(data);
@@ -57,8 +60,6 @@ export const CopySongModal = ({
 
   const handleClose = () => {
     setTargetBandId('');
-    setNewKey('');
-    setNewTempo('');
     onClose();
   };
 
@@ -69,18 +70,24 @@ export const CopySongModal = ({
           Copiar canción a mi banda
         </ModalHeader>
         <ModalBody>
-          <div className="mb-2">
+          <div className="mb-4">
             <p className="text-small text-default-600">
               Vas a copiar: <span className="font-semibold">{songTitle}</span>
             </p>
             {currentKey && (
-              <p className="text-small text-default-500">
-                Tono actual: {currentKey}
+              <p className="mt-2 text-small text-default-500">
+                Tono original: <span className="font-medium">{currentKey}</span>
+                {suggestedKey && suggestedKey !== currentKey && (
+                  <span className="ml-2 text-primary">
+                    → Nuevo tono:{' '}
+                    <span className="font-bold">{suggestedKey}</span>
+                  </span>
+                )}
               </p>
             )}
             {currentTempo && (
               <p className="text-small text-default-500">
-                BPM actual: {currentTempo}
+                BPM: {suggestedTempo || currentTempo}
               </p>
             )}
           </div>
@@ -99,23 +106,6 @@ export const CopySongModal = ({
               <SelectItem key={band.id.toString()}>{band.name}</SelectItem>
             ))}
           </Select>
-
-          <Input
-            label="Nuevo tono (opcional)"
-            placeholder={currentKey || 'Ej: C, D, Em'}
-            value={newKey}
-            onValueChange={setNewKey}
-            description="Deja vacío para mantener el tono original"
-          />
-
-          <Input
-            label="Nuevo BPM (opcional)"
-            placeholder={currentTempo?.toString() || 'Ej: 120'}
-            type="number"
-            value={newTempo}
-            onValueChange={setNewTempo}
-            description="Deja vacío para mantener el tempo original"
-          />
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={handleClose}>

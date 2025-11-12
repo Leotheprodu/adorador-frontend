@@ -17,12 +17,13 @@ import { PostCard } from './PostCard';
 import { CreatePostModal } from './CreatePostModal';
 import { CommentSection } from './CommentSection';
 import { CopySongModal } from './CopySongModal';
+import { SongQuickViewModal } from './SongQuickViewModal';
 import {
   createPostService,
-  toggleBlessingService,
   getCommentsService,
   createCommentService,
   copySongService,
+  copySongDirectService,
   getSongsOfBandForFeed,
 } from '../_services/feedService';
 import { useQueryClient } from '@tanstack/react-query';
@@ -34,6 +35,7 @@ import {
 } from '../_interfaces/feedInterface';
 import { $user } from '@stores/users';
 import { useStore } from '@nanostores/react';
+import { UIGuard } from '@global/utils/UIGuard';
 
 export const FeedClient = () => {
   const user = useStore($user);
@@ -43,11 +45,19 @@ export const FeedClient = () => {
   // States
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const [selectedCopySong, setSelectedCopySong] = useState<Post | null>(null);
+  const [selectedViewSong, setSelectedViewSong] = useState<Post | null>(null);
+  const [suggestedKey, setSuggestedKey] = useState<string | undefined>(
+    undefined,
+  );
+  const [suggestedTempo, setSuggestedTempo] = useState<number | undefined>(
+    undefined,
+  );
   const [selectedBandIdForPost, setSelectedBandIdForPost] = useState<
     number | null
   >(null);
-  const [blessingPostId, setBlessingPostId] = useState<number | null>(null);
   const [commentPostId, setCommentPostId] = useState<number | null>(null);
+  const [copySongPostId, setCopySongPostId] = useState<number | null>(null);
+  const [copySongId, setCopySongId] = useState<number | null>(null);
 
   // Modals
   const {
@@ -64,6 +74,11 @@ export const FeedClient = () => {
     isOpen: isCopySongOpen,
     onOpen: onCopySongOpen,
     onClose: onCopySongClose,
+  } = useDisclosure();
+  const {
+    isOpen: isViewSongOpen,
+    onOpen: onViewSongOpen,
+    onClose: onViewSongClose,
   } = useDisclosure();
 
   // Queries
@@ -91,9 +106,9 @@ export const FeedClient = () => {
 
   // Mutations
   const createPost = createPostService();
-  const copySong = copySongService({ postId: selectedCopySong?.id || 0 });
-  const toggleBlessing = toggleBlessingService({ postId: blessingPostId });
   const createComment = createCommentService({ postId: commentPostId || 0 });
+  const copySong = copySongService({ postId: copySongPostId || 0 });
+  const copySongDirect = copySongDirectService({ songId: copySongId || 0 });
 
   // WebSocket
   useFeedWebSocket({
@@ -143,19 +158,6 @@ export const FeedClient = () => {
     onCreatePostClose();
   };
 
-  const handleToggleBlessing = (postId: number) => {
-    setBlessingPostId(postId);
-    toggleBlessing.mutate(null, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
-        queryClient.invalidateQueries({
-          queryKey: ['post', postId.toString()],
-        });
-        setBlessingPostId(null);
-      },
-    });
-  };
-
   const handleOpenComments = (postId: number) => {
     setSelectedPostId(postId);
     setCommentPostId(postId);
@@ -180,40 +182,168 @@ export const FeedClient = () => {
     });
   };
 
-  const handleOpenCopySong = (postId: number) => {
-    const post = data?.pages
-      .flatMap((page) => page.items)
-      .find((p) => p.id === postId);
-    if (post) {
-      setSelectedCopySong(post);
+  const handleOpenCopySong = (
+    postId: number,
+    newSuggestedKey?: string,
+    newSuggestedTempo?: number,
+  ) => {
+    // Si postId es 0, significa que es una vista desde comentario
+    // Usar selectedViewSong directamente
+    if (postId === 0 && selectedViewSong) {
+      const tempPost = { ...selectedViewSong } as Post & {
+        _isFromComment?: boolean;
+      };
+      tempPost._isFromComment = true;
+      setSelectedCopySong(tempPost);
+      setCopySongId(selectedViewSong.sharedSongId || 0);
+      setSuggestedKey(newSuggestedKey);
+      setSuggestedTempo(newSuggestedTempo);
       onCopySongOpen();
+      return;
     }
-  };
 
-  const handleShareSongToRequest = (postId: number) => {
-    // Encontrar el post de la solicitud
     const post = data?.pages
       .flatMap((page) => page.items)
       .find((p) => p.id === postId);
-    if (post && post.type === 'SONG_REQUEST') {
-      // Cerrar modal de comentarios y abrir modal de copiar canción
-      // pero en este caso es para "compartir" en respuesta a la solicitud
-      setSelectedCopySong(post);
-      handleCloseComments();
-      onCopySongOpen();
-    }
+    if (!post) return;
+
+    setSelectedCopySong(post);
+    setSuggestedKey(newSuggestedKey);
+    setSuggestedTempo(newSuggestedTempo);
+    onCopySongOpen();
   };
 
   const handleCloseCopySong = () => {
     setSelectedCopySong(null);
+    setSuggestedKey(undefined);
+    setSuggestedTempo(undefined);
     onCopySongClose();
+  };
+
+  const handleOpenViewSong = (postId: number) => {
+    const post = data?.pages
+      .flatMap((page) => page.items)
+      .find((p) => p.id === postId);
+    if (post && post.type === 'SONG_SHARE') {
+      setSelectedViewSong(post);
+      onViewSongOpen();
+    }
+  };
+
+  const handleCloseViewSong = () => {
+    setSelectedViewSong(null);
+    onViewSongClose();
+  };
+
+  const handleViewSongFromComment = (songId: number, bandId: number) => {
+    // Crear un objeto Post temporal para abrir el modal de vista rápida
+    const tempPost: Post = {
+      id: 0,
+      type: 'SONG_SHARE',
+      status: 'ACTIVE',
+      title: '',
+      description: null,
+      requestedSongTitle: null,
+      requestedArtist: null,
+      requestedYoutubeUrl: null,
+      authorId: 0,
+      bandId: bandId,
+      sharedSongId: songId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      author: { id: 0, name: '' },
+      band: { id: bandId, name: '' },
+      sharedSong: {
+        id: songId,
+        bandId: bandId,
+        title: '',
+        artist: null,
+        key: null,
+        tempo: null,
+        songType: 'worship',
+      },
+      _count: { blessings: 0, comments: 0, songCopies: 0 },
+      userBlessing: [],
+    };
+    setSelectedViewSong(tempPost);
+    onViewSongOpen();
+  };
+
+  const handleCopySongFromComment = (
+    postId: number,
+    songId: number,
+    bandId: number,
+    key?: string | null,
+    tempo?: number | null,
+  ) => {
+    // Crear un objeto Post temporal con la canción del comentario
+    const tempPost: Post = {
+      id: songId, // Usar songId como identificador temporal
+      type: 'SONG_SHARE',
+      status: 'ACTIVE',
+      title: '',
+      description: null,
+      requestedSongTitle: null,
+      requestedArtist: null,
+      requestedYoutubeUrl: null,
+      authorId: 0,
+      bandId: bandId,
+      sharedSongId: songId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      author: { id: 0, name: '' },
+      band: { id: bandId, name: '' },
+      sharedSong: {
+        id: songId,
+        bandId: bandId,
+        title: '',
+        artist: null,
+        key: key || null,
+        tempo: tempo || null,
+        songType: 'worship',
+      },
+      _count: { blessings: 0, comments: 0, songCopies: 0 },
+      userBlessing: [],
+    } as Post & { _isFromComment?: boolean };
+
+    (tempPost as Post & { _isFromComment?: boolean })._isFromComment = true;
+
+    setSelectedCopySong(tempPost);
+    setCopySongId(songId); // Guardar el songId para usar el servicio correcto
+    onCopySongOpen();
   };
 
   const handleCopySong = async (copyData: CopySongDto) => {
     if (!selectedCopySong) return;
-    await copySong.mutateAsync(copyData);
-    handleCloseCopySong();
-    queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+
+    // Verificar si es una copia desde comentario
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isFromComment = (selectedCopySong as any)._isFromComment;
+
+    if (isFromComment) {
+      // Usar el servicio directo para copiar por songId
+      setCopySongId(selectedCopySong.sharedSongId!);
+      copySongDirect.mutate(copyData, {
+        onSuccess: () => {
+          handleCloseCopySong();
+          queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+          setCopySongId(null);
+        },
+      });
+    } else {
+      // Usar el servicio normal para copiar desde post
+      setCopySongPostId(selectedCopySong.id);
+      copySong.mutate(copyData, {
+        onSuccess: () => {
+          handleCloseCopySong();
+          queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+          queryClient.invalidateQueries({
+            queryKey: ['post', selectedCopySong.id.toString()],
+          });
+          setCopySongPostId(null);
+        },
+      });
+    }
   };
 
   // Flatten posts from pages
@@ -226,118 +356,135 @@ export const FeedClient = () => {
       .map((membership) => membership.band) || [];
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-8">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <Button
-          color="primary"
-          onPress={onCreatePostOpen}
-          startContent={<PlusIcon className="h-5 w-5" />}
-          className="ml-auto"
-        >
-          Crear Post
-        </Button>
-      </div>
-
-      {/* Loading inicial */}
-      {isLoading && (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
-      )}
-
-      {/* Posts */}
-      {!isLoading && (
-        <div className="space-y-4">
-          {posts.length === 0 ? (
-            <div className="py-12 text-center">
-              <p className="mb-4 text-default-500">
-                Aún no hay publicaciones en el feed
-              </p>
-              <Button color="primary" onPress={onCreatePostOpen}>
-                Crear la primera publicación
-              </Button>
-            </div>
-          ) : (
-            posts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                onToggleBlessing={handleToggleBlessing}
-                onComment={handleOpenComments}
-                onCopySong={
-                  post.type === 'SONG_SHARE' ? handleOpenCopySong : undefined
-                }
-              />
-            ))
-          )}
-
-          {/* Observer target para scroll infinito */}
-          <div
-            ref={observerTarget}
-            className="flex h-10 items-center justify-center"
+    <UIGuard isLoggedIn={true} isLoading={isLoading}>
+      <div className="container mx-auto max-w-2xl px-4 py-8">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <Button
+            color="primary"
+            onPress={onCreatePostOpen}
+            startContent={<PlusIcon className="h-5 w-5" />}
+            className="ml-auto"
           >
-            {isFetchingNextPage && <Spinner />}
-          </div>
+            Crear Post
+          </Button>
         </div>
-      )}
 
-      {/* Modal: Crear Post */}
-      <CreatePostModal
-        isOpen={isCreatePostOpen}
-        onClose={handleCloseCreatePost}
-        onSubmit={handleCreatePost}
-        isLoading={createPost.isPending}
-        userBands={userBands}
-        bandSongs={bandSongs || []}
-        onBandChange={handleBandChange}
-      />
+        {/* Loading inicial */}
+        {isLoading && (
+          <div className="flex justify-center py-12">
+            <Spinner size="lg" />
+          </div>
+        )}
 
-      {/* Modal: Comentarios */}
-      <Modal
-        isOpen={isCommentsOpen}
-        onClose={handleCloseComments}
-        size="2xl"
-        scrollBehavior="inside"
-      >
-        <ModalContent>
-          <ModalHeader>Comentarios</ModalHeader>
-          <ModalBody>
-            <CommentSection
-              comments={commentsData || []}
-              onSubmitComment={handleCreateComment}
-              isLoadingComments={isLoadingComments}
-              isSubmitting={createComment.isPending}
-              post={
-                selectedPostId
-                  ? data?.pages
-                      .flatMap((page) => page.items)
-                      .find((p) => p.id === selectedPostId)
-                  : undefined
-              }
-              onShareSongToRequest={handleShareSongToRequest}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        {/* Posts */}
+        {!isLoading && (
+          <div className="space-y-4">
+            {posts.length === 0 ? (
+              <div className="py-12 text-center">
+                <p className="mb-4 text-default-500">
+                  Aún no hay publicaciones en el feed
+                </p>
+                <Button color="primary" onPress={onCreatePostOpen}>
+                  Crear la primera publicación
+                </Button>
+              </div>
+            ) : (
+              posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onComment={handleOpenComments}
+                  onCopySong={
+                    post.type === 'SONG_SHARE' ? handleOpenCopySong : undefined
+                  }
+                  onViewSong={
+                    post.type === 'SONG_SHARE' ? handleOpenViewSong : undefined
+                  }
+                />
+              ))
+            )}
 
-      {/* Modal: Copiar/Compartir Canción */}
-      {selectedCopySong && (
-        <CopySongModal
-          isOpen={isCopySongOpen}
-          onClose={handleCloseCopySong}
-          onSubmit={handleCopySong}
-          isLoading={copySong.isPending}
+            {/* Observer target para scroll infinito */}
+            <div
+              ref={observerTarget}
+              className="flex h-10 items-center justify-center"
+            >
+              {isFetchingNextPage && <Spinner />}
+            </div>
+          </div>
+        )}
+
+        {/* Modal: Crear Post */}
+        <CreatePostModal
+          isOpen={isCreatePostOpen}
+          onClose={handleCloseCreatePost}
+          onSubmit={handleCreatePost}
+          isLoading={createPost.isPending}
           userBands={userBands}
-          songTitle={
-            selectedCopySong.type === 'SONG_REQUEST'
-              ? selectedCopySong.requestedSongTitle || 'Canción solicitada'
-              : selectedCopySong.sharedSong?.title || 'Canción'
-          }
-          currentKey={selectedCopySong.sharedSong?.key || null}
-          currentTempo={selectedCopySong.sharedSong?.tempo || null}
+          bandSongs={bandSongs || []}
+          onBandChange={handleBandChange}
         />
-      )}
-    </div>
+
+        {/* Modal: Comentarios */}
+        <Modal
+          isOpen={isCommentsOpen}
+          onClose={handleCloseComments}
+          size="2xl"
+          scrollBehavior="inside"
+        >
+          <ModalContent>
+            <ModalHeader>Comentarios</ModalHeader>
+            <ModalBody>
+              <CommentSection
+                comments={commentsData || []}
+                onSubmitComment={handleCreateComment}
+                isLoadingComments={isLoadingComments}
+                isSubmitting={createComment.isPending}
+                post={
+                  selectedPostId
+                    ? data?.pages
+                        .flatMap((page) => page.items)
+                        .find((p) => p.id === selectedPostId)
+                    : undefined
+                }
+                onViewSong={handleViewSongFromComment}
+                onCopySong={handleCopySongFromComment}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        {/* Modal: Copiar/Compartir Canción */}
+        {selectedCopySong && (
+          <CopySongModal
+            isOpen={isCopySongOpen}
+            onClose={handleCloseCopySong}
+            onSubmit={handleCopySong}
+            isLoading={copySong.isPending}
+            userBands={userBands}
+            songTitle={
+              selectedCopySong.type === 'SONG_REQUEST'
+                ? selectedCopySong.requestedSongTitle || 'Canción solicitada'
+                : selectedCopySong.sharedSong?.title || 'Canción'
+            }
+            currentKey={selectedCopySong.sharedSong?.key || null}
+            currentTempo={selectedCopySong.sharedSong?.tempo || null}
+            suggestedKey={suggestedKey}
+            suggestedTempo={suggestedTempo}
+          />
+        )}
+
+        {/* Modal: Vista Rápida de Canción */}
+        {selectedViewSong && (
+          <SongQuickViewModal
+            isOpen={isViewSongOpen}
+            onClose={handleCloseViewSong}
+            post={selectedViewSong}
+            onCopySong={handleOpenCopySong}
+          />
+        )}
+      </div>
+    </UIGuard>
   );
 };

@@ -11,6 +11,7 @@ import {
   CreateCommentDto,
   CopySongDto,
   PostType,
+  SongWithLyrics,
 } from '../_interfaces/feedInterface';
 
 /**
@@ -127,12 +128,38 @@ export const toggleBlessingService = ({
 };
 
 /**
+ * Toggle blessing en comentario (dar o quitar)
+ */
+export const toggleCommentBlessingService = ({
+  commentId,
+}: {
+  commentId: number;
+}) => {
+  return PostData<BlessingResponse, null>({
+    key: 'toggleCommentBlessing',
+    url: `${Server1API}/feed/comments/${commentId}/blessings`,
+    method: 'POST',
+  });
+};
+
+/**
  * Copiar canción compartida
  */
 export const copySongService = ({ postId }: { postId: number }) => {
   return PostData<CopySongResponse, CopySongDto>({
     key: 'copySong',
     url: `${Server1API}/feed/posts/${postId}/copy-song`,
+    method: 'POST',
+  });
+};
+
+/**
+ * Copiar canción directamente por songId (desde comentarios)
+ */
+export const copySongDirectService = ({ songId }: { songId: number }) => {
+  return PostData<CopySongResponse, CopySongDto>({
+    key: 'copySongDirect',
+    url: `${Server1API}/feed/songs/${songId}/copy`,
     method: 'POST',
   });
 };
@@ -152,4 +179,24 @@ export const getSongsOfBandForFeed = (
       refetchOnMount: false,
     },
   );
+};
+
+/**
+ * Obtener canción completa con letra y acordes
+ */
+export const getSongWithLyricsService = ({
+  songId,
+  bandId,
+  isEnabled = true,
+}: {
+  songId: number;
+  bandId: number;
+  isEnabled?: boolean;
+}) => {
+  return FetchData<SongWithLyrics>({
+    key: ['songWithLyrics', bandId.toString(), songId.toString()],
+    url: `${Server1API}/bands/${bandId}/songs/${songId}`,
+    isEnabled,
+    refetchOnMount: false,
+  });
 };
