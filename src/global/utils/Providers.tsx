@@ -6,6 +6,7 @@ import { initializeUserOnce } from '@global/services/userInitializer';
 import { useEffect } from 'react';
 import { useTokenRefresh } from '@global/hooks/useTokenRefresh';
 import { useBandInvitationListeners } from '@global/hooks/useBandInvitationListeners';
+import { useNotificationListeners } from '@global/hooks/useNotificationListeners';
 
 // Componente separado para manejar el token refresh
 function TokenManager() {
@@ -18,6 +19,7 @@ function TokenManager() {
 // Componente para listeners de WebSocket
 function WebSocketManager() {
   useBandInvitationListeners();
+  useNotificationListeners();
   return null;
 }
 

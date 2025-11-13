@@ -251,7 +251,7 @@ const CommentItem = ({
   };
 
   return (
-    <div className={isReply ? 'ml-8' : ''}>
+    <div id={`comment-${comment.id}`} className={isReply ? 'ml-8' : ''}>
       <Card>
         <CardBody>
           <div className="flex gap-3">
