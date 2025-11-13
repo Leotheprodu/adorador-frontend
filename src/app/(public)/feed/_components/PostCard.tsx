@@ -108,7 +108,7 @@ export const PostCard = ({
 
         {/* Descripción/Contenido del post */}
         {post.description && (
-          <div className="mb-3 text-default-600 whitespace-pre-wrap">
+          <div className="mb-3 whitespace-pre-wrap text-default-600">
             {post.description}
           </div>
         )}
