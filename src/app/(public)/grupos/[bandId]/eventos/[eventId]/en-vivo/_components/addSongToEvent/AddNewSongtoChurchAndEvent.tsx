@@ -20,6 +20,7 @@ import {
 import { handleOnChange } from '@global/utils/formUtils';
 import { FormAddNewSong } from './FormAddNewSong';
 import { useRouter } from 'next/navigation';
+import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
 
 export const AddNewSongtoChurchAndEvent = ({
   params,
@@ -33,6 +34,11 @@ export const AddNewSongtoChurchAndEvent = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  // Conectar al WebSocket para actualizaciones en tiempo real
+  useBandSongsWebSocket({
+    bandId: parseInt(params.bandId),
+    enabled: isOpen,
+  });
   const formInit: SongPropsWithoutId = {
     title: '',
     artist: '',

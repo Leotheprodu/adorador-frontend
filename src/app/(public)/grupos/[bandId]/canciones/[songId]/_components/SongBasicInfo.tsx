@@ -18,6 +18,7 @@ import { Button, useDisclosure } from '@nextui-org/react';
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
 import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';
+import { getYouTubeThumbnail } from '@global/utils/formUtils';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import Image from 'next/image';
 import { RehearsalControlsModal } from './RehearsalControlsModal';
@@ -79,12 +80,6 @@ export const SongBasicInfo = ({
     }
   };
 
-  // Generar URL de thumbnail de YouTube
-  const getYoutubeThumbnail = (videoId: string | null) => {
-    if (!videoId) return '';
-    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  };
-
   return (
     <>
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
@@ -93,7 +88,7 @@ export const SongBasicInfo = ({
           {data?.youtubeLink && (
             <div className="flex-shrink-0">
               <Image
-                src={getYoutubeThumbnail(data.youtubeLink)}
+                src={getYouTubeThumbnail(data.youtubeLink, 'maxresdefault')}
                 alt={data.title}
                 width={288}
                 height={160}

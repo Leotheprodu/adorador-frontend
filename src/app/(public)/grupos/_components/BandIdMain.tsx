@@ -5,9 +5,11 @@ import { EventsSection } from './EventsSection';
 import { BandMembers } from '@app/(public)/grupos/[bandId]/_components/BandMembers';
 import { UIGuard } from '@global/utils/UIGuard';
 import { GuitarIcon } from '@global/icons';
+import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
 
 export const BandIdMain = ({ bandId }: { bandId: string }) => {
   const { data, isLoading } = getBandById(bandId);
+  useBandSongsWebSocket({ bandId: Number(bandId), enabled: true });
 
   return (
     <UIGuard

@@ -6,6 +6,7 @@ import { useStore } from '@nanostores/react';
 import { useMemo } from 'react';
 import { SkeletonBandCard } from './SkeletonBandCard';
 import { BandCard } from './BandCard';
+import { useAllBandSongsWebSocket } from '@global/hooks/useAllBandSongsWebSocket';
 
 export const BandsShowCase = () => {
   const user = useStore($user);
@@ -14,6 +15,17 @@ export const BandsShowCase = () => {
   const isLoggedIn = useMemo(() => user.isLoggedIn, [user.isLoggedIn]);
 
   const { data, error, isLoading } = getBandsOfUser(isLoggedIn);
+
+  // Obtener IDs de todas las bandas para escuchar sus eventos
+  const bandIds = useMemo(() => {
+    return data?.map((band) => band.id) ?? [];
+  }, [data]);
+
+  // Escuchar eventos de WebSocket de todas las bandas del usuario
+  useAllBandSongsWebSocket({
+    bandIds,
+    enabled: isLoggedIn && bandIds.length > 0,
+  });
 
   return (
     <div className="h-full">

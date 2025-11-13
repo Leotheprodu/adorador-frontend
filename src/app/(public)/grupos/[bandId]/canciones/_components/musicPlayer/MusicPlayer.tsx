@@ -13,6 +13,7 @@ import { PauseIcon } from '@global/icons/PauseIcon';
 import { ForwardIcon } from '@global/icons/ForwardIcon';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
+import { getYouTubeThumbnail } from '@global/utils/formUtils';
 
 export const MusicPlayer = () => {
   const playlist = useStore($PlayList);
@@ -130,7 +131,10 @@ export const MusicPlayer = () => {
             </button>
             <div className="flex flex-col justify-center">
               <img
-                src={`https://img.youtube.com/vi/${selectedBeat?.youtubeLink}/mqdefault.jpg`}
+                src={getYouTubeThumbnail(
+                  selectedBeat?.youtubeLink,
+                  'mqdefault',
+                )}
                 alt={`imagen de ${selectedBeat.name}`}
                 className="h-[5rem] w-full rounded-xl object-cover"
               />

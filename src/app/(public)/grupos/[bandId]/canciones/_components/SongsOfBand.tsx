@@ -11,12 +11,19 @@ import { AddSongButton } from './AddSongButton';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { songTypes } from '@global/config/constants';
+import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
 
 export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data, isLoading, status, refetch } = getSongsOfBand({
     bandId: params.bandId,
+  });
+
+  // Conectar al WebSocket para actualizaciones en tiempo real
+  useBandSongsWebSocket({
+    bandId: parseInt(params.bandId),
+    enabled: true,
   });
 
   const [searchTerm, setSearchTerm] = useState('');

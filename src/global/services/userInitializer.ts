@@ -110,7 +110,23 @@ export const initializeUserOnce = async () => {
           $user.set(loggedInUser);
         } else {
           console.log('[UserInit] Usuario con token válido restaurado');
-          $user.set(localUser);
+
+          // Migración: Asegurar que membersofBands tenga isActive
+          const migratedUser = {
+            ...localUser,
+            membersofBands: (localUser.membersofBands || []).map(
+              (membership) => ({
+                ...membership,
+                isActive:
+                  membership.isActive !== undefined
+                    ? membership.isActive
+                    : true,
+              }),
+            ),
+          };
+
+          setLocalStorage('user', migratedUser);
+          $user.set(migratedUser);
         }
       } else if (localUser.isLoggedIn) {
         // Si no hay token válido pero el usuario aparece como logueado, intentar renovarlo con retry
