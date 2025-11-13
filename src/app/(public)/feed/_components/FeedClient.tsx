@@ -2,7 +2,6 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import {
-  Button,
   Spinner,
   useDisclosure,
   Modal,
@@ -10,11 +9,10 @@ import {
   ModalHeader,
   ModalBody,
 } from '@nextui-org/react';
-import { PlusIcon } from '@global/icons';
 import { useFeedInfinite } from '../_hooks/useFeedInfinite';
 import { useFeedWebSocket } from '../_hooks/useFeedWebSocket';
 import { PostCard } from './PostCard';
-import { CreatePostModal } from './CreatePostModal';
+import { CreatePostInline } from './CreatePostInline';
 import { CommentSection } from './CommentSection';
 import { CopySongModal } from './CopySongModal';
 import { SongQuickViewModal } from './SongQuickViewModal';
@@ -65,11 +63,6 @@ export const FeedClient = () => {
   const [copySongId, setCopySongId] = useState<number | null>(null);
 
   // Modals
-  const {
-    isOpen: isCreatePostOpen,
-    onOpen: onCreatePostOpen,
-    onClose: onCreatePostClose,
-  } = useDisclosure();
   const {
     isOpen: isCommentsOpen,
     onOpen: onCommentsOpen,
@@ -245,18 +238,12 @@ export const FeedClient = () => {
   // Handlers
   const handleCreatePost = async (data: CreatePostDto) => {
     await createPost.mutateAsync(data);
-    onCreatePostClose();
-    setSelectedBandIdForPost(null); // Reset al cerrar
+    setSelectedBandIdForPost(null); // Reset después de crear
     queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
   };
 
   const handleBandChange = (bandId: number) => {
     setSelectedBandIdForPost(bandId);
-  };
-
-  const handleCloseCreatePost = () => {
-    setSelectedBandIdForPost(null);
-    onCreatePostClose();
   };
 
   const handleCloseComments = () => {
@@ -508,16 +495,16 @@ export const FeedClient = () => {
   return (
     <UIGuard isLoggedIn={true} isLoading={isLoading}>
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <Button
-            color="primary"
-            onPress={onCreatePostOpen}
-            startContent={<PlusIcon className="h-5 w-5" />}
-            className="ml-auto"
-          >
-            Crear Post
-          </Button>
+        {/* Crear Post Inline */}
+        <div className="mb-6">
+          <CreatePostInline
+            onSubmit={handleCreatePost}
+            isLoading={createPost.isPending}
+            userBands={userBands}
+            bandSongs={bandSongs || []}
+            selectedBandId={selectedBandIdForPost || undefined}
+            onBandChange={handleBandChange}
+          />
         </div>
 
         {/* Loading inicial */}
@@ -532,12 +519,10 @@ export const FeedClient = () => {
           <div className="space-y-4">
             {posts.length === 0 ? (
               <div className="py-12 text-center">
-                <p className="mb-4 text-default-500">
-                  Aún no hay publicaciones en el feed
+                <p className="text-default-500">
+                  Aún no hay publicaciones en el feed. ¡Usa el formulario de
+                  arriba para crear la primera publicación!
                 </p>
-                <Button color="primary" onPress={onCreatePostOpen}>
-                  Crear la primera publicación
-                </Button>
               </div>
             ) : (
               posts.map((post) => (
@@ -571,17 +556,6 @@ export const FeedClient = () => {
             </div>
           </div>
         )}
-
-        {/* Modal: Crear Post */}
-        <CreatePostModal
-          isOpen={isCreatePostOpen}
-          onClose={handleCloseCreatePost}
-          onSubmit={handleCreatePost}
-          isLoading={createPost.isPending}
-          userBands={userBands}
-          bandSongs={bandSongs || []}
-          onBandChange={handleBandChange}
-        />
 
         {/* Modal: Comentarios */}
         <Modal
