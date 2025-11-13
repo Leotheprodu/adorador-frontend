@@ -9,6 +9,7 @@ import {
   Avatar,
   Button,
   Chip,
+  Tooltip,
 } from '@nextui-org/react';
 import { Post } from '../_interfaces/feedInterface';
 import { formatRelativeTime } from '@global/utils/datesUtils';
@@ -16,7 +17,7 @@ import { ChatIcon, DownloadIcon } from '@global/icons';
 import { BlessingButton } from './BlessingButton';
 import { toggleBlessingService } from '../_services/feedService';
 import { useQueryClient } from '@tanstack/react-query';
-import { getYouTubeThumbnail } from '@global/utils/formUtils';
+import { FeedYouTubePlayer } from './FeedYouTubePlayer';
 
 interface PostCardProps {
   post: Post;
@@ -86,133 +87,123 @@ export const PostCard = ({
 
         {/* Si comparte una canción */}
         {isSongShare && post.sharedSong && (
-          <div
-            className="group mb-2 cursor-pointer rounded-lg bg-default-100 p-3 transition-all hover:bg-default-200 hover:shadow-md"
-            onClick={() => onViewSong && onViewSong(post.id)}
-            title="Click para ver letra y acordes"
-          >
-            <div className="flex items-start gap-3">
-              {/* Thumbnail de YouTube si existe */}
-              {post.sharedSong.youtubeLink && (
-                <div className="flex-shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={getYouTubeThumbnail(
-                      post.sharedSong.youtubeLink,
-                      'mqdefault',
-                    )}
-                    alt={post.sharedSong.title}
-                    className="h-[90px] w-[120px] rounded-lg object-cover"
-                  />
-                </div>
-              )}
-              <div className="flex flex-1 items-start justify-between gap-2">
-                <div className="flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <h3 className="text-base font-semibold">
-                      {post.sharedSong.title}
-                    </h3>
-                    <span className="text-xs text-default-400 opacity-0 transition-opacity group-hover:opacity-100">
-                      Ver
-                    </span>
-                  </div>
-                  {post.sharedSong.artist && (
-                    <p className="text-small text-default-500">
-                      {post.sharedSong.artist}
-                    </p>
-                  )}
-                  <div className="mt-2 flex gap-2">
-                    {post.sharedSong.key && (
-                      <Chip size="sm" variant="flat">
-                        Tono: {post.sharedSong.key}
-                      </Chip>
-                    )}
-                    {post.sharedSong.tempo && (
-                      <Chip size="sm" variant="flat">
-                        BPM: {post.sharedSong.tempo}
-                      </Chip>
-                    )}
-                    <Chip
-                      size="sm"
-                      variant="flat"
-                      color={
-                        post.sharedSong.songType === 'worship'
-                          ? 'primary'
-                          : 'secondary'
-                      }
-                    >
-                      {post.sharedSong.songType === 'worship'
-                        ? 'Adoración'
-                        : 'Alabanza'}
-                    </Chip>
-                  </div>
-                </div>
-                {onCopySong && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="flat"
-                      color="primary"
-                      onPress={() => onCopySong(post.id)}
-                      aria-label="Copiar canción"
-                    >
-                      <DownloadIcon className="h-5 w-5" />
-                    </Button>
-                  </div>
-                )}
+          <div className="mb-3">
+            {/* Reproductor de YouTube si existe */}
+            {post.sharedSong.youtubeLink && (
+              <div className="mb-3 w-full">
+                <FeedYouTubePlayer
+                  youtubeUrl={post.sharedSong.youtubeLink}
+                  postId={post.id}
+                  title={post.sharedSong.title}
+                  artist={post.sharedSong.artist || undefined}
+                />
               </div>
-            </div>
+            )}
+
+            {/* Información de la canción - Diseño minimalista */}
+            <Tooltip
+              content="Click para ver letra y acordes"
+              delay={300}
+              closeDelay={0}
+            >
+              <div
+                className="group cursor-pointer rounded-lg border border-divider bg-content2 p-4 transition-all hover:border-primary hover:bg-content3"
+                onClick={() => onViewSong && onViewSong(post.id)}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 space-y-2">
+                    {/* Título y artista */}
+                    <div>
+                      <h3 className="text-base font-semibold text-foreground">
+                        {post.sharedSong.title}
+                      </h3>
+                      {post.sharedSong.artist && (
+                        <p className="text-sm text-foreground-500">
+                          {post.sharedSong.artist}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Detalles técnicos */}
+                    <div className="flex flex-wrap gap-2">
+                      {post.sharedSong.key && (
+                        <Chip size="sm" variant="flat">
+                          {post.sharedSong.key}
+                        </Chip>
+                      )}
+                      {post.sharedSong.tempo && (
+                        <Chip size="sm" variant="flat">
+                          {post.sharedSong.tempo} BPM
+                        </Chip>
+                      )}
+                      <Chip
+                        size="sm"
+                        variant="flat"
+                        color={
+                          post.sharedSong.songType === 'worship'
+                            ? 'primary'
+                            : 'secondary'
+                        }
+                      >
+                        {post.sharedSong.songType === 'worship'
+                          ? 'Adoración'
+                          : 'Alabanza'}
+                      </Chip>
+                    </div>
+                  </div>
+
+                  {/* Botón de copiar */}
+                  {onCopySong && (
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <Tooltip content="Copiar canción">
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="flat"
+                          color="primary"
+                          onPress={() => onCopySong(post.id)}
+                          aria-label="Copiar canción"
+                        >
+                          <DownloadIcon className="h-4 w-4" />
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Tooltip>
           </div>
         )}
 
         {/* Si solicita una canción */}
         {isSongRequest && (
-          <div className="mb-2 rounded-lg bg-default-100 p-3">
-            <div className="flex gap-3">
-              {/* Thumbnail de YouTube si existe */}
-              {post.requestedYoutubeUrl && (
-                <div className="flex-shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={getYouTubeThumbnail(
-                      post.requestedYoutubeUrl,
-                      'mqdefault',
-                    )}
-                    alt={post.requestedSongTitle || 'Video solicitado'}
-                    className="h-[90px] w-[120px] rounded-lg object-cover"
-                  />
-                </div>
-              )}
-              <div className="flex flex-1 flex-col justify-center">
-                <p className="text-small text-default-600">
-                  🎵 Buscando:{' '}
-                  <span className="font-semibold">
-                    {post.requestedSongTitle}
-                  </span>
-                  {post.requestedArtist && (
-                    <span className="text-default-500">
-                      {' '}
-                      - {post.requestedArtist}
-                    </span>
-                  )}
-                </p>
-                {post.requestedYoutubeUrl && (
-                  <a
-                    href={
-                      post.requestedYoutubeUrl.startsWith('http')
-                        ? post.requestedYoutubeUrl
-                        : `https://www.youtube.com/watch?v=${post.requestedYoutubeUrl}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-small text-primary hover:underline"
-                  >
-                    🎥 Ver en YouTube
-                  </a>
-                )}
+          <div className="mb-3">
+            {/* Card de solicitud de canción */}
+            <div className="mb-3 rounded-lg border border-divider bg-content2 p-3">
+              <div className="mb-2">
+                <Chip size="sm" variant="flat" color="warning">
+                  Solicitud
+                </Chip>
               </div>
+              <p className="text-sm font-semibold text-foreground">
+                {post.requestedSongTitle}
+              </p>
+              {post.requestedArtist && (
+                <p className="text-sm text-foreground-500">
+                  {post.requestedArtist}
+                </p>
+              )}
             </div>
+
+            {/* Reproductor de YouTube si existe */}
+            {post.requestedYoutubeUrl && (
+              <FeedYouTubePlayer
+                youtubeUrl={post.requestedYoutubeUrl}
+                postId={post.id}
+                title={post.requestedSongTitle || undefined}
+                artist={post.requestedArtist || undefined}
+              />
+            )}
           </div>
         )}
 

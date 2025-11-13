@@ -9,6 +9,7 @@ import {
   Textarea,
   Spinner,
   Chip,
+  Tooltip,
 } from '@nextui-org/react';
 import { Comment, CreateCommentDto, Post } from '../_interfaces/feedInterface';
 import { formatRelativeTime } from '@global/utils/datesUtils';
@@ -17,7 +18,7 @@ import { ShareSongCommentModal } from './ShareSongCommentModal';
 import { BlessingButton } from './BlessingButton';
 import { toggleCommentBlessingService } from '../_services/feedService';
 import { useQueryClient } from '@tanstack/react-query';
-import { getYouTubeThumbnail } from '@global/utils/formUtils';
+import { FeedYouTubePlayer } from './FeedYouTubePlayer';
 
 interface CommentSectionProps {
   comments: Comment[];
@@ -272,113 +273,103 @@ const CommentItem = ({
 
               {/* Canción compartida */}
               {comment.sharedSong && (
-                <Card className="mt-3 border-2 border-success-200 bg-success-50">
-                  <CardBody className="py-3">
-                    <div className="flex items-start gap-3">
-                      {/* Thumbnail de YouTube si existe */}
-                      {comment.sharedSong.youtubeLink && (
-                        <div className="flex-shrink-0">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={getYouTubeThumbnail(
-                              comment.sharedSong.youtubeLink,
-                              'mqdefault',
-                            )}
-                            alt={comment.sharedSong.title}
-                            className="h-[90px] w-[120px] rounded-lg object-cover"
-                          />
-                        </div>
-                      )}
-                      <div className="flex flex-1 flex-col">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl">🎵</span>
-                          <div className="flex-1">
-                            <p className="text-small font-semibold text-success-700">
-                              {comment.sharedSong.title}
-                            </p>
-                            {comment.sharedSong.artist && (
-                              <p className="text-tiny text-success-600">
-                                {comment.sharedSong.artist}
-                              </p>
-                            )}
-                            <div className="mt-1 flex gap-2">
-                              {comment.sharedSong.key && (
-                                <Chip
-                                  size="sm"
-                                  variant="flat"
-                                  color="success"
-                                  className="text-tiny"
-                                >
-                                  Tono: {comment.sharedSong.key}
-                                </Chip>
-                              )}
-                              {comment.sharedSong.tempo && (
-                                <Chip
-                                  size="sm"
-                                  variant="flat"
-                                  color="success"
-                                  className="text-tiny"
-                                >
-                                  {comment.sharedSong.tempo} BPM
-                                </Chip>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                <div className="mt-3 rounded-lg border border-success bg-content2 p-3">
+                  {/* Reproductor de YouTube si existe */}
+                  {comment.sharedSong.youtubeLink && (
+                    <div className="mb-3">
+                      <FeedYouTubePlayer
+                        youtubeUrl={comment.sharedSong.youtubeLink}
+                        commentId={comment.id}
+                        title={comment.sharedSong.title}
+                        artist={comment.sharedSong.artist || undefined}
+                      />
                     </div>
-                    <div className="mt-3 flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="flat"
-                        color="success"
-                        startContent={<span>👁️</span>}
-                        onPress={() =>
-                          onViewSong?.(
-                            comment.sharedSong!.id,
-                            comment.sharedSong!.bandId,
-                            comment.id,
-                          )
-                        }
-                        className="flex-1"
-                      >
-                        Ver
-                      </Button>
-                      {onCopySong && (
+                  )}
+
+                  {/* Información de la canción */}
+                  <div className="space-y-2">
+                    <div>
+                      <h4 className="text-sm font-semibold text-foreground">
+                        {comment.sharedSong.title}
+                      </h4>
+                      {comment.sharedSong.artist && (
+                        <p className="text-sm text-foreground-500">
+                          {comment.sharedSong.artist}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Detalles técnicos */}
+                    <div className="flex flex-wrap gap-2">
+                      {comment.sharedSong.key && (
+                        <Chip size="sm" variant="flat">
+                          {comment.sharedSong.key}
+                        </Chip>
+                      )}
+                      {comment.sharedSong.tempo && (
+                        <Chip size="sm" variant="flat">
+                          {comment.sharedSong.tempo} BPM
+                        </Chip>
+                      )}
+                    </div>
+
+                    {/* Botones de acción */}
+                    <div className="flex gap-2">
+                      <Tooltip content="Ver letra y acordes">
                         <Button
                           size="sm"
-                          variant="solid"
+                          variant="flat"
                           color="success"
-                          startContent={<DownloadIcon className="h-4 w-4" />}
+                          className="flex-1"
                           onPress={() =>
-                            onCopySong(
-                              postId!,
+                            onViewSong?.(
                               comment.sharedSong!.id,
                               comment.sharedSong!.bandId,
                               comment.id,
-                              comment.sharedSong!.key,
-                              comment.sharedSong!.tempo,
                             )
                           }
-                          className="flex-1"
                         >
-                          Guardar
+                          Ver
                         </Button>
+                      </Tooltip>
+                      {onCopySong && (
+                        <Tooltip content="Guardar canción">
+                          <Button
+                            size="sm"
+                            variant="solid"
+                            color="success"
+                            className="flex-1"
+                            startContent={<DownloadIcon className="h-4 w-4" />}
+                            onPress={() =>
+                              onCopySong(
+                                postId!,
+                                comment.sharedSong!.id,
+                                comment.sharedSong!.bandId,
+                                comment.id,
+                                comment.sharedSong!.key,
+                                comment.sharedSong!.tempo,
+                              )
+                            }
+                          >
+                            Guardar
+                          </Button>
+                        </Tooltip>
                       )}
                     </div>
+
                     {/* Contador de copias */}
                     {(comment._count?.songCopies ?? 0) > 0 && (
-                      <div className="mt-2 flex items-center justify-center gap-1 text-tiny text-success-600">
+                      <div className="flex items-center justify-center gap-1 text-xs text-foreground-400">
                         <DownloadIcon className="h-3 w-3" />
                         <span>
                           {comment._count!.songCopies === 1
-                            ? '1 persona guardó esta canción'
-                            : `${comment._count!.songCopies} personas guardaron esta canción`}
+                            ? '1 persona guardó'
+                            : `${comment._count!.songCopies} personas guardaron`}
                         </span>
                       </div>
                     )}
-                  </CardBody>
-                </Card>
+                  </div>
+                </div>
               )}
 
               {/* Botones de acción */}
