@@ -2,6 +2,7 @@ import { FetchData, PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import {
   FeedResponse,
+  CommentsResponse,
   Post,
   Comment,
   BlessingResponse,
@@ -84,18 +85,31 @@ export const deletePostService = ({ postId }: { postId: number }) => {
 };
 
 /**
- * Obtener comentarios de un post
+ * Obtener comentarios de un post con paginación
  */
 export const getCommentsService = ({
   postId,
+  cursor,
+  limit = 10,
   isEnabled = true,
 }: {
   postId: number;
+  cursor?: number;
+  limit?: number;
   isEnabled?: boolean;
 }) => {
-  return FetchData<Comment[]>({
-    key: ['comments', postId.toString()],
-    url: `${Server1API}/feed/posts/${postId}/comments`,
+  const params = new URLSearchParams();
+  if (cursor) params.append('cursor', cursor.toString());
+  params.append('limit', limit.toString()); // Siempre enviar limit
+
+  console.log(
+    '🌐 URL de comentarios:',
+    `${Server1API}/feed/posts/${postId}/comments?${params.toString()}`,
+  );
+
+  return FetchData<CommentsResponse>({
+    key: ['comments', postId.toString(), cursor?.toString() || 'initial'],
+    url: `${Server1API}/feed/posts/${postId}/comments?${params.toString()}`,
     refetchOnMount: true,
     isEnabled,
   });

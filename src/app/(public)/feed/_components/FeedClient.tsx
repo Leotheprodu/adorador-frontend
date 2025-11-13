@@ -27,6 +27,7 @@ import {
   getSongsOfBandForFeed,
 } from '../_services/feedService';
 import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import {
   CreatePostDto,
   CreateCommentDto,
@@ -34,12 +35,14 @@ import {
   Post,
 } from '../_interfaces/feedInterface';
 import { $user } from '@stores/users';
+import { $feedNavigation } from '@stores/feedNavigation';
 import { useStore } from '@nanostores/react';
 import { UIGuard } from '@global/utils/UIGuard';
 import { useSearchParams } from 'next/navigation';
 
 export const FeedClient = () => {
   const user = useStore($user);
+  const feedNavigation = useStore($feedNavigation);
   const queryClient = useQueryClient();
   const observerTarget = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -159,6 +162,35 @@ export const FeedClient = () => {
     }
   }, [searchParams, isCommentsOpen, onCommentsOpen]);
 
+  // Manejar navegación desde notificaciones usando el store
+  useEffect(() => {
+    if (feedNavigation.isNavigating && feedNavigation.targetPostId) {
+      // Para ambos casos (post o comentario), hacer scroll al post
+      setTimeout(() => {
+        const element = document.querySelector(
+          `#post-${feedNavigation.targetPostId}`,
+        );
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.classList.add(
+            'ring-2',
+            'ring-brand-purple-400',
+            'rounded-lg',
+          );
+          setTimeout(() => {
+            element.classList.remove(
+              'ring-2',
+              'ring-brand-purple-400',
+              'rounded-lg',
+            );
+          }, 2000);
+        }
+      }, 500);
+
+      // NO limpiar la navegación aquí - se limpiará cuando el PostCard/InlineComments termine su trabajo
+    }
+  }, [feedNavigation]);
+
   // Scroll automático al comentario si hay hash en la URL
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -225,12 +257,6 @@ export const FeedClient = () => {
   const handleCloseCreatePost = () => {
     setSelectedBandIdForPost(null);
     onCreatePostClose();
-  };
-
-  const handleOpenComments = (postId: number) => {
-    setSelectedPostId(postId);
-    setCommentPostId(postId);
-    onCommentsOpen();
   };
 
   const handleCloseComments = () => {
@@ -360,6 +386,11 @@ export const FeedClient = () => {
     onViewSongOpen();
   };
 
+  // Handler compatible con InlineComments
+  const handleOpenViewSongFromComment = (songId: number, bandId: number) => {
+    handleViewSongFromComment(songId, bandId);
+  };
+
   const handleCopySongFromComment = (
     postId: number,
     songId: number,
@@ -405,6 +436,17 @@ export const FeedClient = () => {
     onCopySongOpen();
   };
 
+  // Callback simplificado para notificaciones desde InlineComments
+  const handleCopySongFromCommentSimplified = (
+    songId: number,
+    key?: string,
+    tempo?: number,
+  ) => {
+    // Este es solo un callback de notificación
+    // La lógica real ya está en InlineComments
+    console.log('Canción copiada desde comentario:', { songId, key, tempo });
+  };
+
   const handleCopySong = async (copyData: CopySongDto) => {
     if (!selectedCopySong) return;
 
@@ -424,8 +466,13 @@ export const FeedClient = () => {
       copySongDirect.mutate(copyDataWithComment, {
         onSuccess: () => {
           handleCloseCopySong();
+          toast.success('¡Canción copiada exitosamente!');
           queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
           setCopySongId(null);
+        },
+        onError: (error) => {
+          console.error('Error copiando canción:', error);
+          toast.error('Error al copiar la canción');
         },
       });
     } else {
@@ -434,11 +481,16 @@ export const FeedClient = () => {
       copySong.mutate(copyData, {
         onSuccess: () => {
           handleCloseCopySong();
+          toast.success('¡Canción copiada exitosamente!');
           queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
           queryClient.invalidateQueries({
             queryKey: ['post', selectedCopySong.id.toString()],
           });
           setCopySongPostId(null);
+        },
+        onError: (error) => {
+          console.error('Error copiando canción:', error);
+          toast.error('Error al copiar la canción');
         },
       });
     }
@@ -492,7 +544,6 @@ export const FeedClient = () => {
                 <div key={post.id} id={`post-${post.id}`}>
                   <PostCard
                     post={post}
-                    onComment={handleOpenComments}
                     onCopySong={
                       post.type === 'SONG_SHARE'
                         ? handleOpenCopySong
@@ -503,6 +554,9 @@ export const FeedClient = () => {
                         ? handleOpenViewSong
                         : undefined
                     }
+                    userBands={userBands}
+                    onCopySongFromComment={handleCopySongFromCommentSimplified}
+                    onViewSongFromComment={handleOpenViewSongFromComment}
                   />
                 </div>
               ))
@@ -540,7 +594,7 @@ export const FeedClient = () => {
             <ModalHeader>Comentarios</ModalHeader>
             <ModalBody>
               <CommentSection
-                comments={commentsData || []}
+                comments={commentsData?.items || []}
                 onSubmitComment={handleCreateComment}
                 isLoadingComments={isLoadingComments}
                 isSubmitting={createComment.isPending}

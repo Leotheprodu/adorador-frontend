@@ -1,6 +1,10 @@
 'use client';
 import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
+import {
+  setNavigationToComment,
+  setNavigationToPost,
+} from '@stores/feedNavigation';
 import { usePendingInvitations } from '@app/(public)/grupos/_hooks/usePendingInvitations';
 import { useAcceptInvitation } from '@app/(public)/grupos/_hooks/useAcceptInvitation';
 import { useRejectInvitation } from '@app/(public)/grupos/_hooks/useRejectInvitation';
@@ -120,17 +124,20 @@ function NotificationsList({ onClose }: { onClose: () => void }) {
     // Cerrar el popover
     onClose();
 
-    // Construir la URL de redirección y navegar
+    // Usar el store para manejar la navegación
     if (notification.metadata?.postId) {
-      // Si tiene commentId, agregar parámetros para abrir modal y hacer scroll
       if (notification.metadata?.commentId) {
-        const url = `/feed?postId=${notification.metadata.postId}#comment-${notification.metadata.commentId}`;
-        router.push(url);
+        // Navegar al comentario específico
+        setNavigationToComment(
+          notification.metadata.postId,
+          notification.metadata.commentId,
+        );
       } else {
-        // Si no tiene commentId (ej: blessing en post), solo hacer scroll al post sin abrir modal
-        const url = `/feed#post-${notification.metadata.postId}`;
-        router.push(url);
+        // Navegar solo al post
+        setNavigationToPost(notification.metadata.postId);
       }
+      // Navegar al feed
+      router.push('/feed');
     }
   };
 

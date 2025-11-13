@@ -152,6 +152,12 @@ export interface CreateCommentDto {
   sharedSongId?: number; // Para compartir canción en respuesta
 }
 
+export interface CommentsResponse {
+  items: Comment[];
+  nextCursor: number | null;
+  hasMore: boolean;
+}
+
 export interface CopySongDto {
   targetBandId: number;
   newKey?: string;

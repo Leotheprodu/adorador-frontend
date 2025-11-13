@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -15,25 +15,39 @@ import { Post } from '../_interfaces/feedInterface';
 import { formatRelativeTime } from '@global/utils/datesUtils';
 import { ChatIcon, DownloadIcon } from '@global/icons';
 import { BlessingButton } from './BlessingButton';
+import { InlineComments } from './InlineComments';
 import { toggleBlessingService } from '../_services/feedService';
 import { useQueryClient } from '@tanstack/react-query';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
+import { useStore } from '@nanostores/react';
+import { $feedNavigation } from '@stores/feedNavigation';
 
 interface PostCardProps {
   post: Post;
-  onComment: (postId: number) => void;
   onCopySong?: (postId: number) => void;
   onViewSong?: (postId: number) => void;
+  userBands?: Array<{ id: number; name: string }>;
+  onCopySongFromComment?: (
+    songId: number,
+    key?: string,
+    tempo?: number,
+  ) => void;
+  onViewSongFromComment?: (songId: number, bandId: number) => void;
 }
 
 export const PostCard = ({
   post,
-  onComment,
   onCopySong,
   onViewSong,
+  userBands = [],
+  onCopySongFromComment,
+  onViewSongFromComment,
 }: PostCardProps) => {
   const queryClient = useQueryClient();
+  const feedNavigation = useStore($feedNavigation);
   const [blessingPostId, setBlessingPostId] = useState<number | null>(null);
+  const [showComments, setShowComments] = useState(false);
+
   const toggleBlessing = toggleBlessingService({ postId: blessingPostId || 0 });
 
   const isBlessed = post.userBlessing && post.userBlessing.length > 0;
@@ -53,8 +67,20 @@ export const PostCard = ({
     });
   };
 
+  // Detectar si este post es el objetivo de navegación desde notificaciones
+  useEffect(() => {
+    if (
+      feedNavigation.isNavigating &&
+      feedNavigation.targetPostId === post.id &&
+      feedNavigation.targetCommentId // Solo si hay comentario objetivo
+    ) {
+      // Abrir comentarios automáticamente
+      setShowComments(true);
+    }
+  }, [feedNavigation, post.id]);
+
   return (
-    <Card className="w-full">
+    <Card className="w-full" id={`post-${post.id}`}>
       <CardHeader className="justify-between">
         <div className="flex gap-3">
           <Avatar name={post.author.name} size="md" className="flex-shrink-0" />
@@ -227,7 +253,7 @@ export const PostCard = ({
           size="sm"
           variant="light"
           startContent={<ChatIcon className="h-5 w-5" />}
-          onPress={() => onComment(post.id)}
+          onPress={() => setShowComments(!showComments)}
         >
           {post._count.comments}
         </Button>
@@ -240,6 +266,20 @@ export const PostCard = ({
           </div>
         )}
       </CardFooter>
+
+      {/* Sección de comentarios inline */}
+      {showComments && (
+        <div className="px-4 pb-4">
+          <InlineComments
+            postId={post.id}
+            isVisible={showComments}
+            postType={post.type}
+            userBands={userBands}
+            onCopySong={onCopySongFromComment}
+            onViewSong={onViewSongFromComment}
+          />
+        </div>
+      )}
     </Card>
   );
 };
