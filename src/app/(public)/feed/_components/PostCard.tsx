@@ -108,7 +108,9 @@ export const PostCard = ({
 
         {/* Descripción/Contenido del post */}
         {post.description && (
-          <p className="mb-3 text-default-600">{post.description}</p>
+          <div className="mb-3 whitespace-pre-wrap text-default-600">
+            {post.description}
+          </div>
         )}
 
         {/* Si comparte una canción */}
