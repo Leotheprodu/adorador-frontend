@@ -98,6 +98,14 @@ export const CreatePostInline = ({
     resetForm();
   };
 
+  // Función para procesar caracteres de escape
+  const processEscapeCharacters = (text: string) => {
+    return text
+      .replace(/\\n/g, '\n')
+      .replace(/\\t/g, '\t')
+      .replace(/\\r/g, '\r');
+  };
+
   const resetForm = () => {
     setPostType('SONG_SHARE');
     setContent('');
@@ -126,7 +134,7 @@ export const CreatePostInline = ({
       title,
     };
 
-    // El contenido va como descripción opcional
+    // El contenido va como descripción opcional (ya está procesado automáticamente)
     if (content.trim()) {
       data.description = content.trim();
     }
@@ -327,7 +335,11 @@ export const CreatePostInline = ({
                       : 'Explica por qué necesitas esta canción...'
                   }
                   value={content}
-                  onValueChange={setContent}
+                  onValueChange={(value) => {
+                    // Procesar automáticamente caracteres de escape al escribir/pegar
+                    const processedValue = processEscapeCharacters(value);
+                    setContent(processedValue);
+                  }}
                   minRows={3}
                   maxRows={5}
                   variant="bordered"
