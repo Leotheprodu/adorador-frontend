@@ -101,6 +101,99 @@ export const songTypes = {
   },
 };
 
+export const videoBackgroundIds = {
+  worship: [
+    'CbrFOgZuXUs',
+    'cGDdIfGMzYY',
+    'xgh4NBSYYKA',
+    'YvIlqZ87fMA',
+    '_6W8EGih2a8',
+    '0Sufo_cRyF4',
+    'RPyUdpZlwgs',
+  ],
+  praise: [
+    'ZoalTKIxjBE',
+    '4HTtkIVIT-o',
+    'mMyws8zNj38',
+    'jgGo3DlFFBQ',
+    'aAd0cFAbM1A',
+    'F3XRAUU_XYE',
+  ],
+};
+
+export const worshipVerses: {
+  message: string;
+  source: string;
+}[] = [
+  {
+    message: 'Todo lo que respira alabe a Jehová.',
+    source: 'Salmos 150:6',
+  },
+  {
+    message: 'Exaltad al Señor nuestro Dios, y postraos ante su santo monte.',
+    source: 'Salmos 99:9',
+  },
+  {
+    message:
+      'Venid, aclamemos alegremente a Jehová; cantemos con júbilo a la roca de nuestra salvación.',
+    source: 'Salmos 95:1',
+  },
+  {
+    message:
+      'Entrad por sus puertas con acción de gracias, por sus atrios con alabanza.',
+    source: 'Salmos 100:4',
+  },
+  {
+    message:
+      'Alabad a Jehová, porque él es bueno; porque para siempre es su misericordia.',
+    source: 'Salmos 107:1',
+  },
+  {
+    message: 'Engrandeced a Jehová conmigo, y exaltemos a una su nombre.',
+    source: 'Salmos 34:3',
+  },
+  {
+    message:
+      'Cantaré a Jehová mientras viva; a mi Dios cantaré salmos mientras exista.',
+    source: 'Salmos 104:33',
+  },
+  {
+    message: 'Adorad a Jehová en la hermosura de la santidad.',
+    source: 'Salmos 29:2',
+  },
+  {
+    message:
+      'Sea la gloria de Jehová para siempre; alégrese Jehová en sus obras.',
+    source: 'Salmos 104:31',
+  },
+  {
+    message: 'Alzad vuestras manos al santuario, y bendecid a Jehová.',
+    source: 'Salmos 134:2',
+  },
+  {
+    message:
+      'Bueno es alabarte, oh Jehová, y cantar salmos a tu nombre, oh Altísimo.',
+    source: 'Salmos 92:1',
+  },
+  {
+    message: 'Cantad a Jehová cántico nuevo; cantad a Jehová toda la tierra.',
+    source: 'Salmos 96:1',
+  },
+  {
+    message: 'Jehová es mi fortaleza y mi cántico.',
+    source: 'Salmos 118:14',
+  },
+  {
+    message: 'Alaben su nombre con danza; cántenle salmos con pandero y arpa.',
+    source: 'Salmos 149:3',
+  },
+  {
+    message: 'Grande es Jehová y digno de suprema alabanza.',
+    source: 'Salmos 145:3',
+  },
+];
+export const initialVideo = ['iXg9huPQdb8', 'EbbraAqD0nY'];
+
 export const rootNotes: {
   [key: string]: {
     american: string;
