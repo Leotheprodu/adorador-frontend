@@ -12,9 +12,23 @@
   font-family: 'Agdasima';
   src: url(/fonts/Agdasima-Regular.ttf);
 }
+@font-face {
+  font-family: 'MomoTrustDisplay';
+  src: url(/fonts/MomoTrustDisplay-Regular.ttf);
+}
+@font-face {
+  font-family: 'Kalam-Light';
+  src: url(/fonts/Kalam-Light.ttf);
+}
 
+.font-kalam {
+  font-family: 'Kalam-Light', cursive;
+}
 .font-agdasima {
   font-family: 'Agdasima', sans-serif;
+}
+.font-momotrust {
+  font-family: 'MomoTrustDisplay', sans-serif;
 }
 
 /* Animation for Loading */

@@ -130,7 +130,7 @@ export const LyricsShowcaseCard = ({
                     ],
                   filter: 'brightness(1.5)',
                 }}
-                className={`m-0 w-full p-0 ${shouldCenter ? 'text-center' : ''} ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
+                className={`font-kalam m-0 w-full p-0 ${shouldCenter ? 'text-center' : ''} ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
               >
                 {dataOfLyricSelected?.lyrics}
               </h1>
