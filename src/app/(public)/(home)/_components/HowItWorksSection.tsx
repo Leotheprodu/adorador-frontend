@@ -1,4 +1,5 @@
 import { PrimaryButton } from '@global/components/buttons';
+import { appName } from '@global/config/constants';
 
 export const HowItWorksSection = () => {
   const steps = [
@@ -34,7 +35,7 @@ export const HowItWorksSection = () => {
             Tan fácil como <span className="text-gradient-simple">1, 2, 3</span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-600">
-            Comienza a usar Adorador en minutos, sin complicaciones técnicas
+            Comienza a usar ${appName} en minutos, sin complicaciones técnicas
           </p>
         </div>
 
@@ -44,7 +45,7 @@ export const HowItWorksSection = () => {
             <div key={index} className="relative">
               {/* Connector Line (hidden on mobile) */}
               {index < steps.length - 1 && (
-                <div className="bg-gradient-connector absolute left-1/2 top-12 hidden h-0.5 w-full md:block"></div>
+                <div className="absolute left-1/2 top-12 hidden h-0.5 w-full bg-gradient-connector md:block"></div>
               )}
 
               {/* Card */}

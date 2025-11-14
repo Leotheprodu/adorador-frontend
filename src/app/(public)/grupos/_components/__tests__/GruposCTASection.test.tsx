@@ -185,9 +185,7 @@ describe('GruposCTASection Component', () => {
     it('should render call to action text', () => {
       render(<GruposCTASection />);
       expect(
-        screen.getByText(
-          /Únete a Adorador y comienza a gestionar tu ministerio/i,
-        ),
+        screen.getByText(/Únete a Zamr y comienza a gestionar tu ministerio/i),
       ).toBeInTheDocument();
     });
 

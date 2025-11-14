@@ -11,18 +11,15 @@ export const Header = () => {
         className="group flex items-center justify-center gap-2 transition-transform hover:scale-105"
         href={'/'}
       >
-        <div className="rounded-xl bg-gradient-icon p-1.5 transition-all group-hover:shadow-md">
+        <div className="rounded-xl p-1.5 transition-all group-hover:shadow-md">
           <Image
             width={100}
             height={100}
-            src="/logo_adorador.avif"
+            src="/logo_zamr.webp"
             alt={appName}
-            className="h-10 w-auto object-contain"
+            className="h-20 w-auto object-contain"
           />
         </div>
-        <h1 className="font-agdasima text-3xl font-bold uppercase transition-all text-gradient-primary">
-          {appName}
-        </h1>
       </Link>
       <div className="flex items-center gap-3">
         <NotificationBell />

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { FeedClient } from './_components/FeedClient';
 
 export const metadata: Metadata = {
-  title: 'Feed Social - Adorador',
+  title: 'Feed Social - zamr',
   description:
     'Comparte y descubre canciones con otros grupos de alabanza. Pide canciones y bendice las compartidas por la comunidad.',
 };

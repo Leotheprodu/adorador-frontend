@@ -20,7 +20,7 @@ describe('HowItWorksSection Component', () => {
       render(<HowItWorksSection />);
       expect(
         screen.getByText(
-          /Comienza a usar Adorador en minutos, sin complicaciones técnicas/i,
+          /Comienza a usar Zamr en minutos, sin complicaciones técnicas/i,
         ),
       ).toBeInTheDocument();
     });

@@ -3,12 +3,12 @@ import { appName, appDescription, userRoles, churchRoles } from '../constants';
 describe('constants', () => {
   describe('App Configuration', () => {
     it('should have correct app name', () => {
-      expect(appName).toBe('Adorador');
+      expect(appName).toBe('Zamr');
     });
 
     it('should have app description', () => {
       expect(appDescription).toBeTruthy();
-      expect(appDescription).toContain('Adorador');
+      expect(appDescription).toContain('Zamr');
       expect(appDescription).toContain('cristiana');
     });
   });

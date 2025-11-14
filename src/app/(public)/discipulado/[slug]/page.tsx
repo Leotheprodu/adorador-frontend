@@ -47,7 +47,7 @@ export async function generateMetadata({
       title: post.title,
       description,
       url: `/discipulado/${post.slug}`,
-      siteName: 'adorador.xyz',
+      siteName: 'zamr.app',
       images: [
         {
           url: post.image || '/images/posts/adorar-en-espiritu.avif',

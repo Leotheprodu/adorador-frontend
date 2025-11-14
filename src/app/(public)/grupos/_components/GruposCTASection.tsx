@@ -16,7 +16,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { PostData } from '@global/services/HandleAPI';
-import { Server1API } from '@global/config/constants';
+import { appName, Server1API } from '@global/config/constants';
 import { BandsProps } from '@bands/_interfaces/bandsInterface';
 import { PrimaryButton } from '@global/components/buttons';
 import { updateUserFromToken } from '@global/utils/updateUserFromToken';
@@ -90,7 +90,7 @@ export const GruposCTASection = () => {
           ¿Quieres que tu grupo aparezca aquí?
         </h3>
         <p className="mb-6 text-gray-600">
-          Únete a Adorador y comienza a gestionar tu ministerio de alabanza de
+          Únete a {appName} y comienza a gestionar tu ministerio de alabanza de
           manera profesional
         </p>
         <PrimaryButton
