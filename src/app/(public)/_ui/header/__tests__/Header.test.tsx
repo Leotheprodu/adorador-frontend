@@ -130,7 +130,7 @@ describe('Header Component', () => {
       render(<Header />);
 
       const logo = screen.getByAltText('Test App Name');
-      expect(logo).toHaveAttribute('src', '/logo_adorador.avif');
+      expect(logo).toHaveAttribute('src', '/zamr_logo.webp');
     });
 
     it('should render logo with correct dimensions', () => {

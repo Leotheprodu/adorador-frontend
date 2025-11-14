@@ -15,7 +15,7 @@ describe('SocialProofSection Component', () => {
       expect(
         screen.getByText('Grupos de alabanza que confían en'),
       ).toBeInTheDocument();
-      expect(screen.getByText('Adorador')).toBeInTheDocument();
+      expect(screen.getByText('Zamr')).toBeInTheDocument();
     });
   });
 
@@ -54,7 +54,7 @@ describe('SocialProofSection Component', () => {
     it('should render all testimonials', () => {
       render(<SocialProofSection />);
       expect(
-        screen.getByText(/Adorador ha transformado completamente/i),
+        screen.getByText(/Zamr ha transformado completamente/i),
       ).toBeInTheDocument();
       expect(
         screen.getByText(/Ya no perdemos tiempo buscando acordes/i),

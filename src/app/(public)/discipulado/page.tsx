@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     description:
       'Artículos y recursos para el crecimiento espiritual cristiano.',
     url: '/discipulado',
-    siteName: 'adorador.xyz',
+    siteName: 'zamr.app',
     images: [
       {
         url: '/images/posts/adorar-en-espiritu.avif',
         width: 1200,
         height: 628,
-        alt: 'Discipulados en adorador.xyz',
+        alt: 'Discipulados en zamr.app',
       },
     ],
     locale: 'es_CR',

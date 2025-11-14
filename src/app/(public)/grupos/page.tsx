@@ -3,14 +3,14 @@ import { BandsShowCase } from './_components/BandsShowCase';
 import { GruposCTASection } from './_components/GruposCTASection';
 
 export const metadata: Metadata = {
-  title: 'Grupos de Alabanza - Adorador',
+  title: 'Grupos de Alabanza - Zamr',
   description:
-    'Explora los grupos de alabanza que usan Adorador para gestionar sus eventos y canciones.',
+    'Explora los grupos de alabanza que usan Zamr para gestionar sus eventos y canciones.',
 };
 
 export default function GruposPage() {
   return (
-    <div className="bg-gradient-gray min-h-screen px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-gray px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">

@@ -5,9 +5,10 @@ import { HowItWorksSection } from './_components/HowItWorksSection';
 import { SocialProofSection } from './_components/SocialProofSection';
 import { CTASection } from './_components/CTASection';
 import { ResourcesSection } from './_components/ResourcesSection';
+import { appName } from '@global/config/constants';
 
 export const metadata: Metadata = {
-  title: 'Adorador - Gestión Profesional para Grupos de Alabanza',
+  title: `${appName} - Gestión Profesional para Grupos de Alabanza`,
   description:
     'Gestiona canciones, coordina músicos y proyecta letras en tiempo real. Todo lo que tu grupo de alabanza necesita en una sola plataforma.',
 };
