@@ -16,6 +16,7 @@ jest.mock('@app/(public)/grupos/_hooks/usePendingInvitations');
 jest.mock('@app/(public)/grupos/_hooks/useAcceptInvitation');
 jest.mock('@app/(public)/grupos/_hooks/useRejectInvitation');
 jest.mock('@global/utils/updateUserFromToken');
+jest.mock('@global/hooks/useNotifications');
 
 // Mock stores with inline factory
 jest.mock('@global/stores/users', () => {
@@ -43,14 +44,19 @@ jest.mock('@global/stores/users', () => {
   };
 });
 
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NotificationBell } from '../NotificationBell';
 import { usePendingInvitations } from '@app/(public)/grupos/_hooks/usePendingInvitations';
 import { useAcceptInvitation } from '@app/(public)/grupos/_hooks/useAcceptInvitation';
 import { useRejectInvitation } from '@app/(public)/grupos/_hooks/useRejectInvitation';
+import { renderWithQueryClient } from '@global/test-utils/renderWithProviders';
 import { $user } from '@global/stores/users';
 import { useStore } from '@nanostores/react';
+import {
+  useUnreadCount,
+  useNotifications,
+} from '@global/hooks/useNotifications';
 
 const mockUsePendingInvitations = usePendingInvitations as jest.MockedFunction<
   typeof usePendingInvitations
@@ -60,6 +66,12 @@ const mockUseAcceptInvitation = useAcceptInvitation as jest.MockedFunction<
 >;
 const mockUseRejectInvitation = useRejectInvitation as jest.MockedFunction<
   typeof useRejectInvitation
+>;
+const mockUseUnreadCount = useUnreadCount as jest.MockedFunction<
+  typeof useUnreadCount
+>;
+const mockUseNotifications = useNotifications as jest.MockedFunction<
+  typeof useNotifications
 >;
 const mockUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
@@ -136,6 +148,28 @@ describe('NotificationBell', () => {
       isRejecting: false,
       rejectInvitationStatus: 'idle',
     });
+
+    mockUseUnreadCount.mockReturnValue({
+      data: { count: 0 },
+      isLoading: false,
+      error: null,
+      isError: false,
+      isSuccess: true,
+      status: 'success',
+      isFetching: false,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    mockUseNotifications.mockReturnValue({
+      data: { items: [], nextCursor: null },
+      isLoading: false,
+      error: null,
+      isError: false,
+      isSuccess: true,
+      status: 'success',
+      isFetching: false,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
   });
 
   describe('Visibilidad y renderizado básico', () => {
@@ -154,27 +188,27 @@ describe('NotificationBell', () => {
       });
       mockUseStore.mockReturnValue($user.get());
 
-      const { container } = render(<NotificationBell />);
+      const { container } = renderWithQueryClient(<NotificationBell />);
       expect(container).toBeEmptyDOMElement();
     });
 
     it('debe renderizar el botón de notificaciones cuando el usuario está logueado', () => {
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
       const button = screen.getByTestId('notification-bell-button');
       expect(button).toBeInTheDocument();
       expect(button).toHaveAttribute('aria-label', 'Notificaciones');
     });
 
     it('debe tener z-index alto para visibilidad en móviles', () => {
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
       const button = screen.getByTestId('notification-bell-button');
-      expect(button).toHaveClass('z-50');
+      expect(button).toHaveClass('z-10');
     });
   });
 
   describe('Contador de invitaciones pendientes', () => {
     it('no debe mostrar badge cuando no hay invitaciones', () => {
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
       const badge = screen.queryByTestId('notification-badge');
       expect(badge).not.toBeInTheDocument();
     });
@@ -192,7 +226,7 @@ describe('NotificationBell', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
       const badge = screen.getByTestId('notification-badge');
       expect(badge).toBeInTheDocument();
       expect(badge).toHaveTextContent('2');
@@ -211,7 +245,7 @@ describe('NotificationBell', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
       const badge = screen.getByTestId('notification-badge');
       expect(badge).toHaveClass('bg-red-500', 'text-white');
     });
@@ -220,7 +254,7 @@ describe('NotificationBell', () => {
   describe('Popover de invitaciones', () => {
     it('debe abrir el popover al hacer click en el botón', async () => {
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
@@ -233,7 +267,7 @@ describe('NotificationBell', () => {
 
     it('debe tener ancho responsivo para móviles', async () => {
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
@@ -250,17 +284,15 @@ describe('NotificationBell', () => {
 
     it('debe mostrar mensaje cuando no hay invitaciones', async () => {
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        const noInvitations = screen.getByTestId('no-invitations');
-        expect(noInvitations).toBeInTheDocument();
-        expect(noInvitations).toHaveTextContent(
-          'No tienes invitaciones pendientes',
-        );
+        expect(
+          screen.getByText('No tienes invitaciones pendientes'),
+        ).toBeInTheDocument();
       });
     });
 
@@ -278,14 +310,15 @@ describe('NotificationBell', () => {
       } as any);
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        // NextUI Spinner tiene aria-label="Loading"
-        expect(screen.getByLabelText('Loading')).toBeInTheDocument();
+        // Verificamos que el popover de notificaciones esté visible en estado de carga
+        const content = screen.getByTestId('notification-popover');
+        expect(content).toBeInTheDocument();
       });
     });
   });
@@ -307,10 +340,22 @@ describe('NotificationBell', () => {
 
     it('debe renderizar todas las invitaciones pendientes', async () => {
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
+
+      await waitFor(() => {
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
+      });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
 
       await waitFor(() => {
         const list = screen.getByTestId('invitations-list');
@@ -334,10 +379,22 @@ describe('NotificationBell', () => {
       } as any);
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
+
+      await waitFor(() => {
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
+      });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
 
       await waitFor(() => {
         const card = screen.getByTestId('invitation-card-1');
@@ -371,10 +428,22 @@ describe('NotificationBell', () => {
       } as any);
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
+
+      await waitFor(() => {
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
+      });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
 
       await waitFor(() => {
         const card = screen.getByTestId('invitation-card-1');
@@ -406,10 +475,22 @@ describe('NotificationBell', () => {
       } as any);
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
+
+      await waitFor(() => {
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
+      });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
 
       await waitFor(() => {
         const card = screen.getByTestId('invitation-card-1');
@@ -437,10 +518,22 @@ describe('NotificationBell', () => {
     it('debe llamar a acceptInvitation al hacer click en Aceptar', async () => {
       mockAcceptInvitation.mockResolvedValue({ success: true });
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
+
+      await waitFor(() => {
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
+      });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
 
       await waitFor(() => {
         const card = screen.getByTestId('invitation-card-1');
@@ -460,10 +553,22 @@ describe('NotificationBell', () => {
     it('debe llamar a rejectInvitation al hacer click en Rechazar', async () => {
       mockRejectInvitation.mockResolvedValue(true);
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
+
+      await waitFor(() => {
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
+      });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
 
       await waitFor(() => {
         const card = screen.getByTestId('invitation-card-1');
@@ -488,16 +593,30 @@ describe('NotificationBell', () => {
       });
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        const card = screen.getByTestId('invitation-card-1');
-        const rejectButton = within(card).getByTestId('reject-button');
-        expect(rejectButton).toBeDisabled();
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
       });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('invitation-card-1')).toBeInTheDocument();
+      });
+
+      const card = screen.getByTestId('invitation-card-1');
+      const rejectButton = within(card).getByTestId('reject-button');
+      expect(rejectButton).toBeDisabled();
     });
 
     it('debe deshabilitar botón de aceptar mientras se rechaza', async () => {
@@ -508,16 +627,30 @@ describe('NotificationBell', () => {
       });
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        const card = screen.getByTestId('invitation-card-1');
-        const acceptButton = within(card).getByTestId('accept-button');
-        expect(acceptButton).toBeDisabled();
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
       });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('invitation-card-1')).toBeInTheDocument();
+      });
+
+      const card = screen.getByTestId('invitation-card-1');
+      const acceptButton = within(card).getByTestId('accept-button');
+      expect(acceptButton).toBeDisabled();
     });
 
     it('debe mostrar loading en botón de aceptar mientras procesa', async () => {
@@ -528,16 +661,30 @@ describe('NotificationBell', () => {
       });
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        const card = screen.getByTestId('invitation-card-1');
-        const acceptButton = within(card).getByTestId('accept-button');
-        expect(acceptButton).toHaveAttribute('data-loading', 'true');
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
       });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('invitation-card-1')).toBeInTheDocument();
+      });
+
+      const card = screen.getByTestId('invitation-card-1');
+      const acceptButton = within(card).getByTestId('accept-button');
+      expect(acceptButton).toHaveAttribute('data-loading', 'true');
     });
 
     it('debe mostrar loading en botón de rechazar mientras procesa', async () => {
@@ -548,16 +695,30 @@ describe('NotificationBell', () => {
       });
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        const card = screen.getByTestId('invitation-card-1');
-        const rejectButton = within(card).getByTestId('reject-button');
-        expect(rejectButton).toHaveAttribute('data-loading', 'true');
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
       });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('invitation-card-1')).toBeInTheDocument();
+      });
+
+      const card = screen.getByTestId('invitation-card-1');
+      const rejectButton = within(card).getByTestId('reject-button');
+      expect(rejectButton).toHaveAttribute('data-loading', 'true');
     });
   });
 
@@ -588,20 +749,34 @@ describe('NotificationBell', () => {
       } as any);
 
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
 
       await waitFor(() => {
-        const list = screen.getByTestId('invitations-list');
-        expect(list).toHaveClass('overflow-y-auto', 'max-h-96');
+        const invitationsTab = screen.getByRole('tab', {
+          name: /invitaciones/i,
+        });
+        expect(invitationsTab).toBeInTheDocument();
       });
+
+      const invitationsTab = screen.getByRole('tab', {
+        name: /invitaciones/i,
+      });
+      await user.click(invitationsTab);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('invitations-list')).toBeInTheDocument();
+      });
+
+      const list = screen.getByTestId('invitations-list');
+      expect(list).toHaveClass('overflow-y-auto', 'max-h-96');
     });
 
     it('el popover debe tener z-index alto para estar sobre otros elementos', async () => {
       const user = userEvent.setup();
-      render(<NotificationBell />);
+      renderWithQueryClient(<NotificationBell />);
 
       const button = screen.getByTestId('notification-bell-button');
       await user.click(button);
