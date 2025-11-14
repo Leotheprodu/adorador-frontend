@@ -93,7 +93,6 @@ export const getValidAccessToken = async (): Promise<string | null> => {
     const proactiveRenewalThreshold = 5 * 60 * 1000; // 5 minutos
 
     if (timeUntilExpiry <= proactiveRenewalThreshold && timeUntilExpiry > 0) {
-      console.log('[JWT] Renovación proactiva iniciada');
       // Renovar en segundo plano sin bloquear
       refreshAccessTokenInBackground();
     }
@@ -139,7 +138,6 @@ const refreshAccessTokenInBackground = () => {
   setTimeout(async () => {
     try {
       await refreshAccessToken();
-      console.log('[JWT] Renovación proactiva completada');
     } catch (error) {
       console.warn('[JWT] Error en renovación proactiva:', error);
     }
@@ -162,16 +160,11 @@ export const scheduleTokenRenewal = (tokens: TokenStorage) => {
       console.log('[JWT] Renovación programada ejecutándose...');
       refreshAccessTokenInBackground();
     }, renewalTime);
-
-    console.log(
-      `[JWT] Renovación programada en ${Math.round(renewalTime / 1000)}s`,
-    );
   }
 };
 
 // Función optimizada para renovar tokens con retry y timeout
 export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
-  console.log('[JWT] Intentando renovar token...');
   const tokens = getTokens();
   if (!tokens || !tokens.refreshToken) {
     console.log('[JWT] No hay refresh token disponible');
@@ -186,8 +179,6 @@ export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
       clearTokens();
       return null;
     }
-
-    console.log('[JWT] Llamando a /auth/refresh...');
 
     // Configuración optimizada para renovación con mejor tolerancia a cold starts
     const controller = new AbortController();
@@ -222,11 +213,6 @@ export const refreshAccessToken = async (): Promise<TokenStorage | null> => {
         localStorage.setItem('auth_tokens', JSON.stringify(newTokens));
         scheduleTokenRenewal(newTokens);
       }
-
-      console.log(
-        '[JWT] Nuevo token expira en:',
-        new Date(newTokens.expiresAt).toLocaleString(),
-      );
       return newTokens;
     } else {
       const errorText = await response.text().catch(() => 'Sin detalle');
