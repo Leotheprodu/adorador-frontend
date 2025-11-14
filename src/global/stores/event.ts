@@ -45,4 +45,6 @@ export const $eventConfig = atom({
   showStructure: false,
   lyricsScale: 1,
   swipeLocked: false,
+  isProjectorMode: false,
+  showGreetingScreen: false,
 });

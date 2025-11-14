@@ -6,18 +6,17 @@ import { useEffect, useState } from 'react';
 import { LyricsShowcase } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/LyricsShowcase';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useFullscreen } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useFullscreen';
-import { useHandleEventLeft } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useHandleEventLeft';
 import { useEventSongNavigation } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventSongNavigation';
 import { useEventControls } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventControls';
+import { VideoShowcase } from './VideoShowcase';
+import { FinalMessageSong } from './FinalMessageSong';
 
 export const EventMainScreen = () => {
   const { isFullscreen, isSupported, activateFullscreen, divRef } =
     useFullscreen();
-  const { eventDateLeft } = useHandleEventLeft();
 
   // Hook de navegación de canciones
   const {
-    eventData,
     eventConfig,
     selectedSongData,
     selectedSongLyricLength,
@@ -29,7 +28,6 @@ export const EventMainScreen = () => {
     startSong,
   } = useEventSongNavigation();
 
-  const { title } = eventData;
   const lyricSelected = useStore($lyricSelected);
 
   // Hook de controles (swipe y keyboard)
@@ -58,23 +56,32 @@ export const EventMainScreen = () => {
         backgroundImage: `url('/images/backgrounds/paisaje_${eventConfig.backgroundImage || 1}.avif')`,
       }}
       ref={divRef}
-      className="relative flex h-[22rem] w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black/90 bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken shadow-xl ring-1 ring-white/10 backdrop-blur-sm sm:h-[24rem]"
+      className={`relative flex h-[22rem] w-full flex-col items-center justify-center overflow-hidden rounded-2xl ${eventConfig.showGreetingScreen && eventConfig.isProjectorMode ? 'bg-purple-700' : eventConfig.isProjectorMode ? 'bg-black' : 'bg-black/90'} bg-cover bg-center bg-no-repeat p-5 text-blanco bg-blend-darken shadow-xl ring-1 ring-white/10 backdrop-blur-sm sm:h-[24rem]`}
     >
-      {!selectedSongData ||
-        (lyricSelected.position === -1 && (
-          <div className="flex flex-col items-center justify-center">
-            <h1 className="text-center text-xl uppercase text-slate-400 lg:text-5xl">
-              {title}
-            </h1>
-            <h3 className="text-center text-lg uppercase lg:text-6xl">
-              {eventDateLeft}
-            </h3>
-          </div>
-        ))}
+      {/* en Modo proyector muestra el background con video */}
+      {eventConfig.showGreetingScreen && eventConfig.isProjectorMode ? (
+        <div className="z-10 flex h-full w-full flex-col items-center justify-center">
+          <VideoShowcase
+            props={{
+              type: 'eventIntro',
+            }}
+          />
+        </div>
+      ) : !eventConfig.showGreetingScreen && eventConfig.isProjectorMode ? (
+        <div className="flex h-full w-full flex-col items-center justify-center">
+          <VideoShowcase
+            props={{
+              type: 'eventBackground',
+            }}
+          />
+        </div>
+      ) : null}
       {lyricSelected.position === 0 && selectedSongData && (
-        <div className="flex w-full flex-col items-center justify-center gap-8">
+        <div
+          className={`flex w-full flex-col items-center justify-center gap-8 ${eventConfig.isProjectorMode ? 'absolute' : ''}`}
+        >
           <h1
-            className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+            className={`font-momotrust ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
           >
             {selectedSongData?.song.title}
           </h1>
@@ -93,11 +100,13 @@ export const EventMainScreen = () => {
       )}
       {lyricSelected.position === selectedSongLyricLength + 1 &&
         selectedSongData && (
-          <div className="flex w-full flex-col items-center justify-center gap-8">
+          <div
+            className={`flex w-full flex-col items-center justify-center gap-8 ${eventConfig.isProjectorMode ? 'absolute' : ''}`}
+          >
             <h1
-              className={`uppercase ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
+              className={`font-momotrust ${isFullscreen ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-xl md:text-3xl lg:text-5xl'} text-center`}
             >
-              Fin
+              <FinalMessageSong />
             </h1>
             {/* Botones de navegación al final de la canción */}
             <SongNavigationButtons
@@ -135,7 +144,7 @@ export const EventMainScreen = () => {
 
       {!isFullscreen && isSupported && (
         <button
-          className="absolute bottom-3 right-3 rounded-xl bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 p-3 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-xl active:scale-95"
+          className="absolute bottom-3 right-3 z-20 rounded-xl bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 p-3 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-xl active:scale-95"
           onClick={activateFullscreen}
           title="Pantalla completa"
           aria-label="Activar pantalla completa"

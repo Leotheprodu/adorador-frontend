@@ -56,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="bg-blanco">
+    <html lang="es" className="">
       <body className="bg-blanco">
         <Providers>
           <Toaster />

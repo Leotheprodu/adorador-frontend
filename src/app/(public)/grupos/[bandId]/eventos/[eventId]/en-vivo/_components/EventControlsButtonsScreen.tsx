@@ -55,16 +55,16 @@ export const EventControlsButtonsScreen = () => {
             <ArrowLeftIcon className="[font-size:1rem]" />
           </button>
           <button
-            disabled={eventConfig.lyricsScale >= 1.5}
+            disabled={eventConfig.lyricsScale >= 2}
             onClick={() => {
-              if (eventConfig.lyricsScale < 1.5) {
+              if (eventConfig.lyricsScale < 2) {
                 $eventConfig.set({
                   ...eventConfig,
-                  lyricsScale: Math.min(1.5, eventConfig.lyricsScale + 0.25),
+                  lyricsScale: Math.min(2, eventConfig.lyricsScale + 0.25),
                 });
                 setLocalStorage('eventConfig', {
                   ...eventConfig,
-                  lyricsScale: Math.min(1.5, eventConfig.lyricsScale + 0.25),
+                  lyricsScale: Math.min(2, eventConfig.lyricsScale + 0.25),
                 });
               }
             }}
@@ -117,39 +117,85 @@ export const EventControlsButtonsScreen = () => {
         <Checkbox
           color="secondary"
           size="sm"
-          isSelected={eventConfig.showStructure}
-          aria-label="Mostrar estructura"
+          isSelected={eventConfig.isProjectorMode}
+          aria-label="Modo proyector"
           onValueChange={() => {
             $eventConfig.set({
               ...eventConfig,
-              showStructure: !eventConfig.showStructure,
+              isProjectorMode: !eventConfig.isProjectorMode,
+              showStructure: false,
+              showChords: false,
             });
             setLocalStorage('eventConfig', {
               ...eventConfig,
-              showStructure: !eventConfig.showStructure,
+              isProjectorMode: !eventConfig.isProjectorMode,
+              showStructure: false,
+              showChords: false,
             });
           }}
         >
-          <p className="text-xs font-medium">Estructura</p>
+          <p>Modo Proyector</p>
         </Checkbox>
-        <Checkbox
-          color="secondary"
-          size="sm"
-          isSelected={eventConfig.showChords}
-          aria-label="Mostrar acordes"
-          onValueChange={() => {
-            $eventConfig.set({
-              ...eventConfig,
-              showChords: !eventConfig.showChords,
-            });
-            setLocalStorage('eventConfig', {
-              ...eventConfig,
-              showChords: !eventConfig.showChords,
-            });
-          }}
-        >
-          <p className="text-xs font-medium">Acordes</p>
-        </Checkbox>
+        {eventConfig.isProjectorMode && (
+          <Checkbox
+            color="secondary"
+            size="sm"
+            isSelected={eventConfig.showGreetingScreen}
+            aria-label="Mostrar pantalla de bienvenida"
+            onValueChange={() => {
+              $eventConfig.set({
+                ...eventConfig,
+                showGreetingScreen: !eventConfig.showGreetingScreen,
+              });
+              setLocalStorage('eventConfig', {
+                ...eventConfig,
+                showGreetingScreen: !eventConfig.showGreetingScreen,
+              });
+            }}
+          >
+            <p>Pantalla de Bienvenida</p>
+          </Checkbox>
+        )}
+        {!eventConfig.isProjectorMode && (
+          <>
+            <Checkbox
+              color="secondary"
+              size="sm"
+              isSelected={eventConfig.showStructure}
+              aria-label="Mostrar estructura"
+              onValueChange={() => {
+                $eventConfig.set({
+                  ...eventConfig,
+                  showStructure: !eventConfig.showStructure,
+                });
+                setLocalStorage('eventConfig', {
+                  ...eventConfig,
+                  showStructure: !eventConfig.showStructure,
+                });
+              }}
+            >
+              <p className="text-xs font-medium">Estructura</p>
+            </Checkbox>
+            <Checkbox
+              color="secondary"
+              size="sm"
+              isSelected={eventConfig.showChords}
+              aria-label="Mostrar acordes"
+              onValueChange={() => {
+                $eventConfig.set({
+                  ...eventConfig,
+                  showChords: !eventConfig.showChords,
+                });
+                setLocalStorage('eventConfig', {
+                  ...eventConfig,
+                  showChords: !eventConfig.showChords,
+                });
+              }}
+            >
+              <p className="text-xs font-medium">Acordes</p>
+            </Checkbox>
+          </>
+        )}
         {eventConfig.showChords && (
           <Checkbox
             color="secondary"

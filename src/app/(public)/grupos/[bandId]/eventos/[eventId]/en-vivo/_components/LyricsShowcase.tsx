@@ -70,7 +70,7 @@ export const LyricsShowcase = ({
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <AnimatePresence>
-        <div className="flex w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center">
           <motion.div
             key={lyricSelected.position}
             initial={{
@@ -83,7 +83,7 @@ export const LyricsShowcase = ({
               y: lyricSelected.action === 'forward' ? -200 : 200,
             }}
             transition={{ opacity: { duration: 0.2 }, y: { duration: 0.5 } }}
-            className="flex flex-col"
+            className={`flex flex-col ${eventConfig.isProjectorMode ? 'gap-16' : ''}`}
           >
             {/* Renderizar solo las líneas que realmente existen */}
             {visibleLyricsData.map((lyricData) => (
