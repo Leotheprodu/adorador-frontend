@@ -55,6 +55,14 @@ export const CommentSection = ({
   const handleSubmit = () => {
     if (!newComment.trim()) return;
 
+    // Moderación de palabras prohibidas
+    const forbidden = ['maldición']; // Puedes expandir esta lista
+    const lowerComment = newComment.toLowerCase();
+    if (forbidden.some((word) => lowerComment.includes(word))) {
+      // Opcional: mostrar un toast o mensaje de error
+      return;
+    }
+
     const data: CreateCommentDto = {
       content: newComment.trim(),
     };

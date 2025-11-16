@@ -1,3 +1,20 @@
+// Mock NextUI Button para simular <a> y <button> según corresponda
+jest.mock('@nextui-org/react', () => {
+  const original = jest.requireActual('@nextui-org/react');
+  return {
+    ...original,
+    Button: ({ href, children, ...props }: any) =>
+      href ? (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      ) : (
+        <button type="button" {...props}>
+          {children}
+        </button>
+      ),
+  };
+});
 /**
  * Tests para verificar que AddSongButton invalida correctamente las queries
  * después de crear una canción exitosamente

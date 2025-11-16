@@ -32,10 +32,36 @@ jest.mock('@tanstack/react-query', () => {
     QueryClient: jest.fn().mockImplementation(() => ({
       mount: jest.fn(),
       unmount: jest.fn(),
+      getQueryCache: jest.fn(() => ({ find: jest.fn() })),
+      getMutationCache: jest.fn(() => ({ find: jest.fn() })),
+      isFetching: jest.fn(() => 0),
+      isMutating: jest.fn(() => 0),
+      defaultOptions: {},
     })),
-    QueryClientProvider: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="query-client-provider">{children}</div>
-    ),
+    QueryClientProvider: ({
+      children,
+      client,
+    }: {
+      children: React.ReactNode;
+      client?: any;
+    }) => {
+      // Provide a real QueryClient for tests that need it
+      const realQueryClient =
+        client ||
+        new actualModule.QueryClient({
+          defaultOptions: {
+            queries: { retry: false },
+            mutations: { retry: false },
+          },
+        });
+      return (
+        <div data-testid="query-client-provider">
+          <actualModule.QueryClientProvider client={realQueryClient}>
+            {children}
+          </actualModule.QueryClientProvider>
+        </div>
+      );
+    },
   };
 });
 

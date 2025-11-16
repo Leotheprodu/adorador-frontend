@@ -1,4 +1,5 @@
-'use client';
+export { MemberCard };
+('use client');
 import { useState, useEffect } from 'react';
 import {
   useBandMembers,

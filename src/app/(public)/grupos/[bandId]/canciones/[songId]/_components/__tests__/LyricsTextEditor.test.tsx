@@ -2,6 +2,40 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { LyricsTextEditor } from '../LyricsTextEditor';
 
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => ({
+  Button: ({
+    children,
+    onPress,
+    disabled,
+    isDisabled,
+    ...props
+  }: React.PropsWithChildren<{
+    onPress?: () => void;
+    disabled?: boolean;
+    isDisabled?: boolean;
+  }>) => (
+    <button onClick={onPress} disabled={disabled || isDisabled} {...props}>
+      {children}
+    </button>
+  ),
+  Textarea: ({ value, onChange, ...props }: any) => (
+    <textarea value={value} onChange={onChange} {...props} />
+  ),
+  Card: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  CardHeader: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  CardBody: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+}));
+
+// Mock PrimaryButton para que respete disabled
+jest.mock('@global/components/buttons', () => ({
+  PrimaryButton: ({ children, disabled, isDisabled, ...props }: any) => (
+    <button disabled={disabled || isDisabled} {...props}>
+      {children}
+    </button>
+  ),
+}));
+
 // Mock lyricsStorage
 const mockGetTempLyrics = jest.fn();
 const mockSaveTempLyrics = jest.fn();

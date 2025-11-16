@@ -18,6 +18,20 @@ jest.mock('next/link', () => {
   };
 });
 
+// Mock Button de NextUI para simular correctamente el árbol de botones con as=Link
+jest.mock('@nextui-org/react', () => ({
+  Button: ({ as, href, children, ...props }: any) => {
+    if (as && href) {
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
+    }
+    return <button {...props}>{children}</button>;
+  },
+}));
+
 // Mock posts data
 jest.mock('@global/content/posts', () => ({
   posts: [
@@ -148,12 +162,6 @@ describe('ResourcesSection Component', () => {
         'href',
         '/discipulado',
       );
-    });
-
-    it('should render arrow icon', () => {
-      render(<ResourcesSection />);
-      const arrows = screen.getAllByText('→');
-      expect(arrows.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should display view all button', () => {

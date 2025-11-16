@@ -1,5 +1,20 @@
 import { render, screen } from '@testing-library/react';
+
 import { CTASection } from '../CTASection';
+
+// Mock Button de NextUI para simular correctamente el árbol de botones con as=Link
+jest.mock('@nextui-org/react', () => ({
+  Button: ({ as, href, children, ...props }: any) => {
+    if (as && href) {
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
+    }
+    return <button {...props}>{children}</button>;
+  },
+}));
 
 // Mock Next.js Link component
 jest.mock('next/link', () => {

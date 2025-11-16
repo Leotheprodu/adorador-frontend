@@ -1,3 +1,26 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Mock NotificationBell que respeta el estado de login
+import * as usersStore from '@global/stores/users';
+jest.mock('@ui/header/components/NotificationBell', () => ({
+  NotificationBell: () => {
+    // Simula el comportamiento real: solo renderiza si el usuario está logueado
+    const user = usersStore.$user.get();
+    if (!user?.isLoggedIn) return null;
+    return (
+      <button data-testid="notification-bell-button" className="relative z-50">
+        Mock NotificationBell
+      </button>
+    );
+  },
+}));
+
+function renderWithQueryClient(ui: React.ReactElement) {
+  const queryClient = new QueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+}
 // Mock nanostores FIRST - before any imports
 jest.mock('nanostores', () => ({
   atom: jest.fn((initialValue) => ({
@@ -115,7 +138,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
 
   describe('Visibilidad simultánea en móvil', () => {
     it('debe renderizar NotificationBell y botón hamburguesa cuando el usuario está logueado', () => {
-      render(<Header />);
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.getByTestId('notification-bell-button');
       const menuButton = screen.getByLabelText('Abrir menú');
@@ -125,7 +148,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
     });
 
     it('ambos botones deben estar en el mismo contenedor flex con gap-3', () => {
-      render(<Header />);
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.getByTestId('notification-bell-button');
       const menuButton = screen.getByLabelText('Abrir menú');
@@ -141,7 +164,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
     });
 
     it('NotificationBell debe tener posición relative, no fixed', () => {
-      render(<Header />);
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.getByTestId('notification-bell-button');
 
@@ -152,7 +175,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
     });
 
     it('botón hamburguesa debe tener posición relative en móvil, no fixed', () => {
-      render(<Header />);
+      renderWithQueryClient(<Header />);
 
       const menuButton = screen.getByLabelText('Abrir menú');
 
@@ -163,7 +186,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
     });
 
     it('ambos botones deben tener z-index 50 para estar sobre el overlay', () => {
-      render(<Header />);
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.getByTestId('notification-bell-button');
       const menuButton = screen.getByLabelText('Abrir menú');
@@ -173,7 +196,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
     });
 
     it('el contenedor de ambos botones debe respetar el flujo del header', () => {
-      const { container } = render(<Header />);
+      const { container } = renderWithQueryClient(<Header />);
 
       const header = container.querySelector('header');
       const notificationButton = screen.getByTestId('notification-bell-button');
@@ -190,12 +213,15 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
 
   describe('Comportamiento sin usuario logueado', () => {
     it('no debe mostrar NotificationBell pero sí el menú hamburguesa', () => {
-      mockUseStore.mockReturnValue({
-        ...$user.get(),
+      // Actualiza el store real para simular usuario no logueado
+      const usersStore = require('@global/stores/users');
+      usersStore.$user.set({
+        ...usersStore.$user.get(),
         isLoggedIn: false,
       });
+      mockUseStore.mockReturnValue(usersStore.$user.get());
 
-      render(<Header />);
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.queryByTestId(
         'notification-bell-button',
@@ -209,7 +235,15 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
 
   describe('Prevención de superposición', () => {
     it('el gap-3 debe proporcionar separación suficiente entre botones (12px)', () => {
-      render(<Header />);
+      // Asegura usuario logueado
+      const usersStore = require('@global/stores/users');
+      usersStore.$user.set({
+        ...usersStore.$user.get(),
+        isLoggedIn: true,
+      });
+      mockUseStore.mockReturnValue(usersStore.$user.get());
+
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.getByTestId('notification-bell-button');
       const container = notificationButton.parentElement;
@@ -220,7 +254,15 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
     });
 
     it('ambos botones deben usar relative positioning para mantener flujo del documento', () => {
-      render(<Header />);
+      // Asegura usuario logueado
+      const usersStore = require('@global/stores/users');
+      usersStore.$user.set({
+        ...usersStore.$user.get(),
+        isLoggedIn: true,
+      });
+      mockUseStore.mockReturnValue(usersStore.$user.get());
+
+      renderWithQueryClient(<Header />);
 
       const notificationButton = screen.getByTestId('notification-bell-button');
       const menuButton = screen.getByLabelText('Abrir menú');
@@ -233,14 +275,14 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
 
   describe('Estructura del Header', () => {
     it('debe tener z-index 40 para estar debajo de los botones (z-50)', () => {
-      const { container } = render(<Header />);
+      const { container } = renderWithQueryClient(<Header />);
 
       const header = container.querySelector('header');
       expect(header).toHaveClass('z-40');
     });
 
     it('debe ser fixed y cubrir todo el ancho', () => {
-      const { container } = render(<Header />);
+      const { container } = renderWithQueryClient(<Header />);
 
       const header = container.querySelector('header');
       expect(header).toHaveClass('fixed');

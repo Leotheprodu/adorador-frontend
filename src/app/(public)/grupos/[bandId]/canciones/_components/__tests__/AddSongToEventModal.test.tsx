@@ -2,6 +2,67 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { AddSongToEventModal } from '../AddSongToEventModal';
 
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => {
+  const React = require('react');
+
+  return {
+    Modal: ({
+      children,
+      isOpen,
+      onOpenChange,
+    }: React.PropsWithChildren<{
+      isOpen: boolean;
+      onOpenChange?: (open: boolean) => void;
+    }>) => {
+      if (!isOpen) return null;
+      const onClose = () => onOpenChange?.(false);
+
+      return (
+        <div role="dialog" data-testid="modal">
+          {React.isValidElement(children)
+            ? React.cloneElement(children as React.ReactElement<any>, {
+                __onClose: onClose,
+              })
+            : children}
+        </div>
+      );
+    },
+    ModalContent: ({
+      children,
+      __onClose,
+      ...props
+    }: React.PropsWithChildren & { __onClose?: () => void }) => (
+      <div data-testid="modal-content" {...props}>
+        {typeof children === 'function' ? children(__onClose) : children}
+      </div>
+    ),
+    ModalHeader: ({ children }: React.PropsWithChildren) => (
+      <div>{children}</div>
+    ),
+    ModalBody: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+    ModalFooter: ({ children }: React.PropsWithChildren) => (
+      <div>{children}</div>
+    ),
+    Button: ({
+      children,
+      onPress,
+      ...props
+    }: React.PropsWithChildren<{ onPress?: () => void }>) => (
+      <button onClick={onPress} {...props}>
+        {children}
+      </button>
+    ),
+    Spinner: () => <div aria-label="Loading">Loading...</div>,
+    Chip: ({
+      children,
+      color,
+    }: React.PropsWithChildren<{ color?: string }>) => (
+      <span data-color={color}>{children}</span>
+    ),
+  };
+});
+
 // Mock de los iconos
 jest.mock('@global/icons', () => ({
   CalendarIcon: (props: React.SVGProps<SVGSVGElement>) => (

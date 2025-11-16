@@ -1,3 +1,23 @@
+// Mock NextUI components usados en AddEventButton
+jest.mock('@nextui-org/react', () => ({
+  Button: ({ children, onPress, ...props }) => (
+    <button onClick={onPress} {...props}>
+      {children}
+    </button>
+  ),
+  Modal: ({ children, ...props }) => <div {...props}>{children}</div>,
+  ModalBody: ({ children }) => <div>{children}</div>,
+  ModalContent: ({ children }) => <div>{children}</div>,
+  ModalFooter: ({ children }) => <div>{children}</div>,
+  ModalHeader: ({ children }) => <div>{children}</div>,
+  Tooltip: ({ children }) => <div>{children}</div>,
+  useDisclosure: () => ({
+    isOpen: false,
+    onOpen: jest.fn(),
+    onClose: jest.fn(),
+    onOpenChange: jest.fn(),
+  }),
+}));
 /**
  * Tests para verificar que AddEventButton invalida correctamente las queries
  * después de crear un evento exitosamente
@@ -51,13 +71,7 @@ jest.mock('@global/stores/users', () => {
   };
 });
 
-import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { AddEventButton } from '../AddEventButton';
-import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-
-// Mocks
+// Mocks BEFORE imports
 jest.mock('@tanstack/react-query', () => ({
   ...jest.requireActual('@tanstack/react-query'),
   useQueryClient: jest.fn(),
@@ -70,6 +84,21 @@ jest.mock('next/navigation', () => ({
 jest.mock('@bands/[bandId]/eventos/_services/eventsOfBandService', () => ({
   addEventsToBandService: jest.fn(),
 }));
+
+// NOW imports
+import { render, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import '@testing-library/jest-dom';
+import { AddEventButton } from '../AddEventButton';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+function renderWithQueryClient(ui) {
+  const queryClient = new QueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+}
 
 jest.mock('@bands/[bandId]/eventos/_components/FormAddNewEvent', () => ({
   FormAddNewEvent: () => <div data-testid="form-add-event">Form</div>,
@@ -117,7 +146,9 @@ describe('AddEventButton - Query Invalidation', () => {
   });
 
   it('should invalidate EventsOfBand and BandById queries after successful event creation', async () => {
-    const { rerender } = render(<AddEventButton bandId={mockBandId} />);
+    const { rerender } = renderWithQueryClient(
+      <AddEventButton bandId={mockBandId} />,
+    );
 
     mockStatus = 'success';
     (addEventsToBandService as jest.Mock).mockImplementation(() => ({
@@ -139,7 +170,9 @@ describe('AddEventButton - Query Invalidation', () => {
   });
 
   it('should invalidate queries and close modal after successful event creation (no redirect)', async () => {
-    const { rerender } = render(<AddEventButton bandId={mockBandId} />);
+    const { rerender } = renderWithQueryClient(
+      <AddEventButton bandId={mockBandId} />,
+    );
 
     mockStatus = 'success';
     (addEventsToBandService as jest.Mock).mockImplementation(() => ({
@@ -158,7 +191,9 @@ describe('AddEventButton - Query Invalidation', () => {
   });
 
   it('should NOT invalidate queries if event creation fails', async () => {
-    const { rerender } = render(<AddEventButton bandId={mockBandId} />);
+    const { rerender } = renderWithQueryClient(
+      <AddEventButton bandId={mockBandId} />,
+    );
 
     mockStatus = 'error';
     (addEventsToBandService as jest.Mock).mockImplementation(() => ({
@@ -176,7 +211,9 @@ describe('AddEventButton - Query Invalidation', () => {
   });
 
   it('should invalidate all three queries even if navigating away immediately', async () => {
-    const { rerender } = render(<AddEventButton bandId={mockBandId} />);
+    const { rerender } = renderWithQueryClient(
+      <AddEventButton bandId={mockBandId} />,
+    );
 
     mockStatus = 'success';
     (addEventsToBandService as jest.Mock).mockImplementation(() => ({

@@ -1,3 +1,35 @@
+// Mock NextUI Button para simular <a> y <button> según corresponda
+jest.mock('@nextui-org/react', () => {
+  const original = jest.requireActual('@nextui-org/react');
+  return {
+    ...original,
+    Button: ({
+      href,
+      children,
+      endContent,
+      startContent,
+      isLoading,
+      isDisabled,
+      onPress,
+      ...props
+    }: any) => {
+      const onClick = onPress;
+      return href ? (
+        <a href={href} {...props}>
+          {startContent}
+          {children}
+          {endContent}
+        </a>
+      ) : (
+        <button type="button" onClick={onClick} {...props}>
+          {startContent}
+          {children}
+          {endContent}
+        </button>
+      );
+    },
+  };
+});
 import { render, screen } from '@testing-library/react';
 import { HowItWorksSection } from '../HowItWorksSection';
 
