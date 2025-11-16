@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { worshipVerses } from '@global/config/constants';
 import type {
   EventByIdInterface,
   EventSongsProps,
@@ -125,21 +126,27 @@ const mockActivateFullscreen = jest.fn();
 // eslint-disable-next-line prefer-const
 let mockIsFullscreen = false;
 
-jest.mock('@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway', () => ({
-  useEventGateway: () => ({
-    sendMessage: mockSendMessage,
+jest.mock(
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway',
+  () => ({
+    useEventGateway: () => ({
+      sendMessage: mockSendMessage,
+    }),
   }),
-}));
+);
 
-jest.mock('@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useFullscreen', () => ({
-  useFullscreen: () => ({
-    isFullscreen: mockIsFullscreen,
-    isSupported: true,
-    activateFullscreen: mockActivateFullscreen,
-    exitFullscreen: jest.fn(),
-    divRef: { current: null },
+jest.mock(
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useFullscreen',
+  () => ({
+    useFullscreen: () => ({
+      isFullscreen: mockIsFullscreen,
+      isSupported: true,
+      activateFullscreen: mockActivateFullscreen,
+      exitFullscreen: jest.fn(),
+      divRef: { current: null },
+    }),
   }),
-}));
+);
 
 jest.mock(
   '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useHandleEventLeft',
@@ -154,6 +161,32 @@ jest.mock(
   '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/LyricsShowcase',
   () => ({
     LyricsShowcase: () => <div data-testid="lyrics-showcase">Lyrics</div>,
+  }),
+);
+
+jest.mock(
+  '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/FinalMessageSong',
+  () => ({
+    FinalMessageSong: () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { worshipVerses } = require('@global/config/constants');
+      const verse = worshipVerses[0]; // Siempre usar el primer versículo en tests
+      return (
+        <div className="font-kalam">
+          <div
+            key={verse.message}
+            className="flex flex-col items-center justify-center"
+          >
+            <p className="text-center text-2xl md:text-4xl lg:text-5xl">
+              {verse.message}
+            </p>
+            <p>
+              <em className="text-lg md:text-xl lg:text-2xl">{verse.source}</em>
+            </p>
+          </div>
+        </div>
+      );
+    },
   }),
 );
 
@@ -585,34 +618,43 @@ describe('EventMainScreen', () => {
   });
 
   describe('Pantalla "Fin" y navegación', () => {
-    it('debería mostrar "Fin" cuando position === selectedSongLyricLength + 1', () => {
+    // Utilizaremos el primer versículo de worshipVerses para los tests
+
+    beforeEach(() => {
+      jest.spyOn(Math, 'random').mockReturnValue(0); // Siempre el primero
+    });
+    afterEach(() => {
+      jest.spyOn(Math, 'random').mockRestore();
+    });
+
+    it('debería mostrar el mensaje final cuando position === selectedSongLyricLength + 1', () => {
       $lyricSelected.set({ position: 3, action: 'forward' });
       $selectedSongLyricLength.set(2);
       render(<EventMainScreen />);
 
-      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(screen.getByText(worshipVerses[0].message)).toBeInTheDocument();
     });
 
-    it('debería mostrar botones de navegación en la pantalla "Fin"', () => {
+    it('debería mostrar botones de navegación en la pantalla final', () => {
       $eventSelectedSongId.set(2);
       $selectedSongData.set(mockEventData.songs[1]);
       $selectedSongLyricLength.set(2);
       $lyricSelected.set({ position: 3, action: 'forward' });
       render(<EventMainScreen />);
 
-      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(screen.getByText(worshipVerses[0].message)).toBeInTheDocument();
       expect(screen.getByText('Anterior')).toBeInTheDocument();
       expect(screen.getByText('Siguiente')).toBeInTheDocument();
     });
 
-    it('debería mostrar botón de reiniciar en la pantalla "Fin"', () => {
+    it('debería mostrar botón de reiniciar en la pantalla final', () => {
       $eventSelectedSongId.set(1);
       $selectedSongData.set(mockEventData.songs[0]);
       $selectedSongLyricLength.set(2);
       $lyricSelected.set({ position: 3, action: 'forward' });
       render(<EventMainScreen />);
 
-      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(screen.getByText(worshipVerses[0].message)).toBeInTheDocument();
       expect(
         screen.getByRole('button', { name: /reiniciar canción/i }),
       ).toBeInTheDocument();
@@ -639,7 +681,7 @@ describe('EventMainScreen', () => {
       });
     });
 
-    it('NO debería mostrar botones en pantalla "Fin" cuando NO está en fullscreen', () => {
+    it('NO debería mostrar botones en pantalla final cuando NO está en fullscreen', () => {
       mockIsFullscreen = false;
       $eventSelectedSongId.set(2);
       $selectedSongData.set(mockEventData.songs[1]);
@@ -647,7 +689,7 @@ describe('EventMainScreen', () => {
       $lyricSelected.set({ position: 3, action: 'forward' });
       render(<EventMainScreen />);
 
-      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(screen.getByText(worshipVerses[0].message)).toBeInTheDocument();
       expect(
         screen.queryByRole('button', { name: /reiniciar canción/i }),
       ).not.toBeInTheDocument();
@@ -655,7 +697,7 @@ describe('EventMainScreen', () => {
       expect(screen.queryByText('Siguiente')).not.toBeInTheDocument();
     });
 
-    it('debería mostrar botones en pantalla "Fin" SOLO cuando está en fullscreen Y es event manager', () => {
+    it('debería mostrar botones en pantalla final SOLO cuando está en fullscreen Y es event manager', () => {
       mockIsFullscreen = true;
       $eventSelectedSongId.set(2);
       $selectedSongData.set(mockEventData.songs[1]);
@@ -663,7 +705,7 @@ describe('EventMainScreen', () => {
       $lyricSelected.set({ position: 3, action: 'forward' });
       render(<EventMainScreen />);
 
-      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(screen.getByText(worshipVerses[0].message)).toBeInTheDocument();
       expect(
         screen.getByRole('button', { name: /reiniciar canción/i }),
       ).toBeInTheDocument();
@@ -693,7 +735,7 @@ describe('EventMainScreen', () => {
       $selectedSongLyricLength.set(2);
       render(<EventMainScreen />);
 
-      expect(screen.getByText('Fin')).toBeInTheDocument();
+      expect(screen.getByText(worshipVerses[0].message)).toBeInTheDocument();
       expect(screen.queryByTestId('lyrics-showcase')).not.toBeInTheDocument();
     });
   });

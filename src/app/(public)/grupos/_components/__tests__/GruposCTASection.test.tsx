@@ -50,15 +50,24 @@ jest.mock('@nextui-org/modal', () => ({
   }),
 }));
 
-jest.mock('@nextui-org/button', () => ({
-  Button: ({
-    children,
-    onClick,
-  }: {
-    children: React.ReactNode;
-    onClick?: () => void;
-  }) => <button onClick={onClick}>{children}</button>,
-}));
+// Mock NextUI Button para simular <a> y <button> según corresponda
+jest.mock('@nextui-org/react', () => {
+  const original = jest.requireActual('@nextui-org/react');
+  return {
+    ...original,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Button: ({ href, children, ...props }: any) =>
+      href ? (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      ) : (
+        <button type="button" {...props}>
+          {children}
+        </button>
+      ),
+  };
+});
 
 jest.mock('@nextui-org/input', () => ({
   Input: ({

@@ -1,6 +1,31 @@
+// Mock NextUI Button para simular <a> y <button> según corresponda
+jest.mock('@nextui-org/react', () => {
+  const original = jest.requireActual('@nextui-org/react');
+  return {
+    ...original,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Button: ({ href, children, isDisabled, onPress, ...props }: any) => {
+      const onClick = onPress;
+      return href ? (
+        <a href={href} aria-disabled={isDisabled} {...props}>
+          {children}
+        </a>
+      ) : (
+        <button
+          type="button"
+          disabled={isDisabled}
+          onClick={onClick}
+          {...props}
+        >
+          {children}
+        </button>
+      );
+    },
+  };
+});
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { UpdatingSongList } from '../UpdatingSongList';
+import { UpdatingSongList } from '../UpdatingSongList.tsx';
 import {
   eventUpdateSongs,
   eventDeleteSongs,

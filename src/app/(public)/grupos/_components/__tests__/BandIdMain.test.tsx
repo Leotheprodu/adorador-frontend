@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { BandIdMain } from '../BandIdMain';
 import { getBandById } from '@bands/_services/bandsService';
@@ -20,6 +21,12 @@ jest.mock('@global/utils/UIGuard', () => ({
 }));
 
 describe('BandIdMain - Responsive Layout', () => {
+  function renderWithQueryClient(ui: React.ReactElement) {
+    const queryClient = new QueryClient();
+    return render(
+      <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+    );
+  }
   beforeEach(() => {
     jest.clearAllMocks();
     (getBandById as jest.Mock).mockReturnValue({
@@ -29,12 +36,12 @@ describe('BandIdMain - Responsive Layout', () => {
   });
 
   it('should render without crashing', () => {
-    render(<BandIdMain bandId="1" />);
+    renderWithQueryClient(<BandIdMain bandId="1" />);
     expect(screen.getByTestId('ui-guard')).toBeInTheDocument();
   });
 
   it('should have GuitarIcon with proper responsive classes', () => {
-    const { container } = render(<BandIdMain bandId="1" />);
+    const { container } = renderWithQueryClient(<BandIdMain bandId="1" />);
 
     // Verificar que el contenedor del icono tiene flex-shrink-0
     const iconContainer = container.querySelector('.flex.h-14.w-14');
@@ -46,7 +53,7 @@ describe('BandIdMain - Responsive Layout', () => {
   });
 
   it('should have proper spacing and layout classes', () => {
-    const { container } = render(<BandIdMain bandId="1" />);
+    const { container } = renderWithQueryClient(<BandIdMain bandId="1" />);
 
     // Verificar el contenedor principal tiene space-y-6
     const mainContainer = container.querySelector('.space-y-6');
@@ -54,7 +61,7 @@ describe('BandIdMain - Responsive Layout', () => {
   });
 
   it('should render all sections', () => {
-    render(<BandIdMain bandId="1" />);
+    renderWithQueryClient(<BandIdMain bandId="1" />);
 
     expect(screen.getByTestId('band-members')).toBeInTheDocument();
     expect(screen.getByTestId('songs-section')).toBeInTheDocument();
@@ -62,7 +69,7 @@ describe('BandIdMain - Responsive Layout', () => {
   });
 
   it('should display band name', () => {
-    render(<BandIdMain bandId="1" />);
+    renderWithQueryClient(<BandIdMain bandId="1" />);
     expect(screen.getByText('Test Band')).toBeInTheDocument();
   });
 });

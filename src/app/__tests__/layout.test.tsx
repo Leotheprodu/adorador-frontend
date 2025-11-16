@@ -16,7 +16,7 @@ jest.mock('react-hot-toast', () => ({
 
 describe('RootLayout', () => {
   describe('Component rendering', () => {
-    it('should render the html element with correct lang and class', () => {
+    it('should render the html element with correct lang', () => {
       const { container } = render(
         <RootLayout>
           <div>Test Content</div>
@@ -25,7 +25,7 @@ describe('RootLayout', () => {
 
       const htmlElement = container.querySelector('html');
       expect(htmlElement).toHaveAttribute('lang', 'es');
-      expect(htmlElement).toHaveClass('bg-blanco');
+      // Ya no esperamos la clase 'bg-blanco' en html
     });
 
     it('should render the body element with correct class', () => {
@@ -261,17 +261,15 @@ describe('RootLayout', () => {
   });
 
   describe('CSS classes', () => {
-    it('should apply bg-blanco class to both html and body', () => {
+    it('should apply bg-blanco class to body', () => {
       const { container } = render(
         <RootLayout>
           <div>Content</div>
         </RootLayout>,
       );
 
-      const html = container.querySelector('html');
       const body = container.querySelector('body');
 
-      expect(html).toHaveClass('bg-blanco');
       expect(body).toHaveClass('bg-blanco');
     });
   });

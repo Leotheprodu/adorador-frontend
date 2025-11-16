@@ -2,6 +2,45 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { AddSongEventButton } from '../AddSongEventButton';
 import '@testing-library/jest-dom';
 
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => ({
+  Button: ({
+    children,
+    onPress,
+    disabled,
+    className = '',
+    'aria-label': ariaLabel,
+    isDisabled,
+    ...props
+  }) => {
+    // Filtrar props no nativos
+    const nativeProps = { ...props };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (nativeProps as any).isDisabled;
+    return (
+      <button
+        type="button"
+        onClick={disabled || isDisabled ? undefined : onPress}
+        disabled={disabled || isDisabled}
+        aria-label={ariaLabel}
+        className={`nextui-btn z-10 ${className}`.trim()}
+        {...nativeProps}
+      >
+        {children}
+      </button>
+    );
+  },
+  Popover: ({ children }) => <div data-slot="popover">{children}</div>,
+  PopoverTrigger: ({ children }) => <div data-slot="trigger">{children}</div>,
+  PopoverContent: ({ children }) => <div data-slot="content">{children}</div>,
+  Tooltip: ({ children, content }) => (
+    <div data-testid="tooltip-mock">
+      {children}
+      {content && <div>{content}</div>}
+    </div>
+  ),
+}));
+
 // Mock child components with more realistic behavior
 jest.mock('../AddSongEventBySavedSongs', () => ({
   AddSongEventBySavedSongs: ({ isOpen, onClose, params }) =>

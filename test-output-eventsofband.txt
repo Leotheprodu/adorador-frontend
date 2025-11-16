@@ -1,0 +1,2162 @@
+
+> zamr-frontend@0.1.0 test
+> jest EventsOfBand.test --no-coverage
+
+  console.error
+    Warning: validateDOMNesting(...): <div> cannot appear as a child of <tbody>.
+        at div
+        at event (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)\grupos\[bandId]\eventos\_components\__tests__\EventsOfBand.test.tsx:83:21)
+        at tbody
+        at table
+        at div
+        at div
+        at div
+        at children (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)\grupos\[bandId]\eventos\_components\__tests__\EventsOfBand.test.tsx:94:15)
+        at params (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)\grupos\[bandId]\eventos\_components\EventsOfBand.tsx:13:32)
+        at QueryClientProvider (C:\Users\leovp\Programming\adorador\adorador-frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+        at children (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)\grupos\[bandId]\eventos\_components\__tests__\EventsOfBand.test.tsx:158:22)
+
+    [0m [90m 177 |[39m
+     [90m 178 |[39m   it([32m'should render as a table structure'[39m[33m,[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 179 |[39m     render([33m<[39m[33mEventsOfBand[39m params[33m=[39m{{ bandId[33m:[39m [32m'1'[39m }} [33m/[39m[33m>[39m[33m,[39m {
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 180 |[39m       wrapper[33m:[39m createWrapper()[33m,[39m
+     [90m 181 |[39m     })[33m;[39m
+     [90m 182 |[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at validateDOMNesting (node_modules/react-dom/cjs/react-dom.development.js:10847:7)
+      at createInstance (node_modules/react-dom/cjs/react-dom.development.js:10930:5)
+      at completeWork (node_modules/react-dom/cjs/react-dom.development.js:22226:28)
+      at completeUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26632:16)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26607:5)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25777:74)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:292:10)
+      at Object.<anonymous> (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:179:11)
+
+FAIL src/app/(public)/grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx (8.624 s)
+  EventsOfBand - Table Structure
+    ΓêÜ should render as a table structure (340 ms)
+    ΓêÜ should have correct table headers in desktop (33 ms)
+    ├ù should display all events in unified table (31 ms)
+    ├ù should show event status indicators (26 ms)
+    ├ù should have action menu for each event (24 ms)
+    ├ù should show "Ir a evento" and "Editar evento" options in dropdown menu (19 ms)
+  EventsOfBand - Search and Filters
+    ΓêÜ should render search input (14 ms)
+    ΓêÜ should render filter buttons (16 ms)
+    ├ù should filter events by search term (1043 ms)
+    ├ù should filter by upcoming events (1032 ms)
+    ├ù should filter by past events (1023 ms)
+    ├ù should show all events when clicking "Todos" (1029 ms)
+    ΓêÜ should show correct count of filtered results (29 ms)
+    ΓêÜ should show empty state when no results found (14 ms)
+    ├ù should normalize search text (remove accents) (1019 ms)
+    ΓêÜ should not show AddEventButton in empty state when filters are active (14 ms)
+  EventsOfBand - Empty State
+    ΓêÜ should show empty state when no events exist (14 ms)
+    ΓêÜ should show AddEventButton in empty state when no filters (5 ms)
+  EventsOfBand - Responsive Layout
+    ΓêÜ should have filter buttons with flex-wrap for mobile responsiveness (15 ms)
+    ΓêÜ should have whitespace-nowrap on filter buttons to prevent text wrapping (11 ms)
+    ΓêÜ should have table with max-w-full and overflow-x-auto for mobile scrolling (11 ms)
+  EventsOfBand - Sorting
+    ├ù should show upcoming events first when showing all (1026 ms)
+
+  ΓùÅ EventsOfBand - Table Structure ΓÇ║ should display all events in unified table
+
+    TestingLibraryElementError: Unable to find an element with the text: Culto de Domingo. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      4
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                  <div
+                    data-testid="event-row-3"
+                  />
+                  <div
+                    data-testid="event-row-2"
+                  />
+                  <div
+                    data-testid="event-row-4"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      204 |     });
+      205 |
+    > 206 |     expect(screen.getByText('Culto de Domingo')).toBeInTheDocument();
+          |                   ^
+      207 |     expect(screen.getByText('Reuni├│n de Oraci├│n')).toBeInTheDocument();
+      208 |     expect(screen.getByText('Concierto Especial')).toBeInTheDocument();
+      209 |     expect(screen.getByText('Vigilia de A├▒o Nuevo')).toBeInTheDocument();
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:206:19)
+
+  ΓùÅ EventsOfBand - Table Structure ΓÇ║ should show event status indicators
+
+    TestingLibraryElementError: Unable to find an element with the text: Pr├│ximo. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      4
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                  <div
+                    data-testid="event-row-3"
+                  />
+                  <div
+                    data-testid="event-row-2"
+                  />
+                  <div
+                    data-testid="event-row-4"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      216 |
+      217 |     // Buscar indicadores de estado (pr├│ximo/finalizado)
+    > 218 |     const proximoBadges = screen.getAllByText('Pr├│ximo');
+          |                                  ^
+      219 |     const finalizadoBadges = screen.getAllByText('Finalizado');
+      220 |
+      221 |     expect(proximoBadges.length).toBeGreaterThan(0);
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+      at Object.getAllByText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:218:34)
+
+  ΓùÅ EventsOfBand - Table Structure ΓÇ║ should have action menu for each event
+
+    TestingLibraryElementError: Unable to find a label with the text of: Men├║ de opciones
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      4
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                  <div
+                    data-testid="event-row-3"
+                  />
+                  <div
+                    data-testid="event-row-2"
+                  />
+                  <div
+                    data-testid="event-row-4"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      229 |
+      230 |     // Verificar que hay botones de men├║ de acciones
+    > 231 |     const actionButtons = screen.getAllByLabelText('Men├║ de opciones');
+          |                                  ^
+      232 |     expect(actionButtons.length).toBe(mockEvents.length);
+      233 |   });
+      234 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+      at Object.getAllByLabelText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:231:34)
+
+  ΓùÅ EventsOfBand - Table Structure ΓÇ║ should show "Ir a evento" and "Editar evento" options in dropdown menu
+
+    TestingLibraryElementError: Unable to find a label with the text of: Men├║ de opciones
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      4
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                  <div
+                    data-testid="event-row-3"
+                  />
+                  <div
+                    data-testid="event-row-2"
+                  />
+                  <div
+                    data-testid="event-row-4"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      239 |
+      240 |     // Hacer clic en el primer men├║ de acciones
+    > 241 |     const actionButtons = screen.getAllByLabelText('Men├║ de opciones');
+          |                                  ^
+      242 |     fireEvent.click(actionButtons[0]);
+      243 |
+      244 |     // Verificar que aparecen las opciones del men├║
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+      at Object.getAllByLabelText (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:241:34)
+
+  ΓùÅ EventsOfBand - Search and Filters ΓÇ║ should filter events by search term
+
+    Unable to find an element with the text: Culto de Domingo. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      1
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value="culto"
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      295 |     fireEvent.change(searchInput, { target: { value: 'culto' } });
+      296 |
+    > 297 |     await waitFor(() => {
+          |                  ^
+      298 |       expect(screen.getByText('Culto de Domingo')).toBeInTheDocument();
+      299 |       expect(screen.queryByText('Reuni├│n de Oraci├│n')).not.toBeInTheDocument();
+      300 |       expect(screen.queryByText('Concierto Especial')).not.toBeInTheDocument();
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:297:18)
+
+  ΓùÅ EventsOfBand - Search and Filters ΓÇ║ should filter by upcoming events
+
+    Unable to find an element with the text: Culto de Domingo. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      2
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                  <div
+                    data-testid="event-row-3"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      313 |     fireEvent.click(upcomingButton);
+      314 |
+    > 315 |     await waitFor(() => {
+          |                  ^
+      316 |       expect(screen.getByText('Culto de Domingo')).toBeInTheDocument();
+      317 |       expect(screen.getByText('Concierto Especial')).toBeInTheDocument();
+      318 |       expect(screen.queryByText('Reuni├│n de Oraci├│n')).not.toBeInTheDocument();
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:315:18)
+
+  ΓùÅ EventsOfBand - Search and Filters ΓÇ║ should filter by past events
+
+    Unable to find an element with the text: Reuni├│n de Oraci├│n. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      2
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-2"
+                  />
+                  <div
+                    data-testid="event-row-4"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      331 |     fireEvent.click(pastButton);
+      332 |
+    > 333 |     await waitFor(() => {
+          |                  ^
+      334 |       expect(screen.queryByText('Culto de Domingo')).not.toBeInTheDocument();
+      335 |       expect(screen.queryByText('Concierto Especial')).not.toBeInTheDocument();
+      336 |       expect(screen.getByText('Reuni├│n de Oraci├│n')).toBeInTheDocument();
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:333:18)
+
+  ΓùÅ EventsOfBand - Search and Filters ΓÇ║ should show all events when clicking "Todos"
+
+    Unable to find an element with the text: Culto de Domingo. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      4
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-1"
+                  />
+                  <div
+                    data-testid="event-row-3"
+                  />
+                  <div
+                    data-testid="event-row-2"
+                  />
+                  <div
+                    data-testid="event-row-4"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      356 |     fireEvent.click(allButton);
+      357 |
+    > 358 |     await waitFor(() => {
+          |                  ^
+      359 |       expect(screen.getByText('Culto de Domingo')).toBeInTheDocument();
+      360 |       expect(screen.getByText('Reuni├│n de Oraci├│n')).toBeInTheDocument();
+      361 |       expect(screen.getByText('Concierto Especial')).toBeInTheDocument();
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:358:18)
+
+  ΓùÅ EventsOfBand - Search and Filters ΓÇ║ should normalize search text (remove accents)
+
+    Unable to find an element with the text: Reuni├│n de Oraci├│n. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          data-testid="ui-guard"
+        >
+          <div
+            class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+          >
+            <div
+              class="flex flex-col gap-4"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-4"
+                >
+                  <button
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      fill="none"
+                      focusable="false"
+                      height="1em"
+                      role="presentation"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                    >
+                      <path
+                        d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <small
+                      class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                    >
+                      Volver al grupo
+                    </small>
+                  </button>
+                  <div>
+                    <h1
+                      class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    >
+                      Calendario de Eventos
+                    </h1>
+                    <p
+                      class="mt-1 text-sm text-slate-500"
+                    >
+                      1
+                       de 
+                      4
+                       eventos
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="hidden sm:block"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-3 sm:flex-row"
+              >
+                <div
+                  class="relative flex-1"
+                >
+                  <div
+                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                  >
+                    <svg
+                      class="h-5 w-5 text-slate-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                    placeholder="Buscar eventos por t├¡tulo..."
+                    type="text"
+                    value="reuni├│n"
+                  />
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                  >
+                    Todos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    ≡ƒÄ» Pr├│ximos
+                  </button>
+                  <button
+                    class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                  >
+                    Γ£ô Pasados
+                  </button>
+                </div>
+              </div>
+              <div
+                class="sm:hidden"
+              >
+                <button
+                  data-testid="add-event-button"
+                >
+                  Add Event 
+                  1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+          >
+            <div
+              class="max-w-full overflow-x-auto"
+            >
+              <table
+                class="w-full min-w-full"
+              >
+                <thead
+                  class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                >
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Estado
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Evento
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Hora
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left"
+                    >
+                      Tiempo restante
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right"
+                    >
+                      Acci├│n
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <div
+                    data-testid="event-row-2"
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+      414 |     fireEvent.change(searchInput, { target: { value: 'reuni├│n' } });
+      415 |
+    > 416 |     await waitFor(() => {
+          |                  ^
+      417 |       expect(screen.getByText('Reuni├│n de Oraci├│n')).toBeInTheDocument();
+      418 |     });
+      419 |   });
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:416:18)
+
+  ΓùÅ EventsOfBand - Sorting ΓÇ║ should show upcoming events first when showing all
+
+    TypeError: Cannot read properties of undefined (reading 'textContent')
+
+    Ignored nodes: comments, script, style
+    <html>
+      <head />
+      <body>
+        <div>
+          <div
+            data-testid="ui-guard"
+          >
+            <div
+              class="mb-6 rounded-2xl bg-gradient-to-br from-brand-pink-50 via-white to-brand-purple-50 p-6 shadow-lg backdrop-blur-sm"
+            >
+              <div
+                class="flex flex-col gap-4"
+              >
+                <div
+                  class="flex items-center justify-between"
+                >
+                  <div
+                    class="flex items-center gap-4"
+                  >
+                    <button
+                      class="group flex items-center justify-center gap-2 rounded-xl bg-white/80 p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-brand-pink-50 hover:shadow-md active:scale-95"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        fill="none"
+                        focusable="false"
+                        height="1em"
+                        role="presentation"
+                        viewBox="0 0 512 512"
+                        width="1em"
+                      >
+                        <path
+                          d="m11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2m256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <small
+                        class="hidden text-xs font-medium text-brand-pink-700 sm:group-hover:block"
+                      >
+                        Volver al grupo
+                      </small>
+                    </button>
+                    <div>
+                      <h1
+                        class="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                      >
+                        Calendario de Eventos
+                      </h1>
+                      <p
+                        class="mt-1 text-sm text-slate-500"
+                      >
+                        4
+                         de 
+                        4
+                         eventos
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="hidden sm:block"
+                  >
+                    <button
+                      data-testid="add-event-button"
+                    >
+                      Add Event 
+                      1
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="flex flex-col gap-3 sm:flex-row"
+                >
+                  <div
+                    class="relative flex-1"
+                  >
+                    <div
+                      class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                    >
+                      <svg
+                        class="h-5 w-5 text-slate-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      class="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-pink-600 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+                      placeholder="Buscar eventos por t├¡tulo..."
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="flex flex-wrap gap-2"
+                  >
+                    <button
+                      class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 bg-gradient-to-r from-brand-pink-600 to-brand-purple-600 text-white shadow-sm"
+                    >
+                      Todos
+                    </button>
+                    <button
+                      class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                    >
+                      ≡ƒÄ» Pr├│ximos
+                    </button>
+                    <button
+                      class="whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-pink-300 hover:bg-slate-50"
+                    >
+                      Γ£ô Pasados
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="sm:hidden"
+                >
+                  <button
+                    data-testid="add-event-button"
+                  >
+                    Add Event 
+                    1
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm"
+            >
+              <div
+                class="max-w-full overflow-x-auto"
+              >
+                <table
+                  class="w-full min-w-full"
+                >
+                  <thead
+                    class="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group"
+                  >
+                    <tr>
+                      <th
+                        class="px-4 py-3 text-left"
+                      >
+                        Estado
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left"
+                      >
+                        Evento
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left"
+                      >
+                        Fecha
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left"
+                      >
+                        Hora
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left"
+                      >
+                        Tiempo restante
+                      </th>
+                      <th
+                        class="px-4 py-3 text-right"
+                      >
+                        Acci├│n
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <div
+                      data-testid="event-row-1"
+                    />
+                    <div
+                      data-testid="event-row-3"
+                    />
+                    <div
+                      data-testid="event-row-2"
+                    />
+                    <div
+                      data-testid="event-row-4"
+                    />
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+      562 |       // Verificar que al menos el primer evento sea pr├│ximo
+      563 |       const firstRow = rows[0];
+    > 564 |       expect(firstRow.textContent).toMatch(/Pr├│ximo|Culto de Domingo/);
+          |                       ^
+      565 |     });
+      566 |   });
+      567 | });
+
+      at textContent (C:\Users\leovp\Programming\adorador\adorador-frontend\src\app\(public)../../../../../grupos/[bandId]/eventos/_components/__tests__/EventsOfBand.test.tsx:564:23)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 12 passed, 22 total
+Snapshots:   0 total
+Time:        10.083 s
+Ran all test suites matching EventsOfBand.test.

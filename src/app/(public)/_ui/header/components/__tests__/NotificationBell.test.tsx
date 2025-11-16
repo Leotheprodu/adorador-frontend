@@ -11,6 +11,93 @@ jest.mock('@nanostores/react', () => ({
   useStore: jest.fn(),
 }));
 
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => ({
+  Badge: ({
+    children,
+    content,
+  }: React.PropsWithChildren<{ content?: string | number }>) => (
+    <div data-badge={content}>{children}</div>
+  ),
+  Button: ({
+    children,
+    onPress,
+    isDisabled,
+    disabled,
+    isLoading,
+    className = '',
+    ...props
+  }: React.PropsWithChildren<{
+    onPress?: () => void;
+    isDisabled?: boolean;
+    disabled?: boolean;
+    isLoading?: boolean;
+    className?: string;
+  }>) => (
+    <button
+      onClick={onPress}
+      disabled={isDisabled || disabled}
+      data-disabled={isDisabled || disabled ? 'true' : undefined}
+      data-loading={isLoading ? 'true' : undefined}
+      className={`z-10 ${className}`.trim()}
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Popover: ({ children, ...props }: React.PropsWithChildren<any>) => (
+    <div data-testid="mock-popover" {...props}>
+      {children}
+    </div>
+  ),
+  PopoverTrigger: ({ children }: React.PropsWithChildren) => (
+    <div data-testid="mock-popover-trigger">{children}</div>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  PopoverContent: ({ children, ...props }: React.PropsWithChildren<any>) => (
+    <div data-testid="notification-popover" {...props}>
+      <div data-slot="content" className="z-50 max-w-[calc(100vw-2rem)]">
+        {children}
+      </div>
+    </div>
+  ),
+  Tabs: ({ children }: React.PropsWithChildren) => (
+    <div role="tablist">{children}</div>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Tab: ({ children, title, ...props }: any) => (
+    <div
+      role="tab"
+      aria-label={typeof title === 'string' ? title : undefined}
+      {...props}
+    >
+      <span>{title}</span>
+      {children}
+    </div>
+  ),
+  Dropdown: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  DropdownTrigger: ({ children }: React.PropsWithChildren) => (
+    <div>{children}</div>
+  ),
+  DropdownMenu: ({ children }: React.PropsWithChildren) => (
+    <div role="menu">{children}</div>
+  ),
+  DropdownItem: ({
+    children,
+    onPress,
+  }: React.PropsWithChildren<{ onPress?: () => void }>) => (
+    <div role="menuitem" onClick={onPress}>
+      {children}
+    </div>
+  ),
+  DropdownSection: ({ children }: React.PropsWithChildren) => (
+    <div>{children}</div>
+  ),
+  Spinner: () => <div aria-label="Loading">Loading...</div>,
+  User: ({ name }: { name?: string }) => <div>{name}</div>,
+}));
+
 // Mock hooks
 jest.mock('@app/(public)/grupos/_hooks/usePendingInvitations');
 jest.mock('@app/(public)/grupos/_hooks/useAcceptInvitation');

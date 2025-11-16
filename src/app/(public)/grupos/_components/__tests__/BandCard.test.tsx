@@ -16,6 +16,53 @@ jest.mock('@nanostores/react', () => ({
   useStore: jest.fn((store: any) => store?.get?.() || null),
 }));
 
+// Mock NextUI components
+// Mock dinámico de useDisclosure para controlar el estado en cada test
+let disclosureState = { isEditOpen: false, isDeleteOpen: false };
+let disclosureCallCount = 0;
+jest.mock('@nextui-org/react', () => ({
+  Card: ({ children }) => <div>{children}</div>,
+  CardHeader: ({ children }) => <div>{children}</div>,
+  CardBody: ({ children }) => <div>{children}</div>,
+  CardFooter: ({ children }) => <div>{children}</div>,
+  Button: ({ children, onPress, ...props }) => (
+    <button onClick={onPress} {...props}>
+      {children}
+    </button>
+  ),
+  Chip: ({ children }) => <span>{children}</span>,
+  User: ({ name }) => <div>{name}</div>,
+  Spinner: () => <div aria-label="Loading">Loading...</div>,
+  useDisclosure: () => {
+    disclosureCallCount++;
+    if (disclosureCallCount % 2 === 1) {
+      // EditBandModal (primera llamada en cada render)
+      return {
+        isOpen: disclosureState.isEditOpen,
+        onOpen: () => {
+          disclosureState.isEditOpen = true;
+        },
+        onClose: () => {
+          disclosureState.isEditOpen = false;
+        },
+        onOpenChange: jest.fn(),
+      };
+    } else {
+      // DeleteBandModal (segunda llamada en cada render)
+      return {
+        isOpen: disclosureState.isDeleteOpen,
+        onOpen: () => {
+          disclosureState.isDeleteOpen = true;
+        },
+        onClose: () => {
+          disclosureState.isDeleteOpen = false;
+        },
+        onOpenChange: jest.fn(),
+      };
+    }
+  },
+}));
+
 // Mock stores with inline factory
 jest.mock('@global/stores/users', () => {
   let value = {
@@ -172,6 +219,8 @@ describe('BandCard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockCheckUserStatus.mockReturnValue(false);
+    disclosureState = { isEditOpen: false, isDeleteOpen: false };
+    disclosureCallCount = 0;
     mockUseEventTimeLeft.mockReturnValue({ eventTimeLeft: '', timeLeft: 0 });
   });
 
@@ -337,22 +386,21 @@ describe('BandCard', () => {
     test('debe abrir modal de edición al hacer clic en botón editar', () => {
       mockCheckUserStatus.mockReturnValue(true);
 
-      render(<BandCard band={mockBandWithEvents} />);
-
+      // Renderizar y forzar re-render tras abrir modal
+      const { rerender } = render(<BandCard band={mockBandWithEvents} />);
       const editButton = screen.getByTestId('icon-button-Editar grupo');
       fireEvent.click(editButton);
-
+      rerender(<BandCard band={mockBandWithEvents} />);
       expect(screen.getByTestId('edit-modal')).toBeInTheDocument();
     });
 
     test('debe abrir modal de eliminación al hacer clic en botón eliminar', () => {
       mockCheckUserStatus.mockReturnValue(true);
 
-      render(<BandCard band={mockBandWithEvents} />);
-
+      const { rerender } = render(<BandCard band={mockBandWithEvents} />);
       const deleteButton = screen.getByTestId('icon-button-Eliminar grupo');
       fireEvent.click(deleteButton);
-
+      rerender(<BandCard band={mockBandWithEvents} />);
       expect(screen.getByTestId('delete-modal')).toBeInTheDocument();
     });
   });

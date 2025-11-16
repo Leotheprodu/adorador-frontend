@@ -130,7 +130,7 @@ describe('Header Component', () => {
       render(<Header />);
 
       const logo = screen.getByAltText('Test App Name');
-      expect(logo).toHaveAttribute('src', '/zamr_logo.webp');
+      expect(logo).toHaveAttribute('src', '/logo_zamr.webp');
     });
 
     it('should render logo with correct dimensions', () => {
@@ -145,29 +145,9 @@ describe('Header Component', () => {
       render(<Header />);
 
       const logo = screen.getByAltText('Test App Name');
-      expect(logo).toHaveClass('h-10');
+      expect(logo).toHaveClass('h-20');
       expect(logo).toHaveClass('w-auto');
       expect(logo).toHaveClass('object-contain');
-    });
-
-    it('should render app name as h1', () => {
-      render(<Header />);
-
-      const heading = screen.getByRole('heading', { level: 1 });
-      expect(heading).toBeInTheDocument();
-      expect(heading).toHaveTextContent('Test App Name');
-    });
-
-    it('should apply correct typography classes to app name', () => {
-      render(<Header />);
-
-      const heading = screen.getByRole('heading', { level: 1 });
-      expect(heading).toHaveClass('font-agdasima');
-      expect(heading).toHaveClass('text-3xl');
-      expect(heading).toHaveClass('font-bold');
-      expect(heading).toHaveClass('uppercase');
-      expect(heading).toHaveClass('text-gradient-primary');
-      expect(heading).toHaveClass('transition-all');
     });
   });
 
@@ -180,15 +160,13 @@ describe('Header Component', () => {
       expect(homeLink).toHaveAttribute('href', '/');
     });
 
-    it('should wrap logo and app name in home link', () => {
+    it('should wrap logo in home link', () => {
       render(<Header />);
 
       const homeLink = screen.getByRole('link');
       const logo = screen.getByAltText('Test App Name');
-      const heading = screen.getByRole('heading', { level: 1 });
 
       expect(homeLink).toContainElement(logo);
-      expect(homeLink).toContainElement(heading);
     });
 
     it('should apply flex layout to link', () => {
@@ -209,18 +187,6 @@ describe('Header Component', () => {
       const navbar = screen.getByTestId('responsive-navbar');
       expect(navbar).toBeInTheDocument();
     });
-
-    it('should render ResponsiveNavBar after logo/brand section', () => {
-      render(<Header />);
-
-      const heading = screen.getByRole('heading', { level: 1 });
-      const navbar = screen.getByTestId('responsive-navbar');
-
-      expect(
-        heading.compareDocumentPosition(navbar) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      ).toBeTruthy();
-    });
   });
 
   describe('Semantic HTML', () => {
@@ -229,13 +195,6 @@ describe('Header Component', () => {
 
       const header = container.querySelector('header');
       expect(header).toBeInTheDocument();
-    });
-
-    it('should have proper heading hierarchy with h1', () => {
-      render(<Header />);
-
-      const h1 = screen.getByRole('heading', { level: 1 });
-      expect(h1).toBeInTheDocument();
     });
 
     it('should contain link for navigation', () => {
@@ -254,13 +213,6 @@ describe('Header Component', () => {
       expect(logo).toBeInTheDocument();
     });
 
-    it('should have heading for screen readers', () => {
-      render(<Header />);
-
-      const heading = screen.getByRole('heading', { level: 1 });
-      expect(heading).toBeInTheDocument();
-    });
-
     it('should have link with href for keyboard navigation', () => {
       render(<Header />);
 
@@ -275,7 +227,6 @@ describe('Header Component', () => {
 
       expect(screen.getByRole('link')).toBeInTheDocument();
       expect(screen.getByAltText('Test App Name')).toBeInTheDocument();
-      expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
       expect(screen.getByTestId('responsive-navbar')).toBeInTheDocument();
     });
 

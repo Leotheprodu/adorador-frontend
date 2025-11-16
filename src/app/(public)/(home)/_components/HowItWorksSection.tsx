@@ -35,7 +35,7 @@ export const HowItWorksSection = () => {
             Tan fácil como <span className="text-gradient-simple">1, 2, 3</span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-600">
-            Comienza a usar ${appName} en minutos, sin complicaciones técnicas
+            Comienza a usar {appName} en minutos, sin complicaciones técnicas
           </p>
         </div>
 

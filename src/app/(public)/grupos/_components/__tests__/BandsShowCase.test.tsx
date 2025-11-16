@@ -16,6 +16,25 @@ jest.mock('@nanostores/react', () => ({
   useStore: jest.fn((store: any) => store?.get?.() || null),
 }));
 
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => ({
+  Card: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  CardHeader: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  CardBody: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  CardFooter: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  Button: ({
+    children,
+    onPress,
+    ...props
+  }: React.PropsWithChildren<{ onPress?: () => void }>) => (
+    <button onClick={onPress} {...props}>
+      {children}
+    </button>
+  ),
+  Chip: ({ children }: React.PropsWithChildren) => <span>{children}</span>,
+  Spinner: () => <div aria-label="Loading">Loading...</div>,
+}));
+
 // Mock stores with inline factory
 jest.mock('@global/stores/users', () => {
   let value = {
@@ -53,11 +72,25 @@ jest.mock('@global/stores/users', () => {
 
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BandsShowCase } from '../BandsShowCase';
 import { getBandsOfUser } from '@bands/_services/bandsService';
 import { useStore } from '@nanostores/react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { BandsWithMembersCount } from '@bands/_interfaces/bandsInterface';
+
+// Helper para envolver en QueryClientProvider
+const renderWithQueryClient = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient();
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  return {
+    ...render(ui, { wrapper }),
+    queryClient,
+    wrapper,
+  };
+};
 
 // Mock del servicio de bandas
 jest.mock('@bands/_services/bandsService', () => ({
@@ -144,7 +177,7 @@ describe('BandsShowCase', () => {
         isLoading: true,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       const skeletons = screen.getAllByTestId('skeleton-card');
       expect(skeletons).toHaveLength(3);
@@ -157,7 +190,7 @@ describe('BandsShowCase', () => {
         isLoading: true,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       const loadingTexts = screen.getAllByText('Loading...');
       expect(loadingTexts).toHaveLength(3);
@@ -172,7 +205,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(
         screen.getByText('Aún no estas en un grupo de alabanza'),
@@ -186,7 +219,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.queryByTestId('skeleton-card')).not.toBeInTheDocument();
     });
@@ -200,7 +233,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.getByTestId('band-card-1')).toBeInTheDocument();
       expect(screen.getByTestId('band-card-2')).toBeInTheDocument();
@@ -214,7 +247,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.getByText('Grupo de Alabanza 1')).toBeInTheDocument();
       expect(screen.getByText('Grupo de Alabanza 2')).toBeInTheDocument();
@@ -228,7 +261,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const bandCards = container.querySelectorAll(
         '[data-testid^="band-card-"]',
@@ -243,7 +276,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const list = container.querySelector('ul');
       expect(list).toBeInTheDocument();
@@ -256,7 +289,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const listItems = container.querySelectorAll('li');
       expect(listItems).toHaveLength(3);
@@ -271,7 +304,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.queryByTestId('band-card-1')).not.toBeInTheDocument();
       expect(container.querySelector('ul')).toBeInTheDocument();
@@ -297,7 +330,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(mockGetBandsOfUser).toHaveBeenCalledWith(true);
     });
@@ -319,7 +352,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(mockGetBandsOfUser).toHaveBeenCalledWith(false);
     });
@@ -333,7 +366,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const list = container.querySelector('ul');
       expect(list).toHaveClass('flex', 'flex-wrap');
@@ -346,7 +379,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const list = container.querySelector('ul');
       expect(list).toHaveClass('gap-3');
@@ -359,7 +392,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const mainDiv = container.firstChild;
       expect(mainDiv).toHaveClass('h-full');
@@ -375,7 +408,7 @@ describe('BandsShowCase', () => {
         isLoading: true,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { rerender } = render(<BandsShowCase />);
+      const { rerender, wrapper } = renderWithQueryClient(<BandsShowCase />);
       expect(screen.getAllByTestId('skeleton-card')).toHaveLength(3);
 
       // Luego datos cargados
@@ -385,7 +418,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      rerender(<BandsShowCase />);
+      rerender(<BandsShowCase />, { wrapper });
 
       await waitFor(() => {
         expect(screen.queryByTestId('skeleton-card')).not.toBeInTheDocument();
@@ -411,7 +444,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { rerender } = render(<BandsShowCase />);
+      const { rerender, wrapper } = renderWithQueryClient(<BandsShowCase />);
       expect(
         screen.getByText('Aún no estas en un grupo de alabanza'),
       ).toBeInTheDocument();
@@ -433,7 +466,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      rerender(<BandsShowCase />);
+      rerender(<BandsShowCase />, { wrapper });
 
       await waitFor(() => {
         expect(
@@ -452,7 +485,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.getByTestId('band-card-1')).toBeInTheDocument();
       expect(screen.queryByTestId('band-card-2')).not.toBeInTheDocument();
@@ -479,7 +512,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = render(<BandsShowCase />);
+      const { container } = renderWithQueryClient(<BandsShowCase />);
 
       const bandCards = container.querySelectorAll(
         '[data-testid^="band-card-"]',
@@ -510,7 +543,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      render(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(mockGetBandsOfUser).toHaveBeenCalledTimes(1);
       expect(mockGetBandsOfUser).toHaveBeenCalledWith(true);
