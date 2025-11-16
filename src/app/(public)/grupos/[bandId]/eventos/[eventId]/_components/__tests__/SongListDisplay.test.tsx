@@ -15,7 +15,6 @@ jest.mock('@nextui-org/react', () => ({
 jest.mock('../SongCardWithControls', () => ({
   SongCardWithControls: ({
     data,
-    index,
   }: {
     data: { order: number; song: { title: string } };
     index: number;

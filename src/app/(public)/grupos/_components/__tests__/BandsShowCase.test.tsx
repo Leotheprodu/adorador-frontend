@@ -177,7 +177,7 @@ describe('BandsShowCase', () => {
         isLoading: true,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = renderWithQueryClient(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       const skeletons = screen.getAllByTestId('skeleton-card');
       expect(skeletons).toHaveLength(3);
@@ -190,7 +190,7 @@ describe('BandsShowCase', () => {
         isLoading: true,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = renderWithQueryClient(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       const loadingTexts = screen.getAllByText('Loading...');
       expect(loadingTexts).toHaveLength(3);
@@ -233,7 +233,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = renderWithQueryClient(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.getByTestId('band-card-1')).toBeInTheDocument();
       expect(screen.getByTestId('band-card-2')).toBeInTheDocument();
@@ -247,7 +247,7 @@ describe('BandsShowCase', () => {
         isLoading: false,
       } as unknown as UseQueryResult<BandsWithMembersCount[], Error>);
 
-      const { container } = renderWithQueryClient(<BandsShowCase />);
+      renderWithQueryClient(<BandsShowCase />);
 
       expect(screen.getByText('Grupo de Alabanza 1')).toBeInTheDocument();
       expect(screen.getByText('Grupo de Alabanza 2')).toBeInTheDocument();

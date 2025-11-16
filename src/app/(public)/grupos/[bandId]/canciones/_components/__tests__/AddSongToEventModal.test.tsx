@@ -4,6 +4,7 @@ import { AddSongToEventModal } from '../AddSongToEventModal';
 
 // Mock NextUI components
 jest.mock('@nextui-org/react', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
 
   return {
@@ -21,7 +22,8 @@ jest.mock('@nextui-org/react', () => {
       return (
         <div role="dialog" data-testid="modal">
           {React.isValidElement(children)
-            ? React.cloneElement(children as React.ReactElement<any>, {
+            ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              React.cloneElement(children as React.ReactElement<any>, {
                 __onClose: onClose,
               })
             : children}

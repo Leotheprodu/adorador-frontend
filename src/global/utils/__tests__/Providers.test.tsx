@@ -43,6 +43,7 @@ jest.mock('@tanstack/react-query', () => {
       client,
     }: {
       children: React.ReactNode;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       client?: any;
     }) => {
       // Provide a real QueryClient for tests that need it

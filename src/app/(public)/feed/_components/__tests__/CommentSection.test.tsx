@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock NextUI components con tipado correcto
 jest.mock('@nextui-org/react', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
   return {
     __esModule: true,
@@ -56,6 +57,7 @@ jest.mock('@nextui-org/react', () => {
 
 // Mock nanostores si se usan (no se usan directamente aquí, pero por consistencia)
 jest.mock('nanostores', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   atom: (init: any) => ({ get: () => init, set: () => {} }),
   map: () => ({}),
   computed: () => ({}),

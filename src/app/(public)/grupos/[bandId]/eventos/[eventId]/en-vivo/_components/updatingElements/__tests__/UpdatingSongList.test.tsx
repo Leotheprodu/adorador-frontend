@@ -3,15 +3,8 @@ jest.mock('@nextui-org/react', () => {
   const original = jest.requireActual('@nextui-org/react');
   return {
     ...original,
-    Button: ({
-      href,
-      children,
-      isDisabled,
-      isIconOnly,
-      isLoading,
-      onPress,
-      ...props
-    }: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Button: ({ href, children, isDisabled, onPress, ...props }: any) => {
       const onClick = onPress;
       return href ? (
         <a href={href} aria-disabled={isDisabled} {...props}>

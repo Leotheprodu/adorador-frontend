@@ -8,10 +8,9 @@ jest.mock('@nextui-org/react', () => {
       children,
       endContent,
       startContent,
-      isLoading,
-      isDisabled,
       onPress,
       ...props
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }: any) => {
       const onClick = onPress;
       return href ? (

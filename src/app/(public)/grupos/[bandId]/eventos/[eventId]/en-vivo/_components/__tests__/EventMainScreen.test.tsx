@@ -168,6 +168,7 @@ jest.mock(
   '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/FinalMessageSong',
   () => ({
     FinalMessageSong: () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { worshipVerses } = require('@global/config/constants');
       const verse = worshipVerses[0]; // Siempre usar el primer versículo en tests
       return (

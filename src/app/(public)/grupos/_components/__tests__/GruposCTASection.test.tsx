@@ -55,6 +55,7 @@ jest.mock('@nextui-org/react', () => {
   const original = jest.requireActual('@nextui-org/react');
   return {
     ...original,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Button: ({ href, children, ...props }: any) =>
       href ? (
         <a href={href} {...props}>

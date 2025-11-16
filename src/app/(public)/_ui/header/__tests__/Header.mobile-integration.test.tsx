@@ -214,6 +214,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
   describe('Comportamiento sin usuario logueado', () => {
     it('no debe mostrar NotificationBell pero sí el menú hamburguesa', () => {
       // Actualiza el store real para simular usuario no logueado
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const usersStore = require('@global/stores/users');
       usersStore.$user.set({
         ...usersStore.$user.get(),
@@ -236,6 +237,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
   describe('Prevención de superposición', () => {
     it('el gap-3 debe proporcionar separación suficiente entre botones (12px)', () => {
       // Asegura usuario logueado
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const usersStore = require('@global/stores/users');
       usersStore.$user.set({
         ...usersStore.$user.get(),
@@ -255,6 +257,7 @@ describe('Header - Integración Móvil (NotificationBell + Menu)', () => {
 
     it('ambos botones deben usar relative positioning para mantener flujo del documento', () => {
       // Asegura usuario logueado
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const usersStore = require('@global/stores/users');
       usersStore.$user.set({
         ...usersStore.$user.get(),

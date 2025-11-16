@@ -19,6 +19,7 @@ jest.mock('@nextui-org/react', () => ({
       {children}
     </button>
   ),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Textarea: ({ value, onChange, ...props }: any) => (
     <textarea value={value} onChange={onChange} {...props} />
   ),
@@ -29,6 +30,7 @@ jest.mock('@nextui-org/react', () => ({
 
 // Mock PrimaryButton para que respete disabled
 jest.mock('@global/components/buttons', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   PrimaryButton: ({ children, disabled, isDisabled, ...props }: any) => (
     <button disabled={disabled || isDisabled} {...props}>
       {children}

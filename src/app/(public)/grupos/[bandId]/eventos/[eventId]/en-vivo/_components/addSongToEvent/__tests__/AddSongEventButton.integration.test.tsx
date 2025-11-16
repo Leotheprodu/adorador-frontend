@@ -10,14 +10,13 @@ jest.mock('@nextui-org/react', () => ({
     disabled,
     className = '',
     'aria-label': ariaLabel,
-    isIconOnly,
     isDisabled,
     ...props
   }) => {
     // Filtrar props no nativos
     const nativeProps = { ...props };
-    delete nativeProps.isIconOnly;
-    delete nativeProps.isDisabled;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (nativeProps as any).isDisabled;
     return (
       <button
         type="button"

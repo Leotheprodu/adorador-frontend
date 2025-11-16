@@ -20,6 +20,7 @@ jest.mock('next/link', () => {
 
 // Mock Button de NextUI para simular correctamente el árbol de botones con as=Link
 jest.mock('@nextui-org/react', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Button: ({ as, href, children, ...props }: any) => {
     if (as && href) {
       return (
