@@ -147,7 +147,7 @@ describe('Footer Component', () => {
 
       const navbarLinks = screen.getByTestId('navbar-links');
       expect(navbarLinks).toBeInTheDocument();
-      expect(navbarLinks).toHaveAttribute('data-background', 'oscuro');
+      expect(navbarLinks).toHaveAttribute('data-background', 'dark');
     });
   });
 

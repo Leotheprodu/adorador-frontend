@@ -31,12 +31,12 @@ export const NotificationBell = () => {
       <PopoverTrigger>
         <Button
           isIconOnly
-          variant="light"
-          className="relative overflow-visible"
+          variant="flat"
+          className="relative overflow-visible bg-brand-purple-100 text-brand-purple-700 hover:bg-brand-purple-200 dark:bg-brand-purple-900 dark:text-brand-purple-300 dark:hover:bg-brand-purple-800"
           aria-label="Notificaciones"
           data-testid="notification-bell-button"
         >
-          <BellIcon className="text-2xl text-brand-purple-600" />
+          <BellIcon className="text-2xl" />
           {totalCount > 0 && (
             <span
               className="absolute -right-1 -top-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white shadow-lg"

@@ -8,31 +8,33 @@ import { usePathname } from 'next/navigation';
 
 export const NavbarLinks = ({
   links,
-  backgroundColor = 'claro',
+  backgroundColor = 'light',
 }: {
   links: LinksProps[];
-  backgroundColor?: 'oscuro' | 'claro';
+  backgroundColor?: 'dark' | 'light';
 }) => {
   const pathName = usePathname();
   const user = useStore($user);
+  console.log('Tema de fondo:', backgroundColor);
   const colorsSettings = {
-    oscuro: {
-      text: 'text-white',
-      activeText: 'text-brand-pink-300',
-      activeBg: 'bg-brand-purple-600/20',
-      activeBorder: 'border-brand-pink-400',
-      hover: 'hover:bg-brand-purple-700/30',
+    dark: {
+      text: 'text-white dark:text-gray-200',
+      activeText: 'text-brand-pink-300 dark:text-brand-pink-400',
+      activeBg: 'bg-brand-purple-600/20 dark:bg-brand-purple-700/30',
+      activeBorder: 'border-brand-pink-400 dark:border-brand-pink-500',
+      hover: 'hover:bg-brand-purple-700/30 dark:hover:bg-brand-purple-600/40',
     },
-    claro: {
-      text: 'text-gray-700',
-      activeText: 'text-brand-purple-600',
-      activeBg: 'bg-gradient-icon',
-      activeBorder: 'border-brand-purple-500',
-      hover: 'hover:bg-gradient-light',
+    light: {
+      text: 'text-gray-700 dark:text-gray-300',
+      activeText: 'text-brand-purple-600 dark:text-brand-purple-400',
+      activeBg: 'bg-gradient-icon dark:bg-brand-purple-800/30',
+      activeBorder: 'border-brand-purple-500 dark:border-brand-purple-400',
+      hover: 'hover:bg-gradient-light dark:hover:bg-brand-purple-800/40',
     },
   };
 
-  const settings = colorsSettings[backgroundColor];
+  // Fallback: si backgroundColor no es válido, usar 'light'
+  const settings = colorsSettings[backgroundColor] || colorsSettings['light'];
 
   return (
     <>
