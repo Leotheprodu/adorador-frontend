@@ -40,15 +40,15 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <section className="bg-white px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <section className="bg-white px-4 py-16 transition-colors duration-300 dark:bg-brand-purple-950 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 transition-colors duration-300 dark:text-gray-200 sm:text-4xl md:text-5xl">
             Todo lo que necesitas para{' '}
             <span className="text-gradient-simple">adorar con excelencia</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto max-w-2xl text-lg text-gray-600 transition-colors duration-300 dark:text-brand-purple-200">
             Herramientas profesionales diseñadas específicamente para grupos de
             alabanza modernos
           </p>
@@ -59,27 +59,35 @@ export const FeaturesSection = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-gradient-subtle hover:border-brand-purple-300 group rounded-2xl border border-gray-200 p-8 transition-all hover:shadow-xl"
+              className="group rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:border-brand-purple-300 hover:shadow-xl dark:border-brand-purple-800 dark:bg-brand-purple-900"
             >
               {/* Icon */}
-              <div className="bg-gradient-icon text-brand-purple-600 mb-5 inline-flex rounded-xl p-4 transition-transform group-hover:scale-110">
-                {feature.icon}
+              <div className="mb-5 inline-flex rounded-xl bg-white p-4 text-brand-purple-600 transition-transform duration-300 group-hover:scale-110 dark:bg-brand-purple-900 dark:text-brand-purple-300">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-purple-100 dark:bg-brand-purple-800">
+                  {feature.icon}
+                </div>
               </div>
 
               {/* Title */}
-              <h3 className="mb-3 text-2xl font-bold text-gray-900">
+              <h3 className="mb-3 text-2xl font-bold text-gray-900 transition-colors duration-300 dark:text-brand-pink-200">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="mb-4 text-gray-600">{feature.description}</p>
+              <p className="mb-4 text-gray-600 transition-colors duration-300 dark:text-brand-purple-200">
+                {feature.description}
+              </p>
 
               {/* Benefits List */}
               <ul className="space-y-2">
                 {feature.benefits.map((benefit, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm">
-                    <span className="text-brand-purple-500 mt-1">✓</span>
-                    <span className="text-gray-700">{benefit}</span>
+                    <span className="mt-1 text-brand-purple-500 transition-colors duration-300 dark:text-brand-purple-200">
+                      ✓
+                    </span>
+                    <span className="text-gray-700 transition-colors duration-300 dark:text-brand-purple-100">
+                      {benefit}
+                    </span>
                   </li>
                 ))}
               </ul>

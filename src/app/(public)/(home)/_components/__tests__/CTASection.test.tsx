@@ -27,18 +27,22 @@ jest.mock('next/link', () => {
 
 describe('CTASection Component', () => {
   describe('Component Rendering', () => {
-    it('should render the section', () => {
+    it('should render the section with dark mode classes', () => {
       const { container } = render(<CTASection />);
       const section = container.querySelector('section');
       expect(section).toBeInTheDocument();
       expect(section).toHaveClass('bg-gradient-cta');
+      expect(section?.className).toMatch(/dark:bg-gradient-dark-hero/);
     });
 
-    it('should render main headline', () => {
+    it('should render main headline with dark mode classes', () => {
       render(<CTASection />);
-      expect(
-        screen.getByText(/¿Listo para transformar tu ministerio de alabanza?/i),
-      ).toBeInTheDocument();
+      const headline = screen.getByText(
+        /¿Listo para transformar tu ministerio de alabanza?/i,
+      );
+      expect(headline).toBeInTheDocument();
+      // El headline tiene text-white, no dark:text-brand-pink-200
+      expect(headline.className).toMatch(/text-white/);
     });
 
     it('should render subheadline', () => {
@@ -113,12 +117,15 @@ describe('CTASection Component', () => {
       expect(svgIcons.length).toBeGreaterThanOrEqual(3);
     });
 
-    it('should apply correct text color to indicators', () => {
+    it('should apply correct text color and dark mode to indicators', () => {
       const { container } = render(<CTASection />);
       const indicatorsContainer = container.querySelector(
         '.text-brand-purple-100',
       );
       expect(indicatorsContainer).toBeInTheDocument();
+      expect(indicatorsContainer?.className).toMatch(
+        /dark:text-brand-purple-200/,
+      );
     });
   });
 

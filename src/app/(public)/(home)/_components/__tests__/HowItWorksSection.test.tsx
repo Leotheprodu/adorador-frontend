@@ -34,11 +34,12 @@ import { HowItWorksSection } from '../HowItWorksSection';
 
 describe('HowItWorksSection Component', () => {
   describe('Component Rendering', () => {
-    it('should render the section', () => {
+    it('should render the section with dark mode classes', () => {
       const { container } = render(<HowItWorksSection />);
       const section = container.querySelector('section');
       expect(section).toBeInTheDocument();
       expect(section).toHaveClass('bg-gradient-gray');
+      expect(section?.className).toMatch(/dark:bg-gradient-dark-gray/);
     });
 
     it('should render the section header', () => {
@@ -58,6 +59,14 @@ describe('HowItWorksSection Component', () => {
   });
 
   describe('Step Cards', () => {
+    it('should render cards with dark mode classes', () => {
+      const { container } = render(<HowItWorksSection />);
+      const cards = container.querySelectorAll('.rounded-2xl.bg-white');
+      expect(cards.length).toBe(3);
+      cards.forEach((card) => {
+        expect(card.className).toMatch(/dark:bg-brand-purple-900/);
+      });
+    });
     it('should render all three steps', () => {
       render(<HowItWorksSection />);
       expect(screen.getByText('Crea tu grupo')).toBeInTheDocument();
