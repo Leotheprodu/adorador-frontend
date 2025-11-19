@@ -54,7 +54,7 @@ export const SongCardWithControls = ({
   // Si no es admin, mostrar sin drag & drop
   if (!isAdminEvent) {
     return (
-      <div className="group flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-brand-purple-200 hover:shadow-md">
+      <div className="group flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-brand-purple-200 hover:shadow-md dark:bg-black">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-sm font-bold text-brand-purple-700">
           {data.order}
         </span>
@@ -87,8 +87,8 @@ export const SongCardWithControls = ({
           {...provided.draggableProps}
           className={`group flex items-center gap-3 rounded-lg border-2 p-4 transition-all duration-200 ${
             snapshot.isDragging
-              ? 'z-50 scale-105 border-brand-purple-400 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 shadow-2xl'
-              : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md'
+              ? 'z-50 scale-105 border-brand-purple-400 bg-brand-purple-50 shadow-2xl dark:border-brand-purple-800 dark:bg-brand-purple-800'
+              : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-black dark:hover:border-brand-purple-400'
           }`}
         >
           {/* Drag Handle */}
@@ -110,7 +110,9 @@ export const SongCardWithControls = ({
 
           {/* Información de la canción */}
           <div className="flex-1">
-            <p className="font-semibold text-slate-900">{data.song.title}</p>
+            <p className="font-semibold text-slate-900 dark:text-slate-100">
+              {data.song.title}
+            </p>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
               <span className="rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">
                 {songTypes[data.song.songType].es}
@@ -135,7 +137,7 @@ export const SongCardWithControls = ({
                   <ArrowsUpDownIconIcon className="h-5 w-5 text-brand-purple-600" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-64">
+              <PopoverContent className="w-64 dark:border-1 dark:border-brand-purple-600">
                 <div className="w-full p-3">
                   {/* Header */}
                   <div className="mb-2 flex items-center gap-2">
@@ -143,23 +145,23 @@ export const SongCardWithControls = ({
                       <ArrowsUpDownIconIcon className="h-3 w-3 text-white" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-slate-800">
+                      <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100">
                         Cambiar Tonalidad
                       </h4>
                     </div>
                   </div>
 
                   {/* Current Key Info */}
-                  <div className="mb-2 rounded-lg bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-2 shadow-sm">
+                  <div className="dark:bg-grandient-to-br mb-2 rounded-lg bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-2 shadow-sm dark:from-brand-purple-900 dark:via-gray-900 dark:to-brand-blue-900">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-semibold text-slate-600">
+                      <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-100">
                         Actual:
                       </span>
                       <span className="rounded-full bg-brand-purple-600 px-2 py-0.5 text-xs font-bold text-white shadow-sm">
                         {handleTranspose(data.song.key, data.transpose)}
                       </span>
                     </div>
-                    <div className="mt-1 text-[10px] text-slate-500">
+                    <div className="mt-1 text-[10px] text-slate-500 dark:text-slate-100">
                       {data.transpose === 0 ? (
                         <span>✓ Tonalidad original</span>
                       ) : (

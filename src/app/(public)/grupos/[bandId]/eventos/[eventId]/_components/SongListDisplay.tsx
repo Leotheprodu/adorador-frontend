@@ -94,11 +94,11 @@ export const SongListDisplay = ({
     <div className="w-full">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <MusicNoteIcon className="h-5 w-5 text-brand-purple-600" />
-          <h3 className="text-lg font-semibold text-slate-900">
+          <MusicNoteIcon className="h-5 w-5 text-brand-purple-600 dark:text-brand-purple-300" />
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             Canciones del Evento
           </h3>
-          <span className="rounded-full bg-brand-purple-100 px-2.5 py-0.5 text-xs font-semibold text-brand-purple-700">
+          <span className="rounded-full bg-brand-purple-100 px-2.5 py-0.5 text-xs font-semibold text-brand-purple-700 dark:bg-brand-purple-900 dark:text-brand-purple-200">
             {songs.length}
           </span>
         </div>
@@ -109,7 +109,7 @@ export const SongListDisplay = ({
                 size="sm"
                 variant="flat"
                 onPress={handleCancelChanges}
-                className="whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200"
+                className="whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-gray-900/60 dark:text-slate-100 dark:hover:bg-gray-800"
               >
                 Cancelar
               </Button>
@@ -117,7 +117,7 @@ export const SongListDisplay = ({
                 size="sm"
                 isLoading={isPending}
                 onPress={handleSaveChanges}
-                className="whitespace-nowrap bg-gradient-to-r from-brand-purple-500 to-brand-blue-500 font-semibold text-white shadow-md hover:shadow-lg"
+                className="whitespace-nowrap bg-gradient-to-r from-brand-purple-500 to-brand-blue-500 font-semibold text-white shadow-md hover:shadow-lg dark:from-brand-purple-800 dark:to-brand-blue-900"
               >
                 Guardar Cambios
               </Button>
@@ -133,13 +133,13 @@ export const SongListDisplay = ({
       </div>
 
       {songs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 p-8 text-center">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 p-8 text-center dark:border-purple-800 dark:bg-gray-900/60">
           <div className="text-5xl">🎵</div>
           <div>
-            <p className="font-medium text-slate-700">
+            <p className="font-medium text-slate-700 dark:text-slate-100">
               No hay canciones en este evento
             </p>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-300">
               {isAdminEvent
                 ? 'Agrega canciones usando el botón +'
                 : 'El administrador aún no ha agregado canciones'}
@@ -153,8 +153,8 @@ export const SongListDisplay = ({
               <div
                 className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${
                   snapshot.isDraggingOver
-                    ? 'border-brand-purple-400 bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 shadow-lg'
-                    : 'border-transparent'
+                    ? 'border-brand-purple-400 bg-brand-purple-50 shadow-lg dark:bg-black'
+                    : 'border-transparent dark:bg-black'
                 }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
