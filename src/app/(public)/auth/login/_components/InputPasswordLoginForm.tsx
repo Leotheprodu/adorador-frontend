@@ -48,9 +48,9 @@ export const InputPasswordLoginForm = ({
           />
         }
         type={toggleVisibility ? 'text' : 'password'}
-        className=""
+        className="text-gray-900 dark:text-brand-purple-200"
         startContent={
-          <KeyIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />
+          <KeyIcon className="pointer-events-none flex-shrink-0 text-2xl text-brand-purple-600 dark:text-brand-purple-300" />
         }
         autoComplete="current-password"
         isInvalid={isInvalidPass}
