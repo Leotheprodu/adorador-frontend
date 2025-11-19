@@ -71,7 +71,7 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
           onOpen();
         }}
         size="sm"
-        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:bg-brand-purple-800 dark:text-slate-100 dark:hover:border-brand-purple-800 dark:hover:bg-brand-purple-950"
       >
         <PlusIcon className="h-5 w-5" /> Añadir canción
       </Button>
@@ -79,7 +79,7 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-2 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 pb-4">
+              <ModalHeader className="flex flex-col gap-2 bg-brand-purple-50 pb-4 dark:bg-gray-950">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 shadow-md">
                     <MusicNoteIcon className="h-6 w-6 text-white" />
@@ -101,7 +101,7 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
                   handleChange={handleChange}
                 />
               </ModalBody>
-              <ModalFooter className="gap-2 bg-slate-50">
+              <ModalFooter className="gap-2 bg-slate-50 dark:bg-gray-950">
                 <Button
                   variant="flat"
                   onPress={onClose}
