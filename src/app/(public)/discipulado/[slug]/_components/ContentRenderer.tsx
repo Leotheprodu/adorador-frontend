@@ -30,7 +30,7 @@ export default function ContentRenderer({
                     {block.title}
                   </p>
                 )}
-                <p className="italic leading-relaxed text-slate-700">
+                <p className="italic leading-relaxed text-slate-700 dark:text-slate-200">
                   {block.text}
                 </p>
               </div>
@@ -42,11 +42,11 @@ export default function ContentRenderer({
           return (
             <div key={index} className="space-y-3">
               {block.title && (
-                <h2 className="text-xl font-bold text-slate-800 transition-colors hover:text-brand-purple-500">
+                <h2 className="text-xl font-bold text-slate-800 transition-colors hover:text-brand-purple-500 dark:text-slate-50">
                   {block.title}
                 </h2>
               )}
-              <p className="whitespace-pre-line text-base leading-relaxed text-slate-700">
+              <p className="whitespace-pre-line text-base leading-relaxed text-slate-700 dark:text-slate-100">
                 {block.text}
               </p>
             </div>

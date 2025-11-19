@@ -31,13 +31,13 @@ export default function DiscipuladoListPage() {
   const discipulados = posts.filter((p) => p.category === 'discipulado');
 
   return (
-    <main className="mx-auto mb-[20rem] max-w-7xl px-4 py-10">
+    <main className="mx-auto mb-[20rem] min-h-screen max-w-7xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-pink-50 px-4 py-10 dark:bg-gray-950 dark:bg-none">
       {/* Header Section */}
       <div className="mb-12 text-center">
-        <h1 className="mb-4 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 bg-clip-text text-5xl font-bold text-transparent">
+        <h1 className="mb-4 bg-gradient-to-r from-brand-purple-500 via-brand-pink-500 to-brand-blue-500 bg-clip-text text-5xl font-bold text-transparent dark:text-white">
           Discipulados
         </h1>
-        <p className="flex items-center justify-center gap-2 text-lg text-slate-600">
+        <p className="flex items-center justify-center gap-2 text-lg text-slate-600 dark:text-brand-purple-200">
           <BookOpenIcon className="h-6 w-6 text-brand-purple-500" />
           Recursos para tu crecimiento espiritual
         </p>
@@ -49,7 +49,7 @@ export default function DiscipuladoListPage() {
           <Link
             key={post.id}
             href={`/discipulado/${post.slug}`}
-            className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 transition-all hover:scale-105 hover:shadow-2xl active:scale-100"
+            className="group relative flex flex-col overflow-hidden rounded-2xl bg-white/80 shadow-2xl ring-1 ring-slate-200/50 backdrop-blur-sm transition-all hover:scale-105 hover:shadow-2xl active:scale-100 dark:bg-gray-950 dark:ring-slate-800"
           >
             {/* Image Container with Gradient Overlay */}
             {post.image && (
@@ -67,10 +67,10 @@ export default function DiscipuladoListPage() {
 
             {/* Content */}
             <div className="flex flex-grow flex-col p-6">
-              <h2 className="mb-3 text-xl font-bold text-slate-800 transition-colors group-hover:text-brand-purple-500">
+              <h2 className="mb-3 text-xl font-bold text-slate-800 transition-colors group-hover:text-brand-purple-500 dark:text-white">
                 {post.title}
               </h2>
-              <div className="mt-auto flex items-center gap-2 text-sm text-slate-500">
+              <div className="mt-auto flex items-center gap-2 text-sm text-slate-500 dark:text-slate-100">
                 <CalendarIcon className="h-6 w-6 text-brand-purple-500" />
                 <p>
                   {new Date(post.date).toLocaleDateString('es-ES', {
