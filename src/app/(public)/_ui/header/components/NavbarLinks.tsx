@@ -15,7 +15,6 @@ export const NavbarLinks = ({
 }) => {
   const pathName = usePathname();
   const user = useStore($user);
-  console.log('Tema de fondo:', backgroundColor);
   const colorsSettings = {
     dark: {
       text: 'text-white dark:text-gray-200',
