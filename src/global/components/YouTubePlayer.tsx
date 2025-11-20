@@ -93,7 +93,7 @@ export const YouTubePlayer = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-slate-100 ${className}`}
+      className={`relative overflow-hidden rounded-xl bg-content2 dark:bg-content3 ${className}`}
     >
       {!showPlayer ? (
         // Thumbnail con botón de play

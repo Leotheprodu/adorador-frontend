@@ -14,7 +14,7 @@ export default function GruposPage() {
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-gray-400 sm:text-5xl md:text-6xl">
+          <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-gray-100 sm:text-5xl md:text-6xl">
             Grupos de <span className="text-gradient-simple">Alabanza </span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-gray-600 sm:text-xl">
