@@ -184,24 +184,24 @@ export const CreatePostInline = ({
   };
 
   return (
-    <Card className="w-full border border-divider bg-gradient-to-br from-white to-gray-50/50 shadow-md">
+    <Card className="w-full border border-divider bg-gradient-to-br from-white to-gray-50/50 shadow-md dark:from-default-100 dark:to-default-50">
       <CardBody className="p-0">
         {!isExpanded ? (
           // Vista compacta - similar a Facebook
           <div className="p-4">
             <div
-              className="flex cursor-pointer items-center gap-3 rounded-xl p-3 transition-all duration-200 hover:bg-default-50/50"
+              className="flex cursor-pointer items-center gap-3 rounded-xl p-3 transition-all duration-200 hover:bg-default-100 dark:hover:bg-default-200"
               onClick={handleExpand}
             >
               <Avatar
                 size="md"
                 name={user?.name || 'Usuario'}
-                className="flex-shrink-0 ring-2 ring-brand-purple-100"
+                className="flex-shrink-0 ring-2 ring-brand-purple-100 dark:ring-brand-purple-300"
                 classNames={{
                   base: 'bg-gradient-to-br from-brand-purple-400 to-brand-pink-400',
                 }}
               />
-              <div className="flex min-h-[44px] flex-1 items-center rounded-full border border-default-200 bg-gradient-to-r from-default-100 to-default-50 px-4 text-default-500 transition-all duration-200 hover:border-brand-purple-200 hover:from-default-200 hover:to-default-100 hover:shadow-sm">
+              <div className="flex min-h-[44px] flex-1 items-center rounded-full border border-default-200 bg-gradient-to-r from-default-100 to-default-50 px-4 text-foreground-500 transition-all duration-200 hover:border-brand-purple-200 hover:from-default-200 hover:to-default-100 hover:shadow-sm dark:border-default-300 dark:from-default-200 dark:to-default-100 dark:hover:border-brand-purple-300 dark:hover:from-default-300 dark:hover:to-default-200">
                 <span className="font-medium">
                   ¿Qué canción quieres compartir hoy?
                 </span>
@@ -218,7 +218,7 @@ export const CreatePostInline = ({
                       handleExpand();
                       setPostType('SONG_SHARE');
                     }}
-                    className="border border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100"
+                    className="border border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 dark:border-green-700 dark:from-green-900/30 dark:to-emerald-900/30 dark:hover:from-green-800/40 dark:hover:to-emerald-800/40"
                   >
                     <MusicalNoteIcon className="h-4 w-4" />
                   </Button>
@@ -234,7 +234,7 @@ export const CreatePostInline = ({
                       handleExpand();
                       setPostType('SONG_REQUEST');
                     }}
-                    className="border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100"
+                    className="border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 dark:border-amber-700 dark:from-amber-900/30 dark:to-orange-900/30 dark:hover:from-amber-800/40 dark:hover:to-orange-800/40"
                   >
                     <HandsIcon className="h-4 w-4" />
                   </Button>
@@ -244,13 +244,13 @@ export const CreatePostInline = ({
           </div>
         ) : (
           // Vista expandida - formulario completo
-          <div className="animate-in fade-in-0 space-y-4 bg-gradient-to-br from-white via-gray-50/30 to-brand-purple-50/20 p-4 duration-300">
+          <div className="animate-in fade-in-0 space-y-4 bg-gradient-to-br from-white via-gray-50/30 to-brand-purple-50/20 p-4 duration-300 dark:from-default-100 dark:via-default-50/30 dark:to-brand-purple-900/10">
             {/* Header con avatar y tipo de post */}
             <div className="flex items-start gap-3">
               <Avatar
                 size="md"
                 name={user?.name || 'Usuario'}
-                className="flex-shrink-0 ring-2 ring-brand-purple-100"
+                className="flex-shrink-0 ring-2 ring-brand-purple-100 dark:ring-brand-purple-300"
                 classNames={{
                   base: 'bg-gradient-to-br from-brand-purple-400 to-brand-pink-400',
                 }}
@@ -266,7 +266,7 @@ export const CreatePostInline = ({
                     className={`flex-1 transition-all duration-200 ${
                       postType === 'SONG_SHARE'
                         ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                        : 'border-green-200 bg-white text-green-600 hover:bg-green-50'
+                        : 'border-green-200 bg-white text-green-600 hover:bg-green-50 dark:border-green-700 dark:bg-default-100 dark:text-green-400 dark:hover:bg-green-900/20'
                     }`}
                     startContent={<MusicalNoteIcon className="h-4 w-4" />}
                   >
@@ -282,7 +282,7 @@ export const CreatePostInline = ({
                     className={`flex-1 transition-all duration-200 ${
                       postType === 'SONG_REQUEST'
                         ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                        : 'border-amber-200 bg-white text-amber-600 hover:bg-amber-50'
+                        : 'border-amber-200 bg-white text-amber-600 hover:bg-amber-50 dark:border-amber-700 dark:bg-default-100 dark:text-amber-400 dark:hover:bg-amber-900/20'
                     }`}
                     startContent={<HandsIcon className="h-4 w-4" />}
                   >
@@ -291,8 +291,8 @@ export const CreatePostInline = ({
                 </div>
 
                 {/* Selector de banda compacto */}
-                <div className="flex items-center gap-3 rounded-lg border border-brand-purple-100 bg-white/80 p-3 backdrop-blur-sm">
-                  <span className="whitespace-nowrap text-sm font-medium text-brand-purple-700">
+                <div className="flex items-center gap-3 rounded-lg border border-brand-purple-100 bg-white/80 p-3 backdrop-blur-sm dark:border-brand-purple-800 dark:bg-default-100/80">
+                  <span className="whitespace-nowrap text-sm font-medium text-brand-purple-700 dark:text-brand-purple-300">
                     Tu grupo de alabanza:
                   </span>
                   <Select
@@ -307,7 +307,7 @@ export const CreatePostInline = ({
                       }
                     }}
                     classNames={{
-                      trigger: 'h-8 bg-white border-brand-purple-200',
+                      trigger: 'h-8 bg-white border-brand-purple-200 dark:bg-default-100 dark:border-brand-purple-700',
                     }}
                     renderValue={() => (
                       <Chip
@@ -346,13 +346,13 @@ export const CreatePostInline = ({
                   classNames={{
                     input: 'text-base',
                     inputWrapper:
-                      'bg-white/90 border-brand-purple-200 hover:border-brand-purple-300 focus-within:border-brand-purple-400',
+                      'bg-white/90 border-brand-purple-200 hover:border-brand-purple-300 focus-within:border-brand-purple-400 dark:bg-default-100/90 dark:border-brand-purple-700 dark:hover:border-brand-purple-600 dark:focus-within:border-brand-purple-500',
                   }}
                 />
 
                 {/* Campos específicos según el tipo */}
                 {postType === 'SONG_SHARE' && (
-                  <div className="rounded-lg border border-green-200 bg-white/80 p-3 backdrop-blur-sm">
+                  <div className="rounded-lg border border-green-200 bg-white/80 p-3 backdrop-blur-sm dark:border-green-800 dark:bg-default-100/80">
                     <Select
                       label="Canción a compartir"
                       placeholder="Selecciona una canción"
@@ -365,24 +365,24 @@ export const CreatePostInline = ({
                       size="sm"
                       classNames={{
                         trigger:
-                          'min-h-unit-10 bg-white border-green-200 hover:border-green-300',
-                        label: 'text-green-700 font-medium',
+                          'min-h-unit-10 bg-white border-green-200 hover:border-green-300 dark:bg-default-100 dark:border-green-700 dark:hover:border-green-600',
+                        label: 'text-green-700 font-medium dark:text-green-400',
                       }}
                       renderValue={() => {
                         const song = getSelectedSongInfo();
                         return song ? (
                           <div className="flex flex-col py-1">
-                            <span className="text-sm font-medium text-green-800">
+                            <span className="text-sm font-medium text-green-800 dark:text-green-300">
                               {song.title}
                             </span>
                             {song.artist && (
-                              <span className="text-xs text-green-600">
+                              <span className="text-xs text-green-600 dark:text-green-400">
                                 {song.artist}
                               </span>
                             )}
                           </div>
                         ) : (
-                          <span className="text-default-500">
+                          <span className="text-foreground-500">
                             Selecciona una canción
                           </span>
                         );
@@ -396,7 +396,7 @@ export const CreatePostInline = ({
                           <div className="flex flex-col">
                             <span className="font-semibold">{song.title}</span>
                             {song.artist && (
-                              <span className="text-small text-default-500">
+                              <span className="text-small text-foreground-500">
                                 {song.artist}
                               </span>
                             )}
@@ -408,7 +408,7 @@ export const CreatePostInline = ({
                 )}
 
                 {postType === 'SONG_REQUEST' && (
-                  <div className="space-y-3 rounded-lg border border-amber-200 bg-white/80 p-3 backdrop-blur-sm">
+                  <div className="space-y-3 rounded-lg border border-amber-200 bg-white/80 p-3 backdrop-blur-sm dark:border-amber-800 dark:bg-default-100/80">
                     <Input
                       label="Título de la canción"
                       placeholder="Ej: Aquí Estoy"
@@ -418,8 +418,8 @@ export const CreatePostInline = ({
                       size="sm"
                       classNames={{
                         inputWrapper:
-                          'bg-white border-amber-200 hover:border-amber-300',
-                        label: 'text-amber-700 font-medium',
+                          'bg-white border-amber-200 hover:border-amber-300 dark:bg-default-100 dark:border-amber-700 dark:hover:border-amber-600',
+                        label: 'text-amber-700 font-medium dark:text-amber-400',
                       }}
                     />
                     <Input
@@ -430,8 +430,8 @@ export const CreatePostInline = ({
                       size="sm"
                       classNames={{
                         inputWrapper:
-                          'bg-white border-amber-200 hover:border-amber-300',
-                        label: 'text-amber-700 font-medium',
+                          'bg-white border-amber-200 hover:border-amber-300 dark:bg-default-100 dark:border-amber-700 dark:hover:border-amber-600',
+                        label: 'text-amber-700 font-medium dark:text-amber-400',
                       }}
                     />
                     <Input
@@ -450,13 +450,13 @@ export const CreatePostInline = ({
                       }
                       classNames={{
                         inputWrapper:
-                          'bg-white border-amber-200 hover:border-amber-300',
-                        label: 'text-amber-700 font-medium',
+                          'bg-white border-amber-200 hover:border-amber-300 dark:bg-default-100 dark:border-amber-700 dark:hover:border-amber-600',
+                        label: 'text-amber-700 font-medium dark:text-amber-400',
                         description:
                           requestedYoutubeUrl &&
                           isValidYouTubeId(requestedYoutubeUrl)
-                            ? 'text-green-600 font-medium'
-                            : 'text-default-500',
+                            ? 'text-green-600 font-medium dark:text-green-400'
+                            : 'text-foreground-500',
                       }}
                       startContent={
                         <YoutubeIcon className="h-4 w-4 text-red-500" />
@@ -470,13 +470,13 @@ export const CreatePostInline = ({
             <Divider className="bg-gradient-to-r from-transparent via-brand-purple-200 to-transparent" />
 
             {/* Footer con acciones */}
-            <div className="flex items-center justify-between rounded-lg bg-white/60 p-3 backdrop-blur-sm">
+            <div className="flex items-center justify-between rounded-lg bg-white/60 p-3 backdrop-blur-sm dark:bg-default-100/60">
               <Button
                 variant="bordered"
                 size="sm"
                 onPress={handleCollapse}
                 startContent={<XMarkIcon className="h-4 w-4" />}
-                className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                className="border-default-300 text-foreground-600 hover:bg-default-100 dark:border-default-600 dark:hover:bg-default-200"
               >
                 Cancelar
               </Button>

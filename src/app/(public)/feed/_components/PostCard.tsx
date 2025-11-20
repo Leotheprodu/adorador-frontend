@@ -82,13 +82,13 @@ export const PostCard = ({
   return (
     <Card className="w-full" id={`post-${post.id}`}>
       <CardHeader className="justify-between">
-        <div className="flex gap-3">
+          <div className="flex gap-3">
           <Avatar name={post.author.name} size="md" className="flex-shrink-0" />
           <div className="flex flex-col gap-1">
-            <h4 className="text-small font-semibold leading-none text-default-600">
+            <h4 className="text-small font-semibold leading-none text-foreground-600">
               {post.author.name}
             </h4>
-            <h5 className="text-small tracking-tight text-default-400">
+            <h5 className="text-small tracking-tight text-foreground-400">
               {post.band.name}
             </h5>
           </div>
@@ -102,13 +102,13 @@ export const PostCard = ({
         </Chip>
       </CardHeader>
 
-      <CardBody className="px-3 py-2 text-small text-default-700">
+      <CardBody className="px-3 py-2 text-small text-foreground-700">
         {/* Título del post */}
         <h3 className="mb-2 text-base font-semibold">{post.title}</h3>
 
         {/* Descripción/Contenido del post */}
         {post.description && (
-          <div className="mb-3 whitespace-pre-wrap text-default-600">
+          <div className="mb-3 whitespace-pre-wrap text-foreground-600">
             {post.description}
           </div>
         )}
@@ -135,7 +135,7 @@ export const PostCard = ({
               closeDelay={0}
             >
               <div
-                className="group cursor-pointer rounded-lg border border-divider bg-content2 p-4 transition-all hover:border-primary hover:bg-content3"
+                className="group cursor-pointer rounded-lg border border-divider bg-content2 p-4 transition-all hover:border-primary hover:bg-content3 dark:hover:bg-content4"
                 onClick={() => onViewSong && onViewSong(post.id)}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -236,7 +236,7 @@ export const PostCard = ({
         )}
 
         {/* Timestamp */}
-        <p className="text-tiny text-default-400">
+        <p className="text-tiny text-foreground-400">
           {formatRelativeTime(post.createdAt)}
         </p>
       </CardBody>
@@ -262,7 +262,7 @@ export const PostCard = ({
 
         {/* Contador de copias */}
         {isSongShare && post._count.songCopies > 0 && (
-          <div className="flex items-center gap-1 text-small text-default-500">
+          <div className="flex items-center gap-1 text-small text-foreground-500">
             <DownloadIcon className="h-4 w-4" />
             <span>{post._count.songCopies}</span>
           </div>

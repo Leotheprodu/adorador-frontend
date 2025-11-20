@@ -60,7 +60,7 @@ export const ShareSongCommentModal = ({
           🎵 Compartir Canción en Respuesta
         </ModalHeader>
         <ModalBody>
-          <p className="text-small text-default-500">
+          <p className="text-small text-foreground-500">
             Selecciona una canción de tus bandas para compartir como respuesta a
             esta solicitud.
           </p>

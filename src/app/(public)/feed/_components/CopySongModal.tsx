@@ -71,11 +71,11 @@ export const CopySongModal = ({
         </ModalHeader>
         <ModalBody>
           <div className="mb-4">
-            <p className="text-small text-default-600">
+            <p className="text-small text-foreground-600">
               Vas a copiar: <span className="font-semibold">{songTitle}</span>
             </p>
             {currentKey && (
-              <p className="mt-2 text-small text-default-500">
+              <p className="mt-2 text-small text-foreground-500">
                 Tono original: <span className="font-medium">{currentKey}</span>
                 {suggestedKey && suggestedKey !== currentKey && (
                   <span className="ml-2 text-primary">
@@ -86,7 +86,7 @@ export const CopySongModal = ({
               </p>
             )}
             {currentTempo && (
-              <p className="text-small text-default-500">
+              <p className="text-small text-foreground-500">
                 BPM: {suggestedTempo || currentTempo}
               </p>
             )}

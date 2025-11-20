@@ -287,7 +287,7 @@ export const InlineComments = ({
             {postType === 'SONG_REQUEST' ? (
               <div className="space-y-2">
                 <div className="rounded-lg bg-content2 p-4 text-center">
-                  <p className="mb-3 text-sm text-default-500">
+                  <p className="mb-3 text-sm text-foreground-500">
                     Este post solicita canciones. Comparte una canción de tu
                     banda para responder.
                   </p>
@@ -485,10 +485,10 @@ function CommentItem({
         className="mt-1 flex-shrink-0"
       />
       <div className="flex-1 space-y-2">
-        <div className="rounded-lg bg-gray-50 p-3">
+        <div className="rounded-lg bg-content2 p-3 dark:bg-content3">
           <div className="mb-1 flex items-center gap-2">
             <span className="text-sm font-medium">{comment.author.name}</span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-foreground-500">
               {formatRelativeTime(comment.createdAt)}
             </span>
           </div>
@@ -693,7 +693,7 @@ function CommentItem({
 
         {/* Respuestas anidadas */}
         {comment.replies && comment.replies.length > 0 && (
-          <div className="ml-4 space-y-2 border-l-2 border-gray-100 pl-4">
+          <div className="ml-4 space-y-2 border-l-2 border-divider pl-4">
             {comment.replies.map((reply) => (
               <CommentItem
                 key={reply.id}
