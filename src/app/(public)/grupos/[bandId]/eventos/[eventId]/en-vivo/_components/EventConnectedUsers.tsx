@@ -38,7 +38,6 @@ export const EventConnectedUsers = ({
     const eventId = parseInt(params.eventId);
 
     // Unirse al evento cuando el componente se monta
-    console.log(`[EventConnectedUsers] Uniéndose al evento ${eventId}`);
     socket.emit('joinEvent', { eventId });
 
     // Solicitar la lista inicial de usuarios conectados
@@ -46,13 +45,6 @@ export const EventConnectedUsers = ({
 
     // Escuchar actualizaciones de usuarios conectados
     const handleUsersUpdate = (data: ConnectedUsersData) => {
-      console.log('[EventConnectedUsers] Actualización de usuarios:', data);
-      console.log('[EventConnectedUsers] Usuarios autenticados:', data.users);
-      console.log(
-        '[EventConnectedUsers] Cantidad de invitados:',
-        data.guestCount,
-      );
-      console.log('[EventConnectedUsers] Total:', data.totalCount);
       if (data.eventId === eventId) {
         setConnectedUsers(data);
       }
@@ -61,7 +53,6 @@ export const EventConnectedUsers = ({
     socket.on('eventUsersUpdate', handleUsersUpdate);
 
     return () => {
-      console.log(`[EventConnectedUsers] Saliendo del evento ${eventId}`);
       // Salir del evento cuando el componente se desmonta
       socket.emit('leaveEvent', {});
       socket.off('eventUsersUpdate', handleUsersUpdate);
@@ -89,11 +80,6 @@ export const EventConnectedUsers = ({
 
   const formatUserList = () => {
     const userNames = connectedUsers.users.map((u) => u.name);
-    console.log(
-      '[EventConnectedUsers] Formateando lista. Usuarios:',
-      connectedUsers.users,
-    );
-    console.log('[EventConnectedUsers] Nombres extraídos:', userNames);
     const parts: string[] = [];
 
     if (userNames.length > 0) {

@@ -28,7 +28,7 @@ export const EventControlsButtonsSwipe = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-pink-50/30 p-3 shadow-sm">
+    <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-pink-50/30 p-3 shadow-sm dark:bg-gradient-to-br dark:from-brand-purple-900/50 dark:to-brand-blue-900/50">
       <h3 className="flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-brand-pink-700">
         <LockClosedIcon className="h-4 w-4" /> Control Admin
       </h3>
