@@ -12,7 +12,7 @@ jest.mock('next/image', () => ({
 }));
 
 jest.mock('next/link', () => {
-  // eslint-disable-next-line react/display-name
+  // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
   return (props: any) => {
     const { children, href, ...rest } = props;
     return (

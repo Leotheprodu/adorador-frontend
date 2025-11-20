@@ -11,7 +11,7 @@ export const LastFooter = () => {
           href="https://leoserranodev.vercel.app/es/"
           target="_blank"
           rel="noopener noreferrer"
-          className="border-slate-400 transition-all duration-200 hover:border-b-1 hover:text-slate-100 dark:border-slate-500 dark:hover:text-slate-300">
+          className="border-slate-400 transition-all duration-200 hover:border-b-1 hover:text-slate-100 dark:border-slate-500 dark:hover:text-slate-300"
         >
           Leonardo Serrano
         </a>{' '}
