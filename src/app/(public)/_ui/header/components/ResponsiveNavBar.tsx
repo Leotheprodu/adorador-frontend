@@ -11,6 +11,12 @@ export const ResponsiveNavBar = () => {
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const theme = useStore($resolvedTheme);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   useEffect(() => {
     setIsOpen(false);
   }, [pathName]);
@@ -52,7 +58,7 @@ export const ResponsiveNavBar = () => {
               : 'translate-x-full opacity-0 md:translate-x-0 md:opacity-100'
           }`}
         >
-          <NavbarLinks links={links} backgroundColor={theme} />
+          {hydrated && <NavbarLinks links={links} backgroundColor={theme} />}
         </ul>
       </nav>
     </>
