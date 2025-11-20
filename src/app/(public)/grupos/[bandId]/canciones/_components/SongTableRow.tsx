@@ -97,8 +97,8 @@ export const SongTableRow = ({
   return (
     <>
       <tr
-        className={`group border-b border-slate-100 transition-colors duration-150 hover:bg-brand-purple-50/50 ${
-          isSelected ? 'bg-brand-purple-100/30' : ''
+        className={`group border-b border-slate-100 dark:border-slate-800 transition-colors duration-150 hover:bg-brand-purple-50/50 dark:hover:bg-gray-900 ${
+          isSelected ? 'bg-brand-purple-100/30 dark:bg-brand-purple-950/40' : 'bg-white dark:bg-gray-950'
         }`}
       >
         {/* Título - Mobile y Desktop */}
@@ -107,16 +107,16 @@ export const SongTableRow = ({
             href={`/grupos/${bandId}/canciones/${song.id}`}
             className="flex flex-col gap-1"
           >
-            <span className="font-medium text-slate-800 transition-colors group-hover:text-brand-purple-700">
+            <span className="font-medium text-slate-800 transition-colors group-hover:text-brand-purple-700 dark:text-slate-100 dark:group-hover:text-brand-purple-300">
               {song.title}
             </span>
             {/* Badges móvil - solo visible en mobile */}
             <div className="flex flex-wrap gap-1.5 sm:hidden">
-              <span className="rounded bg-brand-purple-100 px-1.5 py-0.5 text-xs text-brand-purple-700">
+              <span className="rounded bg-brand-purple-100 px-1.5 py-0.5 text-xs text-brand-purple-700 dark:bg-brand-purple-900 dark:text-brand-purple-200">
                 {songTypes[song.songType].es}
               </span>
               {song.artist && (
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">
+                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   {song.artist}
                 </span>
               )}

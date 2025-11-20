@@ -235,7 +235,7 @@ export const MiniLyricsEditor = ({
           setShowUnsavedWarning(false); // Quitar advertencia al empezar a escribir
         }}
         onKeyDown={handleKeyDown}
-        className="w-full resize-none rounded-md border-1 border-primary-300 bg-primary-50/50 p-2 font-mono leading-relaxed text-slate-800 outline-none transition-all focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-200"
+        className="w-full resize-none rounded-md border-1 border-primary-300 bg-primary-50/50 dark:bg-black p-2 font-mono leading-relaxed text-slate-800 dark:text-white outline-none transition-all focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-200"
         placeholder={`       Em      D        Am
 Mi Dios eres mi fortaleza`}
         spellCheck={false}
@@ -250,7 +250,6 @@ Mi Dios eres mi fortaleza`}
       />
 
       {/* Botones de acción */}
-      <div className="flex items-center justify-between gap-2">
         {/* Lado izquierdo - Eliminar */}
         <div className="flex items-center gap-2">
           {showDeleteConfirm ? (
@@ -346,6 +345,6 @@ Mi Dios eres mi fortaleza`}
           </div>
         )}
       </div>
-    </div>
+   
   );
 };

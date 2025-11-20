@@ -176,8 +176,8 @@ export const MiniLyricsCreator = ({
       ref={containerRef}
       className={`group/editor relative rounded-md border-2 bg-white p-2 shadow-sm transition-all ${
         hasText
-          ? 'border-primary-300 bg-primary-50/50'
-          : 'border-slate-200 bg-slate-50'
+          ? 'border-primary-300 bg-primary-50/50 dark:border-primary-400 dark:bg-gray-900'
+          : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-gray-900'
       }`}
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
@@ -189,7 +189,7 @@ export const MiniLyricsCreator = ({
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Escribe la letra aquí (acordes arriba, letra abajo)&#10;Ej:&#10;    C       Am&#10;Gloria a Dios"
-        className={`w-full resize-none overflow-hidden rounded border-none bg-transparent px-2 py-1 font-mono outline-none transition-all`}
+        className={`w-full resize-none overflow-hidden rounded border-none bg-transparent px-2 py-1 font-mono outline-none transition-all dark:bg-gray-950 dark:text-slate-100 dark:placeholder:text-slate-400`}
         style={{
           fontSize: `${lyricsScale}rem`,
           minHeight: '4rem',
@@ -199,18 +199,18 @@ export const MiniLyricsCreator = ({
       />
 
       {/* Botones de acción */}
-      <div className="mt-2 flex items-center justify-end gap-2 border-t border-slate-200 pt-2">
+      <div className="mt-2 flex items-center justify-end gap-2 border-t border-slate-200 pt-2 dark:border-slate-700">
         <button
           onClick={onClose}
           disabled={isPendingAddNewLyric || isPendingParseAndUpdate}
-          className="rounded px-3 py-1 text-sm text-slate-600 transition-colors hover:bg-slate-100 disabled:opacity-50"
+          className="rounded px-3 py-1 text-sm text-slate-600 transition-colors hover:bg-slate-100 disabled:opacity-50 dark:text-slate-300 dark:hover:bg-gray-800"
         >
           Cancelar
         </button>
         <button
           onClick={handleSave}
           disabled={!hasText || isPendingAddNewLyric || isPendingParseAndUpdate}
-          className="rounded bg-primary-500 px-3 py-1 text-sm text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded bg-primary-500 px-3 py-1 text-sm text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-700 dark:hover:bg-primary-800"
         >
           {isPendingAddNewLyric || isPendingParseAndUpdate
             ? 'Guardando...'
@@ -219,9 +219,9 @@ export const MiniLyricsCreator = ({
       </div>
 
       {/* Ayuda de teclado */}
-      <div className="mt-1 text-xs text-slate-400">
-        <kbd className="rounded bg-slate-100 px-1">ESC</kbd> para cancelar •{' '}
-        <kbd className="rounded bg-slate-100 px-1">Ctrl+Enter</kbd> para guardar
+      <div className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+        <kbd className="rounded bg-slate-100 px-1 dark:bg-gray-800 dark:text-slate-200">ESC</kbd> para cancelar •{' '}
+        <kbd className="rounded bg-slate-100 px-1 dark:bg-gray-800 dark:text-slate-200">Ctrl+Enter</kbd> para guardar
       </div>
     </div>
   );

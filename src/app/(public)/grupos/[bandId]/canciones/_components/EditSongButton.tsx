@@ -38,7 +38,7 @@ export const EditSongButton = ({
       <Button
         size="sm"
         onClick={handleOpenModal}
-        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
         startContent={<EditIcon className="h-4 w-4" />}
       >
         Editar Detalles
@@ -47,17 +47,17 @@ export const EditSongButton = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 dark:bg-gray-900">
                 Editar canción
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="dark:bg-gray-950">
                 <FormAddNewSong
                   form={form}
                   setForm={setForm}
                   handleChange={handleChange}
                 />
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter className="dark:bg-gray-900">
                 <Button color="warning" variant="light" onPress={onClose}>
                   Cerrar
                 </Button>

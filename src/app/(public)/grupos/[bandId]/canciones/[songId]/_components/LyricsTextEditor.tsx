@@ -108,13 +108,13 @@ export const LyricsTextEditor = ({
     <div className="flex w-full flex-col items-center gap-4">
       <div className="flex w-full max-w-3xl items-center justify-between">
         <div>
-          <h4 className="text-lg font-bold">Editor de Letras</h4>
-          <p className="text-sm text-slate-600">
+          <h4 className="text-lg font-bold dark:text-slate-100">Editor de Letras</h4>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
             Escribe la letra con los acordes sobre cada línea
           </p>
         </div>
         {lastSaved && (
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-500 dark:text-slate-400">
             {isSaving ? (
               <span className="text-primary-500">Guardando...</span>
             ) : (
@@ -124,11 +124,11 @@ export const LyricsTextEditor = ({
         )}
       </div>
 
-      <div className="w-full max-w-3xl rounded-lg border-1 border-slate-200 bg-white p-4">
-        <h5 className="mb-3 font-semibold text-slate-700">
+      <div className="w-full max-w-3xl rounded-lg border-1 border-slate-200 bg-white p-4 dark:bg-gray-900 dark:border-slate-700">
+        <h5 className="mb-3 font-semibold text-slate-700 dark:text-slate-100">
           Instrucciones de formato:
         </h5>
-        <ul className="mb-4 space-y-1 text-sm text-slate-600">
+        <ul className="mb-4 space-y-1 text-sm text-slate-600 dark:text-slate-300">
           <li>
             • Incluye etiquetas de estructura entre paréntesis: (verso), (coro),
             (intro), (puente)
@@ -139,9 +139,9 @@ export const LyricsTextEditor = ({
           <li>• Puedes dejar espacios en blanco entre secciones</li>
         </ul>
 
-        <div className="mb-4 rounded-md bg-slate-50 p-3">
-          <p className="mb-2 text-sm font-semibold text-slate-700">Ejemplo:</p>
-          <pre className="whitespace-pre-wrap text-xs text-slate-600">
+        <div className="mb-4 rounded-md bg-slate-50 p-3 dark:bg-gray-800">
+          <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-100">Ejemplo:</p>
+          <pre className="whitespace-pre-wrap text-xs text-slate-600 dark:text-slate-300">
             {`(verso)
 Em
 Mi Dios, eres mi fortaleza
@@ -177,7 +177,7 @@ A ti me entrego yo
 Senor, eres mi anhelo
            D
 Eres todo para mi`}
-          className="min-h-[300px] w-full rounded-md border-1 border-slate-300 p-4 font-mono text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+          className="min-h-[300px] w-full rounded-md border-1 border-slate-300 p-4 font-mono text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:bg-gray-950 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400"
           spellCheck={false}
         />
       </div>
@@ -193,7 +193,7 @@ Eres todo para mi`}
       </div>
 
       {statusParseText === 'error' && (
-        <div className="rounded-md bg-danger-50 p-4 text-danger-800">
+        <div className="rounded-md bg-danger-50 p-4 text-danger-800 dark:bg-danger-950 dark:text-danger-200">
           <p className="font-semibold">Error al procesar la letra</p>
           <p className="text-sm">
             Verifica que el formato sea correcto y vuelve a intentarlo.

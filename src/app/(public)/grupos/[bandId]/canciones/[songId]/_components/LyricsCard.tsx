@@ -50,7 +50,7 @@ export const LyricsCard = ({
   // En modo práctica o cuando index es -1, no usar Draggable
   if (isPracticeMode || index === -1) {
     return (
-      <div className="group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 hover:bg-slate-50">
+      <div className="group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent">
         {/* Contenido de la letra */}
         <div className="flex flex-1 flex-col">
           <div style={{ width: 'fit-content' }}>
@@ -67,7 +67,7 @@ export const LyricsCard = ({
             {/* Lyrics Section */}
             <div
               style={{ fontSize: `${lyricsScale}rem` }}
-              className="font-medium leading-relaxed text-slate-800"
+              className="font-medium leading-relaxed text-slate-800 dark:text-slate-100"
             >
               {lyric.lyrics}
             </div>
@@ -96,7 +96,7 @@ export const LyricsCard = ({
             className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
               snapshot.isDragging
                 ? 'z-50 scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
-                : 'hover:bg-slate-50'
+                : 'hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent'
             } lyric-card${lyric.id}`}
           >
             {/* Drag Handle - Siempre visible */}
@@ -146,7 +146,7 @@ export const LyricsCard = ({
                 ) : (
                   <div
                     style={{ fontSize: `${lyricsScale}rem` }}
-                    className="font-medium leading-relaxed text-slate-800"
+                    className="font-medium leading-relaxed text-slate-800 dark:text-slate-100"
                   >
                     {lyric.lyrics}
                   </div>
