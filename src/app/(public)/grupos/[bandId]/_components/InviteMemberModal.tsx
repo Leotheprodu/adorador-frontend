@@ -64,7 +64,7 @@ export const InviteMemberModal = ({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="2xl">
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-2 border-b border-slate-100 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 pb-4">
+        <ModalHeader className="flex flex-col gap-2 border-b border-slate-100 bg-brand-purple-50 pb-4 dark:border-slate-700 dark:bg-gray-900">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 shadow-md">
               <UsersIcon className="h-6 w-6 text-white" />
@@ -162,7 +162,7 @@ export const InviteMemberModal = ({
               )}
           </div>
         </ModalBody>
-        <ModalFooter className="border-t border-slate-100 bg-slate-50">
+        <ModalFooter className="border-t border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-gray-900">
           <Button variant="flat" onPress={handleClose} className="font-medium">
             Cerrar
           </Button>

@@ -96,18 +96,18 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
 
   return (
     <>
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <CardHeader className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-purple-800 dark:bg-black">
+        <CardHeader className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-4 dark:border-purple-800 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-purple-600">
               <UsersIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
                 Miembros del grupo
               </h2>
               {members && (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-500 dark:text-slate-200">
                   {members.length}{' '}
                   {members.length === 1 ? 'miembro' : 'miembros'}
                 </p>
@@ -119,7 +119,7 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
               size="sm"
               onPress={() => setIsInviteModalOpen(true)}
               startContent={<PlusIcon className="h-4 w-4" />}
-              className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+              className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:bg-brand-purple-800 dark:text-slate-100 dark:hover:border-brand-purple-800 dark:hover:bg-brand-purple-950"
             >
               <span className="whitespace-nowrap">Invitar miembro</span>
             </Button>
@@ -139,7 +139,7 @@ export const BandMembers = ({ bandId }: BandMembersProps) => {
               ))}
             </div>
           ) : (
-            <p className="py-4 text-center text-gray-500">
+            <p className="py-4 text-center text-gray-500 dark:text-gray-200">
               No hay miembros en este grupo
             </p>
           )}
@@ -173,7 +173,7 @@ const MemberCard = ({
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50">
+      <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-brand-purple-950">
         <div className="flex items-center gap-3">
           <User
             name={member.user.name}
@@ -224,7 +224,7 @@ const MemberCard = ({
               }
               onPress={() => setIsEditModalOpen(true)}
             >
-              <EditIcon className="h-4 w-4" />
+              <EditIcon className="h-4 w-4 dark:text-brand-purple-200" />
             </Button>
           )}
         </div>

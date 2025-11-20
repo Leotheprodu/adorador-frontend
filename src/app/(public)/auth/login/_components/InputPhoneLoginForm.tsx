@@ -24,10 +24,10 @@ export const InputPhoneLoginForm = ({
         onClear={() => handleOnClear('phone')}
         label="Número de WhatsApp"
         placeholder="+50677778888"
-        className=""
+        className="text-gray-900 dark:text-brand-purple-200"
         variant="underlined"
         startContent={
-          <PhoneIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />
+          <PhoneIcon className="pointer-events-none flex-shrink-0 text-2xl text-brand-purple-600 dark:text-brand-purple-300" />
         }
         autoComplete="tel"
         value={phone}

@@ -519,7 +519,7 @@ export const FeedClient = () => {
           <div className="space-y-4">
             {posts.length === 0 ? (
               <div className="py-12 text-center">
-                <p className="text-default-500">
+                <p className="text-foreground-500">
                   Aún no hay publicaciones en el feed. ¡Usa el formulario de
                   arriba para crear la primera publicación!
                 </p>

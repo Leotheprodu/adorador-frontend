@@ -30,7 +30,7 @@ export const DeleteSongButton = ({
       <Button
         size="sm"
         onClick={onOpen}
-        className="border-2 border-red-200 bg-white font-semibold text-red-600 transition-all hover:border-red-300 hover:bg-red-50"
+        className="border-2 border-red-200 bg-white font-semibold text-red-600 transition-all hover:border-red-300 hover:bg-red-50 dark:border-red-700 dark:bg-gray-900 dark:text-red-400 dark:hover:border-red-400 dark:hover:bg-gray-800"
         startContent={<TrashIcon className="h-4 w-4" />}
       >
         Eliminar
@@ -39,10 +39,10 @@ export const DeleteSongButton = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 dark:bg-gray-900">
                 Confirmar eliminación
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="dark:bg-gray-950">
                 <p>
                   ¿Estás seguro de que deseas eliminar la canción{' '}
                   <strong>&quot;{songTitle}&quot;</strong>?
@@ -51,7 +51,7 @@ export const DeleteSongButton = ({
                   Esta acción no se puede deshacer.
                 </p>
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter className="dark:bg-gray-900">
                 <Button color="default" variant="light" onPress={onClose}>
                   Cancelar
                 </Button>

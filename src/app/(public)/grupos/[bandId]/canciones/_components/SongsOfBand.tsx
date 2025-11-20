@@ -100,7 +100,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
       isLoading={isLoading}
     >
       {/* Header mejorado con gradiente */}
-      <div className="mb-6 rounded-2xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-6 shadow-lg backdrop-blur-sm">
+      <div className="mb-6 rounded-2xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-6 shadow-lg backdrop-blur-sm dark:bg-gray-900 dark:bg-none dark:shadow-none">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -114,10 +114,10 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                 </small>
               </button>
               <div>
-                <h1 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
+                <h1 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl dark:bg-gradient-to-r dark:from-brand-purple-300 dark:to-brand-blue-300">
                   Repertorio Musical
                 </h1>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-300">
                   {filteredSongs?.length || 0} de {data?.length || 0} canciones
                 </p>
               </div>
@@ -141,7 +141,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                 placeholder="Buscar por título, artista, tonalidad o tipo..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-purple-600 focus:outline-none focus:ring-2 focus:ring-brand-purple-200"
+                className="w-full rounded-lg border-2 border-slate-200 bg-white/80 py-2 pl-10 pr-4 text-sm transition-all duration-200 focus:border-brand-purple-600 focus:outline-none focus:ring-2 focus:ring-brand-purple-200 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:placeholder:text-slate-400"
               />
             </div>
 
@@ -151,8 +151,8 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                 onClick={() => setSongTypeFilter('all')}
                 className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                   songTypeFilter === 'all'
-                    ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
-                    : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
+                    ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm dark:from-brand-purple-400 dark:to-brand-blue-400'
+                    : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-200 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800'
                 }`}
               >
                 Todas
@@ -161,8 +161,8 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                 onClick={() => setSongTypeFilter('worship')}
                 className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                   songTypeFilter === 'worship'
-                    ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
-                    : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
+                    ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm dark:from-brand-purple-400 dark:to-brand-blue-400'
+                    : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-200 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800'
                 }`}
               >
                 🙏 Adoración
@@ -171,8 +171,8 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
                 onClick={() => setSongTypeFilter('praise')}
                 className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                   songTypeFilter === 'praise'
-                    ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
-                    : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
+                    ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm dark:from-brand-purple-400 dark:to-brand-blue-400'
+                    : 'border-2 border-slate-200 bg-white/80 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-200 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800'
                 }`}
               >
                 🎉 Alabanza
@@ -189,10 +189,10 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
 
       {/* Tabla única de canciones */}
       {filteredSongs && filteredSongs.length > 0 ? (
-        <div className="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm">
+        <div className="mb-6 overflow-hidden rounded-2xl bg-white/80 shadow-lg ring-1 ring-slate-200/50 backdrop-blur-sm dark:bg-gray-950 dark:ring-slate-800 dark:shadow-none">
           <div className="max-w-full overflow-x-auto">
             <table className="w-full min-w-full">
-              <thead className="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group">
+              <thead className="hidden border-b border-slate-200 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:table-header-group dark:border-slate-800 dark:bg-gray-900 dark:text-slate-300">
                 <tr>
                   <th className="px-4 py-3 text-left">Título</th>
                   <th className="px-4 py-3 text-left">Artista</th>

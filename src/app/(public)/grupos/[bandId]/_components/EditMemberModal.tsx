@@ -121,7 +121,7 @@ export const EditMemberModal = ({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="md">
       <ModalContent>
-        <ModalHeader>
+        <ModalHeader className="dark:bg-gray-950">
           <h3 className="text-xl font-semibold">
             {isSelf ? 'Editar mi perfil en el grupo' : 'Editar miembro'}
           </h3>

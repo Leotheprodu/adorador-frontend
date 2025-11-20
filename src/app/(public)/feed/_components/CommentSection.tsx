@@ -155,7 +155,7 @@ export const CommentSection = ({
 
       {/* Lista de comentarios */}
       {comments.length === 0 ? (
-        <div className="py-8 text-center text-default-400">
+        <div className="py-8 text-center text-foreground-400">
           {isRequest ? (
             <>
               <p>Aún no hay canciones compartidas</p>
@@ -273,11 +273,11 @@ const CommentItem = ({
                 <span className="text-small font-semibold">
                   {comment.author.name}
                 </span>
-                <span className="text-tiny text-default-400">
+                <span className="text-tiny text-foreground-400">
                   {formatRelativeTime(comment.createdAt)}
                 </span>
               </div>
-              <p className="text-small text-default-700">{comment.content}</p>
+              <p className="text-small text-foreground-700">{comment.content}</p>
 
               {/* Canción compartida */}
               {comment.sharedSong && (
@@ -416,7 +416,7 @@ const CommentItem = ({
                 <Card className="mt-3">
                   <CardBody>
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-small text-default-600">
+                      <span className="text-small text-foreground-600">
                         Respondiendo a este comentario
                       </span>
                       <Button size="sm" variant="light" onPress={onCancelReply}>

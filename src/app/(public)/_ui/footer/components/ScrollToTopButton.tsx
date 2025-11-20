@@ -13,10 +13,10 @@ const ScrollToTopButton = () => {
 
   return (
     <Button
-      className="absolute right-0 top-[-5rem] z-30 m-0 h-[5rem] w-[5rem] scale-75 rounded-full bg-slate-800/75 p-0"
+      className="absolute right-0 top-[-5rem] z-30 m-0 h-[5rem] w-[5rem] scale-75 rounded-full bg-slate-800/75 p-0 dark:bg-slate-700/75"
       onClick={scrollToTop}
     >
-      <ArrowUpIcon className="m-0 p-0 text-9xl text-slate-400" />
+      <ArrowUpIcon className="m-0 p-0 text-9xl text-slate-400 dark:text-slate-300" />
     </Button>
   );
 };

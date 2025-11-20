@@ -63,25 +63,25 @@ export const RehearsalControlsModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalContent>
-        <ModalHeader className="flex items-center gap-3">
-          <GearIcon className="h-5 w-5 text-slate-600" />
+        <ModalHeader className="flex items-center gap-3 dark:bg-gray-900">
+          <GearIcon className="h-5 w-5 text-slate-600 dark:text-slate-300" />
           <div>
-            <h3 className="text-lg font-bold text-slate-900">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
               Controles de Ensayo
             </h3>
-            <p className="text-xs font-normal text-slate-500">
+            <p className="text-xs font-normal text-slate-500 dark:text-slate-400">
               Ajusta la visualización para practicar
             </p>
           </div>
         </ModalHeader>
-        <ModalBody className="space-y-6 py-6">
+        <ModalBody className="space-y-6 py-6 dark:bg-gray-950">
           {/* Transpose Control */}
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-slate-700">
+              <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Transposición
               </h4>
-              <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+              <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700 dark:bg-gray-900 dark:text-slate-100">
                 {transpose > 0 ? '+' : ''}
                 {transpose}
               </span>
@@ -89,24 +89,24 @@ export const RehearsalControlsModal = ({
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={() => handleTransposeChange(transpose - 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
               </button>
               <button
                 onClick={() => handleTransposeChange(0)}
-                className="rounded-lg border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50"
+                className="rounded-lg border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800"
               >
                 Resetear
               </button>
               <button
                 onClick={() => handleTransposeChange(transpose + 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
               >
                 <ArrowRightIcon className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-2 text-center text-xs text-slate-500">
+            <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-400">
               Cambia la tonalidad sin modificar la canción
             </p>
           </div>
@@ -114,10 +114,10 @@ export const RehearsalControlsModal = ({
           {/* Lyrics Scale Control */}
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-slate-700">
+              <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Tamaño de Letra
               </h4>
-              <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+              <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700 dark:bg-gray-900 dark:text-slate-100">
                 {eventConfig.lyricsScale}x
               </span>
             </div>
@@ -136,7 +136,7 @@ export const RehearsalControlsModal = ({
                     });
                   }
                 }}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-xl font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-xl font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 -
               </button>
@@ -151,7 +151,7 @@ export const RehearsalControlsModal = ({
                     lyricsScale: 1,
                   });
                 }}
-                className="rounded-lg border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50"
+                className="rounded-lg border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800"
               >
                 Normal
               </button>
@@ -169,7 +169,7 @@ export const RehearsalControlsModal = ({
                     });
                   }
                 }}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-xl font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-xl font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 +
               </button>
@@ -177,8 +177,8 @@ export const RehearsalControlsModal = ({
           </div>
 
           {/* Checkboxes */}
-          <div className="border-t border-slate-200 pt-4">
-            <h4 className="mb-3 text-sm font-semibold text-slate-700">
+          <div className="border-t border-slate-200 pt-4 dark:border-slate-700">
+            <h4 className="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
               Opciones de Visualización
             </h4>
 
@@ -198,7 +198,7 @@ export const RehearsalControlsModal = ({
                   });
                 }}
               >
-                <span className="text-sm text-slate-700">Mostrar Acordes</span>
+                <span className="text-sm text-slate-700 dark:text-slate-100">Mostrar Acordes</span>
               </Checkbox>
 
               {eventConfig.showChords && (
@@ -224,7 +224,7 @@ export const RehearsalControlsModal = ({
                       });
                     }}
                   >
-                    <span className="text-xs text-slate-600">
+                    <span className="text-xs text-slate-600 dark:text-slate-300">
                       Notación Americana (A, B, C...)
                     </span>
                   </Checkbox>
@@ -234,8 +234,8 @@ export const RehearsalControlsModal = ({
           </div>
 
           {/* Info footer */}
-          <div className="rounded-lg bg-slate-50 p-3 text-center">
-            <p className="text-xs text-slate-600">
+          <div className="rounded-lg bg-slate-50 p-3 text-center dark:bg-gray-900">
+            <p className="text-xs text-slate-600 dark:text-slate-300">
               Los cambios se sincronizan automáticamente con eventos activos
             </p>
           </div>

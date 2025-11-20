@@ -2,7 +2,7 @@ import { useStore } from '@nanostores/react';
 import { $lyricSelected, $selectedSongData } from '@stores/event';
 import { useEffect, useRef, useState } from 'react';
 import { LyricsProps } from '../../../_interfaces/eventsInterface';
-import { structureColors, structureLib } from '@global/config/constants';
+import { structureLib } from '@global/config/constants';
 import { useEventGateway } from '../_hooks/useEventGateway';
 import { EventControlsButtonsLirics } from './EventControlsButtonsLirics';
 
@@ -69,50 +69,44 @@ export const EventControlsLyricsSelect = () => {
       <h4 className="mb-3 bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-center text-lg font-bold text-transparent">
         Letras
       </h4>
-      <div className="flex h-full w-full flex-wrap items-center justify-center gap-3 rounded-xl bg-white/70 p-3 shadow-inner backdrop-blur-sm">
+      <div className="flex h-full w-full items-center justify-center gap-3 rounded-xl bg-white/70 p-3 text-slate-800 shadow-inner backdrop-blur-sm dark:bg-black dark:text-white">
         <div
           ref={scrollContainerRef}
-          className="flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-xl bg-gradient-to-br from-slate-50 to-brand-purple-50/20 p-3 shadow-sm sm:h-[22rem]"
+          className="dark:to-brand-blue-950 flex h-[20rem] w-full flex-col items-center overflow-y-auto rounded-xl bg-gradient-to-br from-slate-50 to-brand-purple-50/20 p-3 shadow-sm dark:bg-gradient-to-br dark:from-brand-purple-950 sm:h-[22rem]"
         >
           {lyricsGrouped.map(([structure, lyrics], groupIndex) => (
             <div className="mb-4 w-full" key={groupIndex}>
-              <h2 className="mb-2 rounded-lg bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 px-3 py-2 text-center text-sm font-bold text-brand-purple-700 shadow-sm">
+              <h2 className="mb-2 rounded-lg bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 px-3 py-2 text-center text-sm font-bold text-brand-purple-700 shadow-sm dark:bg-gradient-to-r dark:from-brand-purple-900 dark:to-brand-blue-900 dark:text-brand-purple-200">
                 {structureLib[structure].es}
               </h2>
-              {lyrics.map((lyric, index) => (
-                <div
-                  className="w-full"
-                  key={index}
-                  id={lyric.position.toString()}
-                >
-                  <button
-                    onClick={() => {
-                      handleSelectLyric(lyric.position);
-                    }}
-                    style={{
-                      backgroundColor:
-                        lyricSelected.position > 0 &&
-                        (lyricSelected.position === lyric.position ||
-                          lyricSelected.position + 1 === lyric.position ||
-                          lyricSelected.position + 2 === lyric.position ||
-                          lyricSelected.position + 3 === lyric.position)
-                          ? '#000000'
-                          : structureColors[structure],
-                    }}
-                    className={`mb-1 w-full cursor-pointer rounded-lg px-3 py-2 text-center text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md active:scale-95 ${
-                      lyricSelected.position > 0 &&
-                      (lyricSelected.position === lyric.position ||
-                        lyricSelected.position + 1 === lyric.position ||
-                        lyricSelected.position + 2 === lyric.position ||
-                        lyricSelected.position + 3 === lyric.position)
-                        ? 'text-white ring-2 ring-brand-purple-400 ring-offset-2'
-                        : ''
-                    }`}
+              {lyrics.map((lyric, index) => {
+                const isSelected =
+                  lyricSelected.position > 0 &&
+                  (lyricSelected.position === lyric.position ||
+                    lyricSelected.position + 1 === lyric.position ||
+                    lyricSelected.position + 2 === lyric.position ||
+                    lyricSelected.position + 3 === lyric.position);
+                return (
+                  <div
+                    className="w-full"
+                    key={index}
+                    id={lyric.position.toString()}
                   >
-                    {lyric.lyrics}
-                  </button>
-                </div>
-              ))}
+                    <button
+                      onClick={() => {
+                        handleSelectLyric(lyric.position);
+                      }}
+                      className={`mb-1 w-full cursor-pointer rounded-lg px-3 py-2 text-center text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md active:scale-95 ${
+                        isSelected
+                          ? 'bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 text-black ring-2 ring-brand-purple-400 ring-offset-2 dark:bg-gradient-to-r dark:from-brand-purple-700 dark:to-brand-blue-700 dark:text-white dark:ring-brand-purple-900'
+                          : 'dark:bg-gray-800 dark:text-white dark:hover:bg-brand-purple-900'
+                      }`}
+                    >
+                      {lyric.lyrics}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>

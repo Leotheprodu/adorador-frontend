@@ -178,7 +178,7 @@ export const UpdatingSongList = ({
           footer: 'border-t border-brand-purple-100 py-3',
         }}
       >
-        <ModalContent>
+        <ModalContent className="dark:border-1 dark:border-brand-purple-800 dark:bg-gray-900">
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-0">
@@ -190,7 +190,7 @@ export const UpdatingSongList = ({
                     <h3 className="bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 bg-clip-text text-lg font-bold text-transparent">
                       Editar Canciones
                     </h3>
-                    <p className="text-[10px] font-normal text-slate-500">
+                    <p className="text-[10px] font-normal text-slate-500 dark:text-slate-300">
                       Arrastra • Ajusta el tono • Elimina
                     </p>
                   </div>
@@ -205,8 +205,8 @@ export const UpdatingSongList = ({
                         <div
                           className={`relative flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto rounded-xl border-2 p-2 transition-all duration-200 ${
                             snapshot.isDraggingOver
-                              ? 'border-brand-purple-400 bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 shadow-lg'
-                              : 'border-brand-purple-100 bg-white shadow-sm'
+                              ? 'dark:to-brand-blue-950 border-brand-purple-400 bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 shadow-lg dark:bg-gradient-to-br dark:from-brand-purple-950 dark:via-black'
+                              : 'border-brand-purple-100 bg-white shadow-sm dark:border-brand-blue-900 dark:bg-black'
                           }`}
                           {...provided.droppableProps}
                           ref={provided.innerRef}
@@ -214,7 +214,7 @@ export const UpdatingSongList = ({
                           {songOrder.length === 0 ? (
                             <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
                               <div className="text-3xl">🎵</div>
-                              <p className="text-xs text-slate-500">
+                              <p className="text-xs text-slate-500 dark:text-slate-200">
                                 No hay canciones en este evento
                               </p>
                             </div>

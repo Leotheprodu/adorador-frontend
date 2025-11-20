@@ -7,15 +7,15 @@ export const ResourcesSection = () => {
   const lastsPosts = posts.slice(0, 3);
 
   return (
-    <section className="bg-gray-50 px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <section className="bg-gray-50 px-4 py-16 transition-colors duration-300 dark:bg-gray-950 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 transition-colors duration-300 dark:text-gray-400 sm:text-4xl">
             Recursos para tu{' '}
             <span className="text-gradient-simple">crecimiento espiritual</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto max-w-2xl text-lg text-gray-600 transition-colors duration-300 dark:text-brand-purple-200">
             Artículos y recursos para fortalecer tu ministerio de alabanza
           </p>
         </div>
@@ -26,7 +26,7 @@ export const ResourcesSection = () => {
             <Link
               key={post.id}
               href={`/${post.category}/${post.slug}`}
-              className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 transition-all hover:scale-105 hover:shadow-2xl active:scale-100"
+              className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-100 dark:bg-brand-purple-900 dark:ring-brand-purple-800"
             >
               {/* Image Container with Gradient Overlay */}
               <div className="relative h-48 w-full overflow-hidden">
@@ -42,10 +42,10 @@ export const ResourcesSection = () => {
 
               {/* Content */}
               <div className="flex flex-grow flex-col p-6">
-                <h3 className="mb-3 text-xl font-bold text-slate-800 transition-colors group-hover:text-brand-purple-500">
+                <h3 className="mb-3 text-xl font-bold text-slate-800 transition-colors duration-300 group-hover:text-brand-purple-500 dark:text-brand-pink-200">
                   {post.title}
                 </h3>
-                <p className="mb-4 flex-grow text-sm text-slate-600">
+                <p className="mb-4 flex-grow text-sm text-slate-600 transition-colors duration-300 dark:text-brand-purple-200">
                   {(() => {
                     const paragraph = post.content.find(
                       (el) =>
@@ -59,7 +59,7 @@ export const ResourcesSection = () => {
                       : '';
                   })()}
                 </p>
-                <div className="mt-auto flex items-center gap-2 text-sm text-slate-500">
+                <div className="mt-auto flex items-center gap-2 text-sm text-slate-500 transition-colors duration-300 dark:text-brand-purple-300">
                   <span>📅</span>
                   <p>
                     {new Date(post.date).toLocaleDateString('es-ES', {
@@ -81,7 +81,7 @@ export const ResourcesSection = () => {
         <div className="mt-12 text-center">
           <SecondaryButton
             href="/discipulado"
-            className="border-brand-purple-600 text-brand-purple-600 hover:bg-brand-purple-600 hover:text-white"
+            className="border-brand-purple-600 bg-white text-brand-purple-600 hover:bg-brand-purple-600 hover:text-white dark:border-brand-purple-300 dark:bg-brand-purple-900 dark:text-brand-purple-200 dark:hover:bg-brand-purple-700 dark:hover:text-white"
             endContent={<span className="text-lg">→</span>}
           >
             Ver todos los recursos

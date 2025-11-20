@@ -24,10 +24,10 @@ export const InputEmailLoginForm = ({
         onClear={() => handleOnClear('email')}
         label="Correo Electrónico"
         placeholder="Ingresa tu correo electrónico"
-        className=""
+        className="text-gray-900 dark:text-brand-purple-200"
         variant="underlined"
         startContent={
-          <MailIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />
+          <MailIcon className="pointer-events-none flex-shrink-0 text-2xl text-brand-purple-600 dark:text-brand-purple-300" />
         }
         autoComplete="username"
         value={email}

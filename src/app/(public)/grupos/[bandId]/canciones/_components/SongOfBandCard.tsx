@@ -39,11 +39,12 @@ export const SongOfBandCard = ({
   });
   return (
     <div
-      className={`group relative overflow-hidden rounded-xl border-2 bg-gradient-to-br from-white to-brand-purple-50/30 p-4 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-xl ${
-        selectedSong?.id === song.id
-          ? 'border-brand-purple-400 ring-2 ring-brand-purple-200'
-          : 'border-transparent hover:border-brand-purple-200'
-      }`}
+      className={`group relative overflow-hidden rounded-xl border-2 bg-gradient-to-br from-white to-brand-purple-50/30 p-4 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-xl
+        dark:bg-gray-900 dark:border-slate-800 dark:shadow-none
+        ${selectedSong?.id === song.id
+          ? 'border-brand-purple-400 ring-2 ring-brand-purple-200 dark:border-brand-purple-500 dark:ring-brand-purple-300'
+          : 'border-transparent hover:border-brand-purple-200 dark:hover:border-brand-purple-400'}
+      `}
     >
       {/* Efecto decorativo en hover */}
       <div className="absolute right-0 top-0 h-20 w-20 -translate-y-8 translate-x-8 rounded-full bg-gradient-to-br from-brand-purple-200 to-brand-blue-200 opacity-0 blur-2xl transition-opacity duration-200 group-hover:opacity-100"></div>
@@ -55,7 +56,7 @@ export const SongOfBandCard = ({
             href={`/grupos/${bandId}/canciones/${song.id}`}
             className="flex-1"
           >
-            <h3 className="font-semibold text-slate-800 transition-colors duration-200 group-hover:text-brand-purple-700">
+            <h3 className="font-semibold text-slate-800 transition-colors duration-200 group-hover:text-brand-purple-700 dark:text-slate-100 dark:group-hover:text-brand-purple-300">
               {song.title}
             </h3>
           </Link>

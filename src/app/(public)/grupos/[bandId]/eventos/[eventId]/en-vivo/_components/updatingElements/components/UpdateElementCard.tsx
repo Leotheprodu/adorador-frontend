@@ -35,10 +35,10 @@ export const UpdateElementCard = ({
           {...provided.dragHandleProps}
           className={`group relative flex items-center justify-between gap-2 rounded-lg border-2 p-2 transition-all duration-200 ${
             snapshot.isDragging
-              ? 'z-50 scale-105 border-brand-purple-400 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 shadow-2xl'
+              ? 'dark:to-brand-blue-950 z-50 scale-105 border-brand-purple-400 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 shadow-2xl dark:bg-gradient-to-r dark:from-brand-purple-950 dark:via-black dark:to-brand-blue-900'
               : isMarkedForDeletion
-                ? 'border-red-300 bg-red-50 opacity-60'
-                : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md'
+                ? 'border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900'
+                : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md dark:border-brand-blue-900 dark:bg-black'
           }`}
         >
           {/* Drag Handle Indicator */}
@@ -55,24 +55,24 @@ export const UpdateElementCard = ({
                 <span
                   className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
                     isMarkedForDeletion
-                      ? 'bg-red-200 text-red-700'
-                      : 'bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-brand-purple-700'
+                      ? 'bg-red-200 text-red-700 dark:bg-red-700 dark:text-red-200'
+                      : 'bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-brand-purple-700 dark:bg-gradient-to-br dark:from-brand-purple-800 dark:to-brand-blue-800 dark:text-brand-purple-200'
                   }`}
                 >
                   {data.order}
                 </span>
                 <div className="min-w-0 flex-1">
                   <p
-                    className={`truncate text-sm font-semibold ${isMarkedForDeletion ? 'text-red-600 line-through' : 'text-slate-800'}`}
+                    className={`truncate text-sm font-semibold ${isMarkedForDeletion ? 'text-red-600 line-through' : 'text-slate-800 dark:text-slate-100'}`}
                   >
                     {data.song.title}
                   </p>
-                  <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
-                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5">
+                  <div className="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-300">
+                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 dark:bg-slate-800">
                       {songTypes[data.song.songType].es}
                     </span>
                     {data.song.key !== null && (
-                      <span className="rounded-full bg-brand-purple-100 px-1.5 py-0.5 font-semibold text-brand-purple-700">
+                      <span className="rounded-full bg-brand-purple-100 px-1.5 py-0.5 font-semibold text-brand-purple-700 dark:bg-slate-800 dark:text-brand-purple-200">
                         {handleTranspose(data.song.key, data.transpose)}
                       </span>
                     )}

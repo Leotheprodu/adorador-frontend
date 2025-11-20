@@ -157,7 +157,7 @@ export const AddNewSongtoChurchAndEvent = ({
       size="lg"
       scrollBehavior="inside"
       classNames={{
-        base: 'bg-white max-h-[90vh]',
+        base: 'bg-white max-h-[90vh] dark:bg-gray-900',
         header: 'border-b border-slate-200 py-3',
         body: 'py-3 px-4',
         footer: 'border-t border-slate-200 py-3',
@@ -192,7 +192,7 @@ export const AddNewSongtoChurchAndEvent = ({
                 size="sm"
                 className="mt-2"
                 classNames={{
-                  label: 'text-sm text-slate-600',
+                  label: 'text-sm text-slate-600 dark:text-slate-300',
                 }}
               >
                 Ir a la canción después de crear

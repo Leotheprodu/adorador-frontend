@@ -32,10 +32,12 @@ export const EventTableRow = ({
   event,
   bandId,
   refetch,
+  rowClassName = '',
 }: {
   event: EventsProps;
   bandId: string;
   refetch?: () => void;
+  rowClassName?: string;
 }) => {
   const user = useStore($user);
   const {
@@ -73,12 +75,10 @@ export const EventTableRow = ({
   return (
     <>
       <tr
-        className={`group border-b border-slate-100 transition-colors duration-150 hover:bg-slate-50 ${
-          isUpcoming ? 'bg-emerald-50/30' : ''
-        }`}
+        className={`group ${rowClassName} ${isUpcoming ? 'bg-emerald-50/30 dark:bg-emerald-900/20' : ''}`}
       >
         {/* Estado - Visible en mobile y desktop */}
-        <td className="px-3 py-3 sm:px-4 sm:py-3.5">
+        <td className="px-3 py-3 text-slate-700 dark:text-slate-100 sm:px-4 sm:py-3.5">
           <div
             className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold sm:px-2.5 ${
               isUpcoming
@@ -104,12 +104,12 @@ export const EventTableRow = ({
         </td>
 
         {/* Título y fecha/hora en mobile */}
-        <td className="px-3 py-3 sm:px-4 sm:py-3.5">
+        <td className="px-3 py-3 text-slate-700 dark:text-slate-100 sm:px-4 sm:py-3.5">
           <Link
             href={`/grupos/${bandId}/eventos/${event.id}`}
             className="flex flex-col gap-1"
           >
-            <span className="font-medium text-slate-900 transition-colors group-hover:text-brand-purple-600">
+            <span className="font-medium text-slate-900 transition-colors group-hover:text-brand-purple-600 dark:text-slate-100 dark:group-hover:text-brand-purple-300">
               {event.title}
             </span>
             {/* Info adicional solo en mobile */}
@@ -134,33 +134,33 @@ export const EventTableRow = ({
         </td>
 
         {/* Fecha - Solo Desktop */}
-        <td className="hidden px-4 py-3.5 sm:table-cell">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <CalendarIcon className="h-4 w-4 text-slate-400" />
+        <td className="hidden px-4 py-3.5 text-slate-600 dark:text-slate-100 sm:table-cell">
+          <div className="flex items-center gap-2 text-sm">
+            <CalendarIcon className="h-4 w-4 text-slate-400 dark:text-slate-300" />
             <span>{formatDate(event.date)}</span>
           </div>
         </td>
 
         {/* Hora - Solo Desktop */}
-        <td className="hidden px-4 py-3.5 sm:table-cell">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <ClockIcon className="h-4 w-4 text-slate-400" />
+        <td className="hidden px-4 py-3.5 text-slate-600 dark:text-slate-100 sm:table-cell">
+          <div className="flex items-center gap-2 text-sm">
+            <ClockIcon className="h-4 w-4 text-slate-400 dark:text-slate-300" />
             <span>{formatTime(event.date)}</span>
           </div>
         </td>
 
         {/* Tiempo restante - Solo Desktop y eventos futuros */}
-        <td className="hidden px-4 py-3.5 sm:table-cell">
+        <td className="hidden px-4 py-3.5 text-slate-600 dark:text-slate-100 sm:table-cell">
           {isUpcoming && eventTimeLeft && (
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 px-3 py-1.5 text-xs font-semibold text-brand-purple-700 ring-1 ring-brand-purple-200/50">
-              <ClockIcon className="h-3 w-3" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 px-3 py-1.5 text-xs font-semibold text-brand-purple-700 ring-1 ring-brand-purple-200/50 dark:bg-gradient-to-r dark:from-brand-purple-900 dark:to-brand-blue-900 dark:text-slate-100">
+              <ClockIcon className="h-3 w-3 dark:text-slate-100" />
               <span>{eventTimeLeft}</span>
             </div>
           )}
         </td>
 
         {/* Acciones */}
-        <td className="px-3 py-3 text-right sm:px-4 sm:py-3.5">
+        <td className="px-3 py-3 text-right text-slate-700 dark:text-slate-100 sm:px-4 sm:py-3.5">
           <Dropdown>
             <DropdownTrigger>
               <Button

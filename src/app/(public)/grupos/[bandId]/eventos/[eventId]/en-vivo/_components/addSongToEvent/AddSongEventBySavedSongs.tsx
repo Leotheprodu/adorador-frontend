@@ -168,7 +168,7 @@ export const AddSongEventBySavedSongs = ({
       size="2xl"
       scrollBehavior="inside"
       classNames={{
-        base: 'bg-white max-h-[90vh]',
+        base: 'bg-white dark:bg-gray-900 max-h-[90vh]',
         header: 'border-b border-slate-200 py-3',
         body: 'py-3 px-4 overflow-visible',
         footer: 'border-t border-slate-200 py-3',
@@ -201,7 +201,7 @@ export const AddSongEventBySavedSongs = ({
                 {/* Search input */}
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <SearchIcon className="h-5 w-5 text-slate-400" />
+                    <SearchIcon className="h-5 w-5 text-slate-400 dark:text-slate-100" />
                   </div>
                   <input
                     type="text"
@@ -229,7 +229,7 @@ export const AddSongEventBySavedSongs = ({
                     className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                       songTypeFilter === 'worship'
                         ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
-                        : 'border-2 border-slate-200 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
+                        : 'border-2 border-slate-200 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50 dark:text-slate-100'
                     }`}
                   >
                     🙏 Adoración
@@ -239,7 +239,7 @@ export const AddSongEventBySavedSongs = ({
                     className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                       songTypeFilter === 'praise'
                         ? 'bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white shadow-sm'
-                        : 'border-2 border-slate-200 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50'
+                        : 'border-2 border-slate-200 text-slate-600 hover:border-brand-purple-300 hover:bg-slate-50 dark:text-slate-100'
                     }`}
                   >
                     🎉 Alabanza
@@ -259,17 +259,17 @@ export const AddSongEventBySavedSongs = ({
                             key={song.id}
                             className={`group cursor-pointer rounded-lg border-2 px-3 py-2.5 transition-all duration-200 ${
                               isSelected
-                                ? 'border-brand-purple-600 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 shadow-sm'
-                                : 'border-slate-200 hover:border-brand-purple-300 hover:bg-slate-50 hover:shadow-sm'
+                                ? 'border-brand-purple-600 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 shadow-sm dark:border-brand-purple-400 dark:from-brand-purple-900 dark:to-brand-blue-900'
+                                : 'border-slate-200 hover:border-brand-purple-300 hover:bg-slate-50 hover:shadow-sm dark:border-slate-700 dark:bg-black dark:hover:bg-gray-800'
                             }`}
                             onClick={() => handleSelectSong(song.id)}
                           >
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
-                                <p className="font-semibold text-slate-800">
+                                <p className="font-semibold text-slate-800 dark:text-slate-100">
                                   {song.title}
                                 </p>
-                                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
                                   {song.artist && (
                                     <span className="flex items-center gap-1">
                                       <MicrophoneIcon className="h-3 w-3" />{' '}

@@ -81,7 +81,7 @@ export const SongQuickViewModal = ({
         )}
 
         {/* Lyrics Section */}
-        <div className="font-medium leading-relaxed text-slate-800">
+        <div className="font-medium leading-relaxed text-foreground">
           {lyric.lyrics}
         </div>
       </div>
@@ -109,7 +109,7 @@ export const SongQuickViewModal = ({
                     {post.sharedSong?.title}
                   </h3>
                   {post.sharedSong?.artist && (
-                    <p className="text-sm text-default-500">
+                    <p className="text-sm text-foreground-500">
                       {post.sharedSong.artist}
                     </p>
                   )}
@@ -149,7 +149,7 @@ export const SongQuickViewModal = ({
                 </div>
               ) : !songData?.lyrics || songData.lyrics.length === 0 ? (
                 <div className="py-12 text-center">
-                  <p className="text-default-500">
+                  <p className="text-foreground-500">
                     Esta canción aún no tiene letra registrada
                   </p>
                 </div>

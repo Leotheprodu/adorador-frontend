@@ -179,19 +179,19 @@ export const MusicPlayer = () => {
     <>
       {selectedBeat && (
         <section className="sticky bottom-0 z-[999] flex h-[4rem] w-full items-center justify-center bg-negro [grid-area:musicPlayer]">
-          <div className="peer absolute top-[-4px] z-30 flex h-1 w-full overflow-hidden opacity-85 duration-200 hover:top-[-2rem] hover:h-[2rem] hover:opacity-100">
+          <div className="peer absolute z-30 flex w-full overflow-hidden duration-200 top-[-2rem] h-[2rem]">
             <div
-              className="absolute left-0 z-40 h-[2rem] bg-primary-800 duration-1000 ease-linear"
+              className="absolute left-0 z-40 h-[2rem] bg-brand-blue-700 duration-1000 ease-linear"
               style={{ width: `${progress * 100}%` }}
             />
             <div
-              className="absolute left-0 z-30 h-[2rem] bg-primary-500"
+              className="absolute left-0 z-30 h-[2rem] bg-brand-purple-700"
               style={{ width: `${100}%` }}
             />
-            <p className="absolute top-[.2rem] z-50 ml-4 flex text-terciario">
+            <p className="absolute top-[.2rem] z-50 ml-4 flex text-white">
               {progressDuration}
             </p>
-            <p className="absolute right-0 top-[.2rem] z-50 mr-4 flex text-terciario">
+            <p className="absolute right-0 top-[.2rem] z-50 mr-4 flex text-white">
               {duration}
             </p>
             <input
@@ -201,17 +201,17 @@ export const MusicPlayer = () => {
               step={0.01}
               value={progress}
               onChange={handleonChangeRange}
-              className="absolute z-50 h-[2rem] w-full cursor-pointer opacity-0"
+              className="absolute z-50 h-[4rem] w-full cursor-pointer opacity-0"
             />
           </div>
 
-          <div
+          {/* <div
             className="pointer-events-none absolute top-[-.4rem] z-30 h-[.7rem] w-[.7rem] rounded-full bg-primary-200 opacity-100 peer-hover:opacity-0"
             style={{
               left: `${progress * 100 - 0.3}%`,
               transition: 'left 1s linear',
             }}
-          />
+          /> */}
 
           <div className="absolute flex h-[4rem] w-full items-center justify-center overflow-hidden">
             <div className="pointer-events-none absolute z-10 h-screen w-screen blur-3xl">

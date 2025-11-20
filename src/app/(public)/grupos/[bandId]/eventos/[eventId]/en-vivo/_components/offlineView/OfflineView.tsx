@@ -77,14 +77,14 @@ export const OfflineView = () => {
           <>
             {/* Overlay backdrop */}
             <div
-              className="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-[9998] bg-black/50 dark:bg-black backdrop-blur-sm"
               onClick={handleOpenOffLineView}
             />
 
             {/* Modal full screen */}
-            <div className="fixed inset-0 z-[9999] flex h-screen w-screen flex-col bg-white">
+            <div className="fixed inset-0 z-[9999] flex h-screen w-screen flex-col bg-white dark:bg-black">
               {/* Header de controles */}
-              <div className="sticky top-0 z-50 flex items-center justify-between border-b border-brand-purple-200 bg-gradient-light px-4 py-3 shadow-md backdrop-blur-md">
+              <div className="sticky top-0 z-50 flex items-center justify-between border-b border-brand-purple-200 dark:border-brand-purple-900 bg-gray-100 dark:bg-gray-900 px-4 py-3 shadow-md backdrop-blur-md">
                 <div className="flex items-center gap-3">
                   <UnpluggedIcon className="h-6 w-6 text-brand-purple-600" />
                   <h2 className="text-lg font-semibold text-gradient-primary">
@@ -112,21 +112,21 @@ export const OfflineView = () => {
               </div>
 
               {/* Contenido scrollable */}
-              <div className="flex flex-1 flex-col items-center overflow-y-auto bg-gradient-subtle px-4 py-6">
-                <div ref={componentRef} className="max-w-[50rem]">
-                  <div className="flex flex-col gap-2 text-slate-800">
+              <div className="flex flex-1 flex-col items-center overflow-y-auto bg-slate-50 dark:bg-slate-950 px-4 py-6">
+                <div ref={componentRef} className="">
+                  <div className="flex flex-col gap-2 text-slate-800 dark:text-slate-100">
                     {event?.songs
                       .sort((a, b) => a.order - b.order)
                       .map((data) => (
                         <div
                           key={data.song.id}
-                          className="mb-10 rounded-xl border border-brand-purple-200 bg-white p-6 shadow-md transition-all hover:shadow-lg"
+                          className="mb-10 rounded-xl border border-brand-purple-200 dark:border-brand-purple-950 bg-white dark:bg-black p-6 shadow-md transition-all hover:shadow-lg"
                         >
-                          <h2 className="mb-4 text-center text-2xl font-bold text-brand-purple-600">
+                          <h2 className="mb-4 text-center text-2xl font-bold text-brand-purple-600 dark:text-brand-purple-50">
                             {data.order}) {data.song.title}{' '}
                             {data.song.key !== null &&
                               eventConfig.showChords && (
-                                <span className="text-lg font-normal text-brand-blue-600">
+                                <span className="text-lg font-normal text-brand-blue-600 dark:text-brand-blue-300">
                                   (
                                   {handleTranspose(
                                     data.song.key,

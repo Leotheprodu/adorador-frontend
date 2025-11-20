@@ -63,7 +63,7 @@ export const EventControlsSongsList = ({
             />
           </div>
 
-          <div className="flex h-[12rem] w-full flex-col gap-2 overflow-y-auto rounded-xl bg-white/70 p-3 text-slate-800 shadow-inner backdrop-blur-sm sm:h-[14rem]">
+          <div className="flex h-[12rem] w-full flex-col gap-2 overflow-y-auto rounded-xl bg-white/70 p-3 text-slate-800 shadow-inner backdrop-blur-sm dark:bg-black dark:text-white sm:h-[14rem]">
             {isLoading && (
               <div className="flex h-full items-center justify-center">
                 <Spinner color="secondary" />
@@ -76,8 +76,8 @@ export const EventControlsSongsList = ({
                   onClick={() => handleClickSong(data.song.id)}
                   className={`flex min-h-[3.5rem] items-center rounded-xl border-2 p-3 shadow-sm transition-all duration-200 active:scale-95 ${
                     selectedSongId === data.song.id
-                      ? 'border-brand-purple-300 bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 shadow-md ring-2 ring-brand-purple-200'
-                      : 'border-transparent bg-white hover:border-brand-purple-200 hover:bg-gradient-to-r hover:from-brand-purple-50 hover:to-brand-blue-50 hover:shadow-md'
+                      ? 'border-brand-purple-300 bg-gradient-to-r from-brand-purple-100 to-brand-blue-100 shadow-md ring-2 ring-brand-purple-200 dark:bg-gradient-to-r dark:from-brand-purple-900 dark:to-brand-blue-900 dark:ring-brand-purple-700'
+                      : 'dark:hover:gradient-to-r border-transparent bg-white hover:border-brand-purple-200 hover:bg-gradient-to-r hover:from-brand-purple-50 hover:to-brand-blue-50 dark:bg-gray-800 dark:text-white dark:hover:border-brand-purple-600 dark:hover:from-brand-purple-900 dark:hover:to-brand-blue-900 dark:hover:shadow-md'
                   } disabled:active:scale-100`}
                   key={data.song.id}
                 >
@@ -86,19 +86,19 @@ export const EventControlsSongsList = ({
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
                         selectedSongId === data.song.id
                           ? 'bg-gradient-to-br from-brand-purple-500 to-brand-blue-500 text-white shadow-md'
-                          : 'bg-slate-200 text-slate-600'
+                          : 'bg-slate-200 text-slate-600 dark:bg-gray-700 dark:text-gray-300'
                       }`}
                     >
                       {data.order}
                     </span>
                     <p className="flex-1 text-left text-sm font-medium sm:text-base">
                       <span className="font-semibold">{data.song.title}</span>
-                      <span className="text-slate-500">
+                      <span className="text-slate-500 dark:text-slate-200">
                         {' '}
                         · {songTypes[data.song.songType].es}
                       </span>
                       {data.song.key !== null && (
-                        <span className="text-brand-purple-600">
+                        <span className="text-brand-purple-600 dark:text-purple-200">
                           {' '}
                           · {handleTranspose(data.song.key, data.transpose)}
                         </span>

@@ -24,12 +24,12 @@ export const EventControlsButtonsScreen = () => {
     }
   }, []);
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-purple-50/30 p-3 shadow-sm">
+    <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-white to-brand-purple-50/30 p-3 shadow-sm dark:bg-gradient-to-br dark:from-brand-purple-900/50 dark:to-brand-blue-900/50">
       <h3 className="flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-brand-purple-700">
         <GearIcon className="h-4 w-4" /> Pantalla
       </h3>
       <div className="flex items-center justify-center gap-2">
-        <h4 className="text-sm font-medium text-slate-700">
+        <h4 className="text-sm font-medium text-slate-700 dark:text-slate-200">
           Letra:{' '}
           <span className="text-brand-purple-600">
             {eventConfig.lyricsScale.toFixed(2)}
@@ -50,7 +50,7 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:scale-100 dark:text-brand-blue-800"
           >
             <ArrowLeftIcon className="[font-size:1rem]" />
           </button>
@@ -68,14 +68,16 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:scale-100 dark:text-brand-blue-800"
           >
             <ArrowRightIcon className="[font-size:1rem]" />
           </button>
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <h4 className="text-sm font-medium text-slate-700">Fondo</h4>
+        <h4 className="text-sm font-medium text-slate-700 dark:text-slate-200">
+          Fondo
+        </h4>
         <div className="flex items-center justify-center gap-2">
           <button
             onClick={() => {
@@ -90,7 +92,7 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 dark:text-brand-blue-800"
           >
             <ArrowLeftIcon className="[font-size:1rem]" />
           </button>
@@ -107,7 +109,7 @@ export const EventControlsButtonsScreen = () => {
                 });
               }
             }}
-            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95"
+            className="w-15 h-15 cursor-pointer rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 p-2 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md active:scale-95 dark:text-brand-blue-800"
           >
             <ArrowRightIcon className="[font-size:1rem]" />
           </button>

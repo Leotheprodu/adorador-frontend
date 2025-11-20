@@ -8,7 +8,7 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/components/(button|calendar|checkbox|chip|date-input|date-picker|dropdown|image|input|link|listbox|modal|popover|radio|select|slider|spinner|table|ripple|menu|divider|scroll-shadow|spacer).js',
   ],
-  darkMode: 'media', // Desactivar dark mode automático - siempre modo claro
+  darkMode: 'class', // Modo oscuro controlado por clase
   theme: {
     extend: {
       colors: {
@@ -80,6 +80,13 @@ const config: Config = {
           'linear-gradient(to bottom right, #3b82f6, #2563eb)',
         // Degradado para líneas conectoras
         'gradient-connector': 'linear-gradient(to right, #e9d5ff, #bfdbfe)',
+        // Degradados para modo oscuro
+        'gradient-dark-hero':
+          'linear-gradient(to bottom right, #1e1b4b, #1e3a8a, #831843)',
+        'gradient-dark-subtle':
+          'linear-gradient(to bottom right, #0f172a, #1e293b)',
+        'gradient-dark-gray':
+          'linear-gradient(to bottom right, #1e293b, #334155)',
       },
       // Clases de utilidad para text gradients
       textGradient: {

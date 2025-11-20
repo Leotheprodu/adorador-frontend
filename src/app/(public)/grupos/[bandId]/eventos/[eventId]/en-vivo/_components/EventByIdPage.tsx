@@ -141,7 +141,7 @@ export const EventByIdPage = ({
     <div className="mb-40 flex h-full w-full flex-col items-center justify-center px-3 sm:px-4">
       <div className="flex w-full max-w-screen-md flex-col items-center">
         {/* Header mejorado con gradiente sutil y glassmorphism */}
-        <div className="mb-4 w-full rounded-2xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-4 shadow-sm backdrop-blur-sm sm:mb-6">
+        <div className="mb-4 w-full rounded-2xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-4 shadow-sm backdrop-blur-sm sm:mb-6 dark:bg-gradient-to-br dark:from-brand-purple-900/30 dark:via-black/30 dark:to-brand-blue-900/30">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button

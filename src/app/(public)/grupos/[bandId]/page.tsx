@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function BandById({ params }: { params: { bandId: string } }) {
   return (
-    <div className="flex h-full min-h-screen flex-col items-center bg-gradient-to-br from-slate-50 via-white to-brand-purple-50/20 px-4 py-8 pb-20 sm:px-6 sm:py-12">
+    <div className="flex h-full min-h-screen flex-col items-center bg-slate-50 px-4 py-8 pb-20 dark:bg-gray-950 sm:px-6 sm:py-12">
       <section className="w-full max-w-7xl">
         <BandIdMain bandId={params.bandId} />
       </section>

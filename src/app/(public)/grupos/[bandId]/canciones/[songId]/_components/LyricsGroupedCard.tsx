@@ -86,7 +86,7 @@ export const LyricsGroupedCard = ({
 
   return (
     <div
-      className="w-full border-l-4 py-4 pl-4"
+      className="w-full border-l-4 py-4 pl-4 bg-white dark:bg-gray-900"
       style={{
         borderColor: structureColors[structure],
       }}
@@ -136,7 +136,7 @@ export const LyricsGroupedCard = ({
                         onClick={() => {
                           setInsertPosition(lyric.position);
                         }}
-                        className="mb-1 w-full rounded border-2 border-dashed border-slate-200 bg-slate-50/50 py-2 text-xs text-slate-500 opacity-50 transition-all hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600 hover:opacity-100"
+                        className="mb-1 w-full rounded border-2 border-dashed border-slate-200 bg-slate-50/50 py-2 text-xs text-slate-500 opacity-50 transition-all hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600 hover:opacity-100 dark:border-slate-700 dark:bg-gray-800 dark:text-slate-400 dark:hover:border-primary-400 dark:hover:bg-gray-900 dark:hover:text-primary-300"
                       >
                         + Insertar letra aquí
                       </button>
@@ -173,7 +173,7 @@ export const LyricsGroupedCard = ({
                         onClick={() => {
                           setInsertPosition(lyric.position + 1);
                         }}
-                        className="mt-1 w-full rounded border-2 border-dashed border-slate-200 bg-slate-50/50 py-2 text-xs text-slate-500 opacity-50 transition-all hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600 hover:opacity-100"
+                        className="mt-1 w-full rounded border-2 border-dashed border-slate-200 bg-slate-50/50 py-2 text-xs text-slate-500 opacity-50 transition-all hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600 hover:opacity-100 dark:border-slate-700 dark:bg-gray-800 dark:text-slate-400 dark:hover:border-primary-400 dark:hover:bg-gray-900 dark:hover:text-primary-300"
                       >
                         + Insertar letra aquí
                       </button>

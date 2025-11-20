@@ -64,7 +64,7 @@ export const EventControls = ({
   return (
     <div>
       <section
-        className={`mt-5 h-full w-full flex-grow flex-col items-center justify-center gap-3 rounded-2xl bg-gradient-to-br from-white via-slate-50 to-brand-purple-50/30 p-4 shadow-lg backdrop-blur-sm sm:p-6`}
+        className={`mt-5 h-full w-full flex-grow flex-col items-center justify-center gap-3 rounded-2xl bg-gradient-to-br from-white via-slate-50 to-brand-purple-50/30 p-4 shadow-lg backdrop-blur-sm dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-black sm:p-6`}
       >
         <EventControlsSongsList
           params={params}

@@ -27,14 +27,14 @@ export const HowItWorksSection = () => {
   ];
 
   return (
-    <section className="bg-gradient-gray px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <section className="bg-gradient-gray px-4 py-16 transition-colors duration-300 dark:bg-gradient-dark-gray sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 transition-colors duration-300 dark:text-gray-400 sm:text-4xl md:text-5xl">
             Tan fácil como <span className="text-gradient-simple">1, 2, 3</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto max-w-2xl text-lg text-gray-600 transition-colors duration-300 dark:text-brand-purple-200">
             Comienza a usar {appName} en minutos, sin complicaciones técnicas
           </p>
         </div>
@@ -49,21 +49,23 @@ export const HowItWorksSection = () => {
               )}
 
               {/* Card */}
-              <div className="relative rounded-2xl bg-white p-8 shadow-lg transition-all hover:shadow-xl">
+              <div className="relative rounded-2xl bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-xl dark:bg-brand-purple-900">
                 {/* Number Badge */}
                 <div
-                  className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${step.color} text-2xl font-bold text-white shadow-lg`}
+                  className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${step.color} text-2xl font-bold text-white shadow-lg transition-colors duration-300 dark:shadow-brand-purple-950`}
                 >
                   {step.number}
                 </div>
 
                 {/* Title */}
-                <h3 className="mb-3 text-2xl font-bold text-gray-900">
+                <h3 className="mb-3 text-2xl font-bold text-gray-900 transition-colors duration-300 dark:text-brand-pink-200">
                   {step.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600">{step.description}</p>
+                <p className="text-gray-600 transition-colors duration-300 dark:text-brand-purple-200">
+                  {step.description}
+                </p>
               </div>
             </div>
           ))}

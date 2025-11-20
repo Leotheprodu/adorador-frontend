@@ -12,9 +12,14 @@ jest.mock('next/image', () => ({
 }));
 
 jest.mock('next/link', () => {
-  // eslint-disable-next-line react/display-name
-  return ({ children, href }: { children: React.ReactNode; href: string }) => {
-    return <a href={href}>{children}</a>;
+  // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
+  return (props: any) => {
+    const { children, href, ...rest } = props;
+    return (
+      <a href={href} {...rest}>
+        {children}
+      </a>
+    );
   };
 });
 
@@ -80,11 +85,12 @@ jest.mock('@global/content/posts', () => ({
 
 describe('ResourcesSection Component', () => {
   describe('Component Rendering', () => {
-    it('should render the section', () => {
+    it('should render the section with dark mode classes', () => {
       const { container } = render(<ResourcesSection />);
       const section = container.querySelector('section');
       expect(section).toBeInTheDocument();
       expect(section).toHaveClass('bg-gray-50');
+      expect(section?.className).toMatch(/dark:bg-gray-950/);
     });
 
     it('should render section header', () => {
@@ -137,10 +143,41 @@ describe('ResourcesSection Component', () => {
   });
 
   describe('Post Card Styling', () => {
-    it('should render post cards with styling', () => {
+    it('debe renderizar exactamente 3 cards de post con los estilos correctos', () => {
       const { container } = render(<ResourcesSection />);
-      const section = container.querySelector('section');
-      expect(section).toBeInTheDocument();
+      // Buscar los <a> de los posts por href
+      const cards = container.querySelectorAll(
+        'a[href^="/discipulado/post-prueba-"]',
+      );
+      expect(cards.length).toBe(3);
+      cards.forEach((card) => {
+        expect(card.className).toMatch(/bg-white/);
+        expect(card.className).toMatch(/dark:bg-brand-purple-900/);
+        expect(card.className).toMatch(/dark:ring-brand-purple-800/);
+      });
+    });
+
+    it('should render post cards with dark mode classes', () => {
+      const { container } = render(<ResourcesSection />);
+      // Cards deben tener bg-white y dark:bg-brand-purple-900
+      const cards = container.querySelectorAll('.rounded-2xl');
+      expect(cards.length).toBe(3);
+      cards.forEach((card) => {
+        expect(card.className).toMatch(/bg-white/);
+        expect(card.className).toMatch(/dark:bg-brand-purple-900/);
+        expect(card.className).toMatch(/dark:ring-brand-purple-800/);
+        expect(card.className).not.toMatch(/gradient/);
+      });
+    });
+
+    it('should render the button with correct backgrounds in both modes', () => {
+      render(<ResourcesSection />);
+      // Buscar el botón por su texto
+      const button = screen.getByText('Ver todos los recursos').closest('a');
+      expect(button).toBeInTheDocument();
+      expect(button?.className).toMatch(/dark:bg-brand-purple-900/);
+      expect(button?.className).toMatch(/dark:text-brand-purple-200/);
+      expect(button?.className).not.toMatch(/gradient/);
     });
 
     it('should display post titles as headings', () => {
@@ -207,33 +244,27 @@ describe('ResourcesSection Component', () => {
   });
 
   describe('Accessibility', () => {
-    it('should have proper heading hierarchy', () => {
+    it('debe tener jerarquía de headings correcta', () => {
       const { container } = render(<ResourcesSection />);
       const h2 = container.querySelector('h2');
       const h3s = container.querySelectorAll('h3');
-
       expect(h2).toBeInTheDocument();
       expect(h3s.length).toBe(3);
     });
 
-    it('should have alt text for images', () => {
+    it('debe tener alt text en todas las imágenes', () => {
       const { container } = render(<ResourcesSection />);
       const images = container.querySelectorAll('img');
       images.forEach((img) => {
         expect(img).toHaveAttribute('alt');
       });
     });
-  });
 
-  describe('Content Truncation', () => {
-    it('should truncate long content', () => {
-      // This test verifies the truncation logic works
+    it('debe truncar el contenido largo en los excerpts', () => {
       const { container } = render(<ResourcesSection />);
       const excerpts = container.querySelectorAll('p.text-gray-600');
-
       excerpts.forEach((excerpt) => {
         const text = excerpt.textContent || '';
-        // Should include "Leer más" if content was truncated
         expect(text.length).toBeLessThan(200);
       });
     });

@@ -3,6 +3,7 @@ import '@global/config/globals.css';
 import { Toaster } from 'react-hot-toast';
 import { Providers } from '@global/utils/Providers';
 import { appDescription, appName, domain } from '@global/config/constants';
+import { ThemeScript } from '@global/components/ThemeScript';
 
 export const metadata: Metadata = {
   title: {
@@ -56,8 +57,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="">
-      <body className="bg-blanco">
+    <html lang="es" className="" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="bg-blanco dark:bg-gray-950">
         <Providers>
           <Toaster />
           {children}

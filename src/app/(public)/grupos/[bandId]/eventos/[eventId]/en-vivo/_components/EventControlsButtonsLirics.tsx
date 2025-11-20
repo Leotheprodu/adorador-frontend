@@ -9,7 +9,7 @@ export const EventControlsButtonsLirics = () => {
   const selectedSongLyricLength = useStore($selectedSongLyricLength);
   const { sendMessage } = useEventGateway();
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8 rounded-md border border-slate-200 bg-white p-1 opacity-60 shadow-sm hover:opacity-100">
+    <div className="flex h-full flex-col items-center justify-center gap-8 rounded-md border border-slate-200 bg-white p-1 opacity-60 shadow-sm hover:opacity-100 dark:border-slate-500 dark:bg-slate-900">
       <button
         disabled={lyricSelected.position <= 0}
         onClick={() => {
@@ -25,12 +25,12 @@ export const EventControlsButtonsLirics = () => {
               },
             });
         }}
-        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95 dark:bg-brand-purple-800 dark:text-white dark:hover:bg-brand-purple-700"
       >
         <ArrowUpIcon />
       </button>
       <button
-        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95"
+        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 p-1 duration-200 transition-background hover:bg-slate-200 active:scale-95 dark:bg-brand-purple-800 dark:text-white dark:hover:bg-brand-purple-700"
         disabled={
           lyricSelected.position === selectedSongLyricLength + 1 ||
           selectedSongLyricLength === 0

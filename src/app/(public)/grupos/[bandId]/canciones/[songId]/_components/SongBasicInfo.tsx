@@ -82,7 +82,7 @@ export const SongBasicInfo = ({
 
   return (
     <>
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:bg-gray-900 dark:border-slate-800 dark:shadow-none">
         <div className="flex flex-col gap-6 lg:flex-row">
           {/* Thumbnail de YouTube si existe */}
           {data?.youtubeLink && (
@@ -102,16 +102,16 @@ export const SongBasicInfo = ({
           <div className="flex flex-1 flex-col justify-between">
             {/* Título y metadata */}
             <div>
-              <h1 className="mb-2 text-3xl font-bold text-slate-900">
+              <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-slate-100">
                 {data?.title}
               </h1>
 
               {/* Información secundaria en línea */}
-              <div className="mb-4 flex flex-wrap gap-3 text-sm text-slate-600">
+              <div className="mb-4 flex flex-wrap gap-3 text-sm text-slate-600 dark:text-slate-300">
                 {data?.artist && <span>{data.artist}</span>}
                 {data?.artist &&
                   (data?.key || data?.tempo || data?.songType) && (
-                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-300 dark:text-slate-600">•</span>
                   )}
                 {data && <span>{songTypes[data.songType].es}</span>}
                 {data?.key && (
@@ -138,8 +138,8 @@ export const SongBasicInfo = ({
                   onClick={() => onPracticeModeChange?.(!isPracticeMode)}
                   className={`border-2 font-semibold transition-all ${
                     isPracticeMode
-                      ? 'border-green-500 bg-green-100 text-green-700 hover:bg-green-200'
-                      : 'border-orange-500 bg-orange-100 text-orange-700 hover:bg-orange-200'
+                      ? 'border-green-500 bg-green-100 text-green-700 hover:bg-green-200 dark:border-green-700 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-900'
+                      : 'border-orange-500 bg-orange-100 text-orange-700 hover:bg-orange-200 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-300 dark:hover:bg-orange-900'
                   }`}
                   startContent={
                     isPracticeMode ? (
@@ -151,7 +151,7 @@ export const SongBasicInfo = ({
                 >
                   {isPracticeMode ? 'Modo Práctica' : 'Modo Edición'}
                 </Button>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-slate-500 dark:text-slate-400">
                   {isPracticeMode
                     ? 'Haz clic para editar'
                     : 'Haz clic para practicar'}
@@ -169,7 +169,7 @@ export const SongBasicInfo = ({
                           size="sm"
                           onClick={handleClickPlay}
                           disabled={selectedSong?.id === data?.id}
-                          className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+                          className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
                           startContent={<PlayIcon className="h-4 w-4" />}
                         >
                           Reproducir
@@ -179,7 +179,7 @@ export const SongBasicInfo = ({
                           as={'a'}
                           target="_blank"
                           href={`https://youtu.be/${data.youtubeLink}`}
-                          className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-red-300 hover:bg-red-50"
+                          className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-red-300 hover:bg-red-50 dark:border-red-700 dark:bg-gray-900 dark:text-red-400 dark:hover:border-red-400 dark:hover:bg-gray-800"
                           startContent={<YoutubeIcon className="h-4 w-4" />}
                         >
                           Ver en YouTube
@@ -190,7 +190,7 @@ export const SongBasicInfo = ({
                     <Button
                       size="sm"
                       onClick={onOpen}
-                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
                       startContent={<GearIcon className="h-4 w-4" />}
                     >
                       Controles
@@ -207,8 +207,8 @@ export const SongBasicInfo = ({
                         onClick={() => onEditModeChange(!isEditMode)}
                         className={`border-2 font-semibold transition-all ${
                           isEditMode
-                            ? 'border-brand-purple-500 bg-brand-purple-100 text-brand-purple-700 hover:bg-brand-purple-200'
-                            : 'border-slate-200 bg-white text-slate-700 hover:border-brand-purple-300 hover:bg-brand-purple-50'
+                            ? 'border-brand-purple-500 bg-brand-purple-100 text-brand-purple-700 hover:bg-brand-purple-200 dark:border-brand-purple-700 dark:bg-brand-purple-950 dark:text-brand-purple-200 dark:hover:bg-brand-purple-900'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800'
                         }`}
                         startContent={
                           isEditMode ? (

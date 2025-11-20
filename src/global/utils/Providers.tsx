@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useTokenRefresh } from '@global/hooks/useTokenRefresh';
 import { useBandInvitationListeners } from '@global/hooks/useBandInvitationListeners';
 import { useNotificationListeners } from '@global/hooks/useNotificationListeners';
+import { ThemeProvider } from '@global/components/ThemeProvider';
 
 // Componente separado para manejar el token refresh
 function TokenManager() {
@@ -66,7 +67,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </NextUIProvider>
     </QueryClientProvider>
   );

@@ -7,17 +7,19 @@ export const SongsSection = ({ data, bandId }) => {
   const hasMany = data && data?._count.songs > 5;
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-purple-800 dark:bg-black">
       {/* Header de la sección */}
-      <div className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-4 dark:border-purple-800 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-purple-600">
             <MusicNoteIcon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Canciones</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              Canciones
+            </h2>
             {data && (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-200">
                 {data?._count?.songs || 0} en total
               </p>
             )}
@@ -29,7 +31,7 @@ export const SongsSection = ({ data, bandId }) => {
               as={Link}
               href={`/grupos/${bandId}/canciones`}
               size="sm"
-              className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+              className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:bg-brand-purple-800 dark:text-slate-100 dark:hover:border-brand-purple-800 dark:hover:bg-brand-purple-950"
             >
               <span className="whitespace-nowrap">
                 Ver todas ({data?._count.songs})
@@ -46,12 +48,14 @@ export const SongsSection = ({ data, bandId }) => {
           {data.songs.map((song) => (
             <li key={song.id}>
               <Link href={`/grupos/${bandId}/canciones/${song.id}`}>
-                <div className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-brand-purple-300 hover:shadow-md active:scale-[0.98]">
+                <div className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-brand-purple-300 hover:shadow-md active:scale-[0.98] dark:border-gray-700 dark:bg-black dark:hover:bg-brand-purple-950">
                   <div className="relative z-10">
-                    <h3 className="mb-1 font-semibold text-slate-800 group-hover:text-brand-purple-600">
+                    <h3 className="mb-1 font-semibold text-slate-800 group-hover:text-brand-purple-600 dark:text-slate-100">
                       {song.title}
                     </h3>
-                    <p className="text-sm text-slate-500">{song.artist}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {song.artist}
+                    </p>
                   </div>
 
                   {/* Indicador de acción */}

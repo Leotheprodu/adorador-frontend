@@ -68,7 +68,7 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
           onOpen();
         }}
         size="sm"
-        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50"
+        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
       >
         <PlusIcon className="h-5 w-5" /> Crear canción
       </Button>
@@ -76,33 +76,33 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-2 bg-gradient-to-r from-brand-pink-50 to-brand-purple-50 pb-4">
+              <ModalHeader className="flex flex-col gap-2 bg-gradient-to-r from-brand-pink-50 to-brand-purple-50 pb-4 dark:bg-gray-900 dark:bg-none">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-brand-pink-500 to-brand-purple-500 shadow-md">
                     <MusicNoteIcon className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-xl font-bold text-transparent">
+                    <h2 className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 bg-clip-text text-xl font-bold text-transparent dark:from-brand-pink-300 dark:to-brand-purple-300">
                       Nueva Canción
                     </h2>
-                    <p className="text-xs font-normal text-slate-500">
+                    <p className="text-xs font-normal text-slate-500 dark:text-slate-300">
                       Agrega una nueva canción al repertorio
                     </p>
                   </div>
                 </div>
               </ModalHeader>
-              <ModalBody className="py-6">
+              <ModalBody className="py-6 dark:bg-gray-950">
                 <FormAddNewSong
                   form={form}
                   setForm={setForm}
                   handleChange={handleChange}
                 />
               </ModalBody>
-              <ModalFooter className="gap-2 bg-slate-50">
+              <ModalFooter className="gap-2 bg-slate-50 dark:bg-gray-900">
                 <Button
                   variant="flat"
                   onPress={onClose}
-                  className="font-medium"
+                  className="font-medium dark:bg-gray-900 dark:text-slate-200"
                 >
                   Cancelar
                 </Button>
@@ -112,7 +112,7 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
                   onPress={() => {
                     setForm(formInit);
                   }}
-                  className="font-medium"
+                  className="font-medium dark:bg-gray-900 dark:text-slate-200"
                 >
                   Limpiar
                 </Button>
@@ -120,7 +120,7 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
                   isLoading={statusAddSongToBand === 'pending'}
                   disabled={statusAddSongToBand === 'success'}
                   onPress={handleAddSong}
-                  className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  className="bg-gradient-to-r from-brand-pink-500 to-brand-purple-600 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg dark:from-brand-pink-400 dark:to-brand-purple-400"
                 >
                   Crear Canción
                 </Button>
