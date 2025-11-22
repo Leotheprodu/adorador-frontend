@@ -1,3 +1,66 @@
+// Mock nanostores FIRST - before any imports
+jest.mock('nanostores', () => ({
+  atom: jest.fn((initialValue) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  })),
+}));
+
+jest.mock('@nanostores/react', () => ({
+  useStore: jest.fn(),
+}));
+
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => ({
+  Button: ({
+    children,
+    onPress,
+    isDisabled,
+    disabled,
+    isLoading,
+    className = '',
+    ...props
+  }: React.PropsWithChildren<{
+    onPress?: () => void;
+    isDisabled?: boolean;
+    disabled?: boolean;
+    isLoading?: boolean;
+    className?: string;
+  }>) => (
+    <button
+      onClick={onPress}
+      disabled={isDisabled || disabled}
+      data-disabled={isDisabled || disabled ? 'true' : undefined}
+      data-loading={isLoading ? 'true' : undefined}
+      className={className}
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+  Dropdown: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  DropdownTrigger: ({ children }: React.PropsWithChildren) => (
+    <div>{children}</div>
+  ),
+  DropdownMenu: ({ children }: React.PropsWithChildren) => (
+    <div role="menu">{children}</div>
+  ),
+  DropdownItem: ({
+    children,
+    onPress,
+  }: React.PropsWithChildren<{ onPress?: () => void }>) => (
+    <div role="menuitem" onClick={onPress}>
+      {children}
+    </div>
+  ),
+}));
+
+// Mock ThemeToggle
+jest.mock('@global/components/ThemeToggle', () => ({
+  ThemeToggle: () => <div data-testid="theme-toggle">Theme Toggle</div>,
+}));
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock NotificationBell que respeta el estado de login
@@ -21,18 +84,7 @@ function renderWithQueryClient(ui: React.ReactElement) {
     <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
   );
 }
-// Mock nanostores FIRST - before any imports
-jest.mock('nanostores', () => ({
-  atom: jest.fn((initialValue) => ({
-    get: jest.fn(() => initialValue),
-    set: jest.fn(),
-    subscribe: jest.fn(() => jest.fn()),
-  })),
-}));
 
-jest.mock('@nanostores/react', () => ({
-  useStore: jest.fn(),
-}));
 
 // Mock hooks
 jest.mock('@app/(public)/grupos/_hooks/usePendingInvitations');
