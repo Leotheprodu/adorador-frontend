@@ -33,12 +33,13 @@ export const PostFooter = ({
                 {commentCount}
             </Button>
 
-            {isSongShare && songCopyCount && songCopyCount > 0 && (
+            {isSongShare && typeof songCopyCount === 'number' && songCopyCount > 0 && (
                 <div className="flex items-center gap-1 text-small text-foreground-500">
                     <DownloadIcon className="h-4 w-4" />
                     <span>{songCopyCount}</span>
                 </div>
             )}
+
         </div>
     );
 };

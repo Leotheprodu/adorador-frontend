@@ -30,8 +30,6 @@ export const SongRequestContent = ({
                 <FeedYouTubePlayer
                     youtubeUrl={requestedYoutubeUrl}
                     postId={postId}
-                    title={requestedSongTitle || undefined}
-                    artist={requestedArtist || undefined}
                 />
             )}
         </div>

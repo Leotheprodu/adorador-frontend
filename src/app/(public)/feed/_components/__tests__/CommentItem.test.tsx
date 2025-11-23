@@ -24,17 +24,24 @@ jest.mock('@nextui-org/react', () => ({
             {children}
         </button>
     ),
-}));
-
-// Mock de componentes
-jest.mock('../SharedSongInComment', () => ({
-    SharedSongInComment: ({ comment }: { comment: FeedComment }) => (
-        <div>SharedSong: {comment.sharedSong?.title}</div>
+    Card: ({ children }: { children: React.ReactNode }) => <div>Card: {children}</div>,
+    CardBody: ({ children }: { children: React.ReactNode }) => <div>CardBody: {children}</div>,
+    Textarea: ({ placeholder, value, onValueChange }: any) => (
+        <textarea
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onValueChange(e.target.value)}
+        />
+    ),
+    Chip: ({ children }: { children: React.ReactNode }) => <div>Chip: {children}</div>,
+    Tooltip: ({ children, content }: { children: React.ReactNode; content: string }) => (
+        <div title={content}>{children}</div>
     ),
 }));
 
-jest.mock('../CommentReplyForm', () => ({
-    CommentReplyForm: () => <div>CommentReplyForm</div>,
+// Mock de componentes
+jest.mock('../FeedYouTubePlayer', () => ({
+    FeedYouTubePlayer: () => <div>FeedYouTubePlayer</div>,
 }));
 
 jest.mock('../BlessingButton', () => ({
@@ -93,13 +100,11 @@ describe('CommentItem', () => {
         replyingTo: null,
         newComment: '',
         setNewComment: jest.fn(),
-        handleSubmit: jest.fn(),
-        handleKeyPress: jest.fn(),
+        onSubmitReply: jest.fn(),
+        onCancelReply: jest.fn(),
         isSubmitting: false,
-        onShareSongInReply: jest.fn(),
         onViewSong: jest.fn(),
         onCopySong: jest.fn(),
-        handleCopySongFromComment: jest.fn(),
     };
 
     const mockToggleBlessing = {
@@ -141,7 +146,8 @@ describe('CommentItem', () => {
 
     it('muestra formulario de respuesta cuando está respondiendo', () => {
         renderWithQueryClient(<CommentItem {...defaultProps} replyingTo={1} />);
-        expect(screen.getByText('CommentReplyForm')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Escribe tu respuesta...')).toBeInTheDocument();
+        expect(screen.getByText('Respondiendo a este comentario')).toBeInTheDocument();
     });
 
     it('muestra el botón de blessing con el conteo correcto', () => {

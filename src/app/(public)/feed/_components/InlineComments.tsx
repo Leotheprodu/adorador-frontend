@@ -145,13 +145,13 @@ export const InlineComments = ({
             replyingTo={replyingTo}
             newComment={newComment}
             setNewComment={setNewComment}
-            handleSubmit={handleSubmit}
-            handleKeyPress={handleKeyPress}
+            onSubmitReply={handleSubmit}
+            onCancelReply={() => handleReply(null)}
             isSubmitting={isSubmitting}
-            onShareSongInReply={openShareSongModal}
             onViewSong={onViewSong}
-            onCopySong={onCopySong}
-            handleCopySongFromComment={handleCopySongFromComment}
+            onCopySong={(_postId, songId, _bandId, commentId, title, key, tempo) => {
+              handleCopySongFromComment(songId, title, key, tempo, commentId);
+            }}
           />
         ))}
       </div>

@@ -117,6 +117,7 @@ export const useFeedSongActions = ({
         songId: number,
         bandId: number,
         commentId: number,
+        title: string,
         key?: string | null,
         tempo?: number | null,
     ) => {
@@ -139,7 +140,7 @@ export const useFeedSongActions = ({
             sharedSong: {
                 id: songId,
                 bandId: bandId,
-                title: '',
+                title: title,
                 artist: null,
                 key: key || null,
                 tempo: tempo || null,
