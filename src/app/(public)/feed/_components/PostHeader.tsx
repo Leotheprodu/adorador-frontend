@@ -1,12 +1,7 @@
 'use client';
 
 import { Avatar, Chip } from '@nextui-org/react';
-
-interface PostHeaderProps {
-    authorName: string;
-    bandName: string;
-    isSongShare: boolean;
-}
+import { PostHeaderProps } from './_interfaces/postCardInterfaces';
 
 export const PostHeader = ({
     authorName,

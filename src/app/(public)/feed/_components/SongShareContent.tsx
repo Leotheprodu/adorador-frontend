@@ -3,21 +3,7 @@
 import { Button, Chip, Tooltip } from '@nextui-org/react';
 import { DownloadIcon } from '@global/icons';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
-
-interface SongShareContentProps {
-    postId: number;
-    song: {
-        id: number;
-        title: string;
-        artist: string | null;
-        key: string | null;
-        tempo: number | null;
-        songType: 'worship' | 'praise';
-        youtubeLink?: string | null;
-    };
-    onViewSong?: (postId: number) => void;
-    onCopySong?: (postId: number) => void;
-}
+import { SongShareContentProps } from './_interfaces/postCardInterfaces';
 
 export const SongShareContent = ({
     postId,
@@ -27,7 +13,6 @@ export const SongShareContent = ({
 }: SongShareContentProps) => {
     return (
         <div className="mb-3">
-            {/* Reproductor de YouTube si existe */}
             {song.youtubeLink && (
                 <div className="mb-3 w-full">
                     <FeedYouTubePlayer
@@ -39,7 +24,6 @@ export const SongShareContent = ({
                 </div>
             )}
 
-            {/* Información de la canción */}
             <Tooltip content="Click para ver letra y acordes" delay={300} closeDelay={0}>
                 <div
                     className="group cursor-pointer rounded-lg border border-divider bg-content2 p-4 transition-all hover:border-primary hover:bg-content3 dark:hover:bg-content4"
@@ -47,7 +31,6 @@ export const SongShareContent = ({
                 >
                     <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 space-y-2">
-                            {/* Título y artista */}
                             <div>
                                 <h3 className="text-base font-semibold text-foreground">
                                     {song.title}
@@ -57,7 +40,6 @@ export const SongShareContent = ({
                                 )}
                             </div>
 
-                            {/* Detalles técnicos */}
                             <div className="flex flex-wrap gap-2">
                                 {song.key && (
                                     <Chip size="sm" variant="flat">
@@ -79,7 +61,6 @@ export const SongShareContent = ({
                             </div>
                         </div>
 
-                        {/* Botón de copiar */}
                         {onCopySong && (
                             <div onClick={(e) => e.stopPropagation()}>
                                 <Tooltip content="Copiar canción">

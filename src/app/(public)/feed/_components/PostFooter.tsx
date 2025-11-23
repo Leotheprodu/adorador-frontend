@@ -3,17 +3,7 @@
 import { Button } from '@nextui-org/react';
 import { ChatIcon, DownloadIcon } from '@global/icons';
 import { BlessingButton } from './BlessingButton';
-
-interface PostFooterProps {
-    isBlessed: boolean;
-    blessingCount: number;
-    commentCount: number;
-    songCopyCount?: number;
-    isSongShare: boolean;
-    onToggleBlessing: () => void;
-    onToggleComments: () => void;
-    isBlessingLoading: boolean;
-}
+import { PostFooterProps } from './_interfaces/postCardInterfaces';
 
 export const PostFooter = ({
     isBlessed,
@@ -27,7 +17,6 @@ export const PostFooter = ({
 }: PostFooterProps) => {
     return (
         <div className="flex items-center gap-3">
-            {/* Botón de Blessing */}
             <BlessingButton
                 isBlessed={isBlessed}
                 count={blessingCount}
@@ -35,7 +24,6 @@ export const PostFooter = ({
                 isLoading={isBlessingLoading}
             />
 
-            {/* Botón de Comentarios */}
             <Button
                 size="sm"
                 variant="light"
@@ -45,7 +33,6 @@ export const PostFooter = ({
                 {commentCount}
             </Button>
 
-            {/* Contador de copias */}
             {isSongShare && songCopyCount && songCopyCount > 0 && (
                 <div className="flex items-center gap-1 text-small text-foreground-500">
                     <DownloadIcon className="h-4 w-4" />

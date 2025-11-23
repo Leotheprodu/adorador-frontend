@@ -2,13 +2,7 @@
 
 import { Chip } from '@nextui-org/react';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
-
-interface SongRequestContentProps {
-    postId: number;
-    requestedSongTitle: string | null;
-    requestedArtist: string | null;
-    requestedYoutubeUrl: string | null;
-}
+import { SongRequestContentProps } from './_interfaces/postCardInterfaces';
 
 export const SongRequestContent = ({
     postId,
@@ -18,7 +12,6 @@ export const SongRequestContent = ({
 }: SongRequestContentProps) => {
     return (
         <div className="mb-3">
-            {/* Card de solicitud de canción */}
             <div className="mb-3 rounded-lg border border-divider bg-content2 p-3">
                 <div className="mb-2">
                     <Chip size="sm" variant="flat" color="warning">
@@ -33,7 +26,6 @@ export const SongRequestContent = ({
                 )}
             </div>
 
-            {/* Reproductor de YouTube si existe */}
             {requestedYoutubeUrl && (
                 <FeedYouTubePlayer
                     youtubeUrl={requestedYoutubeUrl}
