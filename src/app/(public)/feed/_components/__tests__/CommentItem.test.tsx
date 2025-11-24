@@ -26,11 +26,11 @@ jest.mock('@nextui-org/react', () => ({
     ),
     Card: ({ children }: { children: React.ReactNode }) => <div>Card: {children}</div>,
     CardBody: ({ children }: { children: React.ReactNode }) => <div>CardBody: {children}</div>,
-    Textarea: ({ placeholder, value, onValueChange }: any) => (
+    Textarea: ({ placeholder, value, onValueChange }: { placeholder?: string; value?: string; onValueChange?: (value: string) => void }) => (
         <textarea
             placeholder={placeholder}
             value={value}
-            onChange={(e) => onValueChange(e.target.value)}
+            onChange={(e) => onValueChange?.(e.target.value)}
         />
     ),
     Chip: ({ children }: { children: React.ReactNode }) => <div>Chip: {children}</div>,

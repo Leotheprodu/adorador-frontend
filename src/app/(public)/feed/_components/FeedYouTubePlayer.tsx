@@ -7,6 +7,8 @@ interface FeedYouTubePlayerProps {
   postId?: number;
   commentId?: number;
   className?: string;
+  title?: string;
+  artist?: string;
 }
 
 /**

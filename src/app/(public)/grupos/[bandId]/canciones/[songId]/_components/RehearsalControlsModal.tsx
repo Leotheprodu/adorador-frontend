@@ -4,16 +4,12 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  Checkbox,
 } from '@nextui-org/react';
-import { ArrowLeftIcon, ArrowRightIcon, GearIcon } from '@global/icons';
-import { useEffect, useState } from 'react';
-import { useStore } from '@nanostores/react';
-import { $eventConfig, $chordPreferences } from '@stores/event';
-import {
-  getLocalStorage,
-  setLocalStorage,
-} from '@global/utils/handleLocalStorage';
+import { GearIcon } from '@global/icons';
+import { useRehearsalControls } from '../_hooks/useRehearsalControls';
+import { TransposeControls } from './rehearsalControls/TransposeControls';
+import { LyricsScaleControls } from './rehearsalControls/LyricsScaleControls';
+import { DisplayOptions } from './rehearsalControls/DisplayOptions';
 
 interface RehearsalControlsModalProps {
   isOpen: boolean;
@@ -26,39 +22,15 @@ export const RehearsalControlsModal = ({
   onClose,
   songId,
 }: RehearsalControlsModalProps) => {
-  const eventConfig = useStore($eventConfig);
-  const chordConfig = useStore($chordPreferences);
-
-  // Estado local para la transposición específica de esta canción
-  const [transpose, setTranspose] = useState(0);
-
-  // Cargar configuración global al montar
-  useEffect(() => {
-    if (getLocalStorage('eventConfig')) {
-      $eventConfig.set(getLocalStorage('eventConfig'));
-    }
-    if (getLocalStorage('chordPreferences')) {
-      $chordPreferences.set(getLocalStorage('chordPreferences'));
-    }
-  }, []);
-
-  // Cargar transposición específica de esta canción
-  useEffect(() => {
-    const storageKey = `songTranspose_${songId}`;
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      setTranspose(parseInt(stored));
-    } else {
-      setTranspose(0);
-    }
-  }, [songId]);
-
-  // Guardar transposición cuando cambie
-  const handleTransposeChange = (newTranspose: number) => {
-    setTranspose(newTranspose);
-    const storageKey = `songTranspose_${songId}`;
-    localStorage.setItem(storageKey, newTranspose.toString());
-  };
+  const {
+    transpose,
+    eventConfig,
+    chordConfig,
+    handleTransposeChange,
+    handleLyricsScaleChange,
+    handleShowChordsChange,
+    handleNoteTypeChange,
+  } = useRehearsalControls(songId);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
@@ -76,162 +48,24 @@ export const RehearsalControlsModal = ({
         </ModalHeader>
         <ModalBody className="space-y-6 py-6 dark:bg-gray-950">
           {/* Transpose Control */}
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Transposición
-              </h4>
-              <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700 dark:bg-gray-900 dark:text-slate-100">
-                {transpose > 0 ? '+' : ''}
-                {transpose}
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                onClick={() => handleTransposeChange(transpose - 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
-              >
-                <ArrowLeftIcon className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => handleTransposeChange(0)}
-                className="rounded-lg border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800"
-              >
-                Resetear
-              </button>
-              <button
-                onClick={() => handleTransposeChange(transpose + 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
-              >
-                <ArrowRightIcon className="h-4 w-4" />
-              </button>
-            </div>
-            <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-400">
-              Cambia la tonalidad sin modificar la canción
-            </p>
-          </div>
+          <TransposeControls
+            transpose={transpose}
+            onTransposeChange={handleTransposeChange}
+          />
 
           {/* Lyrics Scale Control */}
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Tamaño de Letra
-              </h4>
-              <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700 dark:bg-gray-900 dark:text-slate-100">
-                {eventConfig.lyricsScale}x
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                disabled={eventConfig.lyricsScale <= 0.5}
-                onClick={() => {
-                  if (eventConfig.lyricsScale > 0.5) {
-                    $eventConfig.set({
-                      ...eventConfig,
-                      lyricsScale: eventConfig.lyricsScale - 0.25,
-                    });
-                    setLocalStorage('eventConfig', {
-                      ...eventConfig,
-                      lyricsScale: eventConfig.lyricsScale - 0.25,
-                    });
-                  }
-                }}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-xl font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                -
-              </button>
-              <button
-                onClick={() => {
-                  $eventConfig.set({
-                    ...eventConfig,
-                    lyricsScale: 1,
-                  });
-                  setLocalStorage('eventConfig', {
-                    ...eventConfig,
-                    lyricsScale: 1,
-                  });
-                }}
-                className="rounded-lg border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800"
-              >
-                Normal
-              </button>
-              <button
-                disabled={eventConfig.lyricsScale >= 2}
-                onClick={() => {
-                  if (eventConfig.lyricsScale < 2) {
-                    $eventConfig.set({
-                      ...eventConfig,
-                      lyricsScale: eventConfig.lyricsScale + 0.25,
-                    });
-                    setLocalStorage('eventConfig', {
-                      ...eventConfig,
-                      lyricsScale: eventConfig.lyricsScale + 0.25,
-                    });
-                  }
-                }}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-slate-200 bg-white text-xl font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                +
-              </button>
-            </div>
-          </div>
+          <LyricsScaleControls
+            lyricsScale={eventConfig.lyricsScale}
+            onScaleChange={handleLyricsScaleChange}
+          />
 
-          {/* Checkboxes */}
-          <div className="border-t border-slate-200 pt-4 dark:border-slate-700">
-            <h4 className="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Opciones de Visualización
-            </h4>
-
-            <div className="space-y-3">
-              <Checkbox
-                color="secondary"
-                size="md"
-                isSelected={eventConfig.showChords}
-                onValueChange={() => {
-                  $eventConfig.set({
-                    ...eventConfig,
-                    showChords: !eventConfig.showChords,
-                  });
-                  setLocalStorage('eventConfig', {
-                    ...eventConfig,
-                    showChords: !eventConfig.showChords,
-                  });
-                }}
-              >
-                <span className="text-sm text-slate-700 dark:text-slate-100">Mostrar Acordes</span>
-              </Checkbox>
-
-              {eventConfig.showChords && (
-                <div className="ml-6">
-                  <Checkbox
-                    color="secondary"
-                    size="sm"
-                    isSelected={chordConfig.noteType === 'american'}
-                    onValueChange={() => {
-                      $chordPreferences.set({
-                        ...chordConfig,
-                        noteType:
-                          chordConfig.noteType === 'american'
-                            ? 'regular'
-                            : 'american',
-                      });
-                      setLocalStorage('chordPreferences', {
-                        ...chordConfig,
-                        noteType:
-                          chordConfig.noteType === 'american'
-                            ? 'regular'
-                            : 'american',
-                      });
-                    }}
-                  >
-                    <span className="text-xs text-slate-600 dark:text-slate-300">
-                      Notación Americana (A, B, C...)
-                    </span>
-                  </Checkbox>
-                </div>
-              )}
-            </div>
-          </div>
+          {/* Display Options */}
+          <DisplayOptions
+            showChords={eventConfig.showChords}
+            noteType={chordConfig.noteType}
+            onShowChordsChange={handleShowChordsChange}
+            onNoteTypeChange={handleNoteTypeChange}
+          />
 
           {/* Info footer */}
           <div className="rounded-lg bg-slate-50 p-3 text-center dark:bg-gray-900">

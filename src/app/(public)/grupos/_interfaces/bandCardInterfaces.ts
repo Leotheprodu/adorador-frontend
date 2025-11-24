@@ -1,4 +1,5 @@
 import { BandsWithMembersCount } from './bandsInterface';
+import { EventsProps } from '../[bandId]/eventos/_interfaces/eventsInterface';
 
 export interface BandCardProps {
     band: BandsWithMembersCount;
@@ -18,7 +19,7 @@ export interface BandStatsProps {
 }
 
 export interface BandEventsProps {
-    events: any[]; // Replace with proper Event interface if available
+    events: EventsProps[];
     currentEventIndex: number;
     isCurrentEvent: boolean;
     eventTimeLeft: string | null;

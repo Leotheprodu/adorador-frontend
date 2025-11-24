@@ -1,54 +1,81 @@
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { PlayerControls } from '../PlayerControls';
 
-it('renderiza el botón de pause cuando está reproduciendo', () => {
-    render(<PlayerControls {...defaultProps} playing={true} />);
+describe('PlayerControls', () => {
+    const defaultProps = {
+        playing: false,
+        hasSelectedBeat: true,
+        hasMultipleSongs: true,
+        onPlayPause: jest.fn(),
+        onNext: jest.fn(),
+        onPrev: jest.fn(),
+    };
 
-    const pauseButton = screen.getByRole('button', { name: '' });
-    expect(pauseButton).toBeInTheDocument();
-});
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-it('muestra botones de navegación cuando hay múltiples canciones', () => {
-    render(<PlayerControls {...defaultProps} />);
+    afterEach(() => {
+        cleanup();
+    });
 
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(3); // prev, play/pause, next
-});
+    it('renderiza el botón de play cuando no está reproduciendo', () => {
+        render(<PlayerControls {...defaultProps} />);
 
-it('oculta botones de navegación cuando hay una sola canción', () => {
-    render(<PlayerControls {...defaultProps} hasMultipleSongs={false} />);
+        const playButton = screen.getByRole('button', { name: '' });
+        expect(playButton).toBeInTheDocument();
+    });
 
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(1); // solo play/pause
-});
+    it('renderiza el botón de pause cuando está reproduciendo', () => {
+        render(<PlayerControls {...defaultProps} playing={true} />);
 
-it('llama onPlayPause al hacer clic en play/pause', () => {
-    const onPlayPause = jest.fn();
-    render(<PlayerControls {...defaultProps} onPlayPause={onPlayPause} />);
+        const pauseButton = screen.getByRole('button', { name: '' });
+        expect(pauseButton).toBeInTheDocument();
+    });
 
-    const playButton = screen.getAllByRole('button')[1]; // El botón central
-    fireEvent.click(playButton);
+    it('muestra botones de navegación cuando hay múltiples canciones', () => {
+        render(<PlayerControls {...defaultProps} />);
 
-    expect(onPlayPause).toHaveBeenCalledTimes(1);
-});
+        const buttons = screen.getAllByRole('button');
+        expect(buttons).toHaveLength(3); // prev, play/pause, next
+    });
 
-it('llama onNext al hacer clic en siguiente', () => {
-    const onNext = jest.fn();
-    render(<PlayerControls {...defaultProps} onNext={onNext} />);
+    it('oculta botones de navegación cuando hay una sola canción', () => {
+        render(<PlayerControls {...defaultProps} hasMultipleSongs={false} />);
 
-    const buttons = screen.getAllByRole('button');
-    const nextButton = buttons[2]; // Último botón
-    fireEvent.click(nextButton);
+        const buttons = screen.getAllByRole('button');
+        expect(buttons).toHaveLength(1); // solo play/pause
+    });
 
-    expect(onNext).toHaveBeenCalledTimes(1);
-});
+    it('llama onPlayPause al hacer clic en play/pause', () => {
+        const onPlayPause = jest.fn();
+        render(<PlayerControls {...defaultProps} onPlayPause={onPlayPause} />);
 
-it('llama onPrev al hacer clic en anterior', () => {
-    const onPrev = jest.fn();
-    render(<PlayerControls {...defaultProps} onPrev={onPrev} />);
+        const playButton = screen.getAllByRole('button')[1]; // El botón central
+        fireEvent.click(playButton);
 
-    const buttons = screen.getAllByRole('button');
-    const prevButton = buttons[0]; // Primer botón
-    fireEvent.click(prevButton);
+        expect(onPlayPause).toHaveBeenCalledTimes(1);
+    });
 
-    expect(onPrev).toHaveBeenCalledTimes(1);
-});
+    it('llama onNext al hacer clic en siguiente', () => {
+        const onNext = jest.fn();
+        render(<PlayerControls {...defaultProps} onNext={onNext} />);
+
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons[2]; // Último botón
+        fireEvent.click(nextButton);
+
+        expect(onNext).toHaveBeenCalledTimes(1);
+    });
+
+    it('llama onPrev al hacer clic en anterior', () => {
+        const onPrev = jest.fn();
+        render(<PlayerControls {...defaultProps} onPrev={onPrev} />);
+
+        const buttons = screen.getAllByRole('button');
+        const prevButton = buttons[0]; // Primer botón
+        fireEvent.click(prevButton);
+
+        expect(onPrev).toHaveBeenCalledTimes(1);
+    });
 });

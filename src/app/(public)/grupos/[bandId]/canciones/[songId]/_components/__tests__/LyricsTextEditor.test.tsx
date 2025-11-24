@@ -31,7 +31,7 @@ jest.mock('@nextui-org/react', () => ({
 // Mock PrimaryButton para que respete disabled
 jest.mock('@global/components/buttons', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  PrimaryButton: ({ children, disabled, isDisabled, isLoading, onClick, ...props }: any) => (
+  PrimaryButton: ({ children, disabled, isDisabled, onClick, ...props }: any) => (
     <button disabled={disabled || isDisabled} onClick={onClick} {...props}>
       {children}
     </button>
