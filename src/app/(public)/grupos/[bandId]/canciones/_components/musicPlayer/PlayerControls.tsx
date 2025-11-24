@@ -20,6 +20,7 @@ export const PlayerControls = ({
                     type="button"
                     className="flex items-center justify-center rounded-full p-1 opacity-75 duration-75 ease-in-out hover:opacity-100 active:scale-90"
                     onClick={onPrev}
+                    aria-label="Anterior"
                 >
                     <BackwardIcon className="text-primary-200" />
                 </button>
@@ -29,6 +30,7 @@ export const PlayerControls = ({
                 radius="full"
                 className="m-0 flex h-10 w-10 min-w-0 items-center justify-center bg-primario p-0 opacity-75 duration-75 ease-in-out hover:opacity-100"
                 onClick={onPlayPause}
+                aria-label={playing ? "Pausar" : "Reproducir"}
             >
                 {playing && hasSelectedBeat && (
                     <PauseIcon className="scale-125 text-primary-500" />
@@ -42,6 +44,7 @@ export const PlayerControls = ({
                     type="button"
                     className="flex items-center justify-center rounded-full p-1 opacity-75 duration-75 ease-in-out hover:opacity-100 active:scale-90"
                     onClick={onNext}
+                    aria-label="Siguiente"
                 >
                     <ForwardIcon className="text-primary-200" />
                 </button>

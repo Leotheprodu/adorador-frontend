@@ -22,36 +22,38 @@ describe('PlayerControls', () => {
     it('renderiza el botón de play cuando no está reproduciendo', () => {
         render(<PlayerControls {...defaultProps} />);
 
-        const playButton = screen.getByRole('button', { name: '' });
+        const playButton = screen.getByRole('button', { name: 'Reproducir' });
         expect(playButton).toBeInTheDocument();
     });
 
     it('renderiza el botón de pause cuando está reproduciendo', () => {
         render(<PlayerControls {...defaultProps} playing={true} />);
 
-        const pauseButton = screen.getByRole('button', { name: '' });
+        const pauseButton = screen.getByRole('button', { name: 'Pausar' });
         expect(pauseButton).toBeInTheDocument();
     });
 
     it('muestra botones de navegación cuando hay múltiples canciones', () => {
         render(<PlayerControls {...defaultProps} />);
 
-        const buttons = screen.getAllByRole('button');
-        expect(buttons).toHaveLength(3); // prev, play/pause, next
+        expect(screen.getByRole('button', { name: 'Anterior' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Reproducir' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Siguiente' })).toBeInTheDocument();
     });
 
     it('oculta botones de navegación cuando hay una sola canción', () => {
         render(<PlayerControls {...defaultProps} hasMultipleSongs={false} />);
 
-        const buttons = screen.getAllByRole('button');
-        expect(buttons).toHaveLength(1); // solo play/pause
+        expect(screen.queryByRole('button', { name: 'Anterior' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Siguiente' })).not.toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Reproducir' })).toBeInTheDocument();
     });
 
     it('llama onPlayPause al hacer clic en play/pause', () => {
         const onPlayPause = jest.fn();
         render(<PlayerControls {...defaultProps} onPlayPause={onPlayPause} />);
 
-        const playButton = screen.getAllByRole('button')[1]; // El botón central
+        const playButton = screen.getByRole('button', { name: 'Reproducir' });
         fireEvent.click(playButton);
 
         expect(onPlayPause).toHaveBeenCalledTimes(1);
@@ -61,8 +63,7 @@ describe('PlayerControls', () => {
         const onNext = jest.fn();
         render(<PlayerControls {...defaultProps} onNext={onNext} />);
 
-        const buttons = screen.getAllByRole('button');
-        const nextButton = buttons[2]; // Último botón
+        const nextButton = screen.getByRole('button', { name: 'Siguiente' });
         fireEvent.click(nextButton);
 
         expect(onNext).toHaveBeenCalledTimes(1);
@@ -72,8 +73,7 @@ describe('PlayerControls', () => {
         const onPrev = jest.fn();
         render(<PlayerControls {...defaultProps} onPrev={onPrev} />);
 
-        const buttons = screen.getAllByRole('button');
-        const prevButton = buttons[0]; // Primer botón
+        const prevButton = screen.getByRole('button', { name: 'Anterior' });
         fireEvent.click(prevButton);
 
         expect(onPrev).toHaveBeenCalledTimes(1);
