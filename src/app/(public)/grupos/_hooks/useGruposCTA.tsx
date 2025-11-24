@@ -9,7 +9,8 @@ import toast from 'react-hot-toast';
 import { PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import { updateUserFromToken } from '@global/utils/updateUserFromToken';
-import { BandsProps } from '../../_interfaces/bandsInterface';
+import { BandsProps } from '@bands/_interfaces/bandsInterface';
+
 
 interface CreateBandResponse {
     band: BandsProps;

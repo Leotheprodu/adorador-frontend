@@ -151,11 +151,10 @@ export const SongListDisplay = ({
           <Droppable droppableId="songListDisplay">
             {(provided, snapshot) => (
               <div
-                className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${
-                  snapshot.isDraggingOver
+                className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${snapshot.isDraggingOver
                     ? 'border-brand-purple-400 bg-brand-purple-50 shadow-lg dark:bg-black'
                     : 'border-transparent dark:bg-black'
-                }`}
+                  }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
@@ -175,7 +174,7 @@ export const SongListDisplay = ({
           </Droppable>
         </DragDropContext>
       ) : (
-        <div className="grid gap-2">
+        <div className="grid gap-2 dark:bg-black">
           {songOrder.map((data, index) => (
             <SongCardWithControls
               key={data.song.id}

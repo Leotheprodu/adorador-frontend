@@ -59,7 +59,7 @@ export const SongCardWithControls = ({
           {data.order}
         </span>
         <div className="flex-1">
-          <p className="font-semibold text-slate-900">{data.song.title}</p>
+          <p className="font-semibold text-slate-900 dark:text-slate-100">{data.song.title}</p>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">
               {songTypes[data.song.songType].es}
@@ -85,11 +85,10 @@ export const SongCardWithControls = ({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`group flex items-center gap-3 rounded-lg border-2 p-4 transition-all duration-200 ${
-            snapshot.isDragging
+          className={`group flex items-center gap-3 rounded-lg border-2 p-4 transition-all duration-200 ${snapshot.isDragging
               ? 'z-50 scale-105 border-brand-purple-400 bg-brand-purple-50 shadow-2xl dark:border-brand-purple-800 dark:bg-brand-purple-800'
               : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-black dark:hover:border-brand-purple-400'
-          }`}
+            }`}
         >
           {/* Drag Handle */}
           <div
@@ -186,11 +185,10 @@ export const SongCardWithControls = ({
                       isDisabled={data.transpose === 6}
                       variant="flat"
                       size="sm"
-                      className={`flex-1 text-xs font-semibold transition-all duration-200 ${
-                        data.transpose === 6
+                      className={`flex-1 text-xs font-semibold transition-all duration-200 ${data.transpose === 6
                           ? 'bg-slate-100 text-slate-400'
                           : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:scale-105 hover:shadow-md'
-                      }`}
+                        }`}
                       onPress={handleTransposeUp}
                     >
                       ↑ Subir
@@ -199,11 +197,10 @@ export const SongCardWithControls = ({
                       isDisabled={data.transpose === -6}
                       variant="flat"
                       size="sm"
-                      className={`flex-1 text-xs font-semibold transition-all duration-200 ${
-                        data.transpose === -6
+                      className={`flex-1 text-xs font-semibold transition-all duration-200 ${data.transpose === -6
                           ? 'bg-slate-100 text-slate-400'
                           : 'bg-gradient-to-r from-red-500 to-rose-500 text-white hover:scale-105 hover:shadow-md'
-                      }`}
+                        }`}
                       onPress={handleTransposeDown}
                     >
                       ↓ Bajar
