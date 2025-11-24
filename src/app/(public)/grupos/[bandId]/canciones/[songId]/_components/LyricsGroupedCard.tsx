@@ -1,12 +1,11 @@
 import { structureColors, structureLib } from '@global/config/constants';
-import React, { useEffect, useState } from 'react';
 import { LyricsCard } from './LyricsCard';
 import { MiniLyricsCreator } from './MiniLyricsCreator';
-import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { useStore } from '@nanostores/react';
-import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
-import { updateLyricsPositionsService } from '../_services/songIdServices';
-import toast from 'react-hot-toast';
+import { LyricsGroupedCardProps } from '../_interfaces/lyricsInterfaces';
+import { useLyricsGroupDragDrop } from '../_hooks/useLyricsGroupDragDrop';
+import { useLyricsInsertion } from '../_hooks/useLyricsInsertion';
+import { LyricsInsertButton } from './lyrics/LyricsInsertButton';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -19,70 +18,14 @@ export const LyricsGroupedCard = ({
   showChords = true,
   lyricsScale = 1,
   isPracticeMode = false,
-}: {
-  structure: string;
-  lyrics: LyricsProps[];
-  refetchLyricsOfCurrentSong: () => void;
-  params: { bandId: string; songId: string };
-  chordPreferences: ReturnType<typeof useStore>['state'];
-  lyricsOfCurrentSong: LyricsProps[];
-  transpose?: number;
-  showChords?: boolean;
-  lyricsScale?: number;
-  isPracticeMode?: boolean;
-}) => {
-  const [insertPosition, setInsertPosition] = useState<number | null>(null);
-  const [lyricsOrder, setLyricsOrder] = useState<LyricsProps[]>([]);
+}: LyricsGroupedCardProps) => {
+  const { lyricsOrder, handleDragEnd } = useLyricsGroupDragDrop({
+    lyrics,
+    params,
+    refetchLyricsOfCurrentSong,
+  });
 
-  const {
-    mutate: mutateUpdateLyricsPositions,
-    status: statusUpdateLyricsPositions,
-  } = updateLyricsPositionsService({ params });
-
-  useEffect(() => {
-    setLyricsOrder([...lyrics].sort((a, b) => a.position - b.position));
-  }, [lyrics]);
-
-  useEffect(() => {
-    if (statusUpdateLyricsPositions === 'success') {
-      toast.success('Orden actualizado');
-      refetchLyricsOfCurrentSong();
-    }
-  }, [statusUpdateLyricsPositions, refetchLyricsOfCurrentSong]);
-
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const updatedLyrics = [...lyricsOrder];
-    const [removed] = updatedLyrics.splice(result.source.index, 1);
-    updatedLyrics.splice(result.destination.index, 0, removed);
-
-    // Encontrar la posición base (la menor posición en este grupo)
-    const basePosition = Math.min(...lyricsOrder.map((l) => l.position));
-
-    // Actualizar las posiciones manteniendo el orden relativo al grupo
-    const reorderedLyrics = updatedLyrics.map((lyric, index) => ({
-      ...lyric,
-      position: basePosition + index,
-    }));
-
-    setLyricsOrder(reorderedLyrics);
-
-    // Enviar solo las letras que cambiaron de posición
-    const newPositions = reorderedLyrics
-      .filter((lyric, index) => {
-        const originalLyric = lyricsOrder[index];
-        return originalLyric.id !== lyric.id; // Cambió de posición
-      })
-      .map((lyric) => ({
-        id: lyric.id,
-        position: lyric.position,
-      }));
-
-    if (newPositions.length > 0) {
-      mutateUpdateLyricsPositions(newPositions);
-    }
-  };
+  const { insertPosition, openInsertAt, closeInsert } = useLyricsInsertion();
 
   return (
     <div
@@ -132,21 +75,17 @@ export const LyricsGroupedCard = ({
                   <div key={lyric.id} className="group/lyric-wrapper relative">
                     {/* Botón para insertar ANTES de esta letra */}
                     {index === 0 && !insertPosition && (
-                      <button
-                        onClick={() => {
-                          setInsertPosition(lyric.position);
-                        }}
-                        className="mb-1 w-full rounded border-2 border-dashed border-slate-200 bg-slate-50/50 py-2 text-xs text-slate-500 opacity-50 transition-all hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600 hover:opacity-100 dark:border-slate-700 dark:bg-gray-800 dark:text-slate-400 dark:hover:border-primary-400 dark:hover:bg-gray-900 dark:hover:text-primary-300"
-                      >
-                        + Insertar letra aquí
-                      </button>
+                      <LyricsInsertButton
+                        onClick={() => openInsertAt(lyric.position)}
+                        position="before"
+                      />
                     )}
 
                     {insertPosition === lyric.position ? (
                       <MiniLyricsCreator
                         params={params}
                         refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-                        onClose={() => setInsertPosition(null)}
+                        onClose={closeInsert}
                         lyricsOfCurrentSong={lyricsOfCurrentSong}
                         newPosition={lyric.position}
                         structureId={lyric.structure.id}
@@ -169,14 +108,10 @@ export const LyricsGroupedCard = ({
 
                     {/* Botón para insertar DESPUÉS de esta letra */}
                     {!insertPosition && (
-                      <button
-                        onClick={() => {
-                          setInsertPosition(lyric.position + 1);
-                        }}
-                        className="mt-1 w-full rounded border-2 border-dashed border-slate-200 bg-slate-50/50 py-2 text-xs text-slate-500 opacity-50 transition-all hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600 hover:opacity-100 dark:border-slate-700 dark:bg-gray-800 dark:text-slate-400 dark:hover:border-primary-400 dark:hover:bg-gray-900 dark:hover:text-primary-300"
-                      >
-                        + Insertar letra aquí
-                      </button>
+                      <LyricsInsertButton
+                        onClick={() => openInsertAt(lyric.position + 1)}
+                        position="after"
+                      />
                     )}
                   </div>
                 ))}
