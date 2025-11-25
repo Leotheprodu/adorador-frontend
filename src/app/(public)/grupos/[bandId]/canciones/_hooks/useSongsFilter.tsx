@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { SongProps } from '@bands/[bandId]/canciones/_interfaces/songInterface';
+import { SongProps } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
+
 import { $PlayList } from '@stores/player';
 import { songTypes } from '@global/config/constants';
 

@@ -3,63 +3,32 @@ import { EventControlsSongsList } from '@bands/[bandId]/eventos/[eventId]/en-viv
 import { EventControlsLyricsSelect } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsLyricsSelect';
 import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { $eventAdminName, $event } from '@stores/event';
-import { $user } from '@stores/users';
+import { $eventAdminName } from '@stores/event';
 import { EventControlsHandleManager } from './EventControlsHandleManager';
-import { userRoles } from '@global/config/constants';
 import { LightBulbIcon } from '@global/icons';
+import { useEventPermissions } from '../_hooks/useEventPermissions';
+import { EventControlsProps } from '../_interfaces/liveEventInterfaces';
 
 export const EventControls = ({
   params,
   refetch,
   isLoading,
-}: {
-  params: { bandId: string; eventId: string };
-  refetch: () => void;
-  isLoading: boolean;
-}) => {
+}: EventControlsProps) => {
   const { bandId } = params;
-
   const eventAdminName = useStore($eventAdminName);
-  const user = useStore($user);
-  const event = useStore($event);
+
+  // Usar hook compartido de permisos
+  const {
+    isSystemAdmin,
+    isAdminEvent: checkAdminEvent,
+    isEventManager,
+    isBandMemberOnly,
+  } = useEventPermissions();
 
   useEffect(() => {
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventAdminName]);
-
-  // Verificar si es administrador del sistema
-  const isSystemAdmin =
-    user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
-
-  // Verificación precisa: usuario debe ser específicamente admin de la banda
-  // Primero verificar si es miembro de la banda del evento
-  const bandMembership =
-    user.isLoggedIn && user.membersofBands
-      ? user.membersofBands.find(
-          (membership) => membership.band.id === event.bandId,
-        )
-      : undefined;
-
-  // Verificar si es administrador de la banda (NO solo event manager) O administrador del sistema
-  const checkAdminEvent = Boolean(
-    (bandMembership && bandMembership.isAdmin) || isSystemAdmin,
-  );
-
-  // Verificar si es event manager (puede cambiar canciones durante el evento pero no modificar el evento)
-  const isEventManager = Boolean(
-    bandMembership && bandMembership.isEventManager && !bandMembership.isAdmin,
-  );
-
-  // Verificar si es miembro del grupo pero NO admin ni event manager (solo puede ver)
-  // Los admins del sistema NO deben aparecer como "solo miembros"
-  const isBandMemberOnly = Boolean(
-    bandMembership &&
-      !bandMembership.isAdmin &&
-      !bandMembership.isEventManager &&
-      !isSystemAdmin,
-  );
 
   return (
     <div>
