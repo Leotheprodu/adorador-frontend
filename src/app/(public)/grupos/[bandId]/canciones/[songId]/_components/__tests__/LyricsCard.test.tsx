@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { LyricsCard } from '../LyricsCard';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 
@@ -31,7 +31,7 @@ jest.mock('../MiniLyricsEditor', () => ({
 
 // Mock dnd
 jest.mock('@hello-pangea/dnd', () => ({
-    Draggable: ({ children }: any) =>
+    Draggable: ({ children }: { children: (provided: unknown, snapshot: unknown) => React.ReactNode }) =>
         children(
             {
                 draggableProps: { 'data-testid': 'draggable' },
@@ -70,10 +70,10 @@ describe('LyricsCard', () => {
         expect(screen.getByTestId('lyrics-drag-handle')).toBeInTheDocument();
     });
 
-    it('renders editor when updateLyric is true', () => {
+    it('renders editor when updateLyric is true', async () => {
         // Override hook mock for this test
-        const useLyricsCard = require('../../_hooks/useLyricsCard').useLyricsCard;
-        useLyricsCard.mockReturnValue({
+        const { useLyricsCard } = await import('../../_hooks/useLyricsCard');
+        (useLyricsCard as jest.Mock).mockReturnValue({
             updateLyric: true,
             isDragging: false,
             setIsDragging: jest.fn(),

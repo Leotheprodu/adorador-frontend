@@ -53,8 +53,8 @@ jest.mock('../lyrics/LyricsInsertButton', () => ({
 
 // Mock dnd
 jest.mock('@hello-pangea/dnd', () => ({
-    DragDropContext: ({ children }: any) => <div>{children}</div>,
-    Droppable: ({ children }: any) =>
+    DragDropContext: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    Droppable: ({ children }: { children: (provided: unknown, snapshot: unknown) => React.ReactNode }) =>
         children(
             {
                 droppableProps: { 'data-testid': 'droppable' },
@@ -124,9 +124,9 @@ describe('LyricsGroupedCard', () => {
         expect(screen.queryByTestId(/insert-btn-/)).not.toBeInTheDocument();
     });
 
-    it('renders creator when insertPosition matches', () => {
-        const useLyricsInsertion = require('../../_hooks/useLyricsInsertion').useLyricsInsertion;
-        useLyricsInsertion.mockReturnValue({
+    it('renders creator when insertPosition matches', async () => {
+        const { useLyricsInsertion } = await import('../../_hooks/useLyricsInsertion');
+        (useLyricsInsertion as jest.Mock).mockReturnValue({
             insertPosition: 1, // Matches first lyric position
             openInsertAt: jest.fn(),
             closeInsert: jest.fn(),
