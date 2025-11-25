@@ -1,19 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { LyricsTextEditor } from './LyricsTextEditor';
-import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { convertLyricsToPlainText } from '../_utils/lyricsConverter';
 import { deleteAllLyricsService } from '../_services/songIdServices';
-
-interface EditLyricsOptionsProps {
-  params: { bandId: string; songId: string };
-  songTitle?: string;
-  refetchLyricsOfCurrentSong: () => void;
-  mutateUploadLyricsByFile: (formData: FormData) => void;
-  existingLyrics: LyricsProps[];
-  isExpanded?: boolean;
-  onClose?: () => void;
-}
+import { EditLyricsOptionsProps } from '../_interfaces/lyricsInterfaces';
+import { useFileUpload } from '../_hooks/useFileUpload';
+import { FileDropZone } from './lyrics/FileDropZone';
 
 export const EditLyricsOptions = ({
   params,
@@ -26,7 +18,6 @@ export const EditLyricsOptions = ({
 }: EditLyricsOptionsProps) => {
   const [internalIsExpanded, setInternalIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'upload'>('editor');
-  const [isDragging, setIsDragging] = useState(false);
   const [initialText, setInitialText] = useState<string>('');
 
   // Use controlled prop if provided, otherwise use internal state
@@ -34,6 +25,15 @@ export const EditLyricsOptions = ({
 
   const { mutate: mutateDeleteAllLyrics, status: statusDeleteAllLyrics } =
     deleteAllLyricsService({ params });
+
+  const {
+    isDragging,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+    handleFileInput,
+  } = useFileUpload();
 
   // Check URL hash on mount to auto-expand if coming from alert
   useEffect(() => {
@@ -67,43 +67,6 @@ export const EditLyricsOptions = ({
       refetchLyricsOfCurrentSong();
     }
   }, [statusDeleteAllLyrics, refetchLyricsOfCurrentSong]);
-
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type === 'text/plain') {
-      handleFileUploadWithDelete(file);
-    } else {
-      alert('Por favor, arrastra un archivo .txt');
-    }
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileUploadWithDelete(file);
-    }
-  };
 
   const handleFileUploadWithDelete = async (file: File) => {
     // First delete all existing lyrics
@@ -193,21 +156,19 @@ export const EditLyricsOptions = ({
           <div className="flex w-full max-w-4xl justify-center gap-2 border-b-2 border-slate-200 dark:border-slate-700">
             <button
               onClick={() => setActiveTab('editor')}
-              className={`px-6 py-3 font-semibold transition-all ${
-                activeTab === 'editor'
+              className={`px-6 py-3 font-semibold transition-all ${activeTab === 'editor'
                   ? 'border-b-4 border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-300'
                   : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100'
-              }`}
+                }`}
             >
               ✍️ Editor de Texto
             </button>
             <button
               onClick={() => setActiveTab('upload')}
-              className={`px-6 py-3 font-semibold transition-all ${
-                activeTab === 'upload'
+              className={`px-6 py-3 font-semibold transition-all ${activeTab === 'upload'
                   ? 'border-b-4 border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-300'
                   : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100'
-              }`}
+                }`}
             >
               📁 Subir Archivo
             </button>
@@ -253,67 +214,16 @@ export const EditLyricsOptions = ({
                   <li>El archivo txt debe estar codificado en UTF-8</li>
                 </ul>
 
-                {/* Modern Drag & Drop Area */}
-                <div
+                <FileDropZone
+                  isDragging={isDragging}
                   onDragEnter={handleDragEnter}
-                  onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  className={`relative mt-6 rounded-lg border-2 border-dashed p-8 transition-all ${
-                    isDragging
-                      ? 'border-primary-500 bg-primary-50 dark:border-primary-400 dark:bg-gray-900'
-                      : 'border-slate-300 bg-white hover:border-primary-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-gray-900 dark:hover:border-primary-400 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <input
-                    type="file"
-                    accept=".txt"
-                    onChange={handleFileInput}
-                    className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                    id="file-upload-edit"
-                  />
-                  <label
-                    htmlFor="file-upload-edit"
-                    className="flex cursor-pointer flex-col items-center justify-center space-y-3"
-                  >
-                    <div
-                      className={`rounded-full p-4 ${
-                        isDragging ? 'bg-primary-200 dark:bg-primary-900' : 'bg-slate-200 dark:bg-slate-800'
-                      }`}
-                    >
-                      <svg
-                        className={`h-12 w-12 ${
-                          isDragging ? 'text-primary-600' : 'text-slate-500'
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        />
-                      </svg>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-lg font-semibold text-slate-700 dark:text-slate-100">
-                        {isDragging
-                          ? 'Suelta el archivo aquí'
-                          : 'Arrastra tu archivo .txt aquí'}
-                      </p>
-                      <p className="text-sm text-slate-500 dark:text-slate-300">
-                        o haz clic para seleccionar
-                      </p>
-                    </div>
-                    <div className="rounded-full bg-primary-100 px-4 py-2 dark:bg-primary-900">
-                      <span className="text-sm font-medium text-primary-700 dark:text-primary-200">
-                        Solo archivos .txt
-                      </span>
-                    </div>
-                  </label>
-                </div>
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, handleFileUploadWithDelete)}
+                  onFileSelect={(e) =>
+                    handleFileInput(e, handleFileUploadWithDelete)
+                  }
+                />
 
                 <div className="rounded-md bg-warning-50 p-4 dark:bg-warning-900">
                   <p className="text-sm font-semibold text-warning-800 dark:text-warning-200">

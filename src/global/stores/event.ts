@@ -27,9 +27,11 @@ export const $eventLiveMessage = atom<string>('');
 export const $chordPreferences = atom<{
   noteType: NoteType;
   accidentalType: AccidentalType;
+  useFlats: boolean;
 }>({
   noteType: 'american',
   accidentalType: 'sostenido',
+  useFlats: false,
 });
 export const $lyricSelected = atom<lyricSelectedProps>({
   position: 0,

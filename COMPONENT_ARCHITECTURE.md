@@ -1,0 +1,1638 @@
+# 📐 Component Architecture Guide
+
+> Guía completa de patrones y mejores prácticas para crear componentes en este proyecto
+
+---
+
+## 🎯 Filosofía Principal
+
+### Separación de Responsabilidades
+- **Lógica** → Custom Hooks
+- **UI** → Componentes React
+- **Tipos** → Archivos de interfaces
+- **Datos** → Services/Stores
+
+### Regla de Oro
+**Un componente debe hacer UNA cosa bien.** Si hace más, divídelo.
+
+---
+
+## 📁 Estructura de Carpetas
+
+### Patrón Estándar
+
+```
+feature/
+├── _components/           # Componentes React
+│   ├── MainComponent.tsx  # Componente principal
+│   ├── SubComponent1.tsx  # Sub-componente
+│   ├── SubComponent2.tsx  # Sub-componente
+│   └── __tests__/         # Tests de componentes
+├── _hooks/                # Custom hooks
+│   ├── useFeatureLogic.tsx
+│   └── useFeatureData.tsx
+├── _interfaces/           # TypeScript interfaces
+│   └── featureInterfaces.ts
+├── _services/            # API calls
+│   └── featureService.ts
+└── _utils/               # Utilidades específicas
+    └── helpers.ts
+```
+
+### Ejemplo Real del Proyecto
+
+```
+eventos/[eventId]/en-vivo/
+├── _components/
+│   ├── EventByIdPage.tsx          # ✅ Orquestador (90 líneas)
+│   ├── EventPageHeader.tsx        # ✅ UI puro (60 líneas)
+│   ├── EventMainScreen.tsx        # ✅ Display logic (158 líneas)
+│   └── EventControls.tsx          # ✅ Control logic (75 líneas)
+├── _hooks/
+│   ├── useEventPermissions.tsx    # ✅ Lógica compartida
+│   ├── useEventNavigation.tsx     # ✅ Navegación
+│   └── useEventSongsListener.tsx  # ✅ Event listeners
+└── _interfaces/
+    └── liveEventInterfaces.ts     # ✅ Todos los tipos
+```
+
+---
+
+## 🔌 Capa de Servicios (API)
+
+### Ubicación y Estructura
+
+```
+feature/
+└── _services/
+    ├── featureService.ts      # Servicios específicos del feature
+    └── anotherService.ts
+
+/global/services/
+└── HandleAPI.ts               # Utilidades base (FetchData, PostData)
+```
+
+### Utilidades Base
+
+Este proyecto usa **TanStack Query (React Query)** para manejo de estado del servidor. Tenemos 2 utilidades principales:
+
+#### 1. **FetchData** - Para GET requests
+
+```typescript
+// En: /global/services/HandleAPI.ts
+export const FetchData = <TResponse>({
+  key,                        // Query key para cache
+  url,                        // URL del endpoint
+  isEnabled = true,          // Condicional de ejecución
+  skipAuth = false,          // Si omitir autenticación
+  refetchOnMount = false,
+  refetchOnWindowFocus = false,
+}: {
+  key: string | string[];
+  url: string;
+  isEnabled?: boolean;
+  skipAuth?: boolean;
+  refetchOnMount?: boolean;
+  refetchOnWindowFocus?: boolean;
+}): UseQueryResult<TResponse, Error>
+```
+
+**Configuración por defecto:**
+- `staleTime`: 5 minutos
+- `gcTime`: 10 minutos  
+- `retry`: 3 intentos con exponential backoff
+- `refetchOnWindowFocus`: false
+- `refetchOnReconnect`: false
+
+#### 2. **PostData** - Para POST/PUT/DELETE/PATCH requests
+
+```typescript
+// En: /global/services/HandleAPI.ts
+export const PostData = <TResponse, TData = undefined>({
+  key,                    // Mutation key
+  url,                    // URL del endpoint
+  method = 'POST',       // HTTP method
+  isFormData,            // Si es FormData
+  skipAuth = false,      // Si omitir autenticación
+}: {
+  key: string;
+  url: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  isFormData?: boolean;
+  skipAuth?: boolean;
+}): UseMutationResult<TResponse, Error, TData | null, unknown>
+```
+
+### Patrón: Crear un Servicio
+
+#### Paso 1: Crear el archivo de servicio
+
+```typescript
+// _services/eventByIdService.ts
+import { FetchData } from '@global/services/HandleAPI';
+import { Server1API } from '@global/config/constants';
+import { EventByIdInterface } from '../_interfaces/eventInterfaces';
+
+export const getEventsById = ({
+  bandId,
+  eventId,
+}: {
+  bandId: string;
+  eventId: string;
+}) => {
+  return FetchData<EventByIdInterface>({
+    key: ['Event', bandId, eventId],
+    url: `${Server1API}/bands/${bandId}/events/${eventId}`,
+    isEnabled: !!bandId && !!eventId,
+  });
+};
+```
+
+**Características clave:**
+- ✅ Nombre descriptivo: `get[Resource]` | `create[Resource]` | `update[Resource]` | `delete[Resource]`
+- ✅ Query key array con parámetros dinámicos
+- ✅ Validación con `isEnabled`
+- ✅ Tipado genérico `<TResponse>`
+
+#### Paso 2: Usar el servicio en un hook
+
+```typescript
+// _hooks/useEventByIdPage.tsx
+import { getEventsById } from '../_services/eventByIdService';
+
+export const useEventByIdPage = ({ params }) => {
+  const { data, isLoading, status, refetch } = getEventsById({
+    bandId: params.bandId,
+    eventId: params.eventId,
+  });
+  
+  // Lógica adicional del hook (side effects, transformaciones, etc.)
+  useEffect(() => {
+    if (status === 'success' && data) {
+      $event.set(data);
+    }
+  }, [status, data]);
+  
+  return { data, isLoading, refetch };
+};
+```
+
+#### Paso 3: Usar el hook en el componente
+
+```typescript
+// _components/EventByIdPage.tsx
+export const EventByIdPage = ({ params }) => {
+  const { data, isLoading, refetch } = useEventByIdPage({ params });
+  
+  if (isLoading) return <Loading />;
+  
+  return <EventContent data={data} refetch={refetch} />;
+};
+```
+
+### Patrón: Mutations (POST/PUT/DELETE)
+
+#### Ejemplo 1: Simple Mutation
+
+```typescript
+// _services/bandService.ts
+import { PostData } from '@global/services/HandleAPI';
+import { Server1API } from '@global/config/constants';
+
+interface CreateBandRequest {
+  name: string;
+}
+
+interface CreateBandResponse {
+  success: boolean;
+  data: { id: number; name: string };
+}
+
+export const createBandService = () => {
+  return PostData<CreateBandResponse, CreateBandRequest>({
+    key: 'CreateBand',
+    url: `${Server1API}/bands`,
+    method: 'POST',
+  });
+};
+```
+
+#### Ejemplo 2: Usar Mutation en Hook
+
+```typescript
+// _hooks/useCreateBand.tsx
+import { createBandService } from '../_services/bandService';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-hot-toast';
+
+export const useCreateBand = () => {
+  const queryClient = useQueryClient();
+  
+  const { mutate, isPending, status } = createBandService();
+  
+  const handleCreate = (bandName: string) => {
+    mutate({ name: bandName }, {
+      onSuccess: (response) => {
+        toast.success('Banda creada exitosamente');
+        // Invalidar queries relacionadas
+        queryClient.invalidateQueries({ queryKey: ['bands'] });
+      },
+      onError: (error) => {
+        toast.error('Error al crear banda');
+        console.error(error);
+      },
+    });
+  };
+  
+  return { handleCreate, isPending, status };
+};
+```
+
+#### Ejemplo 3: Mutation con FormData
+
+```typescript
+//  _services/songService.ts
+export const uploadSongImageService = () => {
+  return PostData<UploadResponse, FormData>({
+    key: 'UploadSongImage',
+    url: `${Server1API}/songs/upload`,
+    method: 'POST',
+    isFormData: true,  // ← Importante para FormData
+  });
+};
+
+// Uso en hook
+export const useUploadSongImage = () => {
+  const { mutate, isPending } = uploadSongImageService();
+  
+  const handleUpload = (file: File, songId: number) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('songId', songId.toString());
+    
+    mutate(formData, {
+      onSuccess: () => toast.success('Imagen subida'),
+      onError: () => toast.error('Error al subir imagen'),
+    });
+  };
+  
+  return { handleUpload, isPending };
+};
+```
+
+### Patrón: Queries con Parámetros Dinámicos
+
+```typescript
+// _services/songListService.ts
+export const getSongsOfBand = ({
+  bandId,
+  enabled = true,
+}: {
+  bandId: string;
+  enabled?: boolean;
+}) => {
+  return FetchData<SongListResponse>({
+    key: ['SongsOfBand', bandId],  // ← Cache key incluye bandId
+    url: `${Server1API}/bands/${bandId}/songs`,
+    isEnabled: !!bandId && enabled,  // ← Siempre validar parámetros
+  });
+};
+
+// Uso con habilitación condicional
+export const useSongsOfBand = (bandId: string, shouldFetch: boolean) => {
+  return getSongsOfBand({
+    bandId,
+    enabled: shouldFetch,  // Se puede controlar cuándo hace fetch
+  });
+};
+```
+
+### Patrón: Invalidación de Queries
+
+```typescript
+// Después de una mutación exitosa
+const queryClient = useQueryClient();
+
+// Invalidar query específica
+queryClient.invalidateQueries({
+  queryKey: ['Event', bandId, eventId],
+});
+
+// Invalidar todas las queries que empiecen con 'Event'
+queryClient.invalidateQueries({
+  queryKey: ['Event'],
+});
+
+// Invalidar múltiples queries
+const handleSuccess = () => {
+  queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
+  queryClient.invalidateQueries({ queryKey: ['Event', bandId, eventId] });
+};
+```
+
+### Manejo de Errores
+
+#### En el Servicio (usando PostData)
+
+```typescript
+// HandleAPI.ts ya maneja errores básicos
+export const PostData = <TResponse, TData = undefined>({...}) => {
+  return useMutation<TResponse, Error, TData | null, unknown>({
+    mutationKey: [key],
+    mutationFn: async (data?: TData | null) => {
+      return await fetchAPI<TResponse>({
+        url,
+        method,
+        body: (data as FormData | null) ?? undefined,
+        isFormData,
+        skipAuth,
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+      throw new Error(error.message);  // ← Error propagado
+    },
+  });
+};
+```
+
+#### En el Hook (manejo personalizado)
+
+```typescript
+export const useCreateEvent = () => {
+  const { mutate, isPending, error } = createEventService();
+  
+  const handleCreate = (eventData) => {
+    mutate(eventData, {
+      onSuccess: (response) => {
+        toast.success('Evento creado');
+      },
+      onError: (error) => {
+        // Manejo personalizado por tipo de error
+        if (error.message.includes('401')) {
+          toast.error('No autorizado');
+        } else if (error.message.includes('400')) {
+          toast.error('Datos inválidos');
+        } else {
+          toast.error('Error desconocido');
+        }
+      },
+    });
+  };
+  
+  return { handleCreate, isPending, error };
+};
+```
+
+### Naming Conventions
+
+```typescript
+// Servicios GET
+export const get[Resource]      // getEventById, getSongsOfBand
+export const fetch[Resource]    // fetchUserData
+export const list[Resource]     // listEvents
+
+// Servicios POST/CREATE
+export const create[Resource]Service   // createBandService
+export const add[Resource]Service      // addSongToEventService
+
+// Servicios PUT/PATCH
+export const update[Resource]Service   // updateEventService
+export const edit[Resource]Service     // editSongService
+
+// Servicios DELETE
+export const delete[Resource]Service   // deleteEventService
+export const remove[Resource]Service   // removeMemberService
+
+// Servicios especiales
+export const toggle[Action]Service     // toggleBlessingService
+export const upload[Resource]Service   // uploadLyricsService
+```
+
+### Mejores Prácticas
+
+#### ✅ DO: Query Keys Descriptivas
+
+```typescript
+// ✅ BIEN: Query key con parámetros
+FetchData({
+  key: ['Event', bandId, eventId],
+  url: `...`,
+});
+
+// ✅ BIEN: Query key para listado
+FetchData({
+  key: ['EventsOfBand', bandId],
+  url: `...`,
+});
+
+// ❌ MAL: Query key genérica
+FetchData({
+  key: ['data'],
+  url: `...`,
+});
+```
+
+#### ✅ DO: Validar Parámetros con isEnabled
+
+```typescript
+// ✅ BIEN: Validación de parámetros
+export const getEvent = ({ bandId, eventId }) => {
+  return FetchData({
+    key: ['Event', bandId, eventId],
+    url: `${Server1API}/bands/${bandId}/events/${eventId}`,
+    isEnabled: !!bandId && !!eventId,  // ← Evita llamadas innecesarias
+  });
+};
+
+// ❌ MAL: Sin validación
+// Puede hacer llamadas con undefined/null
+```
+
+#### ✅ DO: Tipar Requests y Responses
+
+```typescript
+// ✅ BIEN: Tipado completo
+interface CreateEventRequest {
+  title: string;
+  date: string;
+  bandId: number;
+}
+
+interface CreateEventResponse {
+  success: boolean;
+  data: { id: number; title: string };
+}
+
+export const createEventService = () => {
+  return PostData<CreateEventResponse, CreateEventRequest>({
+    key: 'CreateEvent',
+    url: `${Server1API}/events`,
+    method: 'POST',
+  });
+};
+
+// ❌ MAL: Sin tipos o usando 'any'
+```
+
+#### ✅ DO: Invalidar Queries Relevantes
+
+```typescript
+// ✅ BIEN: Invalidar relacionados
+onSuccess: () => {
+  queryClient.invalidateQueries({ queryKey: ['EventsOfBand'] });
+  queryClient.invalidateQueries({ queryKey: ['Event', bandId, eventId] });
+  toast.success('Guardado');
+};
+
+// ❌ MAL: No invalidar cache
+// Los datos se quedan obsoletos
+```
+
+#### ✅ DO: Manejar Estados de Loading
+
+```typescript
+// ✅ BIEN: UI responsive
+export const Component = () => {
+  const { data, isLoading, error } = useEventData();
+  
+  if (isLoading) return <Skeleton />;
+  if (error) return <ErrorState />;
+  if (!data) return <EmptyState />;
+  
+  return <Content data={data} />;
+};
+```
+
+### Ejemplo Completo: Feature con Servicios
+
+```
+eventos/
+├── _services/
+│   ├── eventService.ts          # CRUD de eventos
+│   └── eventSongsService.ts     # Canciones de evento
+├── _hooks/
+│   ├── useEventData.tsx         # Usa eventService
+│   ├── useCreateEvent.tsx       # Usa eventService.create
+│   └── useEventSongs.tsx        # Usa eventSongsService
+├── _interfaces/
+│   └── eventInterfaces.ts       # Request/Response types
+└── _components/
+    └── EventsOfBand.tsx         # Usa los hooks
+```
+
+**eventService.ts:**
+```typescript
+import { FetchData, PostData } from '@global/services/HandleAPI';
+import { Server1API } from '@global/config/constants';
+
+// GET list
+export const getEventsOfBand = ({ bandId }) => {
+  return FetchData<EventListResponse>({
+    key: ['EventsOfBand', bandId],
+    url: `${Server1API}/bands/${bandId}/events`,
+    isEnabled: !!bandId,
+  });
+};
+
+// GET single
+export const getEventById = ({ bandId, eventId }) => {
+  return FetchData<EventResponse>({
+    key: ['Event', bandId, eventId],
+    url: `${Server1API}/bands/${bandId}/events/${eventId}`,
+    isEnabled: !!bandId && !!eventId,
+  });
+};
+
+// CREATE
+export const createEventService = () => {
+  return PostData<CreateEventResponse, CreateEventRequest>({
+    key: 'CreateEvent',
+    url: `${Server1API}/events`,
+    method: 'POST',
+  });
+};
+
+// UPDATE
+export const updateEventService = () => {
+  return PostData<UpdateEventResponse, UpdateEventRequest>({
+    key: 'UpdateEvent',
+    url: `${Server1API}/events`,
+    method: 'PUT',
+  });
+};
+
+// DELETE
+export const deleteEventService = () => {
+  return PostData<DeleteEventResponse, { eventId: number }>({
+    key: 'DeleteEvent',
+    url: `${Server1API}/events`,
+    method: 'DELETE',
+  });
+};
+```
+
+**useCreateEvent.tsx:**
+```typescript
+import { createEventService } from '../_services/eventService';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+
+export const useCreateEvent = (bandId: string) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { mutate, isPending, error, status } = createEventService();
+  
+  const handleCreate = (eventData: CreateEventRequest) => {
+    mutate(eventData, {
+      onSuccess: (response) => {
+        toast.success('Evento creado exitosamente');
+        queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
+        router.push(`/grupos/${bandId}/eventos/${response.data.id}`);
+      },
+      onError: (error) => {
+        toast.error('Error al crear evento');
+        console.error(error);
+      },
+    });
+  };
+  
+  return { handleCreate, isPending, error, status };
+};
+```
+
+---
+
+## 🪝 Cuándo Crear un Custom Hook
+
+
+### Indicadores de que NECESITAS un Hook
+
+✅ **Lógica compleja de estado**
+```tsx
+// ❌ MAL: Todo en el componente
+const [value1, setValue1] = useState('');
+const [value2, setValue2] = useState(0);
+const [isValid, setIsValid] = useState(false);
+useEffect(() => { /* validación compleja */ }, [value1, value2]);
+
+// ✅ BIEN: Hook dedicado
+const { value1, value2, isValid, handleChange } = useFormValidation();
+```
+
+✅ **Lógica duplicada entre componentes**
+```tsx
+// Si dos componentes hacen lo mismo → Hook compartido
+// Ejemplo: useEventPermissions usado por EventByIdPage y EventControls
+```
+
+✅ **Más de 3 `useState` relacionados**
+```tsx
+// ❌ MAL
+const [isOpen, setIsOpen] = useState(false);
+const [selectedItem, setSelectedItem] = useState(null);
+const [isLoading, setIsLoading] = useState(false);
+
+// ✅ BIEN
+const { isOpen, selectedItem, isLoading, open, close, select } = useModal();
+```
+
+✅ **Efectos secundarios complejos**
+```tsx
+// ❌ MAL: useEffect largo en componente
+useEffect(() => {
+  /* 30+ líneas de lógica de suscripción */
+}, [deps]);
+
+// ✅ BIEN: Hook dedicado
+useEventSongsListener({ eventId, refetch });
+```
+
+✅ **Cálculos computacionalmente costosos**
+```tsx
+// ✅ BIEN: Hook para lógica pesada
+const { filteredData, sortedData } = useListFilter({
+  data,
+  searchFields,
+  filterPredicate,
+  sortComparator,
+});
+```
+
+### Tipos de Hooks que Debes Crear
+
+#### 1. **Hooks de Estado/Lógica** (`use[Feature]Logic`)
+Manejan estado y lógica de negocio.
+
+```tsx
+// Ejemplo: useMusicPlayer.tsx
+export const useMusicPlayer = () => {
+  const [playing, setPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.5);
+  
+  const handlePlay = () => setPlaying(true);
+  const handlePause = () => setPlaying(false);
+  
+  return {
+    playing,
+    volume,
+    handlePlay,
+    handlePause,
+    setVolume,
+  };
+};
+```
+
+#### 2. **Hooks de Datos** (`use[Feature]Data`)
+Manejan fetching y cache de datos.
+
+```tsx
+// Ejemplo: useEventByIdPage.tsx
+export const useEventByIdPage = ({ params }) => {
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['Event', params.bandId, params.eventId],
+    queryFn: () => fetchEvent(params),
+  });
+  
+  return { data, isLoading, refetch };
+};
+```
+
+#### 3. **Hooks de Permisos** (`use[Feature]Permissions`)
+Encapsulan lógica de autorización.
+
+```tsx
+// Ejemplo: useEventPermissions.tsx
+export const useEventPermissions = () => {
+  const user = useStore($user);
+  const event = useStore($event);
+  
+  const isAdminEvent = useMemo(() => {
+    // Lógica compleja de permisos
+  }, [user, event]);
+  
+  return { isAdminEvent, isEventManager, showActionButtons };
+};
+```
+
+#### 4. **Hooks de Navegación** (`use[Feature]Navigation`)
+Manejan navegación y redirección.
+
+```tsx
+// Ejemplo: useEventNavigation.tsx
+export const useEventNavigation = ({ bandId, eventId }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  
+  const handleBackToEvents = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['EventsOfBand'] });
+    router.push(`/grupos/${bandId}/eventos/${eventId}`);
+  }, [bandId, eventId]);
+  
+  return { handleBackToEvents };
+};
+```
+
+#### 5. **Hooks de Listeners** (`use[Feature]Listener`)
+Manejan suscripciones y eventos.
+
+```tsx
+// Ejemplo: useEventSongsListener.tsx
+export const useEventSongsListener = ({ eventId, refetch }) => {
+  useEffect(() => {
+    const handler = (event) => { /* ... */ };
+    window.addEventListener('eventSongsUpdated', handler);
+    return () => window.removeEventListener('eventSongsUpdated', handler);
+  }, [eventId, refetch]);
+};
+```
+
+#### 6. **Hooks Compartidos/Genéricos** (`use[GenericPurpose]`)
+Reutilizables en múltiples features.
+
+```tsx
+// Ejemplo: useListFilter.tsx
+export const useListFilter = <T,>({
+  data,
+  searchFields,
+  filterPredicate,
+  sortComparator,
+}) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const filteredData = useMemo(() => {
+    // Lógica genérica de filtrado
+  }, [data, searchTerm, filterPredicate]);
+  
+  return { searchTerm, setSearchTerm, filteredData };
+};
+```
+
+---
+
+## 🧩 Cuándo Separar Componentes
+
+### Indicadores de que NECESITAS Separar
+
+✅ **Componente > 150 líneas**
+```tsx
+// ✅ Divide en sub-componentes
+// EventAdminPage (285 líneas) → 
+//   EventAdminHeader (40 líneas)
+//   EventInfoCard (50 líneas)
+//   EventQuickActions (30 líneas)
+//   EventStatsCard (40 líneas)
+```
+
+✅ **Bloques de JSX que se repiten**
+```tsx
+// ❌ MAL: Repetición
+<div className="header">
+  <BackwardIcon />
+  <h1>{title}</h1>
+  <div>{actions}</div>
+</div>
+
+// ✅ BIEN: Componente reutilizable
+<ListHeader
+  title={title}
+  onBack={handleBack}
+  actionButton={<AddButton />}
+/>
+```
+
+✅ **Secciones con responsabilidad clara**
+```tsx
+// ✅ BIEN: Cada sección es un componente
+<EventByIdPage>
+  <EventPageHeader />      {/* Header */}
+  <EventMainScreen />      {/* Pantalla principal */}
+  <EventSimpleTitle />     {/* Título */}
+  <EventConnectedUsers />  {/* Usuarios */}
+  <EventControls />        {/* Controles */}
+</EventByIdPage>
+```
+
+✅ **Lógica condicional compleja**
+```tsx
+// ❌ MAL: Condicionales en componente principal
+{isAdmin && canEdit && !isLocked && (
+  <div>
+    {/* 50 líneas de JSX */}
+  </div>
+)}
+
+// ✅ BIEN: Componente dedicado
+{showAdminControls && <AdminControls />}
+```
+
+### Tipos de Componentes que Debes Crear
+
+#### 1. **Componentes de Página/Orquestadores**
+Coordinan otros componentes, usan hooks, poca UI propia.
+
+```tsx
+// Ejemplo: EventByIdPage.tsx (90 líneas)
+export const EventByIdPage = ({ params }) => {
+  // Hooks
+  const { isLoading, refetch } = useEventByIdPage({ params });
+  const { isAdminEvent, showActionButtons } = useEventPermissions();
+  const { handleBackToEvents } = useEventNavigation(params);
+  
+  // Mínima lógica
+  const memoizedRefetch = useCallback(() => refetch(), [refetch]);
+  
+  // Composición de sub-componentes
+  return (
+    <div>
+      <EventPageHeader {...headerProps} />
+      <EventMainScreen />
+      <EventControls {...controlProps} />
+    </div>
+  );
+};
+```
+
+**Características:**
+- ✅ Usa múltiples hooks
+- ✅ Orquesta sub-componentes
+- ✅ Poca lógica propia
+- ✅ Máximo 100-150 líneas
+
+#### 2. **Componentes de UI Puros**
+Solo reciben props y renderizan, sin lógica compleja.
+
+```tsx
+// Ejemplo: EventPageHeader.tsx (60 líneas)
+export const EventPageHeader = ({
+  bandId,
+  eventId,
+  onBack,
+  showActionButtons,
+  isAdminEvent,
+  refetch,
+}: EventPageHeaderProps) => {
+  return (
+    <div className="header">
+      <button onClick={onBack}>
+        <BackwardIcon />
+        Volver
+      </button>
+      <h1>Evento en Vivo</h1>
+      {showActionButtons && (
+        <div>
+          <EditEventButton {...editProps} />
+          <DeleteEventButton {...deleteProps} />
+        </div>
+      )}
+    </div>
+  );
+};
+```
+
+**Características:**
+- ✅ Props tipadas con interface
+- ✅ Sin estado interno (o mínimo)
+- ✅ Sin efectos secundarios
+- ✅ Fácil de testear
+- ✅ 30-80 líneas
+
+#### 3. **Componentes Compartidos/Genéricos**
+Reutilizables en múltiples features.
+
+```tsx
+// Ejemplo: ListHeader.tsx
+export const ListHeader = ({
+  title,
+  subtitle,
+  onBack,
+  actionButton,
+  gradientFrom,
+  gradientTo,
+}: ListHeaderProps) => {
+  return (
+    <div>
+      <button onClick={onBack}><BackwardIcon />Volver</button>
+      <h1 className={`${gradientFrom} ${gradientTo}`}>{title}</h1>
+      <p>{subtitle}</p>
+      {actionButton}
+    </div>
+  );
+};
+```
+
+**Características:**
+- ✅ Genérico y configurable
+- ✅ Props claras y tipadas
+- ✅ Ubicado en `/global/components/`
+- ✅ Documentado con ejemplos
+
+#### 4. **Componentes de Display/Visualización**
+Muestran datos complejos de forma específica.
+
+```tsx
+// Ejemplo: LyricsShowcase.tsx
+export const LyricsShowcase = ({ lyricsShowcaseProps }) => {
+  const lyricSelected = useStore($lyricSelected);
+  const selectedSongData = useStore($selectedSongData);
+  
+  const visibleLyricsData = useMemo(() => {
+    // Lógica de visualización compleja
+  }, [selectedSongData, lyricSelected]);
+  
+  return (
+    <AnimatePresence>
+      {visibleLyricsData.map(lyric => (
+        <LyricsShowcaseCard key={lyric.position} {...lyric} />
+      ))}
+    </AnimatePresence>
+  );
+};
+```
+
+#### 5. **Componentes de Control/Interacción**
+Manejan interacciones del usuario.
+
+```tsx
+// Ejemplo: EventControls.tsx (75 líneas)
+export const EventControls = ({ params, refetch, isLoading }) => {
+  const eventAdminName = useStore($eventAdminName);
+  const { isAdminEvent, isEventManager } = useEventPermissions();
+  
+  useEffect(() => { refetch(); }, [eventAdminName]);
+  
+  return (
+    <section>
+      <EventControlsSongsList {...listProps} />
+      {isAdminEvent && <EventControlsLyricsSelect />}
+      <EventControlsButtons {...buttonProps} />
+    </section>
+  );
+};
+```
+
+---
+
+## 📝 Interfaces y Tipos
+
+### Ubicación
+
+```
+feature/
+└── _interfaces/
+    └── featureInterfaces.ts  # ✅ TODAS las interfaces aquí
+```
+
+### Qué Incluir
+
+```typescript
+// featureInterfaces.ts
+
+// 1. Props de componentes principales
+export interface MainComponentProps {
+  bandId: string;
+  eventId: string;
+  onClose: () => void;
+}
+
+// 2. Props de sub-componentes
+export interface HeaderProps {
+  title: string;
+  onBack: () => void;
+}
+
+// 3. Props de hooks
+export interface UseFeatureLogicProps {
+  id: string;
+  enabled: boolean;
+}
+
+// 4. Tipos de datos específicos del feature
+export interface FeatureData {
+  id: number;
+  name: string;
+  status: 'active' | 'inactive';
+}
+
+// 5. Tipos de retorno de hooks (opcional, si es complejo)
+export interface UseFeatureLogicReturn {
+  data: FeatureData | null;
+  isLoading: boolean;
+  handleAction: () => void;
+}
+```
+
+### Convenciones de Nombres
+
+```typescript
+// Props de componentes
+export interface ComponentNameProps { }
+
+// Props de hooks
+export interface UseHookNameProps { }
+
+// Retorno de hooks (solo si es complejo)
+export interface UseHookNameReturn { }
+
+// Tipos de datos
+export interface EntityName { }
+```
+
+### Ejemplo Real del Proyecto
+
+```typescript
+// liveEventInterfaces.ts
+export interface EventPageHeaderProps {
+  bandId: string;
+  eventId: string;
+  onBack: () => void;
+  showActionButtons: boolean;
+  isAdminEvent: boolean;
+  refetch: () => void;
+}
+
+export interface UseEventNavigationProps {
+  bandId: string;
+  eventId: string;
+}
+
+export interface UseEventSongsListenerProps {
+  eventId: string;
+  refetch: () => void;
+}
+```
+
+---
+
+## 📏 Reglas de Líneas de Código
+
+### Límites Recomendados
+
+| Tipo | Líneas Ideales | Máximo Aceptable | Acción si Excede |
+|------|----------------|------------------|------------------|
+| Hook | 50-100 | 150 | Dividir en sub-hooks |
+| Componente UI | 30-80 | 100 | Extraer sub-componentes |
+| Componente de Página | 80-120 | 150 | Extraer lógica a hooks |
+| Componente Complejo | 100-150 | 200 | Refactorizar urgente |
+
+### Cómo Medir
+
+```bash
+# Contar líneas de un archivo
+wc -l Component.tsx
+
+# Buscar archivos grandes
+find . -name "*.tsx" -exec wc -l {} \; | sort -nr | head -20
+```
+
+### Señales de Alerta
+
+🚨 **Componente > 200 líneas**
+```tsx
+// ACCIÓN INMEDIATA REQUERIDA
+// 1. Extraer lógica a hooks
+// 2. Dividir UI en sub-componentes
+// 3. Mover utilidades a _utils/
+```
+
+⚠️ **Componente 150-200 líneas**
+```tsx
+// CONSIDERA REFACTORIZAR
+// 1. Revisar si hay lógica extraíble
+// 2. Buscar bloques JSX repetitivos
+// 3. Evaluar complejidad
+```
+
+✅ **Componente < 150 líneas**
+```tsx
+// BIEN, pero monitorear
+// Si crece más, planear refactorización
+```
+
+---
+
+## ✅ Checklist de Refactorización
+
+Usa esto cuando vayas a refactorizar un componente existente:
+
+### Paso 1: Análisis
+- [ ] ¿Cuántas líneas tiene el componente?
+- [ ] ¿Cuántos `useState` tiene?
+- [ ] ¿Cuántos `useEffect` tiene?
+- [ ] ¿Hay lógica duplicada con otros componentes?
+- [ ] ¿Hay bloques JSX repetitivos?
+
+### Paso 2: Planificación
+- [ ] Identificar lógica para extraer a hooks
+- [ ] Identificar UI para extraer a componentes
+- [ ] Crear lista de hooks necesarios
+- [ ] Crear lista de componentes necesarios
+- [ ] Diseñar interfaces
+
+### Paso 3: Crear Estructura
+```bash
+feature/
+├── _interfaces/
+│   └── featureInterfaces.ts  # ← Crear PRIMERO
+├── _hooks/
+│   ├── useFeatureLogic.tsx   # ← Crear hooks
+│   └── useFeatureData.tsx
+└── _components/
+    ├── SubComponent1.tsx      # ← Crear componentes
+    └── SubComponent2.tsx
+```
+
+### Paso 4: Implementación
+- [ ] Crear archivo de interfaces
+- [ ] Implementar hooks (de lo más simple a lo más complejo)
+- [ ] Implementar componentes UI puros
+- [ ] Refactorizar componente principal
+- [ ] Actualizar imports
+
+### Paso 5: Verificación
+- [ ] Build compila sin errores
+- [ ] Tests existentes pasan
+- [ ] No hay warnings nuevos de TypeScript
+- [ ] No hay violations de ESLint
+- [ ] Componente principal < 150 líneas
+- [ ] Cada hook tiene responsabilidad clara
+- [ ] Cada componente tiene responsabilidad clara
+
+---
+
+## 🎨 Patrones Establecidos
+
+### Patrón: Lista con Filtrado
+
+```tsx
+// 1. Hook de filtrado específico
+// _hooks/useItemsFilter.tsx
+export const useItemsFilter = () => {
+  const [statusFilter, setStatusFilter] = useState('all');
+  
+  const filter Predicate = useMemo(() => {
+    return (item) => {
+      if (statusFilter === 'all') return true;
+      return item.status === statusFilter;
+    };
+  }, [statusFilter]);
+  
+  return { statusFilter, setStatusFilter, filterPredicate };
+};
+
+// 2. Hook genérico de lista
+// Usar useListFilter.tsx del global
+
+// 3. Componente principal
+export const ItemsList = ({ params }) => {
+  const { data, isLoading } = getItems(params);
+  
+  const { statusFilter, setStatusFilter, filterPredicate } = useItemsFilter();
+  const { searchTerm, setSearchTerm, filteredData } = useListFilter({
+    data,
+    searchFields: (item) => [item.name, item.description],
+    filterPredicate,
+  });
+  
+  const { handleBack } = useBackNavigation(params);
+  
+  return (
+    <div>
+      <ListHeader {...headerProps} />
+      <SearchAndFilter {...filterProps} />
+      {filteredData?.length > 0 ? (
+        <Table data={filteredData} />
+      ) : (
+        <EmptyState {...emptyProps} />
+      )}
+    </div>
+  );
+};
+```
+
+### Patrón: Página con Permisos
+
+```tsx
+// 1. Hook de permisos
+export const useFeaturePermissions = () => {
+  const user = useStore($user);
+  const feature = useStore($feature);
+  
+  const isAdmin = useMemo(() => {
+    // Lógica de permisos
+  }, [user, feature]);
+  
+  return { isAdmin, canEdit, canDelete };
+};
+
+// 2. Componente de página
+export const FeaturePage = ({ params }) => {
+  const { data, refetch } = useFeatureData(params);
+  const { isAdmin, canEdit } = useFeaturePermissions();
+  const { handleBack } = useNavigation(params);
+  
+  return (
+    <div>
+      <PageHeader onBack={handleBack} showActions={canEdit} />
+      <FeatureContent data={data} />
+      {isAdmin && <AdminControls />}
+    </div>
+  );
+};
+```
+
+### Patrón: Modal/Form Complejo
+
+```tsx
+// 1. Hook de form
+export const useFeatureForm = (initialData) => {
+  const [form, setForm] = useState(initialData);
+  const [isValid, setIsValid] = useState(false);
+  
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  
+  const validate = useMemo(() => {
+    // Lógica de validación
+  }, [form]);
+  
+  useEffect(() => {
+    setIsValid(validate());
+  }, [validate]);
+  
+  return { form, isValid, handleChange, setForm };
+};
+
+// 2. Componente de modal
+export const FeatureModal = ({ isOpen, onClose, initialData }) => {
+  const { form, isValid, handleChange } = useFeatureForm(initialData);
+  const { mutate, isPending } = useCreateFeature();
+  
+  const handleSubmit = () => {
+    if (!isValid) return;
+    mutate(form, {
+      onSuccess: () => onClose(),
+    });
+  };
+  
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <FormSection1 data={form} onChange={handleChange} />
+      <FormSection2 data={form} onChange={handleChange} />
+      <ModalFooter>
+        <Button onClick={handleSubmit} isLoading={isPending}>
+          Guardar
+        </Button>
+      </ModalFooter>
+    </Modal>
+  );
+};
+```
+
+---
+
+## ❌ Anti-Patrones a Evitar
+
+### 1. Componentes Monolíticos
+```tsx
+// ❌ MAL: Todo en un componente (300+ líneas)
+export const HugeComponent = () => {
+  const [state1, setState1] = useState();
+  const [state2, setState2] = useState();
+  // ... 10 más estados
+  
+  useEffect(() => { /* 50 líneas */ }, []);
+  useEffect(() => { /* 50 líneas */ }, []);
+  // ... más effects
+  
+  const helper1 = () => { /* 30 líneas */ };
+  const helper2 = () => { /* 30 líneas */ };
+  // ... más helpers
+  
+  return (
+    <div>
+      {/* 100+ líneas de JSX */}
+    </div>
+  );
+};
+
+// ✅ BIEN: Dividido
+export const ProperComponent = () => {
+  const logic = useComponentLogic();
+  const data = useComponentData();
+  
+  return (
+    <div>
+      <Header {...headerProps} />
+      <Content {...contentProps} />
+      <Footer {...footerProps} />
+    </div>
+  );
+};
+```
+
+### 2. Props Drilling Excesivo
+```tsx
+// ❌ MAL: Pasando props por muchos niveles
+<GrandParent data={data}>
+  <Parent data={data}>
+    <Child data={data}>
+      <GrandChild data={data} />
+    </Child>
+  </Parent>
+</GrandParent>
+
+// ✅ BIEN: Usar context o store
+const data = useStore($data);
+```
+
+### 3. Lógica en el JSX
+```tsx
+// ❌ MAL: Cálculos complejos en el render
+<div>
+  {items.filter(x => x.active)
+    .map(x => ({ ...x, computed: x.a + x.b }))
+    .sort((a, b) => a.computed - b.computed)
+    .map(item => <Item key={item.id} {...item} />)}
+</div>
+
+// ✅ BIEN: Mover a useMemo o hook
+const processedItems = useMemo(() => {
+  return items
+    .filter(x => x.active)
+    .map(x => ({ ...x, computed: x.a + x.b }))
+    .sort((a, b) => a.computed - b.computed);
+}, [items]);
+
+return <div>{processedItems.map(item => <Item key={item.id} {...item} />)}</div>;
+```
+
+### 4. Interfaces Inline
+```tsx
+// ❌ MAL: Tipos inline
+const Component = ({ data }: { data: { id: number; name: string } }) => {
+  // ...
+};
+
+// ✅ BIEN: Interfaces centralizadas
+// _interfaces/featureInterfaces.ts
+export interface ComponentProps {
+  data: FeatureData;
+}
+
+export interface FeatureData {
+  id: number;
+  name: string;
+}
+
+// Component.tsx
+const Component = ({ data }: ComponentProps) => {
+  // ...
+};
+```
+
+### 5. Efectos Sin Cleanup
+```tsx
+// ❌ MAL: Event listener sin cleanup
+useEffect(() => {
+  window.addEventListener('resize', handleResize);
+}, []);
+
+// ✅ BIEN: Con cleanup
+useEffect(() => {
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+```
+
+---
+
+## 📚 Ejemplos Completos del Proyecto
+
+### Ejemplo 1: Refactorización de EventAdminPage
+
+**Antes:** 285 líneas, todo mezclado
+
+**Después:** 90 líneas + infraestructura
+
+```
+Creado:
+├── _hooks/
+│   ├── useEventPermissions.tsx   (Lógica de permisos)
+│   └── useEventUpdates.tsx       (Event listeners)
+├── _components/
+│   ├── EventAdminHeader.tsx      (Header UI)
+│   ├── EventInfoCard.tsx         (Info display)
+│   ├── EventQuickActions.tsx     (Action buttons)
+│   └── EventStatsCard.tsx        (Stats display)
+└── _interfaces/
+    └── eventAdminInterfaces.ts   (Todos los tipos)
+```
+
+### Ejemplo 2: Infraestructura de Listas
+
+**Componentes afectados:** `EventsOfBand`, `SongsOfBand`
+
+**Solución:** Componentes y hooks compartidos
+
+```
+/global/
+├── hooks/
+│   ├── useListFilter.tsx        (Genérico)
+│   └── useBackNavigation.tsx    (Genérico)
+├── components/
+│   ├── ListHeader.tsx           (Compartido)
+│   ├── SearchAndFilter.tsx      (Compartido)
+│   └── EmptyState.tsx           (Compartido)
+└── interfaces/
+    └── listComponentsInterfaces.ts
+
+/eventos/_hooks/
+└── useEventsFilter.tsx          (Específico)
+
+/canciones/_hooks/
+└── useSongsFilter.tsx           (Específico)
+```
+
+**Resultado:**
+- EventsOfBand: 250 → 180 líneas (28% ↓)
+- SongsOfBand: 244 → 175 líneas (28% ↓)
+- ~80% duplicación eliminada
+
+### Ejemplo 3: Live Event Module
+
+**Problema:** Lógica de permisos duplicada
+
+**Solución:** Hook compartido
+
+```tsx
+// Antes: Lógica duplicada en EventByIdPage y EventControls
+
+// Después: Hook compartido
+// _hooks/useEventPermissions.tsx
+export const useEventPermissions = () => {
+  const user = useStore($user);
+  const event = useStore($event);
+  
+  const isSystemAdmin = useMemo(() => {
+    return user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
+  }, [user]);
+  
+  const isAdminEvent = useMemo(() => {
+    return Boolean((bandMembership?.isAdmin) || isSystemAdmin);
+  }, [bandMembership, isSystemAdmin]);
+  
+  // ... más lógica compartida
+  
+  return { isSystemAdmin, isAdminEvent, isEventManager, isBandMemberOnly };
+};
+
+// Uso en ambos componentes
+const { isAdminEvent, showActionButtons } = useEventPermissions();
+```
+
+**Resultado:**
+- EventByIdPage: 213 → 90 líneas (58% ↓)
+- EventControls: 105 → 75 líneas (29% ↓)
+- Duplicación eliminada 100%
+
+---
+
+## 🚀 Flujo de Trabajo Recomendado
+
+### Para CREAR un Nuevo Feature
+
+1. **Planificación** (5-10 min)
+   - Listar componentes necesarios
+   - Identificar hooks necesarios
+   - Diseñar estructura de carpetas
+
+2. **Crear Estructura** (2-3 min)
+   ```bash
+   mkdir feature/_components
+   mkdir feature/_hooks
+   mkdir feature/_interfaces
+   touch feature/_interfaces/featureInterfaces.ts
+   ```
+
+3. **Interfaces Primero** (5-10 min)
+   - Definir todos los tipos
+   - Props de componentes
+   - Props de hooks
+
+4. **Hooks** (Variable)
+   - Implementar de lo simple a lo complejo
+   - Probar cada hook individualmente
+
+5. **Componentes UI** (Variable)
+   - Crear componentes puros primero
+   - Componer en componente principal
+
+6. **Verificación** (5 min)
+   - Build sin errores
+   - Lints sin warnings
+   - Tests pasan
+
+### Para REFACTORIZAR un Componente Existente
+
+1. **Análisis** (10-15 min)
+   - Contar líneas
+   - Identificar responsabilidades
+   - Buscar duplicación
+
+2. **Plan de Extracción** (10 min)
+   - Qué lógica → hooks
+   - Qué UI → componentes
+   - Qué tipos → interfaces
+
+3. **Crear Interfaces** (5 min)
+   - Extraer todas las interfaces primero
+
+4. **Extraer Hooks** (Variable)
+   - Uno a la vez
+   - Testear que funcione
+
+5. **Extraer Componentes** (Variable)
+   - UI puro primero
+   - Componer después
+
+6. **Refactorizar Principal** (15-20 min)
+   - Usar nuevos hooks
+   - Componer componentes
+   - Limpiar código
+
+7. **Verificación** (10 min)
+   - Build
+   - Tests
+   - Comparar líneas antes/después
+
+---
+
+## 🎯 Métricas de Éxito
+
+### Componente Bien Refactorizado
+
+✅ **Líneas de Código**
+- Componente principal < 150 líneas
+- Cada hook < 100 líneas
+- Cada sub-componente < 80 líneas
+
+✅ **Acoplamiento**
+- Props claramente definidas
+- Sin prop drilling > 2 niveles
+- Dependencies mínimas
+
+✅ **Cohesión**
+- Cada módulo hace UNA cosa
+- Responsabilidades claras
+- Nombres descriptivos
+
+✅ **Testabilidad**
+- Hooks testeables independientemente
+- Componentes con props mockables
+- Sin lógica compleja en JSX
+
+✅ **Mantenibilidad**
+- Fácil encontrar código
+- Fácil hacer cambios
+- Fácil agregar features
+
+---
+
+## 📖 Glosario
+
+**Component** - Función React que retorna JSX
+
+**Hook** - Función que empieza con `use` y puede usar hooks de React
+
+**Pure Component** - Componente sin estado interno ni efectos secundarios
+
+**Container Component** - Componente que maneja lógica y orquesta otros componentes
+
+**Custom Hook** - Hook creado por nosotros para encapsular lógica reutilizable
+
+**Interface** - Tipo TypeScript que define la forma de un objeto
+
+**Props** - Argumentos que recibe un componente
+
+**State** - Datos que pueden cambiar y causan re-renders
+
+**Effect** - Código que se ejecuta después del render (useEffect)
+
+**Memoization** - Cachear resultados de cálculos costosos (useMemo, useCallback)
+
+---
+
+## 🔗 Recursos del Proyecto
+
+- `final_summary.md` - Resumen completo del proyecto de refactorización
+- `walkthrough.md` - Registro detallado de todas las fases
+- `task.md` - Lista de tareas completadas
+
+---
+
+**Última actualización:** 2025-11-24  
+**Versión:** 1.0  
+**Maintainer:** Leo VP

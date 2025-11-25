@@ -11,7 +11,7 @@ export const useSignUpForm = (formInit: {
   password: string;
   password2: string;
   username: string;
-  email: string; // email ahora es opcional
+  email: string; // email es requerido
   birthdate: string;
 }) => {
   const user = useStore($user);
@@ -137,9 +137,11 @@ export const useSignUpForm = (formInit: {
       toast.error('Formato de teléfono inválido. Ejemplo: +50677778888');
       return;
     }
-    // Validar email solo si se proporciona
-    else if (
-      form.email &&
+    else if (!form.email) {
+      setNoFormValue({ ...noFormValue, email: true });
+      toast.error('El correo electrónico es requerido');
+      return;
+    } else if (
       !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)
     ) {
       setNoFormValue({ ...noFormValue, email: true });
@@ -151,7 +153,7 @@ export const useSignUpForm = (formInit: {
       password: form.password,
       phone: form.phone, // phone ya incluye el +
       name: form.username,
-      email: form.email || undefined, // email es opcional
+      email: form.email,
       birthdate: form.birthdate
         ? new Date(form.birthdate).toISOString()
         : undefined,

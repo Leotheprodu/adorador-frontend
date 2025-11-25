@@ -7,20 +7,10 @@ import { SongCardWithControls } from './SongCardWithControls';
 import { Button } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { eventUpdateSongs } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/services/updatingEventSongsService';
-
-interface Song {
-  order: number;
-  transpose: number;
-  song: {
-    id: number;
-    title: string;
-    songType: 'worship' | 'praise';
-    key: string | null;
-  };
-}
+import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 
 interface SongListDisplayProps {
-  songs: Song[];
+  songs: EventSongsProps[];
   params: { bandId: string; eventId: string };
   refetch: () => void;
   isAdminEvent: boolean;
@@ -32,7 +22,7 @@ export const SongListDisplay = ({
   refetch,
   isAdminEvent,
 }: SongListDisplayProps) => {
-  const [songOrder, setSongOrder] = useState<Song[]>([]);
+  const [songOrder, setSongOrder] = useState<EventSongsProps[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
   const { mutate, isPending, status } = eventUpdateSongs({ params });
 
@@ -85,7 +75,7 @@ export const SongListDisplay = ({
     toast('Cambios descartados', { icon: '↩️' });
   };
 
-  const handleSongOrderChange = (newSongOrder: Song[]) => {
+  const handleSongOrderChange = (newSongOrder: EventSongsProps[]) => {
     setSongOrder(newSongOrder);
     setHasChanges(true);
   };
@@ -151,11 +141,10 @@ export const SongListDisplay = ({
           <Droppable droppableId="songListDisplay">
             {(provided, snapshot) => (
               <div
-                className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${
-                  snapshot.isDraggingOver
-                    ? 'border-brand-purple-400 bg-brand-purple-50 shadow-lg dark:bg-black'
-                    : 'border-transparent dark:bg-black'
-                }`}
+                className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${snapshot.isDraggingOver
+                  ? 'border-brand-purple-400 bg-brand-purple-50 shadow-lg dark:bg-black'
+                  : 'border-transparent dark:bg-black'
+                  }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
@@ -175,7 +164,7 @@ export const SongListDisplay = ({
           </Droppable>
         </DragDropContext>
       ) : (
-        <div className="grid gap-2">
+        <div className="grid gap-2 dark:bg-black">
           {songOrder.map((data, index) => (
             <SongCardWithControls
               key={data.song.id}

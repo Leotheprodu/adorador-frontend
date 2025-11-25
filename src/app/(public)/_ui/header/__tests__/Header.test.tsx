@@ -11,6 +11,51 @@ jest.mock('@nanostores/react', () => ({
   useStore: jest.fn((store) => store?.get?.() || null),
 }));
 
+// Mock NextUI components
+jest.mock('@nextui-org/react', () => ({
+  Button: ({
+    children,
+    onPress,
+    isDisabled,
+    disabled,
+    isLoading,
+    className = '',
+    ...props
+  }: React.PropsWithChildren<{
+    onPress?: () => void;
+    isDisabled?: boolean;
+    disabled?: boolean;
+    isLoading?: boolean;
+    className?: string;
+  }>) => (
+    <button
+      onClick={onPress}
+      disabled={isDisabled || disabled}
+      data-disabled={isDisabled || disabled ? 'true' : undefined}
+      data-loading={isLoading ? 'true' : undefined}
+      className={className}
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+  Dropdown: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  DropdownTrigger: ({ children }: React.PropsWithChildren) => (
+    <div>{children}</div>
+  ),
+  DropdownMenu: ({ children }: React.PropsWithChildren) => (
+    <div role="menu">{children}</div>
+  ),
+  DropdownItem: ({
+    children,
+    onPress,
+  }: React.PropsWithChildren<{ onPress?: () => void }>) => (
+    <div role="menuitem" onClick={onPress}>
+      {children}
+    </div>
+  ),
+}));
+
 import { render, screen } from '@testing-library/react';
 import { Header } from '../Header';
 
@@ -63,6 +108,11 @@ jest.mock('next/image', () => ({
   ),
 }));
 
+// Mock ThemeToggle
+jest.mock('@global/components/ThemeToggle', () => ({
+  ThemeToggle: () => <div data-testid="theme-toggle">Theme Toggle</div>,
+}));
+
 // Mock ResponsiveNavBar
 jest.mock('@ui/header/components/ResponsiveNavBar', () => ({
   ResponsiveNavBar: () => (
@@ -90,6 +140,7 @@ describe('Header Component', () => {
       expect(header).toHaveClass('h-[5rem]');
       expect(header).toHaveClass('w-screen');
       expect(header).toHaveClass('bg-white/80');
+      expect(header).toHaveClass('dark:bg-gray-900/80');
     });
 
     it('should apply positioning and spacing classes', () => {
@@ -110,11 +161,14 @@ describe('Header Component', () => {
       expect(header).toHaveClass('transition-all');
     });
 
-    it('should have shadow styling', () => {
+    it('should have shadow styling and border', () => {
       const { container } = render(<Header />);
 
       const header = container.querySelector('header');
       expect(header).toHaveClass('shadow-lg');
+      expect(header).toHaveClass('border-b');
+      expect(header).toHaveClass('border-brand-purple-100/50');
+      expect(header).toHaveClass('dark:border-brand-purple-800/50');
     });
   });
 
@@ -257,11 +311,12 @@ describe('Header Component', () => {
       expect(header).toHaveClass('sm:px-20');
     });
 
-    it('should have responsive background opacity', () => {
+    it('should have responsive background opacity with dark mode support', () => {
       const { container } = render(<Header />);
 
       const header = container.querySelector('header');
       expect(header).toHaveClass('bg-white/80');
+      expect(header).toHaveClass('dark:bg-gray-900/80');
     });
 
     it('should have responsive backdrop blur', () => {
@@ -273,21 +328,24 @@ describe('Header Component', () => {
   });
 
   describe('Mobile Component Visibility Integration', () => {
-    it('should render both NotificationBell and ResponsiveNavBar', () => {
+    it('should render ThemeToggle, NotificationBell and ResponsiveNavBar', () => {
       render(<Header />);
 
+      expect(screen.getByTestId('theme-toggle')).toBeInTheDocument();
       expect(screen.getByTestId('notification-bell')).toBeInTheDocument();
       expect(screen.getByTestId('responsive-navbar')).toBeInTheDocument();
     });
 
-    it('should place both components in the same container with gap', () => {
+    it('should place all components in the same container with gap', () => {
       render(<Header />);
 
+      const themeToggle = screen.getByTestId('theme-toggle');
       const notificationBell = screen.getByTestId('notification-bell');
       const navbar = screen.getByTestId('responsive-navbar');
 
-      // Ambos deben estar en el mismo contenedor padre
-      const commonParent = notificationBell.parentElement;
+      // Todos deben estar en el mismo contenedor padre
+      const commonParent = themeToggle.parentElement;
+      expect(commonParent).toContainElement(notificationBell);
       expect(commonParent).toContainElement(navbar);
 
       // El contenedor debe tener gap-3 para separarlos

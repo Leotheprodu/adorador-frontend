@@ -6,9 +6,9 @@ interface FeedYouTubePlayerProps {
   youtubeUrl: string;
   postId?: number;
   commentId?: number;
+  className?: string;
   title?: string;
   artist?: string;
-  className?: string;
 }
 
 /**
@@ -19,8 +19,6 @@ export const FeedYouTubePlayer = ({
   youtubeUrl,
   postId,
   commentId,
-  title,
-  artist,
   className = '',
 }: FeedYouTubePlayerProps) => {
   // Generar ID único basado en el contexto
@@ -34,8 +32,6 @@ export const FeedYouTubePlayer = ({
     <YouTubePlayer
       youtubeUrl={youtubeUrl}
       uniqueId={uniqueId}
-      title={title}
-      artist={artist}
       showControls={true}
       className={className}
     />

@@ -1,9 +1,9 @@
-import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import React, { useState, useEffect, useRef } from 'react';
-import { useStore } from '@nanostores/react';
 import { MiniLyricsEditor } from './MiniLyricsEditor';
 import { Draggable } from '@hello-pangea/dnd';
-import { ChordDisplay } from './ChordDisplay';
+import { LyricsCardProps } from '../_interfaces/lyricsInterfaces';
+import { useLyricsCard } from '../_hooks/useLyricsCard';
+import { LyricsContent } from './lyrics/LyricsContent';
+import { LyricsDragHandle } from './lyrics/LyricsDragHandle';
 
 export const LyricsCard = ({
   lyric,
@@ -16,62 +16,27 @@ export const LyricsCard = ({
   showChords = true,
   lyricsScale = 1,
   isPracticeMode = false,
-}: {
-  lyric: LyricsProps;
-  index: number;
-  refetchLyricsOfCurrentSong: () => void;
-  params: { bandId: string; songId: string };
-  chordPreferences: ReturnType<typeof useStore>['state'];
-  lyricsOfCurrentSong: LyricsProps[];
-  transpose?: number;
-  showChords?: boolean;
-  lyricsScale?: number;
-  isPracticeMode?: boolean;
-}) => {
-  const [updateLyric, setUpdateLyric] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const prevIsDragging = useRef(false);
-
-  const handleClickLyric = () => {
-    // No permitir edición en modo práctica
-    if (isPracticeMode) return;
-    setUpdateLyric(!updateLyric);
-  };
-
-  // Detectar cuando termina el drag y cerrar el editor
-  useEffect(() => {
-    // Si estaba arrastrando y ya no lo está (drag terminado)
-    if (prevIsDragging.current && !isDragging) {
-      setUpdateLyric(false);
-    }
-    prevIsDragging.current = isDragging;
-  }, [isDragging]);
+}: LyricsCardProps) => {
+  const {
+    updateLyric,
+    isDragging,
+    setIsDragging,
+    handleClickLyric,
+    handleCloseEditor,
+  } = useLyricsCard(isPracticeMode);
 
   // En modo práctica o cuando index es -1, no usar Draggable
   if (isPracticeMode || index === -1) {
     return (
       <div className="group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent">
-        {/* Contenido de la letra */}
         <div className="flex flex-1 flex-col">
-          <div style={{ width: 'fit-content' }}>
-            {/* Chords Section */}
-            {showChords && lyric.chords && lyric.chords.length > 0 && (
-              <ChordDisplay
-                chords={lyric.chords}
-                transpose={transpose}
-                chordPreferences={chordPreferences}
-                lyricsScale={lyricsScale}
-              />
-            )}
-
-            {/* Lyrics Section */}
-            <div
-              style={{ fontSize: `${lyricsScale}rem` }}
-              className="font-medium leading-relaxed text-slate-800 dark:text-slate-100"
-            >
-              {lyric.lyrics}
-            </div>
-          </div>
+          <LyricsContent
+            lyric={lyric}
+            transpose={transpose}
+            showChords={showChords}
+            lyricsScale={lyricsScale}
+            chordPreferences={chordPreferences}
+          />
         </div>
       </div>
     );
@@ -93,63 +58,39 @@ export const LyricsCard = ({
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
-              snapshot.isDragging
-                ? 'z-50 scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
-                : 'hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent'
-            } lyric-card${lyric.id}`}
+            className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${snapshot.isDragging
+              ? 'z-50 scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
+              : 'hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent'
+              } lyric-card${lyric.id}`}
           >
             {/* Drag Handle - Siempre visible */}
             {!updateLyric && (
-              <div
-                {...provided.dragHandleProps}
-                className="flex shrink-0 cursor-grab flex-col gap-0.5 rounded-md p-1.5 opacity-30 transition-all hover:bg-slate-200 hover:opacity-100 active:cursor-grabbing active:bg-slate-300"
-                title="Arrastra para mover"
-              >
-                <div className="h-1 w-1 rounded-full bg-slate-500"></div>
-                <div className="h-1 w-1 rounded-full bg-slate-500"></div>
-                <div className="h-1 w-1 rounded-full bg-slate-500"></div>
-              </div>
+              <LyricsDragHandle dragHandleProps={provided.dragHandleProps} />
             )}
 
             {/* Contenido de la letra */}
             <div className="flex flex-1 flex-col">
-              {/* Wrapper con ancho ajustado - fit-content para vista, full width para edición */}
               <div
                 onClick={updateLyric ? undefined : handleClickLyric}
-                className={`${!updateLyric ? 'cursor-text' : 'w-full'}`}
-                style={updateLyric ? undefined : { width: 'fit-content' }}
+                className={!updateLyric ? 'cursor-text' : ''}
               >
-                {/* Chords Section - Only show if showChords is true */}
-                {!updateLyric &&
-                  showChords &&
-                  lyric.chords &&
-                  lyric.chords.length > 0 && (
-                    <ChordDisplay
-                      chords={lyric.chords}
-                      transpose={transpose}
-                      chordPreferences={chordPreferences}
-                      lyricsScale={lyricsScale}
-                    />
-                  )}
-
-                {/* Lyrics Section */}
                 {updateLyric ? (
                   <MiniLyricsEditor
                     lyric={lyric}
                     params={params}
                     refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-                    onClose={() => setUpdateLyric(false)}
+                    onClose={handleCloseEditor}
                     lyricsScale={lyricsScale}
                     lyricsOfCurrentSong={lyricsOfCurrentSong}
                   />
                 ) : (
-                  <div
-                    style={{ fontSize: `${lyricsScale}rem` }}
-                    className="font-medium leading-relaxed text-slate-800 dark:text-slate-100"
-                  >
-                    {lyric.lyrics}
-                  </div>
+                  <LyricsContent
+                    lyric={lyric}
+                    transpose={transpose}
+                    showChords={showChords}
+                    lyricsScale={lyricsScale}
+                    chordPreferences={chordPreferences}
+                  />
                 )}
               </div>
             </div>
