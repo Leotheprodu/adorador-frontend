@@ -40,11 +40,8 @@ export const WhatsAppVerificationComponent = ({
 
   const openWhatsApp = () => {
     // URL para abrir WhatsApp con un mensaje predefinido
-    // TODO: Configurar el número real de tu bot de WhatsApp
-    const botNumber =
-      process.env.NEXT_PUBLIC_WHATSAPP_BOT_NUMBER || '+50663017707'; // Número de tu bot
     const encodedMessage = encodeURIComponent(tokenOnlyMessage);
-    const whatsappUrl = `https://wa.me/${botNumber.replace('+', '')}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${adminWhatsApp.replace('+', '')}?text=${encodedMessage}`;
 
     window.open(whatsappUrl, '_blank');
   };

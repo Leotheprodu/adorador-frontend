@@ -36,10 +36,12 @@ import {
 import { $user } from '@stores/users';
 import { useStore } from '@nanostores/react';
 import { UIGuard } from '@global/utils/UIGuard';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export const FeedClient = () => {
   const user = useStore($user);
   const queryClient = useQueryClient();
+  const { invalidateLimits } = useInvalidateSubscriptionLimits();
   const observerTarget = useRef<HTMLDivElement>(null);
 
   // Estado local
@@ -172,6 +174,8 @@ export const FeedClient = () => {
           modals.handleCloseCopySong();
           toast.success('¡Canción copiada exitosamente!');
           queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+          // Invalidar límites de suscripción de la banda destino (currentSongs aumentó)
+          invalidateLimits(copyData.targetBandId.toString());
           modals.setCopySongId(null);
         },
         onError: (error) => {
@@ -189,6 +193,8 @@ export const FeedClient = () => {
           queryClient.invalidateQueries({
             queryKey: ['post', modals.selectedCopySong!.id.toString()],
           });
+          // Invalidar límites de suscripción de la banda destino (currentSongs aumentó)
+          invalidateLimits(copyData.targetBandId.toString());
           modals.setCopySongPostId(null);
         },
         onError: (error) => {

@@ -9,9 +9,11 @@ import { $user } from '@global/stores/users';
 import { userRoles } from '@global/config/constants';
 import { handleOnChange } from '@global/utils/formUtils';
 import { addEventsToBandService } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export const useAddEventButton = (bandId: string) => {
     const queryClient = useQueryClient();
+    const { invalidateLimits } = useInvalidateSubscriptionLimits();
     const user = useStore($user);
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -65,6 +67,8 @@ export const useAddEventButton = (bandId: string) => {
             queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
             // Invalidar la lista de grupos del usuario (donde se muestran los eventos en las cards)
             queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
+            // Invalidar límites de suscripción (currentEventsThisMonth aumentó)
+            invalidateLimits(bandId);
             // Cerrar el modal y resetear el formulario
             onClose();
             setForm(formInit);

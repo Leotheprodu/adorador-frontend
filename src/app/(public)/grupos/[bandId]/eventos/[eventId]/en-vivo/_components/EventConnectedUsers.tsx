@@ -36,9 +36,10 @@ export const EventConnectedUsers = ({
     }
 
     const eventId = parseInt(params.eventId);
+    const bandId = parseInt(params.bandId);
 
     // Unirse al evento cuando el componente se monta
-    socket.emit('joinEvent', { eventId });
+    socket.emit('joinEvent', { eventId, bandId });
 
     // Solicitar la lista inicial de usuarios conectados
     socket.emit('getConnectedUsers', { eventId });

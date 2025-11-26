@@ -15,9 +15,12 @@ import { handleOnChange } from '@global/utils/formUtils';
 import { PlusIcon, MusicNoteIcon } from '@global/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { SongPropsWithoutId } from '../_interfaces/songsInterface';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export const AddSongButton = ({ bandId }: { bandId: string }) => {
   const queryClient = useQueryClient();
+  const { invalidateLimits } = useInvalidateSubscriptionLimits();
+
   const formInit: SongPropsWithoutId = {
     title: '',
     artist: '',
@@ -51,6 +54,8 @@ export const AddSongButton = ({ bandId }: { bandId: string }) => {
       queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
       // Invalidar la lista de grupos del usuario
       queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
+      // Invalidar límites de suscripción (currentSongs aumentó)
+      invalidateLimits(bandId);
       // Cerrar el modal y resetear el formulario
       onOpenChange();
       setForm(formInit);

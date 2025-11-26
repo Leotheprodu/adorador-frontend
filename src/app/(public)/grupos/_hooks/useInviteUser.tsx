@@ -4,6 +4,7 @@ import { Server1API } from '@global/config/constants';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { getTokens } from '@global/utils/jwtUtils';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export interface SearchUserResult {
   id: number;
@@ -69,6 +70,7 @@ export const useSearchUsers = (bandId: number) => {
 export const useInviteUser = (bandId: number) => {
   const [isInviting, setIsInviting] = useState(false);
   const queryClient = useQueryClient();
+  const { invalidateLimits } = useInvalidateSubscriptionLimits();
 
   const { mutateAsync: inviteUserMutation } = PostData<
     { id: number },
@@ -89,6 +91,8 @@ export const useInviteUser = (bandId: number) => {
 
       // Invalidar búsqueda para actualizar estado de invitación
       queryClient.invalidateQueries({ queryKey: [`SearchUsers-${bandId}`] });
+      // Invalidar límites de suscripción (currentMembers aumentó)
+      invalidateLimits(bandId.toString());
 
       setIsInviting(false);
       return true;

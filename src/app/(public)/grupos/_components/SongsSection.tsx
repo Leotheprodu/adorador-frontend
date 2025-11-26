@@ -80,7 +80,7 @@ export const SongsSection = ({ data, bandId }) => {
           ))}
         </ul>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 py-12">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-gray-950 py-12">
           <MusicNoteIcon className="mb-4 h-12 w-12 text-slate-300" />
           <h3 className="mb-2 text-lg font-semibold text-slate-700">
             Aún no hay canciones

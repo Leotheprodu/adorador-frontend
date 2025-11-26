@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { copySongDirectService } from '../_services/feedService';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 interface CopySongData {
     songId: number;
@@ -16,6 +17,7 @@ interface CopySongData {
  */
 export const useCommentCopySong = ({ postId }: { postId: number }) => {
     const queryClient = useQueryClient();
+    const { invalidateLimits } = useInvalidateSubscriptionLimits();
     const [copySongData, setCopySongData] = useState<CopySongData | null>(null);
 
     // Hook del servicio para copiar canción (usa el songId del copySongData actual)
@@ -71,6 +73,9 @@ export const useCommentCopySong = ({ postId }: { postId: number }) => {
                     queryKey: ['comments', postId.toString()],
                 });
                 queryClient.invalidateQueries({ queryKey: ['feed-infinite'] });
+
+                // Invalidar límites de suscripción de la banda destino (currentSongs aumentó)
+                invalidateLimits(data.targetBandId.toString());
 
                 // Forzar refetch después de un pequeño delay para asegurar actualización
                 setTimeout(() => {

@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { deleteEventService } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export const useDeleteEvent = ({
   bandId,
@@ -17,6 +18,8 @@ export const useDeleteEvent = ({
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { invalidateLimits } = useInvalidateSubscriptionLimits();
+
   const {
     mutate: mutateDeleteEvent,
     status: statusDeleteEvent,
@@ -37,6 +40,8 @@ export const useDeleteEvent = ({
       queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
       // Invalidar la lista de grupos del usuario (donde se muestran los eventos en las cards)
       queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
+      // Invalidar límites de suscripción (currentEventsThisMonth disminuyó)
+      invalidateLimits(bandId);
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {
