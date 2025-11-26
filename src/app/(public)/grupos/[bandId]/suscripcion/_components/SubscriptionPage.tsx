@@ -1,7 +1,9 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { useSubscriptionPlans, useBandSubscription, useSubscriptionLimits } from '../_hooks/useSubscriptionData';
+import { useBandPayments } from '../_hooks/usePaymentData';
 import { PlanUpgradeCard } from './PlanUpgradeCard';
+import { PaymentHistoryTable } from './PaymentHistoryTable';
 import { Spinner } from '@nextui-org/spinner';
 import { getBandById } from '@bands/_services/bandsService';
 import { Tabs, Tab } from '@nextui-org/react';
@@ -59,6 +61,9 @@ export const SubscriptionPage = ({
     } = useSubscriptionLimits({
         bandId: memoizedParams.bandId,
     });
+    const { payments, isLoading: paymentsLoading } = useBandPayments({
+        bandId: memoizedParams.bandId,
+    });
 
     // Group plans by billing cycle
     const { annualPlans, monthlyPlans } = useMemo(() => {
@@ -67,7 +72,7 @@ export const SubscriptionPage = ({
         return { annualPlans: annual, monthlyPlans: monthly };
     }, [plans]);
 
-    const isLoading = plansLoading || subscriptionLoading || limitsLoading;
+    const isLoading = plansLoading || subscriptionLoading || limitsLoading || paymentsLoading;
 
     if (isLoading) {
         return (
@@ -282,6 +287,14 @@ export const SubscriptionPage = ({
                             </div>
                         </Tab>
                     </Tabs>
+                </div>
+
+                {/* Payment History */}
+                <div className="w-full">
+                    <PaymentHistoryTable
+                        payments={payments || []}
+                        isLoading={paymentsLoading}
+                    />
                 </div>
             </div>
         </div>
