@@ -153,7 +153,7 @@ const PaymentRowCell = ({
         case 'plan':
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-sm capitalize">{payment.subscription.plan.name}</p>
+                    <p className="text-bold text-sm capitalize">{payment.plan.name}</p>
                     <p className="text-bold text-tiny capitalize text-default-400">
                         {payment.subscription.band.name}
                     </p>

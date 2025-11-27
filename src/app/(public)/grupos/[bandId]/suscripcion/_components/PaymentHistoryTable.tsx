@@ -37,7 +37,7 @@ export const PaymentHistoryTable = ({
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-sm capitalize">
-                            {payment.subscription?.plan?.name || 'Plan desconocido'}
+                            {payment.plan?.name || payment.subscription?.plan?.name || 'Plan desconocido'}
                         </p>
                     </div>
                 );

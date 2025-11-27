@@ -7,7 +7,7 @@ import { PaymentHistoryTable } from './PaymentHistoryTable';
 import { Spinner } from '@nextui-org/spinner';
 import { getBandById } from '@bands/_services/bandsService';
 import { Tabs, Tab } from '@nextui-org/react';
-import type { SubscriptionPlan, PlanType } from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
+import type { SubscriptionPlan } from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
 
 export const SubscriptionPage = ({
     params,

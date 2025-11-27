@@ -24,9 +24,11 @@ export interface AdminPayment {
         band: {
             name: string;
         };
-        plan: {
-            name: string;
-        };
+    };
+    plan: {
+        id: number;
+        name: string;
+        price: number;
     };
     paidByUser: {
         name: string;

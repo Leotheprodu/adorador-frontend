@@ -24,8 +24,11 @@ export const useAddEventButton = (bandId: string) => {
     };
     const [form, setForm] = useState(formInit);
 
-    const { mutate: mutateAddEventToBand, status: statusAddEventToBand } =
-        addEventsToBandService({ bandId });
+    const {
+        mutate: mutateAddEventToBand,
+        status: statusAddEventToBand,
+        error: errorAddEventToBand,
+    } = addEventsToBandService({ bandId });
 
     // Verificar si el usuario es admin de la banda
     const isAdminBand =
@@ -74,7 +77,25 @@ export const useAddEventButton = (bandId: string) => {
             setForm(formInit);
         }
         if (statusAddEventToBand === 'error') {
-            toast.error('Error al crear el evento');
+            // Detectar si es un error de límite de suscripción
+            const errorMessage = errorAddEventToBand?.message || '';
+
+            if (errorMessage.includes('403-') && errorMessage.includes('límite')) {
+                const customMessage =
+                    errorMessage.split('403-')[1] ||
+                    'Has alcanzado el límite de tu plan';
+                toast.error(customMessage, {
+                    duration: 6000,
+                    icon: '🚫',
+                    style: {
+                        background: '#FEE2E2',
+                        color: '#991B1B',
+                        fontWeight: '600',
+                    },
+                });
+            } else {
+                toast.error('Error al crear el evento');
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [statusAddEventToBand, bandId, queryClient, onClose]);

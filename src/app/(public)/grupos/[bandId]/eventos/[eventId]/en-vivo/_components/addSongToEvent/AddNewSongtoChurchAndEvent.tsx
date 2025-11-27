@@ -59,6 +59,7 @@ export const AddNewSongtoChurchAndEvent = ({
     data: newSong,
     mutate: mutateAddSongToChurch,
     status: statusAddSongToChurch,
+    error: errorAddSongToChurch,
   } = addSongsToBandService({ bandId });
   const { status: statusAddSongToEvent, mutate: mutateAddSongToEvent } =
     addSongsToEventService({ params });
@@ -77,7 +78,26 @@ export const AddNewSongtoChurchAndEvent = ({
       });
     }
     if (statusAddSongToChurch === 'error') {
-      toast.error('Error al agregar canción al catálogo de la iglesia');
+      // Detectar si es un error de límite de suscripción
+      const errorMessage = errorAddSongToChurch?.message || '';
+
+      if (errorMessage.includes('403-') && errorMessage.includes('límite')) {
+        // Extraer el mensaje después del código de estado
+        const customMessage =
+          errorMessage.split('403-')[1] ||
+          'Has alcanzado el límite de tu plan';
+        toast.error(customMessage, {
+          duration: 6000,
+          icon: '🚫',
+          style: {
+            background: '#FEE2E2',
+            color: '#991B1B',
+            fontWeight: '600',
+          },
+        });
+      } else {
+        toast.error('Error al agregar canción al catálogo de la iglesia');
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusAddSongToChurch]);

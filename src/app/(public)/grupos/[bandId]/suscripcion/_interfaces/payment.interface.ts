@@ -37,6 +37,12 @@ export interface PaymentHistory {
     createdAt: string;
     updatedAt: string;
     // Relaciones anidadas
+    plan?: {
+        id: number;
+        name: string;
+        price: number;
+    };
+    // Fallback para registros antiguos sin planId
     subscription?: {
         plan: {
             id: number;
