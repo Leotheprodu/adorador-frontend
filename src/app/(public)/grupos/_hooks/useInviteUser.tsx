@@ -74,7 +74,6 @@ export const useInviteUser = (bandId: number) => {
 
   const {
     mutateAsync: inviteUserMutation,
-    error: inviteError,
   } = PostData<{ id: number }, { invitedUserId: number }>({
     key: `InviteUser-${bandId}`,
     url: `${Server1API}/bands/${bandId}/invite`,

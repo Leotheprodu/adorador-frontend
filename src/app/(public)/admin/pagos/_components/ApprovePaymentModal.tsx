@@ -32,9 +32,9 @@ export const ApprovePaymentModal = ({
                             <p>
                                 ¿Estás seguro de que deseas aprobar este pago?
                             </p>
-                            <div className="mt-2 space-y-1 text-sm text-gray-600">
+                            <div className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                 <p><strong>Usuario:</strong> {payment.paidByUser?.name || 'Sin usuario'}</p>
-                                <p><strong>Plan:</strong> {payment.subscription.plan.name}</p>
+                                <p><strong>Plan:</strong> {payment.plan.name}</p>
                                 <p><strong>Banda:</strong> {payment.subscription.band.name}</p>
                                 <p><strong>Monto:</strong> {payment.currency} {payment.amount}</p>
                                 <p><strong>Método:</strong> {payment.method.replace('_', ' ')}</p>

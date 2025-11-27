@@ -263,13 +263,15 @@ export const useEventWSConexion = ({
           console.warn('[WebSocket] ⚠️ Desconectado por prioridad:', data);
           
           // Toast con duración larga (8 segundos)
-          toast.warning(
+          toast(
             data.message || 'Has sido desconectado del evento porque un miembro de la banda necesita el espacio.',
             {
               duration: 8000,
               icon: '⚠️',
               style: {
                 maxWidth: '500px',
+                background: '#FEF3C7',
+                color: '#92400E',
               },
             }
           );

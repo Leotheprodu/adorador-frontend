@@ -3,6 +3,7 @@ import { CopyIcon } from '@global/icons/CopyIcon';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { PrimaryButton, SecondaryButton } from '@global/components/buttons';
+import { adminWhatsApp } from '@global/config/constants';
 
 interface WhatsAppVerificationProps {
   verificationToken: string;

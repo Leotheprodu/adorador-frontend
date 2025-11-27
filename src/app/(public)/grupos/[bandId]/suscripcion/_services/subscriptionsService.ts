@@ -1,11 +1,6 @@
 import { FetchData, PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import type {
-    SubscriptionPlan,
-    BandSubscription,
-    SubscriptionLimits,
-} from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
-import type {
     GetPlansResponse,
     GetSubscriptionResponse,
     GetLimitsResponse,

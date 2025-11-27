@@ -1,7 +1,7 @@
 import { FetchData } from '@global/services/HandleAPI';
 import { fetchAPI } from '@global/utils/fetchAPI';
 import { Server1API } from '@global/config/constants';
-import { AdminPayment, ApprovePaymentDto } from '../_interfaces/adminPaymentInterface';
+import { AdminPayment } from '../_interfaces/adminPaymentInterface';
 
 export const getPendingPaymentsService = () => {
     return FetchData<AdminPayment[]>({

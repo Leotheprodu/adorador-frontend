@@ -1,7 +1,7 @@
 import { FetchData, PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import type {
-    PaymentHistory,
+    
     CreatePaymentDto,
     ApprovePaymentDto,
     RejectPaymentDto,
