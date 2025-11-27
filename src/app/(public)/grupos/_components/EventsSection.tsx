@@ -55,12 +55,12 @@ export const EventsSection = ({ data, bandId }) => {
             ))}
         </ul>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 py-12">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 dark:border-gray-700 dark:bg-gray-950 bg-slate-50 py-12">
           <CalendarIcon className="mb-4 h-12 w-12 text-slate-300" />
-          <h3 className="mb-2 text-lg font-semibold text-slate-700 dark:text-slate-100">
+          <h3 className="mb-2 text-lg font-semibold text-slate-700 ">
             No hay eventos programados
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-200">
+          <p className="text-sm text-slate-500 ">
             Crea tu primer evento para comenzar a organizar
           </p>
         </div>

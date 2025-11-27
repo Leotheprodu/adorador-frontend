@@ -24,7 +24,7 @@
       "@users/*": ["app/(public)/users/*"],
       "@home/*": ["app/(public)/(home)/*"],
       "@auth/*": ["app/(public)/auth/*"],
-      "@admin/*": ["app/(private)/admin/*"],
+      "@admin/*": ["app/(public)/admin/*"],
       "@ui/*": ["app/(public)/_ui/*"],
       "@stores/*": ["global/stores/*"],
       "@global/*": ["global/*"],

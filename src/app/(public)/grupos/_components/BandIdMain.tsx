@@ -7,6 +7,8 @@ import { UIGuard } from '@global/utils/UIGuard';
 import { GuitarIcon } from '@global/icons';
 import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
 
+import { SubscriptionSummaryCard } from '../[bandId]/suscripcion/_components/SubscriptionSummaryCard';
+
 export const BandIdMain = ({ bandId }: { bandId: string }) => {
   const { data, isLoading } = getBandById(bandId);
   useBandSongsWebSocket({ bandId: Number(bandId), enabled: true });
@@ -34,6 +36,9 @@ export const BandIdMain = ({ bandId }: { bandId: string }) => {
             </div>
           </div>
         </div>
+
+        {/* Resumen de Suscripción */}
+        <SubscriptionSummaryCard bandId={bandId} />
 
         {/* Secciones del contenido */}
         <div className="space-y-6">

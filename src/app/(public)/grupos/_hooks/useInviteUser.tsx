@@ -4,6 +4,7 @@ import { Server1API } from '@global/config/constants';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { getTokens } from '@global/utils/jwtUtils';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export interface SearchUserResult {
   id: number;
@@ -69,11 +70,11 @@ export const useSearchUsers = (bandId: number) => {
 export const useInviteUser = (bandId: number) => {
   const [isInviting, setIsInviting] = useState(false);
   const queryClient = useQueryClient();
+  const { invalidateLimits } = useInvalidateSubscriptionLimits();
 
-  const { mutateAsync: inviteUserMutation } = PostData<
-    { id: number },
-    { invitedUserId: number }
-  >({
+  const {
+    mutateAsync: inviteUserMutation,
+  } = PostData<{ id: number }, { invitedUserId: number }>({
     key: `InviteUser-${bandId}`,
     url: `${Server1API}/bands/${bandId}/invite`,
     method: 'POST',
@@ -89,16 +90,33 @@ export const useInviteUser = (bandId: number) => {
 
       // Invalidar búsqueda para actualizar estado de invitación
       queryClient.invalidateQueries({ queryKey: [`SearchUsers-${bandId}`] });
+      // Invalidar límites de suscripción (currentMembers aumentó)
+      invalidateLimits(bandId.toString());
 
       setIsInviting(false);
       return true;
     } catch (error) {
       setIsInviting(false);
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Error al enviar la invitación';
-      toast.error(errorMessage);
+        error instanceof Error ? error.message : 'Error al enviar la invitación';
+
+      // Detectar si es un error de límite de suscripción
+      if (errorMessage.includes('403-') && errorMessage.includes('límite')) {
+        const customMessage =
+          errorMessage.split('403-')[1] ||
+          'Has alcanzado el límite de tu plan';
+        toast.error(customMessage, {
+          duration: 6000,
+          icon: '🚫',
+          style: {
+            background: '#FEE2E2',
+            color: '#991B1B',
+            fontWeight: '600',
+          },
+        });
+      } else {
+        toast.error(errorMessage);
+      }
       return false;
     }
   };

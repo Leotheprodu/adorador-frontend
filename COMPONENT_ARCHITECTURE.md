@@ -1601,6 +1601,755 @@ const { isAdminEvent, showActionButtons } = useEventPermissions();
 
 ---
 
+## 🧪 Testing
+
+Testing es una parte **esencial** del desarrollo frontend. Todo componente y hook debe tener tests completos.
+
+### Filosofía de Testing en Frontend
+
+- **Component Tests**: Testear comportamiento del usuario
+- **Hook Tests**: Testear lógica aislada
+- **Integration Tests**: Testear flujos completos
+- **Mocking**: Mockear dependencias externas (NextUI, nanostores, APIs)
+- **Coverage**: Mínimo 80% de cobertura de código
+
+### Herramientas de Testing
+
+- **Jest**: Test runner y framework de testing
+- **React Testing Library**: Testing de componentes React
+- **@testing-library/user-event**: Simulación de interacciones del usuario
+- **@testing-library/react-hooks**: Testing de custom hooks
+
+---
+
+## 🧪 Mocking Crítico: NextUI y Nanostores
+
+### Patrón: Mock de NextUI Components
+
+NextUI components deben ser mockeados antes de cualquier import para evitar problemas con SSR y dependencies.
+
+```typescript
+// ✅ SIEMPRE AL INICIO DEL ARCHIVO DE TEST
+jest.mock('@nextui-org/react', () => ({
+  Button: ({
+    children,
+    as,
+    className,
+    endContent,
+    startContent,
+    isLoading,
+    isDisabled,
+    disabled,
+    type,
+    onClick,
+    onPress,
+    ...props
+  }: {
+    children: React.ReactNode;
+    as?: React.ElementType;
+    className?: string;
+    endContent?: React.ReactNode;
+    startContent?: React.ReactNode;
+    isLoading?: boolean;
+    isDisabled?: boolean;
+    disabled?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+    onClick?: () => void;
+    onPress?: () => void;
+    [key: string]: unknown;
+  }) => {
+    const isButtonDisabled = isDisabled || disabled || isLoading;
+
+    if (as) {
+      const Component = as;
+      return (
+        <Component
+          className={className}
+          disabled={isButtonDisabled}
+          data-loading={isLoading}
+          onClick={onClick}
+          {...props}
+        >
+          {startContent}
+          {children}
+          {endContent}
+        </Component>
+      );
+    }
+    return (
+      <button
+        className={className}
+        disabled={isButtonDisabled}
+        data-loading={isLoading}
+        type={type}
+        onClick={onClick || onPress}
+        {...props}
+      >
+        {startContent}
+        {children}
+        {endContent}
+      </button>
+    );
+  },
+}));
+```
+
+### Patrón: Mock de NextUIProvider
+
+```typescript
+// ✅ Mock para Provider de NextUI
+jest.mock('@nextui-org/react', () => ({
+  NextUIProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="nextui-provider">{children}</div>
+  ),
+}));
+```
+
+### Patrón: Mock de Nanostores
+
+**CRÍTICO**: Los mocks de nanostores deben ir AL PRINCIPIO del archivo de test, antes de cualquier import.
+
+```typescript
+// ✅ SIEMPRE PRIMERO - Mock nanostores
+jest.mock('nanostores', () => ({
+  atom: jest.fn((initialValue) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  })),
+}));
+
+jest.mock('@nanostores/react', () => ({
+  useStore: jest.fn((store) => store.get()),
+}));
+
+// Después de los mocks, imports normales
+import { render, screen } from '@testing-library/react';
+import { MyComponent } from './MyComponent';
+```
+
+### Patrón: Mock de React Query
+
+```typescript
+jest.mock('@tanstack/react-query', () => {
+  const actualModule = jest.requireActual('@tanstack/react-query');
+  return {
+    ...actualModule,
+    QueryClient: jest.fn().mockImplementation(() => ({
+      mount: jest.fn(),
+      unmount: jest.fn(),
+      getQueryCache: jest.fn(() => ({ find: jest.fn() })),
+      getMutationCache: jest.fn(() => ({ find: jest.fn() })),
+      isFetching: jest.fn(() => 0),
+      isMutating: jest.fn(() => 0),
+      defaultOptions: {},
+    })),
+    QueryClientProvider: ({
+      children,
+      client,
+    }: {
+      children: React.ReactNode;
+      client?: any;
+    }) => {
+      const realQueryClient =
+        client ||
+        new actualModule.QueryClient({
+          defaultOptions: {
+            queries: { retry: false },
+            mutations: { retry: false },
+          },
+        });
+      return (
+        <div data-testid="query-client-provider">
+          <actualModule.QueryClientProvider client={realQueryClient}>
+            {children}
+          </actualModule.QueryClientProvider>
+        </div>
+      );
+    },
+  };
+});
+```
+
+### Patrón: Mock de Next.js Link
+
+```typescript
+jest.mock('next/link', () => ({
+  __esModule: true,
+  default: ({
+    children,
+    href,
+  }: {
+    children: React.ReactNode;
+    href: string;
+  }) => {
+    return <a href={href}>{children}</a>;
+  },
+}));
+```
+
+---
+
+## 🧪 Testing de Componentes
+
+### Anatomía de un Test de Componente
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { PrimaryButton } from './PrimaryButton';
+
+// ✅ Mocks al inicio
+jest.mock('@nextui-org/react', () => ({
+  Button: ({ children, onClick, ...props }: any) => (
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
+  ),
+}));
+
+describe('PrimaryButton', () => {
+  describe('Component Rendering', () => {
+    it('should render children correctly', () => {
+      render(<PrimaryButton>Click me</PrimaryButton>);
+
+      expect(screen.getByText('Click me')).toBeInTheDocument();
+    });
+
+    it('should render as a link when href is provided', () => {
+      render(<PrimaryButton href="/auth/login">Iniciar sesión</PrimaryButton>);
+
+      const link = screen.getByRole('link');
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute('href', '/auth/login');
+    });
+
+    it('should render as a button when onClick is provided', () => {
+      const handleClick = jest.fn();
+      render(<PrimaryButton onClick={handleClick}>Guardar</PrimaryButton>);
+
+      const button = screen.getByRole('button');
+      expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe('Styling', () => {
+    it('should apply correct CSS classes', () => {
+      render(<PrimaryButton onClick={() => {}}>Test</PrimaryButton>);
+
+      const button = screen.getByRole('button');
+      expect(button.className).toContain('bg-brand-purple-600');
+      expect(button.className).toContain('text-white');
+    });
+
+    it('should merge custom className', () => {
+      render(
+        <PrimaryButton onClick={() => {}} className="custom-class">
+          Test
+        </PrimaryButton>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button.className).toContain('bg-brand-purple-600');
+      expect(button.className).toContain('custom-class');
+    });
+  });
+
+  describe('User Interactions', () => {
+    it('should call onClick when clicked', async () => {
+      const user = userEvent.setup();
+      const handleClick = jest.fn();
+
+      render(<PrimaryButton onClick={handleClick}>Click me</PrimaryButton>);
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      expect(handleClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call onClick when disabled', async () => {
+      const user = userEvent.setup();
+      const handleClick = jest.fn();
+
+      render(
+        <PrimaryButton onClick={handleClick} disabled>
+          Disabled
+        </PrimaryButton>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Props Forwarding', () => {
+    it('should forward isLoading prop', () => {
+      render(<PrimaryButton isLoading={true}>Loading...</PrimaryButton>);
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('data-loading', 'true');
+      expect(button).toBeDisabled();
+    });
+
+    it('should forward type prop', () => {
+      render(<PrimaryButton type="submit">Submit</PrimaryButton>);
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('type', 'submit');
+    });
+  });
+});
+```
+
+---
+
+## 🧪 Testing de Custom Hooks
+
+### Patrón: Test de Hooks con renderHook
+
+```typescript
+import { renderHook, waitFor, act } from '@testing-library/react';
+import { useIsClient } from './useIsClient';
+
+describe('useIsClient', () => {
+  it('should return false on initial render (SSR)', () => {
+    const { result } = renderHook(() => useIsClient());
+
+    expect(result.current).toBe(false);
+  });
+
+  it('should return true after mounting (client)', async () => {
+    const { result } = renderHook(() => useIsClient());
+
+    await waitFor(() => {
+      expect(result.current).toBe(true);
+    });
+  });
+});
+```
+
+### Patrón: Test de Hooks con React Query
+
+```typescript
+import { renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { getEventsById } from './eventByIdService';
+
+describe('getEventsById', () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should fetch event by id successfully', async () => {
+    const mockEvent = {
+      id: 1,
+      title: 'Test Event',
+      date: '2025-12-31',
+    };
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockEvent,
+    });
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    const { result } = renderHook(
+      () => getEventsById({ bandId: '1', eventId: '1' }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual(mockEvent);
+  });
+});
+```
+
+### Patrón: Test de Hooks con Timers
+
+```typescript
+import { renderHook, act } from '@testing-library/react';
+import { useTokenRefresh } from './useTokenRefresh';
+
+describe('useTokenRefresh', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
+  it('should refresh token every 5 minutes', async () => {
+    const mockRefresh = jest.fn().mockResolvedValue(true);
+
+    renderHook(() => useTokenRefresh());
+
+    // Avanzar 5 minutos
+    act(() => {
+      jest.advanceTimersByTime(5 * 60 * 1000);
+    });
+
+    expect(mockRefresh).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+---
+
+## 🧪 Testing con Nanostores
+
+### Patrón: Test de Componentes que usan Nanostores
+
+```typescript
+// ✅ Mock nanostores PRIMERO
+jest.mock('nanostores', () => ({
+  atom: jest.fn((initialValue) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  })),
+}));
+
+jest.mock('@nanostores/react', () => ({
+  useStore: jest.fn((store) => store.get()),
+}));
+
+import { render, screen } from '@testing-library/react';
+import { useStore } from '@nanostores/react';
+import { $user } from '@global/stores/userStore';
+import { UserProfile } from './UserProfile';
+
+const mockUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+describe('UserProfile with nanostores', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should display user name from store', () => {
+    // ✅ Mock del valor del store
+    mockUseStore.mockReturnValue({
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+    });
+
+    render(<UserProfile />);
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+  });
+
+  it('should show loading when user is null', () => {
+    mockUseStore.mockReturnValue(null);
+
+    render(<UserProfile />);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+## 🧪 Comandos de Testing
+
+```bash
+# Ejecutar todos los tests
+npm test
+
+# Ejecutar tests en modo watch
+npm run test:watch
+
+# Ejecutar tests con coverage
+npm run test:coverage
+
+# Ejecutar tests de un archivo específico
+npm test PrimaryButton.test.tsx
+
+# Ejecutar tests que coincidan con un patrón
+npm test -- --testNamePattern="should render"
+
+# Ejecutar tests con verbose output
+npm test -- --verbose
+```
+
+---
+
+## 🧪 Matchers Útiles de React Testing Library
+
+```typescript
+// ✅ Queries básicas
+screen.getByText('texto');           // Error si no encuentra
+screen.queryByText('texto');         // null si no encuentra
+screen.findByText('texto');          // Async, espera a que aparezca
+screen.getAllByText('texto');        // Array de elementos
+
+// ✅ Queries por rol
+screen.getByRole('button');
+screen.getByRole('link');
+screen.getByRole('textbox');
+screen.getByRole('heading', { level: 1 });
+
+// ✅ Queries por test id
+screen.getByTestId('submit-button');
+
+// ✅ Assertions comunes
+expect(element).toBeInTheDocument();
+expect(element).toBeVisible();
+expect(element).toBeDisabled();
+expect(element).toHaveTextContent('texto');
+expect(element).toHaveAttribute('href', '/path');
+expect(element).toHaveClass('className');
+expect(element).toHaveStyle({ color: 'red' });
+
+// ✅ User events
+import userEvent from '@testing-library/user-event';
+
+const user = userEvent.setup();
+await user.click(button);
+await user.type(input, 'texto');
+await user.clear(input);
+await user.selectOptions(select, 'option1');
+await user.hover(element);
+await user.keyboard('{Enter}');
+```
+
+---
+
+## 🧪 Patrones de Testing
+
+### Patrón: AAA (Arrange, Act, Assert)
+
+```typescript
+it('should update count when button is clicked', async () => {
+  // ✅ ARRANGE: Preparar el test
+  const user = userEvent.setup();
+  render(<Counter initialCount={0} />);
+
+  // ✅ ACT: Ejecutar la acción
+  const button = screen.getByRole('button', { name: /increment/i });
+  await user.click(button);
+
+  // ✅ ASSERT: Verificar el resultado
+  expect(screen.getByText('Count: 1')).toBeInTheDocument();
+});
+```
+
+### Patrón: Test de Estados de Carga
+
+```typescript
+describe('Loading states', () => {
+  it('should show loading state initially', () => {
+    const { result } = renderHook(() => useEventData({ eventId: '1' }));
+
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  it('should show success state after loading', async () => {
+    const { result } = renderHook(() => useEventData({ eventId: '1' }));
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+  });
+
+  it('should show error state on failure', async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Failed'));
+
+    const { result } = renderHook(() => useEventData({ eventId: '1' }));
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+  });
+});
+```
+
+### Patrón: Test de Formularios
+
+```typescript
+describe('LoginForm', () => {
+  it('should submit form with valid data', async () => {
+    const user = userEvent.setup();
+    const handleSubmit = jest.fn();
+
+    render(<LoginForm onSubmit={handleSubmit} />);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const submitButton = screen.getByRole('button', { name: /login/i });
+
+    await user.type(emailInput, 'test@example.com');
+    await user.type(passwordInput, 'password123');
+    await user.click(submitButton);
+
+    expect(handleSubmit).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password123',
+    });
+  });
+
+  it('should show validation errors', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={jest.fn()} />);
+
+    const submitButton = screen.getByRole('button', { name: /login/i });
+    await user.click(submitButton);
+
+    expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/password is required/i)).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+## 🧪 Mejores Prácticas de Testing
+
+### ✅ DO: Queries Semánticas
+
+```typescript
+// ✅ BIEN: Queries por rol/label (accesibles)
+screen.getByRole('button', { name: /submit/i });
+screen.getByLabelText(/email/i);
+screen.getByText(/welcome/i);
+
+// ❌ MAL: Queries por clase o ID (frágiles)
+container.querySelector('.button-submit');
+screen.getByTestId('submit-btn');  // Solo como último recurso
+```
+
+### ✅ DO: Test User Behavior, Not Implementation
+
+```typescript
+// ✅ BIEN: Testing comportamiento del usuario
+it('should add item to cart when clicked', async () => {
+  const user = userEvent.setup();
+  render(<ProductCard product={mockProduct} />);
+
+  const addButton = screen.getByRole('button', { name: /add to cart/i });
+  await user.click(addButton);
+
+  expect(screen.getByText(/item added/i)).toBeInTheDocument();
+});
+
+// ❌ MAL: Testing detalles de implementación
+it('should call useState when clicked', () => {
+  // Testing internal React hooks
+});
+```
+
+### ✅ DO: Nombres Descriptivos
+
+```typescript
+// ✅ BIEN: Describe qué hace y qué espera
+it('should display error message when email is invalid', async () => {
+  // ...
+});
+
+// ❌ MAL: Nombre vago
+it('should work', () => {
+  // ...
+});
+```
+
+### ✅ DO: Test Aislados
+
+```typescript
+// ✅ BIEN: Cada test es independiente
+describe('Counter', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('test 1', () => {
+    // Independiente
+  });
+
+  it('test 2', () => {
+    // Independiente
+  });
+});
+```
+
+### ✅ DO: waitFor para Operaciones Async
+
+```typescript
+// ✅ BIEN: Usar waitFor para async
+it('should load data', async () => {
+  render(<DataComponent />);
+
+  await waitFor(() => {
+    expect(screen.getByText('Loaded')).toBeInTheDocument();
+  });
+});
+
+// ❌ MAL: No esperar
+it('should load data', () => {
+  render(<DataComponent />);
+  expect(screen.getByText('Loaded')).toBeInTheDocument(); // ❌ Falla
+});
+```
+
+---
+
+## 🧪 Coverage Requirements
+
+### Mínimos Requeridos
+
+- **Statements**: 80%
+- **Branches**: 75%
+- **Functions**: 80%
+- **Lines**: 80%
+
+### Ver Coverage
+
+```bash
+npm run test:coverage
+```
+
+Esto genera un reporte HTML en `coverage/lcov-report/index.html`.
+
+---
+
+## 🧪 Checklist de Testing
+
+Al crear un nuevo componente o hook:
+
+- [ ] Test de renderizado básico
+- [ ] Test de props
+- [ ] Test de user interactions
+- [ ] Test de estados de carga (loading, success, error)
+- [ ] Test de edge cases
+- [ ] Test de accessibility (roles, labels)
+- [ ] Mocks correctos de dependencias
+- [ ] Coverage mínimo del 80%
+
+---
+
 ## 📖 Glosario
 
 **Component** - Función React que retorna JSX

@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { deleteSongService } from '@bands/[bandId]/canciones/_services/songsOfBandService';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useInvalidateSubscriptionLimits } from '@bands/[bandId]/suscripcion/_hooks/useInvalidateSubscriptionLimits';
 
 export const useDeleteSong = ({
   bandId,
@@ -17,6 +18,8 @@ export const useDeleteSong = ({
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { invalidateLimits } = useInvalidateSubscriptionLimits();
+
   const {
     mutate: mutateDeleteSong,
     status: statusDeleteSong,
@@ -37,6 +40,8 @@ export const useDeleteSong = ({
       queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
       // Invalidar la lista de grupos del usuario (donde se muestra el contador de canciones)
       queryClient.invalidateQueries({ queryKey: ['BandsOfUser'] });
+      // Invalidar límites de suscripción (currentSongs disminuyó)
+      invalidateLimits(bandId);
 
       // Ejecutar callback personalizado si existe
       if (onSuccess) {

@@ -15,6 +15,8 @@ interface ConnectedUsersData {
   users: ConnectedUser[];
   guestCount: number;
   totalCount: number;
+  maxConnections?: number; // Límite de conexiones según el plan
+  planName?: string; // Nombre del plan de suscripción
 }
 
 export const EventConnectedUsers = ({
@@ -36,9 +38,10 @@ export const EventConnectedUsers = ({
     }
 
     const eventId = parseInt(params.eventId);
+    const bandId = parseInt(params.bandId);
 
     // Unirse al evento cuando el componente se monta
-    socket.emit('joinEvent', { eventId });
+    socket.emit('joinEvent', { eventId, bandId });
 
     // Solicitar la lista inicial de usuarios conectados
     socket.emit('getConnectedUsers', { eventId });
@@ -121,9 +124,15 @@ export const EventConnectedUsers = ({
         <span className="text-sm font-medium text-green-800">
           {formatUserList()}
         </span>
-        <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
-          {connectedUsers.totalCount}
-        </span>
+        {connectedUsers.maxConnections ? (
+          <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
+            {connectedUsers.totalCount}/{connectedUsers.maxConnections}
+          </span>
+        ) : (
+          <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
+            {connectedUsers.totalCount}
+          </span>
+        )}
       </div>
     </div>
   );

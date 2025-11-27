@@ -12,6 +12,7 @@ import {
 import { $user } from '@stores/users';
 import { useEffect, useRef, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
+import toast from 'react-hot-toast';
 import {
   getValidAccessToken,
   isTokenExpired,
@@ -219,6 +220,63 @@ export const useEventWSConexion = ({
               '[WebSocket] Rate limit aplicado - reducir frecuencia de mensajes',
             );
           }
+        });
+
+        // Listener para límite de conexiones alcanzado
+        newSocket.on('connection_limit_reached', (data: {
+          eventId: number;
+          currentConnections: number;
+          maxConnections: number;
+          planName: string;
+          message: string;
+          isGuest?: boolean;
+          allAuthenticated?: boolean;
+        }) => {
+          console.warn('[WebSocket] ⚠️ Límite de conexiones alcanzado:', data);
+          
+          // Mostrar notificación al usuario
+          const message = data.isGuest 
+            ? `Este evento ha alcanzado su límite de ${data.maxConnections} espectadores (Plan ${data.planName}). Los miembros de la banda tienen prioridad.`
+            : data.allAuthenticated
+            ? `Este evento ha alcanzado su límite de ${data.maxConnections} espectadores y todos los espacios están ocupados por miembros autenticados.`
+            : data.message;
+          
+          // Toast con duración larga (8 segundos)
+          toast.error(message, {
+            duration: 8000,
+            icon: '🚫',
+            style: {
+              maxWidth: '500px',
+            },
+          });
+          
+          // Desconectar el socket ya que no puede unirse
+          newSocket.disconnect();
+        });
+
+        // Listener para cuando un invitado es desconectado por prioridad
+        newSocket.on('disconnected_by_priority', (data: {
+          eventId: number;
+          reason: string;
+          message: string;
+        }) => {
+          console.warn('[WebSocket] ⚠️ Desconectado por prioridad:', data);
+          
+          // Toast con duración larga (8 segundos)
+          toast(
+            data.message || 'Has sido desconectado del evento porque un miembro de la banda necesita el espacio.',
+            {
+              duration: 8000,
+              icon: '⚠️',
+              style: {
+                maxWidth: '500px',
+                background: '#FEF3C7',
+                color: '#92400E',
+              },
+            }
+          );
+          
+          // El socket ya fue desconectado por el servidor
         });
 
         return newSocket;
