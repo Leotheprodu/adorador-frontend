@@ -225,8 +225,8 @@ describe('AddEventButton - Query Invalidation', () => {
     rerender(<AddEventButton bandId={mockBandId} />);
 
     await waitFor(() => {
-      // Las tres queries deberían ser invalidadas (EventsOfBand, BandById, BandsOfUser)
-      expect(mockInvalidateQueries).toHaveBeenCalledTimes(3);
+      // Las cuatro queries deberían ser invalidadas (EventsOfBand, BandById, BandsOfUser, SubscriptionLimits)
+      expect(mockInvalidateQueries).toHaveBeenCalledTimes(4);
     });
   });
 });
