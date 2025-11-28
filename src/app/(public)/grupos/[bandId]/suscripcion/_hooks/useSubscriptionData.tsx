@@ -56,7 +56,7 @@ export const useSubscriptionLimits = ({
         enabled,
     });
 
-    const limits = data; // Backend devuelve objeto directamente
+    const limits = data || null; // Backend devuelve objeto directamente
 
     // Calcular porcentajes de uso
     const membersUsage = limits
