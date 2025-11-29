@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { HeroSection } from './_components/HeroSection';
 import { FeaturesSection } from './_components/FeaturesSection';
+import { ProblemSolutionSection } from './_components/ProblemSolutionSection';
+import { ValuePropositionSection } from './_components/ValuePropositionSection';
 import { HowItWorksSection } from './_components/HowItWorksSection';
 import { SocialProofSection } from './_components/SocialProofSection';
 import { CTASection } from './_components/CTASection';
@@ -18,6 +20,8 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 px-4 py-8 transition-colors duration-300 dark:bg-gray-950">
       <HeroSection />
       <FeaturesSection />
+      <ProblemSolutionSection />
+      <ValuePropositionSection />
       <HowItWorksSection />
       <SocialProofSection />
       <CTASection />

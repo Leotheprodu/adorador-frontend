@@ -21,10 +21,10 @@ export const CTASection = () => {
             Crear mi cuenta gratis
           </WhiteButton>
           <SecondaryButton
-            href="/discipulado"
+            href="/precios"
             className="w-full border-white bg-transparent text-white hover:bg-white hover:text-brand-purple-600 sm:w-auto"
           >
-            Explorar recursos
+            Ver planes y precios
           </SecondaryButton>
         </div>
 

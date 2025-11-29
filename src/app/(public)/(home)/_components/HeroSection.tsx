@@ -36,10 +36,10 @@ export const HeroSection = () => {
               Empieza gratis ahora
             </PrimaryButton>
             <SecondaryButton
-              href="#demo"
+              href="/precios"
               className="w-full border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-white hover:text-gray-700 hover:shadow-xl dark:border-brand-purple-800 dark:bg-brand-purple-900 dark:text-brand-purple-200 dark:hover:bg-brand-purple-800 dark:hover:text-white sm:w-auto"
             >
-              Ver cómo funciona
+              Ver planes y precios
             </SecondaryButton>
           </div>
 

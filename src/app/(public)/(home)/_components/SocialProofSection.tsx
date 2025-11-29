@@ -1,4 +1,5 @@
 import { appName } from '@global/config/constants';
+import { testimonials } from '../../precios/_content/pricingContent';
 
 export const SocialProofSection = () => {
   const stats = [
@@ -16,30 +17,6 @@ export const SocialProofSection = () => {
       number: '24/7',
       label: 'Disponibilidad',
       description: 'acceso desde cualquier lugar',
-    },
-  ];
-
-  const testimonials = [
-    {
-      quote:
-        'Zamr ha transformado completamente la manera en que organizamos nuestros eventos de alabanza. La proyección en tiempo real es increíble.',
-      author: 'Carlos M.',
-      role: 'Director de Alabanza',
-      church: 'Iglesia Vida Nueva',
-    },
-    {
-      quote:
-        'Ya no perdemos tiempo buscando acordes o creando presentaciones. Todo está en un solo lugar y funciona perfectamente.',
-      author: 'María G.',
-      role: 'Líder de Alabanza',
-      church: 'Centro Cristiano',
-    },
-    {
-      quote:
-        'La coordinación con el equipo es mucho más fácil ahora. Todos saben qué canciones tocaremos y en qué tonalidad.',
-      author: 'David R.',
-      role: 'Músico',
-      church: 'Iglesia El Camino',
     },
   ];
 
@@ -100,8 +77,10 @@ export const SocialProofSection = () => {
                 <div className="text-sm text-gray-600 transition-colors duration-300 dark:text-brand-purple-200">
                   {testimonial.role}
                 </div>
-                <div className="text-sm text-brand-purple-600 transition-colors duration-300 dark:text-brand-purple-300">
-                  {testimonial.church}
+                <div className="mt-4 rounded-lg bg-brand-purple-50 p-3 dark:bg-brand-purple-800/50">
+                  <p className="text-center text-xs font-semibold text-brand-purple-700 dark:text-brand-purple-300">
+                    💡 {testimonial.highlight}
+                  </p>
                 </div>
               </div>
             </div>

@@ -4,6 +4,7 @@ export const links: LinksProps[] = [
   { name: 'Grupos', href: '/grupos' },
   { name: 'Feed Social', href: '/feed', isLoggedIn: true },
   { name: 'Discipulado', href: '/discipulado' },
+  { name: 'Precios', href: '/precios' },
   {
     name: 'Crear cuenta',
     href: '/auth/sign-up',
