@@ -5,15 +5,9 @@ import {
     TableBody,
     TableRow,
     TableCell,
-    User,
-    Button,
-    Tooltip,
-    Link,
     useDisclosure,
 } from '@nextui-org/react';
 import { AdminPayment } from '../../_interfaces/adminPaymentInterface';
-import { PaymentStatusBadge } from './PaymentStatusBadge';
-import { CheckIcon, XMarkIcon, EyeIcon } from '@global/icons';
 import { useApprovePayment, useRejectPayment } from '../../_hooks/useAdminPayments';
 import { ApprovePaymentModal } from './ApprovePaymentModal';
 import { RejectPaymentModal } from './RejectPaymentModal';
