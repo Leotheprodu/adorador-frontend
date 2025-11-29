@@ -47,7 +47,7 @@ export const TrialCTA = () => {
                                 <div>
                                     {/* Quote Icon */}
                                     <div className="mb-2 text-3xl text-brand-purple-400">
-                                        "
+                                        &quot;
                                     </div>
 
                                     {/* Quote */}

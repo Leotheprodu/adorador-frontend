@@ -1,10 +1,4 @@
 import { PlanType } from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
-import {
-    YoutubeIcon,
-    BookOpenIcon,
-    MusicNoteIcon,
-    ComputerDesktopIcon,
-} from '@global/icons';
 
 /**
  * Pricing Page Content
@@ -118,7 +112,6 @@ export const upcomingFeatures = [
     {
         title: 'Más Fondos Animados',
         description: 'Biblioteca expandida de fondos profesionales para proyector',
-        icon: <ComputerDesktopIcon className="text-emerald-600" />,
         status: 'Próximamente',
     },
 ];

@@ -116,7 +116,7 @@ export const ProblemSolutionSection = () => {
                             Del hebreo <span className="font-bold">Zamar</span> (זָמַר)
                         </p>
                         <p className="mb-4 text-xl font-semibold text-brand-purple-700 dark:text-brand-purple-300">
-                            "Alabar a Dios con instrumentos y voces"
+                            &quot;Alabar a Dios con instrumentos y voces&quot;
                         </p>
                         <p className="text-gray-600 dark:text-gray-400">
                             Exactamente lo que hacen los usuarios de nuestra aplicación:
