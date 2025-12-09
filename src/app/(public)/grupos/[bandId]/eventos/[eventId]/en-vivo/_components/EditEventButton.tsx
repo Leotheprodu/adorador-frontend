@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   Tooltip,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 import { EditIcon } from '@global/icons/EditIcon';
 import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEditEvent';

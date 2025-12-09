@@ -1,4 +1,4 @@
-import { Input } from '@nextui-org/react';
+import { Input } from "@heroui/react";
 import { EndContentInputPassword } from '@auth/login/_components/EndContentInputPassword';
 import { KeyIcon } from '@global/icons/KeyIcon';
 import { useEffect, useState } from 'react';

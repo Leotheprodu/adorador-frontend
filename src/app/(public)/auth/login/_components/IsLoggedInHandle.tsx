@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { useIsLoggedInHandle } from '@auth/login/_hooks/useIsLoggedInHandle';
 import { LoggedUser } from '@auth/login/_interfaces/LoginInterface';
 

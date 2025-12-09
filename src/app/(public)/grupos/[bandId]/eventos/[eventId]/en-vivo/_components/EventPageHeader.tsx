@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { EditEventButton } from './EditEventButton';
 import { DeleteEventButton } from './DeleteEventButton';
@@ -11,6 +12,12 @@ export const EventPageHeader = ({
     isAdminEvent,
     refetch,
 }: EventPageHeaderProps) => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     return (
         <div className="mb-4 w-full rounded-2xl bg-gradient-to-br from-brand-purple-50 via-white to-brand-blue-50 p-4 shadow-sm backdrop-blur-sm sm:mb-6 dark:bg-gradient-to-br dark:from-brand-purple-900/30 dark:via-black/30 dark:to-brand-blue-900/30">
             <div className="flex items-center justify-between">
@@ -33,8 +40,8 @@ export const EventPageHeader = ({
                     </div>
                 </div>
 
-                {/* Botones de admin con mejor diseño */}
-                {showActionButtons && (
+                {/* Botones de admin con mejor diseño - solo renderizar después de montar */}
+                {mounted && showActionButtons && (
                     <div className="flex items-center gap-2">
                         <EditEventButton
                             bandId={bandId}

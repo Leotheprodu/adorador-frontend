@@ -1,4 +1,4 @@
-import { Chip } from '@nextui-org/react';
+import { Chip } from "@heroui/react";
 import { PaymentStatus } from '../../_interfaces/adminPaymentInterface';
 
 interface PaymentStatusBadgeProps {

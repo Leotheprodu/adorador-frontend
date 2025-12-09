@@ -100,18 +100,18 @@ describe('Additional Icon Components', () => {
       expect(container.querySelector('svg')).toBeInTheDocument();
     });
 
-    it('should not have fixed width and height attributes', () => {
+    it('should have default width and height attributes', () => {
       const { container } = render(<GuitarIcon />);
       const svg = container.querySelector('svg');
-      // El SVG no debe tener width/height fijos para ser responsive
-      expect(svg).not.toHaveAttribute('width', '1em');
-      expect(svg).not.toHaveAttribute('height', '1em');
+      // El SVG tiene width/height de 1em por defecto
+      expect(svg).toHaveAttribute('width', '1em');
+      expect(svg).toHaveAttribute('height', '1em');
     });
 
     it('should have viewBox for proper scaling', () => {
       const { container } = render(<GuitarIcon />);
       const svg = container.querySelector('svg');
-      expect(svg).toHaveAttribute('viewBox', '0 0 16 16');
+      expect(svg).toHaveAttribute('viewBox', '0 0 24 24');
     });
 
     it('should accept custom className for sizing', () => {

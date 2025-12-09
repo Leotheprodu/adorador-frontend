@@ -9,7 +9,7 @@ import {
   Button,
   Input,
   Checkbox,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import {
   useUpdateMember,
   useRemoveMember,

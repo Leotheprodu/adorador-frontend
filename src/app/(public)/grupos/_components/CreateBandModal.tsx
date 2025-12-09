@@ -6,7 +6,7 @@ import {
     ModalFooter,
     ModalHeader,
     Input,
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 interface CreateBandModalProps {
     isOpen: boolean;

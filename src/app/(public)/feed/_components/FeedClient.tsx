@@ -7,7 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useFeedInfinite } from '../_hooks/useFeedInfinite';
 import { useFeedWebSocket } from '../_hooks/useFeedWebSocket';
 import { useFeedModals } from '../_hooks/useFeedModals';

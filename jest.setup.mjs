@@ -38,7 +38,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock global de NextUI (evita errores ESM en todos los tests)
-jest.mock('@nextui-org/react', () => {
+jest.mock('@heroui/react', () => {
   const React = require('react');
   return {
     __esModule: true,

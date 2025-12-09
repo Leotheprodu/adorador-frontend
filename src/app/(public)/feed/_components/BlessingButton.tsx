@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { HeartIcon } from '@global/icons';
 
 interface BlessingButtonProps {

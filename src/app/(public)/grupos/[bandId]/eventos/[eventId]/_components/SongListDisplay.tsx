@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
 import { AddSongEventButton } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/AddSongEventButton';
 import { MusicNoteIcon } from '@global/icons';
 import { SongCardWithControls } from './SongCardWithControls';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import toast from 'react-hot-toast';
 import { eventUpdateSongs } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/services/updatingEventSongsService';
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';

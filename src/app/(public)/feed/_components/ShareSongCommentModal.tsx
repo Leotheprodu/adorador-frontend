@@ -11,7 +11,7 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { getBandsOfUser } from '@bands/_services/bandsService';
 import { getSongsOfBandForFeed } from '../_services/feedService';
 
@@ -82,7 +82,7 @@ export const ShareSongCommentModal = ({
             isLoading={isLoadingBands}
           >
             {bands?.map((band) => (
-              <SelectItem key={band.id.toString()} value={band.id.toString()}>
+              <SelectItem key={band.id.toString()}>
                 {band.name}
               </SelectItem>
             )) ?? []}

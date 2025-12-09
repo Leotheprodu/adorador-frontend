@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { useSignUpForm } from '@auth/sign-up/_hooks/useSignUpForm';
 import { InputUsernameSignUpForm } from '@auth/sign-up/_components/InputUsernameSignUpForm';
 import { InputEmailSignUpForm } from '@auth/sign-up/_components/InputEmailSignUpForm';

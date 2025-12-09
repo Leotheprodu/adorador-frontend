@@ -1,9 +1,11 @@
 'use client';
+import React from 'react';
 import Link from 'next/link';
 import { LinksProps } from '@global/interfaces/AppSecurityInterfaces';
-import { CheckUserStatus } from '@global/utils/checkUserStatus';
+import { checkUserStatusPure } from '@global/utils/checkUserStatus';
 import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
+import { $event } from '@stores/event';
 import { usePathname } from 'next/navigation';
 
 export const NavbarLinks = ({
@@ -15,6 +17,13 @@ export const NavbarLinks = ({
 }) => {
   const pathName = usePathname();
   const user = useStore($user);
+  const event = useStore($event);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const colorsSettings = {
     dark: {
       text: 'text-white dark:text-gray-200',
@@ -35,59 +44,61 @@ export const NavbarLinks = ({
   // Fallback: si backgroundColor no es válido, usar 'light'
   const settings = colorsSettings[backgroundColor] || colorsSettings['light'];
 
+  // Filter links based on user permissions using PURE function (no hooks)
+  const visibleLinks = React.useMemo(() => {
+    if (!mounted) return [];
+    
+    return links.filter((link) => 
+      checkUserStatusPure(user, event, {
+        isLoggedIn: link.isLoggedIn,
+        roles: link.roles,
+        negativeRoles: link.negativeRoles,
+        churchRoles: link.churchRoles,
+        checkChurchId: link.checkChurchId,
+        negativeChurchRoles: link.negativeChurchRoles,
+      })
+    );
+  }, [links, mounted, user, event]);
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <>
-      {links.map(
-        ({
-          name,
-          href,
-          isLoggedIn,
-          roles,
-          negativeRoles,
-          churchRoles,
-          checkChurchId,
-          negativeChurchRoles,
-        }) =>
-          CheckUserStatus({
-            isLoggedIn,
-            roles,
-            negativeRoles,
-            churchRoles,
-            checkChurchId,
-            negativeChurchRoles,
-          }) ? (
-            <li key={name}>
-              <Link
-                href={href}
-                className={`linkNav group relative flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-all duration-300 ${
-                  settings.text
-                } ${settings.hover} ${
-                  pathName.includes(href)
-                    ? `${settings.activeText} ${settings.activeBg} shadow-sm`
-                    : ''
-                }`}
-              >
-                <span className="relative">
-                  {name === 'Login'
-                    ? user.isLoggedIn
-                      ? 'Cerrar sesión'
-                      : 'Iniciar sesión'
-                    : name}
-                  {pathName.includes(href) && (
-                    <span
-                      className={`absolute -bottom-1 left-0 h-0.5 w-full rounded-full ${settings.activeBorder} bg-gradient-primary`}
-                    />
-                  )}
-                  {!pathName.includes(href) && (
-                    <span
-                      className={`absolute -bottom-1 left-0 h-0.5 w-0 rounded-full bg-gradient-primary opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100`}
-                    />
-                  )}
-                </span>
-              </Link>
-            </li>
-          ) : null,
-      )}
+      {visibleLinks.map(({ name, href }) => (
+        <li key={name}>
+          <Link
+            href={href}
+            className={`linkNav group relative flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-all duration-300 ${
+              settings.text
+            } ${settings.hover} ${
+              pathName.includes(href)
+                ? `${settings.activeText} ${settings.activeBg} shadow-sm`
+                : ''
+            }`}
+          >
+            <span className="relative">
+              {name === 'Login'
+                ? user.isLoggedIn
+                  ? 'Cerrar sesión'
+                  : 'Iniciar sesión'
+                : name}
+              {pathName.includes(href) && (
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 w-full rounded-full ${settings.activeBorder} bg-gradient-primary`}
+                />
+              )}
+              {!pathName.includes(href) && (
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 w-0 rounded-full bg-gradient-primary opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100`}
+                />
+              )}
+            </span>
+          </Link>
+        </li>
+      ))}
     </>
   );
 };

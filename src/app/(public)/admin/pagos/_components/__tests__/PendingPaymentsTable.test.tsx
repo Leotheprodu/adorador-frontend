@@ -8,7 +8,7 @@ import * as useAdminPaymentsHooks from '../../../_hooks/useAdminPayments';
 jest.mock('../../../_hooks/useAdminPayments');
 
 // Mock NextUI
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,
     TableHeader: ({ columns }: { columns: Array<{ uid: string; name: string }> }) => (
         <thead>

@@ -20,6 +20,8 @@ export const UIGuard = ({
   checkBandId,
 }: UiGuardProps) => {
   const user = useStore($user);
+  const [mounted, setMounted] = React.useState(false);
+  
   const checkUserStatus = CheckUserStatus({
     isLoggedIn,
     roles,
@@ -32,12 +34,21 @@ export const UIGuard = ({
   });
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (isLoading) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
   }, [isLoading]);
+
+  // Don't show loading state during SSR to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
 
   if (isLoading && checkUserStatus) {
     return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Textarea } from '@nextui-org/react';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Textarea } from "@heroui/react";
 import { AdminPayment } from '../../_interfaces/adminPaymentInterface';
 import { useState } from 'react';
 

@@ -4,7 +4,7 @@ import { AuthHeader } from '../AuthHeader';
 import { AuthFooter } from '../AuthFooter';
 
 // Mock NextUI Link since it might cause issues in tests if not mocked or if it relies on context
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
         <a href={href}>{children}</a>
     ),

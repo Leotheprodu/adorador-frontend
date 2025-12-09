@@ -14,7 +14,7 @@ import {
   Button,
   Chip,
   User,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { InviteMemberModal } from './InviteMemberModal';
 import { EditMemberModal } from './EditMemberModal';

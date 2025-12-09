@@ -11,7 +11,7 @@ import {
   Spinner,
   User,
   Chip,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import {
   useSearchUsers,
   useInviteUser,

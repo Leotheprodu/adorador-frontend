@@ -1,6 +1,6 @@
 'use client';
 
-import { Accordion, AccordionItem } from '@nextui-org/accordion';
+import { Accordion, AccordionItem } from "@heroui/accordion";
 import { pricingFAQs } from '../_content/pricingContent';
 
 export const PricingFAQ = () => {

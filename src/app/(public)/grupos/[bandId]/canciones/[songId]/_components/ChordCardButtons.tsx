@@ -17,7 +17,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 export const ChordCardButtons = ({
   chord,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { useQueryClient } from '@tanstack/react-query';
 import { useStore } from '@nanostores/react';
 import toast from 'react-hot-toast';

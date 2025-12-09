@@ -17,10 +17,10 @@ jest.mock('@global/hooks/useTokenRefresh');
 jest.mock('@global/services/userInitializer');
 jest.mock('@global/hooks/useBandInvitationListeners');
 
-// Mock NextUIProvider
-jest.mock('@nextui-org/react', () => ({
-  NextUIProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="nextui-provider">{children}</div>
+// Mock HeroUIProvider
+jest.mock('@heroui/react', () => ({
+  HeroUIProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="heroui-provider">{children}</div>
   ),
 }));
 
@@ -115,7 +115,7 @@ describe('Providers Component', () => {
       expect(queryProvider).toBeInTheDocument();
     });
 
-    it('should render NextUIProvider inside QueryClientProvider', () => {
+    it('should render HeroUIProvider inside QueryClientProvider', () => {
       render(
         <Providers>
           <div>Test Content</div>
@@ -123,7 +123,7 @@ describe('Providers Component', () => {
       );
 
       const queryProvider = screen.getByTestId('query-client-provider');
-      const nextUIProvider = screen.getByTestId('nextui-provider');
+      const nextUIProvider = screen.getByTestId('heroui-provider');
 
       expect(queryProvider).toContainElement(nextUIProvider);
     });
@@ -136,7 +136,7 @@ describe('Providers Component', () => {
       );
 
       const childContent = screen.getByTestId('child-content');
-      const nextUIProvider = screen.getByTestId('nextui-provider');
+      const nextUIProvider = screen.getByTestId('heroui-provider');
 
       expect(childContent).toBeInTheDocument();
       expect(nextUIProvider).toContainElement(childContent);
@@ -153,7 +153,7 @@ describe('Providers Component', () => {
         '[data-testid="query-client-provider"]',
       );
       const nextUIProvider = queryProvider?.querySelector(
-        '[data-testid="nextui-provider"]',
+        '[data-testid="heroui-provider"]',
       );
       const appContent = nextUIProvider?.querySelector(
         '[data-testid="app-content"]',
@@ -193,7 +193,7 @@ describe('Providers Component', () => {
 
       // TokenManager returns null, so it shouldn't add any extra elements
       const nextUIProvider = container.querySelector(
-        '[data-testid="nextui-provider"]',
+        '[data-testid="heroui-provider"]',
       );
       const childElements = nextUIProvider?.children;
 
@@ -394,7 +394,7 @@ describe('Providers Component', () => {
       const { container } = render(<Providers>{null}</Providers>);
 
       expect(
-        container.querySelector('[data-testid="nextui-provider"]'),
+        container.querySelector('[data-testid="heroui-provider"]'),
       ).toBeInTheDocument();
     });
   });
@@ -456,7 +456,7 @@ describe('Providers Component', () => {
 
       // Check all providers are rendered
       expect(screen.getByTestId('query-client-provider')).toBeInTheDocument();
-      expect(screen.getByTestId('nextui-provider')).toBeInTheDocument();
+      expect(screen.getByTestId('heroui-provider')).toBeInTheDocument();
       expect(screen.getByTestId('app-content')).toBeInTheDocument();
 
       // Check hooks are called

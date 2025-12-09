@@ -1,4 +1,4 @@
-import { Checkbox } from '@nextui-org/react';
+import { Checkbox } from "@heroui/react";
 import { InlineDisplayTogglesProps } from '../../_interfaces/lyricsInterfaces';
 
 export const InlineDisplayToggles = ({

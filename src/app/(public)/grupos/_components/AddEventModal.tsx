@@ -5,7 +5,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { CalendarIcon } from '@global/icons';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
 

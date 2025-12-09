@@ -5,7 +5,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { MusicNoteIcon } from '@global/icons';
 import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';

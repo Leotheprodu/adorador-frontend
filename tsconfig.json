@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,24 +24,48 @@
       }
     ],
     "paths": {
-      "@bands/*": ["app/(public)/grupos/*"],
-      "@users/*": ["app/(public)/users/*"],
-      "@home/*": ["app/(public)/(home)/*"],
-      "@auth/*": ["app/(public)/auth/*"],
-      "@admin/*": ["app/(public)/admin/*"],
-      "@ui/*": ["app/(public)/_ui/*"],
-      "@stores/*": ["global/stores/*"],
-      "@global/*": ["global/*"],
-      "@app/*": ["app/*"],
-      "@/*": ["*"]
-    }
+      "@bands/*": [
+        "app/(public)/grupos/*"
+      ],
+      "@users/*": [
+        "app/(public)/users/*"
+      ],
+      "@home/*": [
+        "app/(public)/(home)/*"
+      ],
+      "@auth/*": [
+        "app/(public)/auth/*"
+      ],
+      "@admin/*": [
+        "app/(public)/admin/*"
+      ],
+      "@ui/*": [
+        "app/(public)/_ui/*"
+      ],
+      "@stores/*": [
+        "global/stores/*"
+      ],
+      "@global/*": [
+        "global/*"
+      ],
+      "@app/*": [
+        "app/*"
+      ],
+      "@/*": [
+        "*"
+      ]
+    },
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "jest-setup.d.ts"
+    "jest-setup.d.ts",
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

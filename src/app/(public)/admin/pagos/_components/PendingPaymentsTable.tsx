@@ -6,7 +6,7 @@ import {
     TableRow,
     TableCell,
     useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { AdminPayment } from '../../_interfaces/adminPaymentInterface';
 import { useApprovePayment, useRejectPayment } from '../../_hooks/useAdminPayments';
 import { ApprovePaymentModal } from './ApprovePaymentModal';

@@ -7,7 +7,7 @@ import {
   setLocalStorage,
 } from '@global/utils/handleLocalStorage';
 import { useStore } from '@nanostores/react';
-import { Checkbox } from '@nextui-org/react';
+import { Checkbox } from "@heroui/react";
 import { $chordPreferences, $eventConfig } from '@stores/event';
 import { useEffect } from 'react';
 export const EventControlsButtonsScreen = () => {

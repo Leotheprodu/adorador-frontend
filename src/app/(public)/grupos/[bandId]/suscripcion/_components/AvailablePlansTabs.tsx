@@ -1,4 +1,4 @@
-import { Tabs, Tab } from '@nextui-org/react';
+import { Tabs, Tab } from "@heroui/react";
 import { SubscriptionPlan, BandSubscription } from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
 
 interface AvailablePlansTabsProps {

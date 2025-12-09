@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Textarea, Button, Divider } from '@nextui-org/react';
+import { Avatar, Textarea, Button, Divider } from "@heroui/react";
 import { SendIcon, XMarkIcon } from '@global/icons';
 import { PostType } from '../_interfaces/feedInterface';
 import { PostTypeSelectorButtons } from './PostTypeSelectorButtons';

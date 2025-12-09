@@ -1,5 +1,5 @@
 // Mock NextUI components FIRST
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Button: ({
     children,
     onPress,

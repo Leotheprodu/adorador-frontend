@@ -9,10 +9,11 @@ import { LightBulbIcon } from '@global/icons';
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
   const post = posts.find(
-    (p) => p.slug === params.slug && p.category === 'discipulado',
+    (p) => p.slug === slug && p.category === 'discipulado',
   );
 
   if (!post) {
@@ -61,13 +62,14 @@ export async function generateMetadata({
     },
   };
 }
-export default function DiscipuladoPage({
+export default async function DiscipuladoPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   const post = posts.find(
-    (p) => p.slug === params.slug && p.category === 'discipulado',
+    (p) => p.slug === slug && p.category === 'discipulado',
   );
   const author = authors.find((a) => a.id === post?.authorId);
 

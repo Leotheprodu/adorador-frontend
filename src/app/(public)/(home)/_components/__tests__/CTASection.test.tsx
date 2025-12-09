@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { CTASection } from '../CTASection';
 
 // Mock Button de NextUI para simular correctamente el árbol de botones con as=Link
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Button: ({ as, href, children, ...props }: any) => {
     if (as && href) {
@@ -64,7 +64,7 @@ describe('CTASection Component', () => {
 
     it('should render secondary CTA button', () => {
       render(<CTASection />);
-      const secondaryButton = screen.getByText('Explorar recursos');
+      const secondaryButton = screen.getByText('Ver planes y precios');
       expect(secondaryButton).toBeInTheDocument();
     });
 
@@ -74,12 +74,12 @@ describe('CTASection Component', () => {
       expect(primaryButton.closest('a')).toHaveAttribute('href', '/auth/login');
     });
 
-    it('should link secondary button to discipulado', () => {
+    it('should link secondary button to precios', () => {
       render(<CTASection />);
-      const secondaryButton = screen.getByText('Explorar recursos');
+      const secondaryButton = screen.getByText('Ver planes y precios');
       expect(secondaryButton.closest('a')).toHaveAttribute(
         'href',
-        '/discipulado',
+        '/precios',
       );
     });
 
@@ -92,11 +92,11 @@ describe('CTASection Component', () => {
 
     it('should render secondary button with appropriate styling', () => {
       render(<CTASection />);
-      const secondaryButton = screen.getByText('Explorar recursos');
+      const secondaryButton = screen.getByText('Ver planes y precios');
       expect(secondaryButton).toBeInTheDocument();
       expect(secondaryButton.closest('a')).toHaveAttribute(
         'href',
-        '/discipulado',
+        '/precios',
       );
     });
   });

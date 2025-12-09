@@ -8,7 +8,7 @@ import {
     Textarea,
     Chip,
     Tooltip,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { formatRelativeTime } from '@global/utils/datesUtils';
 import { SendIcon, DownloadIcon } from '@global/icons';
 import { BlessingButton } from './BlessingButton';

@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { $user } from '@stores/users';
 import { useStore } from '@nanostores/react';
 import { InputPhoneLoginForm } from './InputPhoneLoginForm';

@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BlessingButton } from '../BlessingButton';
-import { ButtonProps } from '@nextui-org/button';
+import { ButtonProps } from "@heroui/button";
 import { ReactNode } from 'react';
 
 // Mock NextUI Button con tipado correcto
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Button: (props: ButtonProps & { children?: ReactNode }) => (
     <button onClick={props.onPress}>{props.children}</button>
   ),

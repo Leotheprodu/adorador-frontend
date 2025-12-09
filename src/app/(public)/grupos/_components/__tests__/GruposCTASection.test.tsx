@@ -23,7 +23,7 @@ jest.mock('next/link', () => {
 });
 
 // Mock NextUI components
-jest.mock('@nextui-org/modal', () => ({
+jest.mock('@heroui/modal', () => ({
   Modal: ({
     children,
     isOpen,
@@ -51,8 +51,8 @@ jest.mock('@nextui-org/modal', () => ({
 }));
 
 // Mock NextUI Button para simular <a> y <button> según corresponda
-jest.mock('@nextui-org/react', () => {
-  const original = jest.requireActual('@nextui-org/react');
+jest.mock('@heroui/react', () => {
+  const original = jest.requireActual('@heroui/react');
   return {
     ...original,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,7 +69,7 @@ jest.mock('@nextui-org/react', () => {
   };
 });
 
-jest.mock('@nextui-org/input', () => ({
+jest.mock('@heroui/input', () => ({
   Input: ({
     value,
     onChange,

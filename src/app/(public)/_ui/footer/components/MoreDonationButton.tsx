@@ -7,7 +7,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import { InputSecureTextToCopy } from '@ui/footer/components/InputSecureTextToCopy';
 import { CreditCardIcon } from '@global/icons/CreditCardIcon';

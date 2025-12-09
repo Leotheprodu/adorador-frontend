@@ -45,7 +45,7 @@ jest.spyOn(nanostoresReact, 'useStore').mockReturnValue({ songs: [] });
 
 // Mock explícito de NextUI
 import { PropsWithChildren, ButtonHTMLAttributes, ReactNode } from 'react';
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Modal: ({ children }: PropsWithChildren<object>) => (
     <div data-testid="modal">
       {typeof children === 'function'

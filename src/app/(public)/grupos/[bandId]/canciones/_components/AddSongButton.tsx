@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { addSongsToBandService } from '../_services/songsOfBandService';

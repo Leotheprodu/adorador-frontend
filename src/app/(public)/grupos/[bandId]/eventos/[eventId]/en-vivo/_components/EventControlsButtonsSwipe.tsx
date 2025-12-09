@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react';
-import { Checkbox } from '@nextui-org/react';
+import { Checkbox } from "@heroui/react";
 import { $eventConfig } from '@stores/event';
 import {
   getLocalStorage,

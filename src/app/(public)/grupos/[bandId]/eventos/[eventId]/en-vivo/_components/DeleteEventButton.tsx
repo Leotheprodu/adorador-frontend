@@ -7,7 +7,7 @@ import {
   ModalHeader,
   Tooltip,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 import { useDeleteEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useDeleteEvent';
 import { useStore } from '@nanostores/react';

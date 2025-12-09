@@ -1,6 +1,6 @@
 // Mock NextUI Button para simular <a> y <button> según corresponda
-jest.mock('@nextui-org/react', () => {
-  const original = jest.requireActual('@nextui-org/react');
+jest.mock('@heroui/react', () => {
+  const original = jest.requireActual('@heroui/react');
   return {
     ...original,
     Button: ({

@@ -12,7 +12,7 @@ import {
   Select,
   SelectItem,
   Input,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useEffect, useState } from 'react';
 import { updateLyricsPositionsService } from '../_services/songIdServices';
 

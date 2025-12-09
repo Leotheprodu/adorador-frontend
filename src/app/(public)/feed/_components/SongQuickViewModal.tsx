@@ -10,7 +10,7 @@ import {
   Button,
   Spinner,
   Chip,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Post, LyricsProps } from '../_interfaces/feedInterface';
 import { getSongWithLyricsService } from '../_services/feedService';
 import { structureColors, structureLib } from '@global/config/constants';

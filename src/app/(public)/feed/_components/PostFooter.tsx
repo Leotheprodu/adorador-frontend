@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { ChatIcon, DownloadIcon } from '@global/icons';
 import { BlessingButton } from './BlessingButton';
 import { PostFooterProps } from './_interfaces/postCardInterfaces';

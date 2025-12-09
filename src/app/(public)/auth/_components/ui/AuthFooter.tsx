@@ -1,4 +1,4 @@
-import { Link } from '@nextui-org/react';
+import { Link } from "@heroui/react";
 import { findHrefFromLinks } from '@global/utils/findHrefFromLinks';
 
 interface AuthFooterProps {

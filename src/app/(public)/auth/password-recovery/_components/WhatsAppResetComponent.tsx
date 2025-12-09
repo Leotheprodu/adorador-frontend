@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardBody, Button } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Button } from "@heroui/react";
 // Iconos simplificados con emojis
 
 interface WhatsAppResetComponentProps {

@@ -1,6 +1,6 @@
 'use client';
 import { ArrowUpIcon } from '@global/icons/ArrowUpIcon';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import React from 'react';
 
 const ScrollToTopButton = () => {

@@ -1,5 +1,5 @@
 'use client';
-import { Spinner, Button } from '@nextui-org/react';
+import { Spinner, Button } from "@heroui/react";
 import { updateUserFromToken } from '@global/utils/updateUserFromToken';
 import { useAcceptInvitation } from '@app/(public)/grupos/_hooks/useAcceptInvitation';
 import { useRejectInvitation } from '@app/(public)/grupos/_hooks/useRejectInvitation';

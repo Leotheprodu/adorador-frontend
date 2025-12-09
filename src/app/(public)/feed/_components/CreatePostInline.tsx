@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody } from "@heroui/react";
 import { CreatePostDto, PostType } from '../_interfaces/feedInterface';
 import { useCreatePostForm } from '../_hooks/useCreatePostForm';
 import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';

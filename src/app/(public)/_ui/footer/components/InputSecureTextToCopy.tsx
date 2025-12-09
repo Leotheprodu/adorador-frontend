@@ -1,7 +1,7 @@
 import { CopyIcon } from '@global/icons/CopyIcon';
 import { EyeFilledIcon } from '@global/icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '@global/icons/EyeSlashFilledIcon';
-import { Input, Tooltip } from '@nextui-org/react';
+import { Input, Tooltip } from "@heroui/react";
 import toast from 'react-hot-toast';
 
 import { useEffect, useState } from 'react';

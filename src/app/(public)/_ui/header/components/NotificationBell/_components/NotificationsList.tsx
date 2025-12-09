@@ -1,5 +1,5 @@
 'use client';
-import { Spinner } from '@nextui-org/react';
+import { Spinner } from "@heroui/react";
 import { Notification } from '@global/services/notifications.service';
 import { useNotificationsList } from '../_hooks/useNotificationsList';
 import { NotificationItem } from './NotificationItem';

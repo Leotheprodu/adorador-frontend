@@ -1,4 +1,4 @@
-import { Button, Chip, Tooltip } from '@nextui-org/react';
+import { Button, Chip, Tooltip } from "@heroui/react";
 import { DownloadIcon } from '@global/icons';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
 import { Comment as FeedComment } from '../_interfaces/feedInterface';

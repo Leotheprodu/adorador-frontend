@@ -8,7 +8,7 @@ import {
     Chip,
     Tooltip,
     Link,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { PaymentHistory, PaymentStatus } from '../_interfaces/payment.interface';
 import { EyeIcon } from '@global/icons';
 

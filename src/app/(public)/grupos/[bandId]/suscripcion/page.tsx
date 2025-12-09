@@ -1,13 +1,14 @@
 import { SubscriptionPage } from '@bands/[bandId]/suscripcion/_components/SubscriptionPage';
 
-export default function Suscripcion({
+export default async function Suscripcion({
     params,
 }: {
-    params: { bandId: string };
+    params: Promise<{ bandId: string }>;
 }) {
+    const resolvedParams = await params;
     return (
         <div className="flex h-full w-full flex-col items-center p-8 pb-20 sm:p-20">
-            <SubscriptionPage params={params} />
+            <SubscriptionPage params={resolvedParams} />
         </div>
     );
 }

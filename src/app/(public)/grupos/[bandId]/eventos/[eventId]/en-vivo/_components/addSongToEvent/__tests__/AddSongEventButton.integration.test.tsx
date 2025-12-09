@@ -3,7 +3,7 @@ import { AddSongEventButton } from '../AddSongEventButton';
 import '@testing-library/jest-dom';
 
 // Mock NextUI components
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Button: ({
     children,
     onPress,
@@ -23,7 +23,7 @@ jest.mock('@nextui-org/react', () => ({
         onClick={disabled || isDisabled ? undefined : onPress}
         disabled={disabled || isDisabled}
         aria-label={ariaLabel}
-        className={`nextui-btn z-10 ${className}`.trim()}
+        className={`heroui-btn z-10 ${className}`.trim()}
         {...nativeProps}
       >
         {children}

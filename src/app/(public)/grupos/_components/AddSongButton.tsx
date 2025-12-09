@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { PlusIcon } from '@global/icons';
 import { useAddSongButton } from '../_hooks/useAddSongButton';
 import { AddSongModal } from './AddSongModal';

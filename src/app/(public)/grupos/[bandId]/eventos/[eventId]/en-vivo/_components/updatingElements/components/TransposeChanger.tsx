@@ -4,7 +4,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';

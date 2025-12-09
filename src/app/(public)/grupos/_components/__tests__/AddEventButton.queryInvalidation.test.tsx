@@ -1,5 +1,5 @@
 // Mock NextUI components usados en AddEventButton
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Button: ({ children, onPress, ...props }) => (
     <button onClick={onPress} {...props}>
       {children}
