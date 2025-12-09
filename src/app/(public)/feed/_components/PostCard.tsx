@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardBody, CardFooter } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, CardFooter } from "@heroui/react";
 import { formatRelativeTime } from '@global/utils/datesUtils';
 import { PostHeader } from './PostHeader';
 import { SongShareContent } from './SongShareContent';

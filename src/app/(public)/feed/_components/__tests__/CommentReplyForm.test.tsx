@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CommentReplyForm } from '../CommentReplyForm';
 
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     Avatar: ({ name }: { name?: string }) => <div>{name}</div>,
     Button: ({
         children,

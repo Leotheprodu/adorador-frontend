@@ -1,6 +1,6 @@
 'use client';
 
-import { Spinner } from '@nextui-org/spinner';
+import { Spinner } from "@heroui/spinner";
 import { PlanUpgradeCard } from './PlanUpgradeCard';
 import { PaymentHistoryTable } from './PaymentHistoryTable';
 import { useSubscriptionPageLogic } from '../_hooks/useSubscriptionPageLogic';

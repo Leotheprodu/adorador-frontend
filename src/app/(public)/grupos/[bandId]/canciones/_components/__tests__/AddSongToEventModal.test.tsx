@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { AddSongToEventModal } from '../AddSongToEventModal';
 
 // Mock NextUI components
-jest.mock('@nextui-org/react', () => {
+jest.mock('@heroui/react', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
 

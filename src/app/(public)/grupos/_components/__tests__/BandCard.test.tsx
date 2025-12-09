@@ -20,7 +20,7 @@ jest.mock('@nanostores/react', () => ({
 // Mock dinámico de useDisclosure para controlar el estado en cada test
 let disclosureState = { isEditOpen: false, isDeleteOpen: false };
 let disclosureCallCount = 0;
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Card: ({ children }) => <div>{children}</div>,
   CardHeader: ({ children }) => <div>{children}</div>,
   CardBody: ({ children }) => <div>{children}</div>,

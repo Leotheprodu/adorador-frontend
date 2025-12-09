@@ -6,7 +6,7 @@ import {
   Button,
   Textarea,
   Spinner,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useCommentSection } from '../_hooks/useCommentSection';
 import { ShareSongCommentModal } from './ShareSongCommentModal';
 import { CommentItem } from './CommentItem';

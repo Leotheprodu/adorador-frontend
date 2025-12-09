@@ -1,6 +1,6 @@
 'use client';
 
-import { Select, SelectItem, Chip } from '@nextui-org/react';
+import { Select, SelectItem, Chip } from "@heroui/react";
 
 interface BandSelectorProps {
     bandId: string;

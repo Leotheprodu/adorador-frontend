@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import {
   Popover,
   PopoverTrigger,
@@ -6,7 +7,7 @@ import {
   Button,
   Tabs,
   Tab,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { BellIcon } from '@global/icons/BellIcon';
 import { useNotificationBell } from './NotificationBell/_hooks/useNotificationBell';
 import { NotificationsList } from './NotificationBell/_components/NotificationsList';
@@ -24,7 +25,14 @@ export const NotificationBell = () => {
     setIsOpen,
   } = useNotificationBell();
 
-  if (!user.isLoggedIn) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted || !user.isLoggedIn) return null;
 
   return (
     <Popover placement="right-end" isOpen={isOpen} onOpenChange={setIsOpen}>

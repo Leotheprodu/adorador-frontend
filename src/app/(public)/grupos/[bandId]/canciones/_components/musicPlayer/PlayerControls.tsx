@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { PlayIcon } from '@global/icons/PlayIcon';
 import { PauseIcon } from '@global/icons/PauseIcon';
 import { ForwardIcon } from '@global/icons/ForwardIcon';
@@ -29,7 +29,7 @@ export const PlayerControls = ({
                 type="button"
                 radius="full"
                 className="m-0 flex h-10 w-10 min-w-0 items-center justify-center bg-primario p-0 opacity-75 duration-75 ease-in-out hover:opacity-100"
-                onClick={onPlayPause}
+                onPress={() => onPlayPause({} as React.MouseEvent<HTMLButtonElement>)}
                 aria-label={playing ? "Pausar" : "Reproducir"}
             >
                 {playing && hasSelectedBeat && (

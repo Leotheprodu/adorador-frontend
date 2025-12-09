@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { getEventsOfBand } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
 import { getEventsById } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_services/eventByIdService';
 import { addSongsToEventService } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/services/AddSongsToEventService';

@@ -1,4 +1,4 @@
-import { Avatar, Button, Textarea } from '@nextui-org/react';
+import { Avatar, Button, Textarea } from "@heroui/react";
 import { SendIcon } from '@global/icons';
 
 interface CommentReplyFormProps {

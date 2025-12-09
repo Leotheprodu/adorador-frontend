@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { $event } from '@stores/event';
 import React, { useEffect, useState, useMemo } from 'react';
 import toast from 'react-hot-toast';

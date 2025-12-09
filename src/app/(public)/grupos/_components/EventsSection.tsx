@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import Link from 'next/link';
 import { AddEventButton } from './AddEventButton';
 import { EventOfBandCard } from '@bands/[bandId]/eventos/_components/EventOfBandCard';

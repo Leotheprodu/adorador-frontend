@@ -17,7 +17,7 @@ jest.mock('@nanostores/react', () => ({
 }));
 
 // Mock NextUI components
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Card: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
   CardHeader: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
   CardBody: ({ children }: React.PropsWithChildren) => <div>{children}</div>,

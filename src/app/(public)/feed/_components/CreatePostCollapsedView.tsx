@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Button, Tooltip } from '@nextui-org/react';
+import { Avatar, Button, Tooltip } from "@heroui/react";
 import { MusicalNoteIcon, HandsIcon } from '@global/icons';
 import { PostType } from '../_interfaces/feedInterface';
 

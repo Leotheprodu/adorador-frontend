@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Chip } from '@nextui-org/react';
+import { Avatar, Chip } from "@heroui/react";
 import { PostHeaderProps } from './_interfaces/postCardInterfaces';
 
 export const PostHeader = ({

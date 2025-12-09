@@ -9,7 +9,7 @@ import {
   Button,
   Tooltip,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { EditIcon } from '@global/icons/EditIcon';
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { UpdateElementCard } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/components/UpdateElementCard';

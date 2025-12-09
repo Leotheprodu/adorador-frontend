@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import {
   Modal,
@@ -7,12 +8,11 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { $eventAdminName } from '@stores/event';
 import { eventAdminChange } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_services/eventByIdService';
 import { refreshAccessToken } from '@global/utils/jwtUtils';
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
 import { $user } from '@stores/users';
 export const EventControlsHandleManager = ({
   params,
@@ -29,6 +29,11 @@ export const EventControlsHandleManager = ({
     params,
   });
   const user = useStore($user);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (status === 'success') {
@@ -96,6 +101,11 @@ export const EventControlsHandleManager = ({
     mutate(null);
     onOpenChange();
   };
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>

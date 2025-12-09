@@ -1,5 +1,5 @@
-import { Button } from '@nextui-org/button';
-import { Card, CardBody } from '@nextui-org/card';
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
 import Link from 'next/link';
 import { marketingMessages, testimonials } from '../_content/pricingContent';
 

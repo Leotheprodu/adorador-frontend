@@ -6,7 +6,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useEditEvent } from '../useEditEvent';
 import { useQueryClient } from '@tanstack/react-query';
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { useStore } from '@nanostores/react';
 
 // Mocks
@@ -15,7 +15,7 @@ jest.mock('@tanstack/react-query', () => ({
   useQueryClient: jest.fn(),
 }));
 
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   useDisclosure: jest.fn(),
 }));
 

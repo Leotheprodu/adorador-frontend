@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { Button } from '@nextui-org/react';
-import { Select, SelectItem } from '@nextui-org/react';
-import { Card, CardBody, CardHeader } from '@nextui-org/react';
-import { Divider } from '@nextui-org/react';
+import { Button } from "@heroui/react";
+import { Select, SelectItem } from "@heroui/react";
+import { Card, CardBody, CardHeader } from "@heroui/react";
+import { Divider } from "@heroui/react";
 import type { SubscriptionPlan } from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
 import { PaymentMethod } from '@bands/[bandId]/suscripcion/_interfaces/payment.interface';
 import { useCreatePayment } from '../_hooks/usePaymentData';
@@ -102,7 +102,6 @@ Pago vía: ${methodLabels[selectedMethod as PaymentMethod]}`;
                     {availablePlans.map((plan) => (
                         <SelectItem
                             key={plan.id.toString()}
-                            value={plan.id.toString()}
                             textValue={`${plan.name} - $${plan.price}/${getBillingPeriod(plan.durationDays)}`}
                         >
                             {plan.name} - ${plan.price}/{getBillingPeriod(plan.durationDays)}
@@ -118,13 +117,13 @@ Pago vía: ${methodLabels[selectedMethod as PaymentMethod]}`;
                     onChange={(e) => setSelectedMethod(e.target.value)}
                     isRequired
                 >
-                    <SelectItem key={PaymentMethod.BANK_TRANSFER} value={PaymentMethod.BANK_TRANSFER} textValue="Transferencia Bancaria">
+                    <SelectItem key={PaymentMethod.BANK_TRANSFER} textValue="Transferencia Bancaria">
                         Transferencia Bancaria
                     </SelectItem>
-                    <SelectItem key={PaymentMethod.SINPE_MOVIL} value={PaymentMethod.SINPE_MOVIL} textValue="Sinpe Móvil">
+                    <SelectItem key={PaymentMethod.SINPE_MOVIL} textValue="Sinpe Móvil">
                         Sinpe Móvil
                     </SelectItem>
-                    <SelectItem key={PaymentMethod.PAYPAL} value={PaymentMethod.PAYPAL} textValue="Paypal">
+                    <SelectItem key={PaymentMethod.PAYPAL} textValue="Paypal">
                         Paypal
                     </SelectItem>
 

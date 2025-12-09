@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { Button, Link } from '@nextui-org/react';
+import { Button, Link } from "@heroui/react";
 import { verifyWhatsAppTokenService } from '@auth/verify-email/_services/verifyService';
 import toast from 'react-hot-toast';
 import { findHrefFromLinks } from '@/global/utils/findHrefFromLinks';

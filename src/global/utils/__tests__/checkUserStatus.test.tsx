@@ -138,9 +138,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(true);
-      expect(console.log).toHaveBeenCalledWith(
-        'User is an admin, access granted',
-      );
     });
 
     it('should grant access to admin even with negative roles', () => {
@@ -199,9 +196,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User is not logged in or logged in status does not match',
-      );
     });
 
     it('should return true when user is logged in but isLoggedIn is false', () => {
@@ -263,9 +257,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User does not have the required roles',
-      );
     });
   });
 
@@ -285,7 +276,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith('User has negative roles');
     });
 
     it('should grant access when user does not have negative roles', () => {
@@ -347,9 +337,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User does not have the required church membership',
-      );
     });
 
     it('should grant access when checkChurchId is not provided', () => {
@@ -418,9 +405,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User does not have the required church roles',
-      );
     });
 
     it('should grant access when churchRoles is not provided', () => {
@@ -472,9 +456,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User has negative church roles',
-      );
     });
 
     it('should grant access when user does not have negative church roles', () => {
@@ -548,9 +529,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User does not have the required band membership',
-      );
     });
 
     it('should grant access when checkBandId is not provided', () => {
@@ -618,9 +596,6 @@ describe('CheckUserStatus', () => {
       );
 
       expect(result.current).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        'User does not have admin event permission',
-      );
     });
 
     it('should deny access when user is not logged in', () => {
@@ -831,9 +806,6 @@ describe('CheckUserStatus', () => {
 
       // Admin bypasses all checks
       expect(result.current).toBe(true);
-      expect(console.log).toHaveBeenCalledWith(
-        'User is an admin, access granted',
-      );
     });
   });
 

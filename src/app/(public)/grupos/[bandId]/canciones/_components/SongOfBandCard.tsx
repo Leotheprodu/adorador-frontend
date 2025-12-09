@@ -10,7 +10,7 @@ import {
   ModalHeader,
   useDisclosure,
   Button,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { SongPropsWithCount } from '../_interfaces/songsInterface';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import { TrashIcon, CalendarIcon, MusicNoteIcon } from '@global/icons';

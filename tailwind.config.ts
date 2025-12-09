@@ -1,4 +1,4 @@
-import { nextui } from '@nextui-org/theme';
+import { heroui } from "@heroui/theme";
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -6,7 +6,7 @@ const config: Config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@nextui-org/theme/dist/components/(button|calendar|checkbox|chip|date-input|date-picker|dropdown|image|input|link|listbox|modal|popover|radio|select|slider|spinner|table|ripple|menu|divider|scroll-shadow|spacer).js',
+    "./node_modules/@heroui/theme/dist/components/(button|calendar|checkbox|chip|date-input|date-picker|dropdown|image|input|link|listbox|modal|popover|radio|select|slider|spinner|table|ripple|menu|divider|scroll-shadow|spacer).js",
   ],
   darkMode: 'class', // Modo oscuro controlado por clase
   theme: {
@@ -96,7 +96,7 @@ const config: Config = {
     },
   },
   plugins: [
-    nextui(),
+    heroui(),
     // Plugin personalizado para text gradients
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function ({ addUtilities }: any) {

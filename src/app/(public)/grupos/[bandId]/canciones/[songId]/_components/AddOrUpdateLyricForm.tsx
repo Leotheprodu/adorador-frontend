@@ -1,5 +1,5 @@
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { Button, Input, Select, SelectItem } from '@nextui-org/react';
+import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { useEffect, useState } from 'react';
 import {
   addNewLyricService,

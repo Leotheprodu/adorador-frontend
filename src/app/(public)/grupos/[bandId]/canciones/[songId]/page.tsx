@@ -1,14 +1,15 @@
 import { SongIdMainPage } from './_components/SongIdMainPage';
 
-export default function SongsById({
+export default async function SongsById({
   params,
 }: {
-  params: { bandId: string; songId: string };
+  params: Promise<{ bandId: string; songId: string }>;
 }) {
+  const resolvedParams = await params;
   return (
     <div className="flex h-full min-h-screen flex-col items-center bg-gradient-to-br from-slate-50 via-white to-brand-purple-50/20 px-4 py-8 pb-20 sm:px-6 sm:py-12 dark:bg-gray-950 dark:bg-none">
       <section className="w-full max-w-7xl">
-        <SongIdMainPage params={params} />
+        <SongIdMainPage params={resolvedParams} />
       </section>
     </div>
   );

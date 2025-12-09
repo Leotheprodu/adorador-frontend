@@ -3,7 +3,7 @@ jest.mock('@nanostores/react', () => ({
   useStore: jest.fn(() => ({ isNavigating: false })),
 }));
 
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Card: ({ children, ...props }: React.PropsWithChildren<object>) => (
     <div {...props}>{children}</div>
   ),

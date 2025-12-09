@@ -7,7 +7,7 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { EventsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 import { CalendarIcon, ArrowRightIcon } from '@global/icons';

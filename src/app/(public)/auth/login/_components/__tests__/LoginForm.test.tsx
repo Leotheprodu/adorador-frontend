@@ -37,7 +37,7 @@ jest.mock('../../../_components/ui/AuthFooter', () => ({
 }));
 
 // Mock NextUI Button
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     Button: ({
         children,
         onClick,

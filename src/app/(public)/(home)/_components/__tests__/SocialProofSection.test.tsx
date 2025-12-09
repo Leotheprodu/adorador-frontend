@@ -63,35 +63,35 @@ describe('SocialProofSection Component', () => {
 
     it('debe renderizar los autores de los testimonios', () => {
       render(<SocialProofSection />);
-      expect(screen.getByText('Carlos M.')).toBeInTheDocument();
-      expect(screen.getByText('María G.')).toBeInTheDocument();
-      expect(screen.getByText('David R.')).toBeInTheDocument();
+      expect(screen.getByText('Gamaliel Serrano')).toBeInTheDocument();
+      expect(screen.getByText('Hillary')).toBeInTheDocument();
+      expect(screen.getByText('Justin')).toBeInTheDocument();
     });
 
     it('debe renderizar el contenido de los testimonios', () => {
       render(<SocialProofSection />);
       expect(
-        screen.getByText(/Zamr ha transformado completamente/i),
+        screen.getByText(/Me encanta que puedo ver los acordes/i),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Ya no perdemos tiempo buscando acordes/i),
+        screen.getByText(/He subido muchísimas canciones/i),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/La coordinación con el equipo/i),
+        screen.getByText(/Me encargo de pasar las letras/i),
       ).toBeInTheDocument();
     });
 
     it('debe renderizar los roles de los autores', () => {
       render(<SocialProofSection />);
-      expect(screen.getByText('Director de Alabanza')).toBeInTheDocument();
-      expect(screen.getByText('Líder de Alabanza')).toBeInTheDocument();
-      expect(screen.getByText('Músico')).toBeInTheDocument();
+      expect(screen.getByText('Bajista')).toBeInTheDocument();
+      expect(screen.getByText('Cantante')).toBeInTheDocument();
+      expect(screen.getByText('Encargado de Eventos')).toBeInTheDocument();
     });
 
-    it('debe usar el color de marca para los nombres de iglesia', () => {
-      const { container } = render(<SocialProofSection />);
-      const churchNames = container.querySelectorAll('.text-brand-purple-600');
-      expect(churchNames.length).toBe(3);
+    it('debe usar estilos de color para los nombres de autor', () => {
+      const { container} = render(<SocialProofSection />);
+      const authorNames = container.querySelectorAll('.dark\\:text-brand-pink-200');
+      expect(authorNames.length).toBeGreaterThanOrEqual(3);
     });
   });
 
@@ -124,80 +124,5 @@ describe('SocialProofSection Component', () => {
       const cards = container.querySelectorAll('.rounded-2xl');
       expect(cards.length).toBeGreaterThanOrEqual(3);
     });
-  });
-});
-
-it('debe renderizar exactamente 3 testimonial cards con los estilos correctos', () => {
-  const { container } = render(<SocialProofSection />);
-  const testimonialCards = container.querySelectorAll(
-    '.rounded-2xl.border.bg-white',
-  );
-  expect(testimonialCards.length).toBe(3);
-  testimonialCards.forEach((card) => {
-    expect(card.className).toMatch(/bg-white/);
-    expect(card.className).toMatch(/dark:bg-brand-purple-900/);
-    expect(card.className).toMatch(/dark:border-brand-purple-800/);
-    expect(card.className).not.toMatch(/gradient/);
-  });
-});
-
-it('debe renderizar los autores de los testimonios', () => {
-  render(<SocialProofSection />);
-  expect(screen.getByText('Carlos M.')).toBeInTheDocument();
-  expect(screen.getByText('María G.')).toBeInTheDocument();
-  expect(screen.getByText('David R.')).toBeInTheDocument();
-});
-
-it('debe renderizar el contenido de los testimonios', () => {
-  render(<SocialProofSection />);
-  expect(
-    screen.getByText(/Zamr ha transformado completamente/i),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText(/Ya no perdemos tiempo buscando acordes/i),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText(/La coordinación con el equipo/i),
-  ).toBeInTheDocument();
-});
-
-it('debe renderizar los roles de los autores', () => {
-  render(<SocialProofSection />);
-  expect(screen.getByText('Director de Alabanza')).toBeInTheDocument();
-  expect(screen.getByText('Líder de Alabanza')).toBeInTheDocument();
-  expect(screen.getByText('Músico')).toBeInTheDocument();
-});
-
-it('debe usar el color de marca para los nombres de iglesia', () => {
-  const { container } = render(<SocialProofSection />);
-  const churchNames = container.querySelectorAll('.text-brand-purple-600');
-  expect(churchNames.length).toBe(3);
-});
-
-describe('Responsive Layout', () => {
-  it('should have responsive grid for stats', () => {
-    const { container } = render(<SocialProofSection />);
-    const statsGrid = container.querySelector('.grid.md\\:grid-cols-3');
-    expect(statsGrid).toBeInTheDocument();
-  });
-
-  it('should have responsive grid for testimonials', () => {
-    const { container } = render(<SocialProofSection />);
-    const grids = container.querySelectorAll('.grid');
-    expect(grids.length).toBeGreaterThanOrEqual(2);
-  });
-});
-
-describe('Accesibilidad', () => {
-  it('debe tener jerarquía de headings correcta', () => {
-    const { container } = render(<SocialProofSection />);
-    const h2 = container.querySelector('h2');
-    expect(h2).toBeInTheDocument();
-  });
-
-  it('debe tener marcado semántico para testimonios', () => {
-    const { container } = render(<SocialProofSection />);
-    const cards = container.querySelectorAll('.rounded-2xl');
-    expect(cards.length).toBeGreaterThanOrEqual(3);
   });
 });

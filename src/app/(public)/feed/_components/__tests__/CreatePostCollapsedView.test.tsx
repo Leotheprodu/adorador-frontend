@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { CreatePostCollapsedView } from '../CreatePostCollapsedView';
 
 // Mock de NextUI
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     Avatar: ({ name }: { name?: string }) => <div>Avatar: {name}</div>,
     Button: ({
         children,

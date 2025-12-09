@@ -30,7 +30,7 @@ jest.mock('@nanostores/react', () => ({
 }));
 
 // Mock de NextUI components
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Button: ({
     children,
     onClick,

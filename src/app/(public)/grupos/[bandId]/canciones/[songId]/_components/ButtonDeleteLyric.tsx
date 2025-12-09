@@ -6,7 +6,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
 

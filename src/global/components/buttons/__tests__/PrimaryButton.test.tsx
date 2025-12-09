@@ -18,7 +18,7 @@ jest.mock('next/link', () => ({
 }));
 
 // Mock NextUI Button
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
   Button: ({
     children,
     as,

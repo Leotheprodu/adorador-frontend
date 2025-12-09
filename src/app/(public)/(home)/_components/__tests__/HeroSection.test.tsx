@@ -1,6 +1,6 @@
 // Mock NextUI Button para simular <a> y <button> según corresponda
-jest.mock('@nextui-org/react', () => {
-  const original = jest.requireActual('@nextui-org/react');
+jest.mock('@heroui/react', () => {
+  const original = jest.requireActual('@heroui/react');
   return {
     ...original,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,9 +97,9 @@ describe('HeroSection Component', () => {
 
     it('should render secondary CTA button with correct link', () => {
       render(<HeroSection />);
-      const secondaryButton = screen.getByText('Ver cómo funciona');
+      const secondaryButton = screen.getByText('Ver planes y precios');
       expect(secondaryButton).toBeInTheDocument();
-      expect(secondaryButton.closest('a')).toHaveAttribute('href', '#demo');
+      expect(secondaryButton.closest('a')).toHaveAttribute('href', '/precios');
     });
 
     it('should render primary button with styling', () => {

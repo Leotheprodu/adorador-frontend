@@ -4,40 +4,32 @@ import { AppSecurityProps } from '@global/interfaces/AppSecurityInterfaces';
 import { $event } from '@stores/event';
 import { userRoles } from '@global/config/constants';
 
-export const CheckUserStatus = ({
-  isLoggedIn,
-  roles,
-  negativeRoles,
-  checkChurchId,
-  churchRoles,
-  negativeChurchRoles,
-  checkAdminEvent,
-  checkBandId,
-  checkBandAdmin,
-}: AppSecurityProps): boolean => {
-  const user = useStore($user);
-  const event = useStore($event);
-
+/**
+ * Pure function version of CheckUserStatus that doesn't use hooks.
+ * Use this when you need to check user status in loops, useMemo, or other places where hooks can't be called.
+ */
+export const checkUserStatusPure = (
+  user: ReturnType<typeof $user.get>,
+  event: ReturnType<typeof $event.get>,
+  {
+    isLoggedIn,
+    roles,
+    negativeRoles,
+    checkChurchId,
+    churchRoles,
+    negativeChurchRoles,
+    checkAdminEvent,
+    checkBandId,
+    checkBandAdmin,
+  }: AppSecurityProps
+): boolean => {
   // Helper functions for each logical check
   const isAdmin = () =>
     user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
 
   const isLoggedInCheck = () => {
-    if (isLoggedIn === undefined) return true; // If isLoggedIn is not defined, assume true
-
-    // Debug detallado para entender el problema
-    const result = user?.isLoggedIn === isLoggedIn;
-    if (!result) {
-      console.log('[DEBUG CheckUserStatus] Login mismatch:', {
-        expected: isLoggedIn,
-        actual: user?.isLoggedIn,
-        userState: user ? 'exists' : 'null/undefined',
-        userId: user?.id,
-        userName: user?.name,
-      });
-    }
-
-    return result;
+    if (isLoggedIn === undefined) return true;
+    return user?.isLoggedIn === isLoggedIn;
   };
 
   const hasNegativeRolesCheck = () =>
@@ -60,10 +52,7 @@ export const CheckUserStatus = ({
   };
 
   const isBandAdminCheck = () => {
-    // Si no se está verificando el permiso de admin del grupo, retornar true
     if (!checkBandAdmin) return true;
-
-    // Si se está verificando, el usuario debe estar logueado y tener el permiso
     if (user?.isLoggedIn && user?.membersofBands) {
       return user.membersofBands.some(
         (band) => band.band.id === checkBandId && band.isAdmin,
@@ -97,10 +86,7 @@ export const CheckUserStatus = ({
   };
 
   const userHasAdminEventPermission = () => {
-    // Si no se está verificando el permiso de admin del evento, retornar true
     if (!checkAdminEvent) return true;
-
-    // Si se está verificando, el usuario debe estar logueado y tener el permiso
     if (user?.isLoggedIn && user?.membersofBands) {
       return user.membersofBands.some(
         (band) => band.band.id === event?.bandId && band.isEventManager,
@@ -109,50 +95,28 @@ export const CheckUserStatus = ({
     return false;
   };
 
-  // Realizar todas las validaciones directamente (sin useMemo para evitar problemas con dependencias)
-  if (isAdmin()) {
-    console.log('User is an admin, access granted');
-    return true;
-  }
-
-  // Verificación más robusta para manejar estados transitorios durante la inicialización
-  const loginCheckResult = isLoggedInCheck();
-  if (!loginCheckResult) {
-    console.log('User is not logged in or logged in status does not match');
-    return false;
-  }
-  if (negativeRoles && hasNegativeRolesCheck()) {
-    console.log('User has negative roles');
-    return false;
-  }
-  if (!hasMembershipCheck()) {
-    console.log('User does not have the required church membership');
-    return false;
-  }
-  if (!hasBandMembershipCheck()) {
-    console.log('User does not have the required band membership');
-    return false;
-  }
-  if (checkBandAdmin && !isBandAdminCheck()) {
-    console.log('User is not an admin of the band');
-    return false;
-  }
-  if (negativeChurchRoles && hasNegativeChurchRolesCheck()) {
-    console.log('User has negative church roles');
-    return false;
-  }
-  if (roles && !hasRequiredRoleCheck()) {
-    console.log('User does not have the required roles');
-    return false;
-  }
-  if (churchRoles && !hasChurchRoleCheck()) {
-    console.log('User does not have the required church roles');
-    return false;
-  }
-  if (checkAdminEvent && !userHasAdminEventPermission()) {
-    console.log('User does not have admin event permission');
-    return false;
-  }
+  // Realizar todas las validaciones
+  if (isAdmin()) return true;
+  if (!isLoggedInCheck()) return false;
+  if (negativeRoles && hasNegativeRolesCheck()) return false;
+  if (!hasMembershipCheck()) return false;
+  if (!hasBandMembershipCheck()) return false;
+  if (checkBandAdmin && !isBandAdminCheck()) return false;
+  if (negativeChurchRoles && hasNegativeChurchRolesCheck()) return false;
+  if (roles && !hasRequiredRoleCheck()) return false;
+  if (churchRoles && !hasChurchRoleCheck()) return false;
+  if (checkAdminEvent && !userHasAdminEventPermission()) return false;
 
   return true;
+};
+
+/**
+ * Hook version of CheckUserStatus.
+ * Use this at the top level of React components.
+ */
+export const CheckUserStatus = (props: AppSecurityProps): boolean => {
+  const user = useStore($user);
+  const event = useStore($event);
+
+  return checkUserStatusPure(user, event, props);
 };

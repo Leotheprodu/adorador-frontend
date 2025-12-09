@@ -1,5 +1,5 @@
 'use client';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input } from "@heroui/react";
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { PasswordRecoveryService } from '../_services/PasswordRecoveryService';

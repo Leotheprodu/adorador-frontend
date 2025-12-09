@@ -1,5 +1,5 @@
 import { PhoneIcon } from '@global/icons/PhoneIcon';
-import { Input } from '@nextui-org/react';
+import { Input } from "@heroui/react";
 
 export const InputPhoneLoginForm = ({
   handle,

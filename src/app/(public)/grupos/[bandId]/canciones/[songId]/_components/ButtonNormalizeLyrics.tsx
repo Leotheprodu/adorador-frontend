@@ -8,7 +8,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { normalizeLyricsService } from '../_services/songIdServices';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import toast from 'react-hot-toast';

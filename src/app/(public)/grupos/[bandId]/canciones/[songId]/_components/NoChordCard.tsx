@@ -13,7 +13,7 @@ import {
   Select,
   SelectItem,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useEffect, useState } from 'react';
 import { addChordToLyricService } from '../_services/songIdServices';
 

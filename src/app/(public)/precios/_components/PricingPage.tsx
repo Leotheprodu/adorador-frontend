@@ -1,6 +1,6 @@
 'use client';
 
-import { Spinner } from '@nextui-org/spinner';
+import { Spinner } from "@heroui/spinner";
 import { PricingHero } from './PricingHero';
 import { PricingCards } from './PricingCards';
 import { PricingFAQ } from './PricingFAQ';

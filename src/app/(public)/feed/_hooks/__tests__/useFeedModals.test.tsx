@@ -3,7 +3,7 @@ import { useFeedModals } from '../useFeedModals';
 import { Post } from '../../_interfaces/feedInterface';
 
 // Mock de NextUI useDisclosure
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     useDisclosure: jest.fn(() => {
         let isOpen = false;
         return {

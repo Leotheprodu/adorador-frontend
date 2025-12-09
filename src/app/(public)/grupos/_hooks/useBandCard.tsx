@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 import { CheckUserStatus } from '@global/utils/checkUserStatus';
 import { BandsWithMembersCount } from '../_interfaces/bandsInterface';

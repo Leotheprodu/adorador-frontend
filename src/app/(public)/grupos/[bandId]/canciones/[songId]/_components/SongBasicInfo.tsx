@@ -14,7 +14,7 @@ import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
 import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
-import { Button, useDisclosure } from '@nextui-org/react';
+import { Button, useDisclosure } from "@heroui/react";
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
 import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';

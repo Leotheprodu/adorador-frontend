@@ -46,7 +46,6 @@ export const VideoShowcase = ({
         volume={0}
         muted={true}
         controls={false}
-        fullscreen={true}
         /* onPlay={handlePlay}
             onPause={handlePause} */
         config={{

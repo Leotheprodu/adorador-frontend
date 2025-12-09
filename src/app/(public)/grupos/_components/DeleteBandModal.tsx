@@ -9,7 +9,7 @@ import {
   ModalFooter,
   Button,
   Input,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useDeleteBand } from '../_hooks/useDeleteBand';
 import { useRouter } from 'next/navigation';
 

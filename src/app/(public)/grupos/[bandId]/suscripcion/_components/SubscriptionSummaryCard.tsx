@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody, CardHeader, Button, Progress, Chip } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Button, Progress, Chip } from "@heroui/react";
 import { useBandSubscription, useSubscriptionLimits } from '../_hooks/useSubscriptionData';
 import Link from 'next/link';
 import { CrownIcon } from '@global/icons/CrownIcon';

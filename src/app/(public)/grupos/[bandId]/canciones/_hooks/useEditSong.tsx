@@ -1,4 +1,4 @@
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateSongService } from '@bands/[bandId]/canciones/_services/songsOfBandService';

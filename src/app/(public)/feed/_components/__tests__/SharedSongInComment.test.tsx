@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SharedSongInComment } from '../SharedSongInComment';
 import { Comment as FeedComment } from '../../_interfaces/feedInterface';
 
-jest.mock('@nextui-org/react', () => ({
+jest.mock('@heroui/react', () => ({
     Button: ({
         children,
         onPress,

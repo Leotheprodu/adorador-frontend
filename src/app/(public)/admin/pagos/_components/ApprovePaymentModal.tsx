@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
 import { AdminPayment } from '../../_interfaces/adminPaymentInterface';
 
 interface ApprovePaymentModalProps {

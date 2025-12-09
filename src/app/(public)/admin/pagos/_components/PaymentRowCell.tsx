@@ -3,7 +3,7 @@ import {
     Button,
     Tooltip,
     Link,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { AdminPayment } from '../../_interfaces/adminPaymentInterface';
 import { PaymentStatusBadge } from './PaymentStatusBadge';
 import { CheckIcon, XMarkIcon, EyeIcon } from '@global/icons';

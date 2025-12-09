@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Button, Textarea, Spinner, Divider } from '@nextui-org/react';
+import { Avatar, Button, Textarea, Spinner, Divider } from "@heroui/react";
 import { SendIcon, ArrowDownIcon } from '@global/icons';
 import { ShareSongCommentModal } from './ShareSongCommentModal';
 import { CopySongModal } from './CopySongModal';
@@ -68,7 +68,6 @@ export const InlineComments = ({
   return (
     <div className="space-y-4 pt-4">
       <Divider />
-
       {/* Formulario para nuevo comentario principal */}
       {!replyingTo && (
         <div className="flex gap-3">
@@ -94,7 +93,7 @@ export const InlineComments = ({
               </div>
             ) : (
               // Para SONG_SHARE, permitir comentarios normales
-              <>
+              (<>
                 <Textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
@@ -128,12 +127,11 @@ export const InlineComments = ({
                     Comentar
                   </Button>
                 </div>
-              </>
+              </>)
             )}
           </div>
         </div>
       )}
-
       {/* Lista de comentarios */}
       <div className="space-y-3">
         {allComments.map((comment) => (
@@ -155,7 +153,6 @@ export const InlineComments = ({
           />
         ))}
       </div>
-
       {/* Botón "Ver más comentarios" */}
       {hasMore && (
         <div className="flex justify-center pt-2">
@@ -172,7 +169,6 @@ export const InlineComments = ({
           </Button>
         </div>
       )}
-
       {/* Modal para compartir canción */}
       <ShareSongCommentModal
         isOpen={isShareSongModalOpen}
@@ -180,7 +176,6 @@ export const InlineComments = ({
         onShare={handleShareFromSelector}
         isSharing={isSubmitting}
       />
-
       {/* Modal para copiar canción */}
       {copySongData && (
         <CopySongModal

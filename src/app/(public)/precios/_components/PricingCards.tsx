@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardBody, CardHeader } from '@nextui-org/card';
-import { Button } from '@nextui-org/button';
-import { Chip } from '@nextui-org/chip';
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Button } from "@heroui/button";
+import { Chip } from "@heroui/chip";
 import Link from 'next/link';
 import type { SubscriptionPlan } from '@bands/[bandId]/suscripcion/_interfaces/subscription.interface';
 import {

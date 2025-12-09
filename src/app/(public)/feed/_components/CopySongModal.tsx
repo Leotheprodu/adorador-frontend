@@ -10,7 +10,7 @@ import {
   Button,
   Select,
   SelectItem,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { CopySongDto } from '../_interfaces/feedInterface';
 
 interface CopySongModalProps {

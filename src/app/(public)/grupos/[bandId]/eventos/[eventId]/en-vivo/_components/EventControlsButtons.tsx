@@ -1,4 +1,5 @@
 /* import { EventControlsButtonsLiveMessages } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtonsLiveMessages'; */
+import { useState, useEffect } from 'react';
 import { EventControlsButtonsScreen } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtonsScreen';
 import { EventControlsButtonsSwipe } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtonsSwipe';
 import { useStore } from '@nanostores/react';
@@ -13,10 +14,20 @@ export const EventControlsButtons = ({
   bandId: number;
 }) => {
   const user = useStore($user);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Verificar si el usuario es admin del sistema (no solo admin del evento)
   const isSystemAdmin =
     user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div

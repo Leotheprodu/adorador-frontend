@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $user } from '@global/stores/users';
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostData } from '@global/services/HandleAPI';

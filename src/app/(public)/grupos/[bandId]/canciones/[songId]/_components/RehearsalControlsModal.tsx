@@ -4,7 +4,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { GearIcon } from '@global/icons';
 import { useRehearsalControls } from '../_hooks/useRehearsalControls';
 import { TransposeControls } from './rehearsalControls/TransposeControls';

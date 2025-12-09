@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Tooltip,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { AddSongEventBySavedSongs } from './AddSongEventBySavedSongs';
 import { AddNewSongtoChurchAndEvent } from './AddNewSongtoChurchAndEvent';
 import { useState, useMemo, memo } from 'react';

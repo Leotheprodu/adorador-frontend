@@ -1,4 +1,4 @@
-import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { ArrowsUpDownIconIcon } from '@global/icons/ArrowsUpDownIcon';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
 import { TransposeControlPopoverProps } from '../_interfaces/songCardInterfaces';

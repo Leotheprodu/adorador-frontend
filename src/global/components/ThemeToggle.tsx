@@ -2,7 +2,7 @@
 import { useTheme } from '@global/hooks/useTheme';
 import { MoonIcon, SunIcon } from '@global/icons';
 import { SystemIcon } from '@global/icons/SystemIcon';
-import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react';
+import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { useEffect, useState } from 'react';
 
 const themeOptions = [

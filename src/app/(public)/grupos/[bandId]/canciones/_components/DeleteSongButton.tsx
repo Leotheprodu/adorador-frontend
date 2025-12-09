@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useDeleteSong } from '@bands/[bandId]/canciones/_hooks/useDeleteSong';
 import { TrashIcon } from '@global/icons';
 
