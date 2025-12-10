@@ -10,18 +10,21 @@ import {
   Textarea,
   Select,
   SelectItem,
-  Switch,
   Chip,
-  Divider,
   Spinner,
   Checkbox,
 } from '@heroui/react';
 import { toast } from 'react-hot-toast';
 import { useVideoLyrics } from '../_hooks/useVideoLyrics';
-import { getVideoLyricsService } from '../_services/videoLyricsService';
+import {
+  getVideoLyricsService,
+  UpdateVideoLyricsDto,
+} from '../_services/videoLyricsService';
 import { SongVideoLyrics } from '../../_interfaces/songsInterface';
 import { YouTubePlayer } from '@global/components/YouTubePlayer';
-import { CheckIcon, TrashIcon } from '@global/icons';
+import { CheckIcon, TrashIcon, EditIcon } from '@global/icons';
+import { EditVideoLyricsModal } from './EditVideoLyricsModal';
+import { DeleteConfirmModal } from './DeleteConfirmModal';
 
 interface VideoLyricsManagerProps {
   bandId: string;
@@ -56,6 +59,15 @@ export const VideoLyricsManager = ({
     usesVideoLyrics: true,
   });
 
+  // Modal states
+  const [editingVideo, setEditingVideo] = useState<SongVideoLyrics | null>(
+    null,
+  );
+  const [deletingVideo, setDeletingVideo] = useState<{
+    id: number;
+    title?: string;
+  } | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -84,12 +96,16 @@ export const VideoLyricsManager = ({
     });
   };
 
-  const handleDeleteConfirm = (videoId: number, title?: string) => {
-    if (
-      confirm(`¿Estás seguro de eliminar el video ${title || 'sin título'}?`)
-    ) {
-      handleDelete(videoId);
+  const handleDeleteConfirm = () => {
+    if (deletingVideo) {
+      handleDelete(deletingVideo.id);
+      setDeletingVideo(null);
     }
+  };
+
+  const handleEditSave = (videoId: number, data: UpdateVideoLyricsDto) => {
+    handleUpdate(videoId, data);
+    setEditingVideo(null);
   };
 
   return (
@@ -256,6 +272,7 @@ export const VideoLyricsManager = ({
                           variant="light"
                           onPress={() => handleSetPreferred(video.id)}
                           isDisabled={isLoading}
+                          title="Marcar como preferido"
                         >
                           {video.isPreferred ? (
                             <CheckIcon className="h-5 w-5 text-warning" />
@@ -264,12 +281,27 @@ export const VideoLyricsManager = ({
                         <Button
                           isIconOnly
                           size="sm"
+                          color="primary"
+                          variant="light"
+                          onPress={() => setEditingVideo(video)}
+                          isDisabled={isLoading}
+                          title="Editar video"
+                        >
+                          <EditIcon className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          isIconOnly
+                          size="sm"
                           color="danger"
                           variant="light"
                           onPress={() =>
-                            handleDeleteConfirm(video.id, video.title)
+                            setDeletingVideo({
+                              id: video.id,
+                              title: video.title,
+                            })
                           }
                           isDisabled={isLoading}
+                          title="Eliminar video"
                         >
                           <TrashIcon className="h-5 w-5" />
                         </Button>
@@ -332,6 +364,24 @@ export const VideoLyricsManager = ({
           </CardBody>
         </Card>
       )}
+
+      {/* Edit Modal */}
+      <EditVideoLyricsModal
+        isOpen={!!editingVideo}
+        onClose={() => setEditingVideo(null)}
+        video={editingVideo}
+        onSave={handleEditSave}
+        isLoading={isLoading}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={!!deletingVideo}
+        onClose={() => setDeletingVideo(null)}
+        onConfirm={handleDeleteConfirm}
+        title={deletingVideo?.title}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

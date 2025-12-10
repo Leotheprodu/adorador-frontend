@@ -72,22 +72,26 @@ export const useVideoLyrics = ({
   };
 
   // Update video lyrics - Must use mutation from update service
-  const handleUpdate = (data: UpdateVideoLyricsDto) => {
-    updateMutate(data, {
-      onSuccess: () => {
-        toast.success('Video actualizado exitosamente');
-        queryClient.invalidateQueries({
-          queryKey: ['SongVideoLyrics', bandId, songId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ['Song', bandId, songId],
-        });
-      },
-      onError: (error) => {
-        toast.error('Error al actualizar video');
-        console.error(error);
-      },
-    });
+  const handleUpdate = (videoId: number, data: UpdateVideoLyricsDto) => {
+    setVideoIdState(videoId);
+
+    setTimeout(() => {
+      updateMutate(data, {
+        onSuccess: () => {
+          toast.success('Video actualizado exitosamente');
+          queryClient.invalidateQueries({
+            queryKey: ['SongVideoLyrics', bandId, songId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['Song', bandId, songId],
+          });
+        },
+        onError: (error) => {
+          toast.error('Error al actualizar video');
+          console.error(error);
+        },
+      });
+    }, 1000);
   };
 
   // Delete video lyrics  - Use single deleteMutate
