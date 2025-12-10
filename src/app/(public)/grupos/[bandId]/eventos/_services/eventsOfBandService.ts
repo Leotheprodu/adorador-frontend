@@ -5,6 +5,7 @@ import { EventsProps } from '../_interfaces/eventsInterface';
 export interface EventPropsWithoutId {
   title: string;
   date: Date;
+  eventMode?: 'live' | 'videolyrics'; // Modo del evento (default: live)
 }
 
 export const getEventsOfBand = ({ bandId }: { bandId: string }) => {

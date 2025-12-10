@@ -4,6 +4,7 @@ import { appName } from '@global/config/constants';
 import { PrimaryButton } from '@global/components/buttons';
 import { useGruposCTA } from '../_hooks/useGruposCTA';
 import { CreateBandModal } from './CreateBandModal';
+import { useState, useEffect } from 'react';
 
 export const GruposCTASection = () => {
   const {
@@ -19,6 +20,17 @@ export const GruposCTASection = () => {
     isCreating,
     isSuccess,
   } = useGruposCTA();
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
 
   // Usuario NO logueado
   if (!isLoggedIn) {
