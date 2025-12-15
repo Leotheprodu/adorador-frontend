@@ -1,4 +1,5 @@
-import { Button, ButtonProps } from "@heroui/react";
+'use client';
+import { Button, ButtonProps } from '@heroui/react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 

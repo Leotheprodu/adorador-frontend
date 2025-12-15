@@ -11,6 +11,11 @@ interface YouTubePlayerProps {
   artist?: string;
   showControls?: boolean;
   className?: string;
+  autoplay?: boolean;
+  onEnd?: () => void;
+  playerRef?: React.RefObject<any>; // External ref for controlling the player
+  onProgress?: (state: { played: number; playedSeconds: number }) => void;
+  onDuration?: (duration: number) => void;
 }
 
 export const YouTubePlayer = ({
@@ -20,17 +25,26 @@ export const YouTubePlayer = ({
   artist,
   showControls = true,
   className = '',
+  autoplay = false,
+  onEnd,
+  playerRef: externalRef,
+  onProgress,
+  onDuration,
 }: YouTubePlayerProps) => {
   const {
-    playerRef,
+    playerRef: internalRef,
     showPlayer,
     youtubeId,
     thumbnail,
-    isPlaying,
+    playing,
     handlePlayPause,
     handlePlay,
     handlePause,
-  } = useYouTubePlayer({ youtubeUrl, uniqueId });
+    handleEnd,
+  } = useYouTubePlayer({ youtubeUrl, uniqueId, autoplay, onEnd });
+
+  // Use external ref if provided, otherwise use internal ref
+  const playerReference = externalRef || internalRef;
 
   if (!youtubeId) {
     return null;
@@ -38,7 +52,7 @@ export const YouTubePlayer = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-content2 dark:bg-content3 ${className}`}
+      className={`relative h-full overflow-hidden rounded-xl bg-content2 dark:bg-content3 ${className}`}
     >
       {!showPlayer ? (
         <YouTubeThumbnail
@@ -48,22 +62,27 @@ export const YouTubePlayer = ({
           onPlay={handlePlayPause}
         />
       ) : (
-        // Reproductor activo - Más alto que el thumbnail
-        <div className="relative w-full" style={{ height: '400px' }}>
+        // Reproductor activo - Fill container
+        <div className="relative h-full w-full">
           <ReactPlayer
-            ref={playerRef}
+            ref={playerReference}
             url={`https://www.youtube.com/watch?v=${youtubeId}`}
-            playing={isPlaying}
+            playing={playing}
             controls={showControls}
             width="100%"
             height="100%"
             onPlay={handlePlay}
             onPause={handlePause}
+            onEnded={handleEnd}
+            onProgress={onProgress}
+            onDuration={onDuration}
             config={{
               youtube: {
                 playerVars: {
                   modestbranding: 1,
                   rel: 0,
+                  autoplay: autoplay ? 1 : 0,
+                  fs: 1, // Enable fullscreen
                 },
               },
             }}

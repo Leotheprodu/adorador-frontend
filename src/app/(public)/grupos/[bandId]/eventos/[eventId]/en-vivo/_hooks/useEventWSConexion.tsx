@@ -223,61 +223,67 @@ export const useEventWSConexion = ({
         });
 
         // Listener para límite de conexiones alcanzado
-        newSocket.on('connection_limit_reached', (data: {
-          eventId: number;
-          currentConnections: number;
-          maxConnections: number;
-          planName: string;
-          message: string;
-          isGuest?: boolean;
-          allAuthenticated?: boolean;
-        }) => {
-          console.warn('[WebSocket] ⚠️ Límite de conexiones alcanzado:', data);
-          
-          // Mostrar notificación al usuario
-          const message = data.isGuest 
-            ? `Este evento ha alcanzado su límite de ${data.maxConnections} espectadores (Plan ${data.planName}). Los miembros de la banda tienen prioridad.`
-            : data.allAuthenticated
-            ? `Este evento ha alcanzado su límite de ${data.maxConnections} espectadores y todos los espacios están ocupados por miembros autenticados.`
-            : data.message;
-          
-          // Toast con duración larga (8 segundos)
-          toast.error(message, {
-            duration: 8000,
-            icon: '🚫',
-            style: {
-              maxWidth: '500px',
-            },
-          });
-          
-          // Desconectar el socket ya que no puede unirse
-          newSocket.disconnect();
-        });
+        newSocket.on(
+          'connection_limit_reached',
+          (data: {
+            eventId: number;
+            currentConnections: number;
+            maxConnections: number;
+            planName: string;
+            message: string;
+            isGuest?: boolean;
+            allAuthenticated?: boolean;
+          }) => {
+            console.warn(
+              '[WebSocket] ⚠️ Límite de conexiones alcanzado:',
+              data,
+            );
 
-        // Listener para cuando un invitado es desconectado por prioridad
-        newSocket.on('disconnected_by_priority', (data: {
-          eventId: number;
-          reason: string;
-          message: string;
-        }) => {
-          console.warn('[WebSocket] ⚠️ Desconectado por prioridad:', data);
-          
-          // Toast con duración larga (8 segundos)
-          toast(
-            data.message || 'Has sido desconectado del evento porque un miembro de la banda necesita el espacio.',
-            {
+            // Mostrar notificación al usuario
+            const message = data.isGuest
+              ? `Este evento ha alcanzado su límite de ${data.maxConnections} espectadores (Plan ${data.planName}). Los miembros de la banda tienen prioridad.`
+              : data.allAuthenticated
+                ? `Este evento ha alcanzado su límite de ${data.maxConnections} espectadores y todos los espacios están ocupados por miembros autenticados.`
+                : data.message;
+
+            // Toast con duración larga (8 segundos)
+            toast.error(message, {
               duration: 8000,
-              icon: '⚠️',
+              icon: '🚫',
               style: {
                 maxWidth: '500px',
-                background: '#FEF3C7',
-                color: '#92400E',
               },
-            }
-          );
-          
-          // El socket ya fue desconectado por el servidor
-        });
+            });
+
+            // Desconectar el socket ya que no puede unirse
+            newSocket.disconnect();
+          },
+        );
+
+        // Listener para cuando un invitado es desconectado por prioridad
+        newSocket.on(
+          'disconnected_by_priority',
+          (data: { eventId: number; reason: string; message: string }) => {
+            console.warn('[WebSocket] ⚠️ Desconectado por prioridad:', data);
+
+            // Toast con duración larga (8 segundos)
+            toast(
+              data.message ||
+                'Has sido desconectado del evento porque un miembro de la banda necesita el espacio.',
+              {
+                duration: 8000,
+                icon: '⚠️',
+                style: {
+                  maxWidth: '500px',
+                  background: '#FEF3C7',
+                  color: '#92400E',
+                },
+              },
+            );
+
+            // El socket ya fue desconectado por el servidor
+          },
+        );
 
         return newSocket;
       } catch (error) {
@@ -297,13 +303,11 @@ export const useEventWSConexion = ({
       socket.off(`eventSongsUpdated-${params.eventId}`);
       socket.off(`songUpdated-${params.eventId}`);
       socket.off(`liveMessage-${params.eventId}`);
+      socket.off(`videoSeek-${params.eventId}`);
+      socket.off(`videoProgress-${params.eventId}`);
 
       // Listener optimizado para letras con soporte para formatos legacy y nuevos
       socket.on(`lyricSelected-${params.eventId}`, (data) => {
-        console.log(
-          `[WebSocket SYNC] 🎵 Recibido lyricSelected-${params.eventId}:`,
-          data,
-        );
         try {
           let lyricMessage;
           let adminName = 'Unknown';
@@ -319,20 +323,8 @@ export const useEventWSConexion = ({
             }
           } else {
             // Formato legacy directo
-            console.log(
-              '[WebSocket DEBUG] Procesando mensaje legacy:',
-              data.message,
-            );
-            console.log(
-              '[WebSocket DEBUG] isLegacyLyricMessage:',
-              isLegacyLyricMessage(data.message),
-            );
             if (data.message && isLegacyLyricMessage(data.message)) {
               lyricMessage = data.message;
-              console.log(
-                '[WebSocket DEBUG] Lyric message asignado:',
-                lyricMessage,
-              );
             }
             if (data.eventAdmin) {
               adminName = data.eventAdmin;
@@ -340,16 +332,8 @@ export const useEventWSConexion = ({
           }
 
           if (lyricMessage) {
-            console.log(
-              '[WebSocket DEBUG] Actualizando $lyricSelected con:',
-              lyricMessage,
-            );
             $lyricSelected.set(lyricMessage);
             $eventAdminName.set(adminName);
-          } else {
-            console.warn(
-              '[WebSocket DEBUG] lyricMessage es null/undefined, no se actualiza el store',
-            );
           }
         } catch (error) {
           console.warn('[WebSocket] Error procesando lyric message:', error);
@@ -358,10 +342,6 @@ export const useEventWSConexion = ({
 
       // Listener optimizado para selección de canciones
       socket.on(`eventSelectedSong-${params.eventId}`, (data) => {
-        console.log(
-          `[WebSocket SYNC] 🎼 Recibido eventSelectedSong-${params.eventId}:`,
-          data,
-        );
         try {
           let songId;
           let adminName = 'Unknown';
@@ -376,17 +356,8 @@ export const useEventWSConexion = ({
             }
           } else {
             // Formato legacy
-            console.log(
-              '[WebSocket DEBUG] Procesando songId legacy:',
-              data.message,
-            );
-            console.log(
-              '[WebSocket DEBUG] isLegacyEventSongMessage:',
-              isLegacyEventSongMessage(data.message),
-            );
             if (isLegacyEventSongMessage(data.message)) {
               songId = data.message;
-              console.log('[WebSocket DEBUG] Song ID asignado:', songId);
             }
             if (data.eventAdmin) {
               adminName = data.eventAdmin;
@@ -394,11 +365,6 @@ export const useEventWSConexion = ({
           }
 
           if (songId !== undefined) {
-            console.log(
-              '[WebSocket DEBUG] Actualizando $eventSelectedSongId con:',
-              songId,
-            );
-
             // Verificar si la canción cambió
             const previousSongId = $eventSelectedSongId.get();
             const isSongChange =
@@ -421,19 +387,12 @@ export const useEventWSConexion = ({
 
                 // SOLO reiniciar la posición si la canción cambió (no en la carga inicial)
                 if (isSongChange) {
-                  console.log(
-                    '[WebSocket DEBUG] Canción cambió, reseteando posición a 0',
-                  );
                   $lyricSelected.set({ position: 0, action: 'backward' });
-                } else {
-                  console.log(
-                    '[WebSocket DEBUG] Misma canción o carga inicial, manteniendo posición actual',
-                  );
                 }
               }
             } catch (err) {
               console.warn(
-                '[WebSocket SYNC] Error actualizando stores derivados:',
+                '[WebSocket] Error actualizando stores derivados:',
                 err,
               );
             }
@@ -665,6 +624,85 @@ export const useEventWSConexion = ({
           }
         } catch (error) {
           console.warn('[WebSocket] Error procesando live message:', error);
+        }
+      });
+
+      // Listener para video seek - sincronización de posición del video
+      socket.on(`videoSeek-${params.eventId}`, (data) => {
+        try {
+          let seekTo: number | undefined;
+
+          if (isCompressedMessage(data)) {
+            const decompressed = decompressMessage(data);
+            seekTo = (decompressed.message as { seekTo?: number })?.seekTo;
+          } else {
+            seekTo =
+              (data as { message?: { seekTo?: number }; seekTo?: number })
+                .message?.seekTo || (data as { seekTo?: number }).seekTo;
+          }
+
+          if (seekTo !== undefined && seekTo >= 0 && seekTo <= 1) {
+            // Access player directly from global store
+            import('@stores/videoLyricsPlayer').then(
+              ({ $videoLyricsPlayerRef }) => {
+                const playerRef = $videoLyricsPlayerRef.get();
+
+                if (playerRef?.current) {
+                  const player = playerRef.current.getInternalPlayer();
+                  if (player && player.getDuration) {
+                    const duration = player.getDuration();
+                    const seekTime = seekTo * duration;
+                    player.seekTo(seekTime, true);
+                  }
+                }
+              },
+            );
+          } else {
+            console.warn('[WebSocket] seekTo inválido:', seekTo);
+          }
+        } catch (error) {
+          console.warn('[WebSocket] Error procesando video seek:', error);
+        }
+      });
+
+      // Listener para video progress - sincronización continua de progreso desde proyector
+      socket.on(`videoProgress-${params.eventId}`, (data) => {
+        try {
+          let progressData: {
+            progress: number;
+            progressDuration: string;
+            duration: string;
+          };
+
+          if (isCompressedMessage(data)) {
+            const decompressed = decompressMessage(data);
+            progressData = decompressed.message as {
+              progress: number;
+              progressDuration: string;
+              duration: string;
+            };
+          } else {
+            progressData = data.message || data;
+          }
+
+          if (progressData && typeof progressData.progress === 'number') {
+            // Update global stores so event manager panel shows current progress
+            import('@stores/videoPlayer').then(
+              ({
+                $videoProgress,
+                $videoProgressDuration,
+                $videoDuration,
+                $videoPlayerReady,
+              }) => {
+                $videoProgress.set(progressData.progress);
+                $videoProgressDuration.set(progressData.progressDuration);
+                $videoDuration.set(progressData.duration);
+                $videoPlayerReady.set(true); // Mark as ready when receiving progress from projector
+              },
+            );
+          }
+        } catch (error) {
+          console.warn('[WebSocket] Error procesando video progress:', error);
         }
       });
 
