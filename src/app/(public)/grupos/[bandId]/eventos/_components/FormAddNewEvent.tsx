@@ -50,10 +50,8 @@ export const FormAddNewEvent = ({
         }}
         description="Live = Música en vivo con letras, VideoLyrics = Videos con letras"
       >
-        <SelectItem key="live" value="live">
-          Live - Música en vivo
-        </SelectItem>
-        <SelectItem key="videolyrics" value="videolyrics">
+        <SelectItem key="live">Live - Música en vivo</SelectItem>
+        <SelectItem key="videolyrics">
           VideoLyrics - Videos con letras
         </SelectItem>
       </Select>

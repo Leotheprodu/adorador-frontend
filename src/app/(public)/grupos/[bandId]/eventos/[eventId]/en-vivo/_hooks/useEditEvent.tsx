@@ -1,4 +1,4 @@
-import { useDisclosure } from "@heroui/react";
+import { useDisclosure } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateEventService } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 interface EventDataForEdit {
   title: string;
   date: string | Date;
+  eventMode?: 'live' | 'videolyrics';
 }
 
 export const useEditEvent = ({
@@ -28,6 +29,7 @@ export const useEditEvent = ({
   const [form, setForm] = useState({
     title: '',
     date: '',
+    eventMode: 'live' as 'live' | 'videolyrics',
   });
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
@@ -60,6 +62,7 @@ export const useEditEvent = ({
     mutateUpdateEvent({
       title: form.title,
       date: new Date(form.date),
+      eventMode: form.eventMode,
     });
   };
 
@@ -78,6 +81,7 @@ export const useEditEvent = ({
       setForm({
         title: currentEventData.title,
         date: localDateTime,
+        eventMode: currentEventData.eventMode || 'live',
       });
     }
     onOpen();

@@ -12,7 +12,7 @@ export interface CreateVideoLyricsDto {
   isPreferred?: boolean;
 }
 
-export interface UpdateVideoLyricsDto extends Partial<CreateVideoLyricsDto> {}
+export type UpdateVideoLyricsDto = Partial<CreateVideoLyricsDto>;
 
 // GET all video lyrics for a song
 export const getVideoLyricsService = ({

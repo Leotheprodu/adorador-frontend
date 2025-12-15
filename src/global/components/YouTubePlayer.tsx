@@ -13,7 +13,7 @@ interface YouTubePlayerProps {
   className?: string;
   autoplay?: boolean;
   onEnd?: () => void;
-  playerRef?: React.RefObject<any>; // External ref for controlling the player
+  playerRef?: React.RefObject<ReactPlayer>; // External ref for controlling the player
   onProgress?: (state: { played: number; playedSeconds: number }) => void;
   onDuration?: (duration: number) => void;
 }

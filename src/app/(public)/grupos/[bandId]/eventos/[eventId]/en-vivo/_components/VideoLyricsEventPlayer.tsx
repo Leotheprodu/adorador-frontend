@@ -16,6 +16,7 @@ import {
   $videoPlayerReady,
 } from '@stores/videoPlayer';
 import { $videoLyricsPlayerRef } from '@stores/videoLyricsPlayer';
+import type ReactPlayer from 'react-player';
 
 interface VideoLyricsEventPlayerProps {
   currentSong: EventSongsProps | null;
@@ -61,7 +62,7 @@ export const VideoLyricsEventPlayer = ({
   bandId,
   activateFullscreen,
 }: VideoLyricsEventPlayerProps) => {
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<ReactPlayer>(null);
   const [currentVideoId, setCurrentVideoId] = useState<string>('');
   const [showOverlay, setShowOverlay] = useState(true);
   const { sendMessage } = useEventGateway();
