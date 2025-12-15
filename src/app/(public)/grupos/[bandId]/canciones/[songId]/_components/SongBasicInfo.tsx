@@ -14,7 +14,7 @@ import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
 import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
-import { Button, useDisclosure } from "@heroui/react";
+import { Button, useDisclosure, Chip } from '@heroui/react';
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
 import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';
@@ -22,6 +22,8 @@ import { getYouTubeThumbnail } from '@global/utils/formUtils';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import Image from 'next/image';
 import { RehearsalControlsModal } from './RehearsalControlsModal';
+import { VideoLyricsModal } from './VideoLyricsModal';
+import { getVideoLyricsService } from '../_services/videoLyricsService';
 
 export const SongBasicInfo = ({
   data,
@@ -51,6 +53,14 @@ export const SongBasicInfo = ({
   const playlist = useStore($PlayList);
   const selectedSong = useStore($SelectedSong);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isVideoLyricsOpen,
+    onOpen: onVideoLyricsOpen,
+    onClose: onVideoLyricsClose,
+  } = useDisclosure();
+
+  //  Fetch video lyrics count
+  const { data: videoLyrics } = getVideoLyricsService({ bandId, songId });
 
   useEffect(() => {
     if (
@@ -82,7 +92,7 @@ export const SongBasicInfo = ({
 
   return (
     <>
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:bg-gray-900 dark:border-slate-800 dark:shadow-none">
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-gray-900 dark:shadow-none">
         <div className="flex flex-col gap-6 lg:flex-row">
           {/* Thumbnail de YouTube si existe */}
           {data?.youtubeLink && (
@@ -111,7 +121,9 @@ export const SongBasicInfo = ({
                 {data?.artist && <span>{data.artist}</span>}
                 {data?.artist &&
                   (data?.key || data?.tempo || data?.songType) && (
-                    <span className="text-slate-300 dark:text-slate-600">•</span>
+                    <span className="text-slate-300 dark:text-slate-600">
+                      •
+                    </span>
                   )}
                 {data && <span>{songTypes[data.songType].es}</span>}
                 {data?.key && (
@@ -195,6 +207,26 @@ export const SongBasicInfo = ({
                     >
                       Controles
                     </Button>
+
+                    {/* Videos button - always visible */}
+                    <Button
+                      size="sm"
+                      onPress={onVideoLyricsOpen}
+                      startContent={<PlayIcon className="h-4 w-4" />}
+                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
+                    >
+                      Videos
+                      {videoLyrics && videoLyrics.length > 0 && (
+                        <Chip
+                          size="sm"
+                          variant="flat"
+                          color="primary"
+                          className="ml-1"
+                        >
+                          {videoLyrics.length}
+                        </Chip>
+                      )}
+                    </Button>
                   </>
                 )}
 
@@ -221,6 +253,25 @@ export const SongBasicInfo = ({
                         {isEditMode ? 'Ver Letra' : 'Editar Letra'}
                       </Button>
                     )}
+
+                    <Button
+                      size="sm"
+                      onPress={onVideoLyricsOpen}
+                      startContent={<PlayIcon className="h-4 w-4" />}
+                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
+                    >
+                      Videos
+                      {videoLyrics && videoLyrics.length > 0 && (
+                        <Chip
+                          size="sm"
+                          variant="flat"
+                          color="primary"
+                          className="ml-1"
+                        >
+                          {videoLyrics.length}
+                        </Chip>
+                      )}
+                    </Button>
 
                     <EditSongButton
                       bandId={bandId}
@@ -263,6 +314,14 @@ export const SongBasicInfo = ({
       <RehearsalControlsModal
         isOpen={isOpen}
         onClose={onClose}
+        songId={songId}
+      />
+
+      {/* Modal de video lyrics */}
+      <VideoLyricsModal
+        isOpen={isVideoLyricsOpen}
+        onClose={onVideoLyricsClose}
+        bandId={bandId}
         songId={songId}
       />
     </>

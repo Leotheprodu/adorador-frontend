@@ -7,12 +7,14 @@
 ## 🎯 Filosofía Principal
 
 ### Separación de Responsabilidades
+
 - **Lógica** → Custom Hooks
 - **UI** → Componentes React
 - **Tipos** → Archivos de interfaces
 - **Datos** → Services/Stores
 
 ### Regla de Oro
+
 **Un componente debe hacer UNA cosa bien.** Si hace más, divídelo.
 
 ---
@@ -98,8 +100,9 @@ export const FetchData = <TResponse>({
 ```
 
 **Configuración por defecto:**
+
 - `staleTime`: 5 minutos
-- `gcTime`: 10 minutos  
+- `gcTime`: 10 minutos
 - `retry`: 3 intentos con exponential backoff
 - `refetchOnWindowFocus`: false
 - `refetchOnReconnect`: false
@@ -149,6 +152,7 @@ export const getEventsById = ({
 ```
 
 **Características clave:**
+
 - ✅ Nombre descriptivo: `get[Resource]` | `create[Resource]` | `update[Resource]` | `delete[Resource]`
 - ✅ Query key array con parámetros dinámicos
 - ✅ Validación con `isEnabled`
@@ -165,14 +169,14 @@ export const useEventByIdPage = ({ params }) => {
     bandId: params.bandId,
     eventId: params.eventId,
   });
-  
+
   // Lógica adicional del hook (side effects, transformaciones, etc.)
   useEffect(() => {
     if (status === 'success' && data) {
       $event.set(data);
     }
   }, [status, data]);
-  
+
   return { data, isLoading, refetch };
 };
 ```
@@ -183,9 +187,9 @@ export const useEventByIdPage = ({ params }) => {
 // _components/EventByIdPage.tsx
 export const EventByIdPage = ({ params }) => {
   const { data, isLoading, refetch } = useEventByIdPage({ params });
-  
+
   if (isLoading) return <Loading />;
-  
+
   return <EventContent data={data} refetch={refetch} />;
 };
 ```
@@ -227,23 +231,26 @@ import { toast } from 'react-hot-toast';
 
 export const useCreateBand = () => {
   const queryClient = useQueryClient();
-  
+
   const { mutate, isPending, status } = createBandService();
-  
+
   const handleCreate = (bandName: string) => {
-    mutate({ name: bandName }, {
-      onSuccess: (response) => {
-        toast.success('Banda creada exitosamente');
-        // Invalidar queries relacionadas
-        queryClient.invalidateQueries({ queryKey: ['bands'] });
+    mutate(
+      { name: bandName },
+      {
+        onSuccess: (response) => {
+          toast.success('Banda creada exitosamente');
+          // Invalidar queries relacionadas
+          queryClient.invalidateQueries({ queryKey: ['bands'] });
+        },
+        onError: (error) => {
+          toast.error('Error al crear banda');
+          console.error(error);
+        },
       },
-      onError: (error) => {
-        toast.error('Error al crear banda');
-        console.error(error);
-      },
-    });
+    );
   };
-  
+
   return { handleCreate, isPending, status };
 };
 ```
@@ -257,25 +264,25 @@ export const uploadSongImageService = () => {
     key: 'UploadSongImage',
     url: `${Server1API}/songs/upload`,
     method: 'POST',
-    isFormData: true,  // ← Importante para FormData
+    isFormData: true, // ← Importante para FormData
   });
 };
 
 // Uso en hook
 export const useUploadSongImage = () => {
   const { mutate, isPending } = uploadSongImageService();
-  
+
   const handleUpload = (file: File, songId: number) => {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('songId', songId.toString());
-    
+
     mutate(formData, {
       onSuccess: () => toast.success('Imagen subida'),
       onError: () => toast.error('Error al subir imagen'),
     });
   };
-  
+
   return { handleUpload, isPending };
 };
 ```
@@ -292,9 +299,9 @@ export const getSongsOfBand = ({
   enabled?: boolean;
 }) => {
   return FetchData<SongListResponse>({
-    key: ['SongsOfBand', bandId],  // ← Cache key incluye bandId
+    key: ['SongsOfBand', bandId], // ← Cache key incluye bandId
     url: `${Server1API}/bands/${bandId}/songs`,
-    isEnabled: !!bandId && enabled,  // ← Siempre validar parámetros
+    isEnabled: !!bandId && enabled, // ← Siempre validar parámetros
   });
 };
 
@@ -302,7 +309,7 @@ export const getSongsOfBand = ({
 export const useSongsOfBand = (bandId: string, shouldFetch: boolean) => {
   return getSongsOfBand({
     bandId,
-    enabled: shouldFetch,  // Se puede controlar cuándo hace fetch
+    enabled: shouldFetch, // Se puede controlar cuándo hace fetch
   });
 };
 ```
@@ -361,7 +368,7 @@ export const PostData = <TResponse, TData = undefined>({...}) => {
 ```typescript
 export const useCreateEvent = () => {
   const { mutate, isPending, error } = createEventService();
-  
+
   const handleCreate = (eventData) => {
     mutate(eventData, {
       onSuccess: (response) => {
@@ -379,7 +386,7 @@ export const useCreateEvent = () => {
       },
     });
   };
-  
+
   return { handleCreate, isPending, error };
 };
 ```
@@ -441,7 +448,7 @@ export const getEvent = ({ bandId, eventId }) => {
   return FetchData({
     key: ['Event', bandId, eventId],
     url: `${Server1API}/bands/${bandId}/events/${eventId}`,
-    isEnabled: !!bandId && !!eventId,  // ← Evita llamadas innecesarias
+    isEnabled: !!bandId && !!eventId, // ← Evita llamadas innecesarias
   });
 };
 
@@ -495,11 +502,11 @@ onSuccess: () => {
 // ✅ BIEN: UI responsive
 export const Component = () => {
   const { data, isLoading, error } = useEventData();
-  
+
   if (isLoading) return <Skeleton />;
   if (error) return <ErrorState />;
   if (!data) return <EmptyState />;
-  
+
   return <Content data={data} />;
 };
 ```
@@ -522,6 +529,7 @@ eventos/
 ```
 
 **eventService.ts:**
+
 ```typescript
 import { FetchData, PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
@@ -573,6 +581,7 @@ export const deleteEventService = () => {
 ```
 
 **useCreateEvent.tsx:**
+
 ```typescript
 import { createEventService } from '../_services/eventService';
 import { useQueryClient } from '@tanstack/react-query';
@@ -583,7 +592,7 @@ export const useCreateEvent = (bandId: string) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { mutate, isPending, error, status } = createEventService();
-  
+
   const handleCreate = (eventData: CreateEventRequest) => {
     mutate(eventData, {
       onSuccess: (response) => {
@@ -597,7 +606,7 @@ export const useCreateEvent = (bandId: string) => {
       },
     });
   };
-  
+
   return { handleCreate, isPending, error, status };
 };
 ```
@@ -606,28 +615,32 @@ export const useCreateEvent = (bandId: string) => {
 
 ## 🪝 Cuándo Crear un Custom Hook
 
-
 ### Indicadores de que NECESITAS un Hook
 
 ✅ **Lógica compleja de estado**
+
 ```tsx
 // ❌ MAL: Todo en el componente
 const [value1, setValue1] = useState('');
 const [value2, setValue2] = useState(0);
 const [isValid, setIsValid] = useState(false);
-useEffect(() => { /* validación compleja */ }, [value1, value2]);
+useEffect(() => {
+  /* validación compleja */
+}, [value1, value2]);
 
 // ✅ BIEN: Hook dedicado
 const { value1, value2, isValid, handleChange } = useFormValidation();
 ```
 
 ✅ **Lógica duplicada entre componentes**
+
 ```tsx
 // Si dos componentes hacen lo mismo → Hook compartido
 // Ejemplo: useEventPermissions usado por EventByIdPage y EventControls
 ```
 
 ✅ **Más de 3 `useState` relacionados**
+
 ```tsx
 // ❌ MAL
 const [isOpen, setIsOpen] = useState(false);
@@ -639,6 +652,7 @@ const { isOpen, selectedItem, isLoading, open, close, select } = useModal();
 ```
 
 ✅ **Efectos secundarios complejos**
+
 ```tsx
 // ❌ MAL: useEffect largo en componente
 useEffect(() => {
@@ -650,6 +664,7 @@ useEventSongsListener({ eventId, refetch });
 ```
 
 ✅ **Cálculos computacionalmente costosos**
+
 ```tsx
 // ✅ BIEN: Hook para lógica pesada
 const { filteredData, sortedData } = useListFilter({
@@ -663,6 +678,7 @@ const { filteredData, sortedData } = useListFilter({
 ### Tipos de Hooks que Debes Crear
 
 #### 1. **Hooks de Estado/Lógica** (`use[Feature]Logic`)
+
 Manejan estado y lógica de negocio.
 
 ```tsx
@@ -670,10 +686,10 @@ Manejan estado y lógica de negocio.
 export const useMusicPlayer = () => {
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  
+
   const handlePlay = () => setPlaying(true);
   const handlePause = () => setPlaying(false);
-  
+
   return {
     playing,
     volume,
@@ -685,6 +701,7 @@ export const useMusicPlayer = () => {
 ```
 
 #### 2. **Hooks de Datos** (`use[Feature]Data`)
+
 Manejan fetching y cache de datos.
 
 ```tsx
@@ -694,12 +711,13 @@ export const useEventByIdPage = ({ params }) => {
     queryKey: ['Event', params.bandId, params.eventId],
     queryFn: () => fetchEvent(params),
   });
-  
+
   return { data, isLoading, refetch };
 };
 ```
 
 #### 3. **Hooks de Permisos** (`use[Feature]Permissions`)
+
 Encapsulan lógica de autorización.
 
 ```tsx
@@ -707,16 +725,17 @@ Encapsulan lógica de autorización.
 export const useEventPermissions = () => {
   const user = useStore($user);
   const event = useStore($event);
-  
+
   const isAdminEvent = useMemo(() => {
     // Lógica compleja de permisos
   }, [user, event]);
-  
+
   return { isAdminEvent, isEventManager, showActionButtons };
 };
 ```
 
 #### 4. **Hooks de Navegación** (`use[Feature]Navigation`)
+
 Manejan navegación y redirección.
 
 ```tsx
@@ -724,24 +743,27 @@ Manejan navegación y redirección.
 export const useEventNavigation = ({ bandId, eventId }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  
+
   const handleBackToEvents = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['EventsOfBand'] });
     router.push(`/grupos/${bandId}/eventos/${eventId}`);
   }, [bandId, eventId]);
-  
+
   return { handleBackToEvents };
 };
 ```
 
 #### 5. **Hooks de Listeners** (`use[Feature]Listener`)
+
 Manejan suscripciones y eventos.
 
 ```tsx
 // Ejemplo: useEventSongsListener.tsx
 export const useEventSongsListener = ({ eventId, refetch }) => {
   useEffect(() => {
-    const handler = (event) => { /* ... */ };
+    const handler = (event) => {
+      /* ... */
+    };
     window.addEventListener('eventSongsUpdated', handler);
     return () => window.removeEventListener('eventSongsUpdated', handler);
   }, [eventId, refetch]);
@@ -749,6 +771,7 @@ export const useEventSongsListener = ({ eventId, refetch }) => {
 ```
 
 #### 6. **Hooks Compartidos/Genéricos** (`use[GenericPurpose]`)
+
 Reutilizables en múltiples features.
 
 ```tsx
@@ -760,11 +783,11 @@ export const useListFilter = <T,>({
   sortComparator,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const filteredData = useMemo(() => {
     // Lógica genérica de filtrado
   }, [data, searchTerm, filterPredicate]);
-  
+
   return { searchTerm, setSearchTerm, filteredData };
 };
 ```
@@ -776,9 +799,10 @@ export const useListFilter = <T,>({
 ### Indicadores de que NECESITAS Separar
 
 ✅ **Componente > 150 líneas**
+
 ```tsx
 // ✅ Divide en sub-componentes
-// EventAdminPage (285 líneas) → 
+// EventAdminPage (285 líneas) →
 //   EventAdminHeader (40 líneas)
 //   EventInfoCard (50 líneas)
 //   EventQuickActions (30 líneas)
@@ -786,6 +810,7 @@ export const useListFilter = <T,>({
 ```
 
 ✅ **Bloques de JSX que se repiten**
+
 ```tsx
 // ❌ MAL: Repetición
 <div className="header">
@@ -803,33 +828,36 @@ export const useListFilter = <T,>({
 ```
 
 ✅ **Secciones con responsabilidad clara**
+
 ```tsx
 // ✅ BIEN: Cada sección es un componente
 <EventByIdPage>
-  <EventPageHeader />      {/* Header */}
-  <EventMainScreen />      {/* Pantalla principal */}
-  <EventSimpleTitle />     {/* Título */}
-  <EventConnectedUsers />  {/* Usuarios */}
-  <EventControls />        {/* Controles */}
+  <EventPageHeader /> {/* Header */}
+  <EventMainScreen /> {/* Pantalla principal */}
+  <EventSimpleTitle /> {/* Título */}
+  <EventConnectedUsers /> {/* Usuarios */}
+  <EventControls /> {/* Controles */}
 </EventByIdPage>
 ```
 
 ✅ **Lógica condicional compleja**
+
 ```tsx
 // ❌ MAL: Condicionales en componente principal
-{isAdmin && canEdit && !isLocked && (
-  <div>
-    {/* 50 líneas de JSX */}
-  </div>
-)}
+{
+  isAdmin && canEdit && !isLocked && <div>{/* 50 líneas de JSX */}</div>;
+}
 
 // ✅ BIEN: Componente dedicado
-{showAdminControls && <AdminControls />}
+{
+  showAdminControls && <AdminControls />;
+}
 ```
 
 ### Tipos de Componentes que Debes Crear
 
 #### 1. **Componentes de Página/Orquestadores**
+
 Coordinan otros componentes, usan hooks, poca UI propia.
 
 ```tsx
@@ -839,10 +867,10 @@ export const EventByIdPage = ({ params }) => {
   const { isLoading, refetch } = useEventByIdPage({ params });
   const { isAdminEvent, showActionButtons } = useEventPermissions();
   const { handleBackToEvents } = useEventNavigation(params);
-  
+
   // Mínima lógica
   const memoizedRefetch = useCallback(() => refetch(), [refetch]);
-  
+
   // Composición de sub-componentes
   return (
     <div>
@@ -855,12 +883,14 @@ export const EventByIdPage = ({ params }) => {
 ```
 
 **Características:**
+
 - ✅ Usa múltiples hooks
 - ✅ Orquesta sub-componentes
 - ✅ Poca lógica propia
 - ✅ Máximo 100-150 líneas
 
 #### 2. **Componentes de UI Puros**
+
 Solo reciben props y renderizan, sin lógica compleja.
 
 ```tsx
@@ -892,6 +922,7 @@ export const EventPageHeader = ({
 ```
 
 **Características:**
+
 - ✅ Props tipadas con interface
 - ✅ Sin estado interno (o mínimo)
 - ✅ Sin efectos secundarios
@@ -899,6 +930,7 @@ export const EventPageHeader = ({
 - ✅ 30-80 líneas
 
 #### 3. **Componentes Compartidos/Genéricos**
+
 Reutilizables en múltiples features.
 
 ```tsx
@@ -913,7 +945,10 @@ export const ListHeader = ({
 }: ListHeaderProps) => {
   return (
     <div>
-      <button onClick={onBack}><BackwardIcon />Volver</button>
+      <button onClick={onBack}>
+        <BackwardIcon />
+        Volver
+      </button>
       <h1 className={`${gradientFrom} ${gradientTo}`}>{title}</h1>
       <p>{subtitle}</p>
       {actionButton}
@@ -923,12 +958,14 @@ export const ListHeader = ({
 ```
 
 **Características:**
+
 - ✅ Genérico y configurable
 - ✅ Props claras y tipadas
 - ✅ Ubicado en `/global/components/`
 - ✅ Documentado con ejemplos
 
 #### 4. **Componentes de Display/Visualización**
+
 Muestran datos complejos de forma específica.
 
 ```tsx
@@ -936,14 +973,14 @@ Muestran datos complejos de forma específica.
 export const LyricsShowcase = ({ lyricsShowcaseProps }) => {
   const lyricSelected = useStore($lyricSelected);
   const selectedSongData = useStore($selectedSongData);
-  
+
   const visibleLyricsData = useMemo(() => {
     // Lógica de visualización compleja
   }, [selectedSongData, lyricSelected]);
-  
+
   return (
     <AnimatePresence>
-      {visibleLyricsData.map(lyric => (
+      {visibleLyricsData.map((lyric) => (
         <LyricsShowcaseCard key={lyric.position} {...lyric} />
       ))}
     </AnimatePresence>
@@ -952,6 +989,7 @@ export const LyricsShowcase = ({ lyricsShowcaseProps }) => {
 ```
 
 #### 5. **Componentes de Control/Interacción**
+
 Manejan interacciones del usuario.
 
 ```tsx
@@ -959,9 +997,11 @@ Manejan interacciones del usuario.
 export const EventControls = ({ params, refetch, isLoading }) => {
   const eventAdminName = useStore($eventAdminName);
   const { isAdminEvent, isEventManager } = useEventPermissions();
-  
-  useEffect(() => { refetch(); }, [eventAdminName]);
-  
+
+  useEffect(() => {
+    refetch();
+  }, [eventAdminName]);
+
   return (
     <section>
       <EventControlsSongsList {...listProps} />
@@ -971,6 +1011,304 @@ export const EventControls = ({ params, refetch, isLoading }) => {
   );
 };
 ```
+
+---
+
+## 💧 Hydration Protection (SSR/Client Components)
+
+> **CRÍTICO para React 18 + Next.js 15**: Este patrón es OBLIGATORIO para Client Components que renderizan contenido condicional basado en estado del usuario, autenticación, o datos dinámicos.
+
+### ⚠️ El Problema de Hidratación
+
+Cuando un Client Component (`'use client'`) se renderiza dentro de un Server Component (páginas de Next.js por defecto), puede ocurrir un **hydration mismatch** si el HTML generado en el servidor difiere del HTML generado en el cliente.
+
+**Causas comunes:**
+
+- `isLoggedIn` es `false` en servidor pero `true` en cliente
+- `isLoading` difiere entre servidor y cliente
+- Renderizado condicional basado en stores (nanostores, zustand, etc.)
+- Uso de `localStorage`, `sessionStorage`, o `window` en render
+- Fechas/horas que cambian entre renderizados
+
+**Error típico:**
+
+```
+Hydration failed because the server rendered HTML didn't match the client.
+```
+
+### ✅ Solución: Mounted Guard Pattern
+
+El patrón **mounted guard** previene la hidratación hasta que el componente esté completamente montado en el cliente.
+
+#### Patrón Básico
+
+```tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+
+export const MyClientComponent = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render conditional content until mounted
+  if (!mounted) {
+    return null; // o un placeholder/skeleton
+  }
+
+  // Ahora es seguro renderizar contenido condicional
+  return (
+    <div>{/* Contenido que puede diferir entre servidor y cliente */}</div>
+  );
+};
+```
+
+#### Cuándo Usar Este Patrón
+
+✅ **SIEMPRE usar cuando:**
+
+- El componente renderiza contenido diferente basado en `isLoggedIn`
+- El componente usa stores (`useStore($user)`, `useStore($event)`, etc.)
+- Hay renderizado condicional basado en permisos/roles
+- Se usa `isLoading`, `error`, `data` de React Query de forma condicional
+- Se accede a `window`, `localStorage`, `sessionStorage`
+
+❌ **NO necesitas el patrón cuando:**
+
+- El componente es puramente presentacional (solo props)
+- No hay renderizado condicional basado en estado dinámico
+- El componente es un Server Component
+
+### 📋 Ejemplos Reales del Proyecto
+
+#### Ejemplo 1: Protección por `isLoggedIn`
+
+```tsx
+// GruposCTASection.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useGruposCTA } from '../_hooks/useGruposCTA';
+
+export const GruposCTASection = () => {
+  const { isLoggedIn, ...rest } = useGruposCTA();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // ✅ NO renderizar hasta que esté montado
+  if (!mounted) {
+    return null;
+  }
+
+  // Usuario NO logueado
+  if (!isLoggedIn) {
+    return (
+      <div className="...">
+        <h3>¿QuieresQue tu grupo aparezca aquí?</h3>
+        <PrimaryButton href="/auth/login">Registrar mi grupo</PrimaryButton>
+      </div>
+    );
+  }
+
+  // Usuario LOGUEADO - diferente contenido
+  return (
+    <div className="...">
+      <h3>¿Listo para crear un nuevo grupo?</h3>
+      <PrimaryButton onClick={onOpen}>+ Crear nuevo grupo</PrimaryButton>
+    </div>
+  );
+};
+```
+
+**Por qué funciona:**
+
+- En servidor: retorna `null` (no hay mismatch)
+- En cliente: espera al mount, luego renderiza contenido correcto
+- `isLoggedIn` puede diferir entre servidor/cliente sin causar error
+
+#### Ejemplo 2: Protección por `isLoading`/`data`
+
+```tsx
+// BandsShowCase.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getBandsOfUser } from '@bands/_services/bandsService';
+import { useStore } from '@nanostores/react';
+import { $user } from '@global/stores/users';
+
+export const BandsShowCase = () => {
+  const user = useStore($user);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const { data, error, isLoading } = getBandsOfUser(user.isLoggedIn);
+
+  // ✅ NO renderizar contenido condicional hasta que esté montado
+  if (!mounted) {
+    return <div className="h-full" />; // placeholder con misma estructura
+  }
+
+  return (
+    <div className="h-full">
+      {error && <ErrorState />}
+      {isLoading && <SkeletonState />}
+      {data && <BandList bands={data} />}
+    </div>
+  );
+};
+```
+
+**Por qué funciona:**
+
+- `isLoading` puede ser `true` en servidor pero `false` en cliente
+- Al retornar solo la estructura base antes del mount, evitamos el mismatch
+- Después del mount, el contenido condicional se renderiza correctamente
+
+#### Ejemplo 3: Protección con Permisos
+
+```tsx
+// EventPageHeader.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+
+export const EventPageHeader = ({ showActionButtons, isAdminEvent }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <div className="header">
+      <BackButton />
+      <h1>Evento en Vivo</h1>
+
+      {/* ✅ Solo renderizar botones después del mount */}
+      {mounted && showActionButtons && (
+        <div>
+          <EditButton />
+          <DeleteButton />
+        </div>
+      )}
+    </div>
+  );
+};
+```
+
+**Por qué funciona:**
+
+- `showActionButtons` depende de permisos/roles que pueden diferir
+- Guardamos el mounted check ANTES de renderizar los botones
+- La estructura base (header, h1) se renderiza igual en servidor y cliente
+
+### 🎯 Mejores Prácticas
+
+#### ✅ DO: Retornar Estructura Mínima
+
+```tsx
+// ✅ BIEN: Retornar estructura base
+if (!mounted) {
+  return <div className="container" />; // misma estructura root
+}
+
+// ✅ BIEN: Retornar loading apropiado
+if (!mounted) {
+  return <SkeletonLoader />;
+}
+
+// ✅ BIEN: Retornar null si no hay estructura fija
+if (!mounted) {
+  return null;
+}
+```
+
+#### ❌ DON'T: Renderizar Contenido Dinámico Antes del Mount
+
+```tsx
+// ❌ MAL: No usar mounted guard
+export const BadComponent = () => {
+  const user = useStore($user);
+
+  // Esto causará hydration mismatch
+  if (!user.isLoggedIn) {
+    return <LoginPrompt />;
+  }
+
+  return <UserDashboard />;
+};
+```
+
+#### ✅ DO: Aplicar Guard a Nivel Correcto
+
+```tsx
+// ✅ BIEN: Guard en el componente raíz
+export const ParentComponent = () => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return (
+    <div>
+      <ChildA /> {/* No necesitan su propio guard */}
+      <ChildB />
+    </div>
+  );
+};
+
+// ❌ MAL: Guard innecesario en hijos
+const ChildA = () => {
+  const [mounted, setMounted] = useState(false); // ❌ Redundante
+  // ...
+};
+```
+
+### 📊 Checklist de Componentes
+
+Usa este checklist al crear Client Components:
+
+- [ ] ¿El componente usa `'use client'`?
+- [ ] ¿Renderiza contenido diferente basado en autenticación?
+- [ ] ¿Usa stores (nanostores, zustand, etc.)?
+- [ ] ¿Tiene renderizado condicional basado en `isLoading`/`data`/`error`?
+- [ ] ¿Accede a `window`, `localStorage`, o APIs del navegador?
+- [ ] ¿Los datos pueden diferir entre servidor y cliente?
+
+**Si respondiste SÍ a cualquiera: usa el mounted guard pattern.**
+
+### 🔍 Debugging Hydration Issues
+
+Si ves un error de hidratación:
+
+1. **Identifica el componente** en el stack trace
+2. **Busca renderizado condicional** basado en estado dinámico
+3. **Añade mounted guard** al principio del componente
+4. **Verifica** que el placeholder retornado tenga la misma estructura base
+5. **Test** recargando la página
+
+**Herramientas útiles:**
+
+```bash
+# En desarrollo, React te mostrará dónde ocurrió el mismatch
+# Busca el warning en console con detalles del árbol
+```
+
+### 📚 Referencias
+
+- [React Hydration Docs](https://react.dev/link/hydration-mismatch)
+- [Next.js Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components)
+- [Server vs Client Components](https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns)
 
 ---
 
@@ -1027,16 +1365,16 @@ export interface UseFeatureLogicReturn {
 
 ```typescript
 // Props de componentes
-export interface ComponentNameProps { }
+export interface ComponentNameProps {}
 
 // Props de hooks
-export interface UseHookNameProps { }
+export interface UseHookNameProps {}
 
 // Retorno de hooks (solo si es complejo)
-export interface UseHookNameReturn { }
+export interface UseHookNameReturn {}
 
 // Tipos de datos
-export interface EntityName { }
+export interface EntityName {}
 ```
 
 ### Ejemplo Real del Proyecto
@@ -1069,12 +1407,12 @@ export interface UseEventSongsListenerProps {
 
 ### Límites Recomendados
 
-| Tipo | Líneas Ideales | Máximo Aceptable | Acción si Excede |
-|------|----------------|------------------|------------------|
-| Hook | 50-100 | 150 | Dividir en sub-hooks |
-| Componente UI | 30-80 | 100 | Extraer sub-componentes |
-| Componente de Página | 80-120 | 150 | Extraer lógica a hooks |
-| Componente Complejo | 100-150 | 200 | Refactorizar urgente |
+| Tipo                 | Líneas Ideales | Máximo Aceptable | Acción si Excede        |
+| -------------------- | -------------- | ---------------- | ----------------------- |
+| Hook                 | 50-100         | 150              | Dividir en sub-hooks    |
+| Componente UI        | 30-80          | 100              | Extraer sub-componentes |
+| Componente de Página | 80-120         | 150              | Extraer lógica a hooks  |
+| Componente Complejo  | 100-150        | 200              | Refactorizar urgente    |
 
 ### Cómo Medir
 
@@ -1089,6 +1427,7 @@ find . -name "*.tsx" -exec wc -l {} \; | sort -nr | head -20
 ### Señales de Alerta
 
 🚨 **Componente > 200 líneas**
+
 ```tsx
 // ACCIÓN INMEDIATA REQUERIDA
 // 1. Extraer lógica a hooks
@@ -1097,6 +1436,7 @@ find . -name "*.tsx" -exec wc -l {} \; | sort -nr | head -20
 ```
 
 ⚠️ **Componente 150-200 líneas**
+
 ```tsx
 // CONSIDERA REFACTORIZAR
 // 1. Revisar si hay lógica extraíble
@@ -1105,6 +1445,7 @@ find . -name "*.tsx" -exec wc -l {} \; | sort -nr | head -20
 ```
 
 ✅ **Componente < 150 líneas**
+
 ```tsx
 // BIEN, pero monitorear
 // Si crece más, planear refactorización
@@ -1117,6 +1458,7 @@ find . -name "*.tsx" -exec wc -l {} \; | sort -nr | head -20
 Usa esto cuando vayas a refactorizar un componente existente:
 
 ### Paso 1: Análisis
+
 - [ ] ¿Cuántas líneas tiene el componente?
 - [ ] ¿Cuántos `useState` tiene?
 - [ ] ¿Cuántos `useEffect` tiene?
@@ -1124,6 +1466,7 @@ Usa esto cuando vayas a refactorizar un componente existente:
 - [ ] ¿Hay bloques JSX repetitivos?
 
 ### Paso 2: Planificación
+
 - [ ] Identificar lógica para extraer a hooks
 - [ ] Identificar UI para extraer a componentes
 - [ ] Crear lista de hooks necesarios
@@ -1131,6 +1474,7 @@ Usa esto cuando vayas a refactorizar un componente existente:
 - [ ] Diseñar interfaces
 
 ### Paso 3: Crear Estructura
+
 ```bash
 feature/
 ├── _interfaces/
@@ -1144,6 +1488,7 @@ feature/
 ```
 
 ### Paso 4: Implementación
+
 - [ ] Crear archivo de interfaces
 - [ ] Implementar hooks (de lo más simple a lo más complejo)
 - [ ] Implementar componentes UI puros
@@ -1151,6 +1496,7 @@ feature/
 - [ ] Actualizar imports
 
 ### Paso 5: Verificación
+
 - [ ] Build compila sin errores
 - [ ] Tests existentes pasan
 - [ ] No hay warnings nuevos de TypeScript
@@ -1170,14 +1516,14 @@ feature/
 // _hooks/useItemsFilter.tsx
 export const useItemsFilter = () => {
   const [statusFilter, setStatusFilter] = useState('all');
-  
+
   const filter Predicate = useMemo(() => {
     return (item) => {
       if (statusFilter === 'all') return true;
       return item.status === statusFilter;
     };
   }, [statusFilter]);
-  
+
   return { statusFilter, setStatusFilter, filterPredicate };
 };
 
@@ -1187,16 +1533,16 @@ export const useItemsFilter = () => {
 // 3. Componente principal
 export const ItemsList = ({ params }) => {
   const { data, isLoading } = getItems(params);
-  
+
   const { statusFilter, setStatusFilter, filterPredicate } = useItemsFilter();
   const { searchTerm, setSearchTerm, filteredData } = useListFilter({
     data,
     searchFields: (item) => [item.name, item.description],
     filterPredicate,
   });
-  
+
   const { handleBack } = useBackNavigation(params);
-  
+
   return (
     <div>
       <ListHeader {...headerProps} />
@@ -1218,11 +1564,11 @@ export const ItemsList = ({ params }) => {
 export const useFeaturePermissions = () => {
   const user = useStore($user);
   const feature = useStore($feature);
-  
+
   const isAdmin = useMemo(() => {
     // Lógica de permisos
   }, [user, feature]);
-  
+
   return { isAdmin, canEdit, canDelete };
 };
 
@@ -1231,7 +1577,7 @@ export const FeaturePage = ({ params }) => {
   const { data, refetch } = useFeatureData(params);
   const { isAdmin, canEdit } = useFeaturePermissions();
   const { handleBack } = useNavigation(params);
-  
+
   return (
     <div>
       <PageHeader onBack={handleBack} showActions={canEdit} />
@@ -1249,19 +1595,19 @@ export const FeaturePage = ({ params }) => {
 export const useFeatureForm = (initialData) => {
   const [form, setForm] = useState(initialData);
   const [isValid, setIsValid] = useState(false);
-  
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  
+
   const validate = useMemo(() => {
     // Lógica de validación
   }, [form]);
-  
+
   useEffect(() => {
     setIsValid(validate());
   }, [validate]);
-  
+
   return { form, isValid, handleChange, setForm };
 };
 
@@ -1269,14 +1615,14 @@ export const useFeatureForm = (initialData) => {
 export const FeatureModal = ({ isOpen, onClose, initialData }) => {
   const { form, isValid, handleChange } = useFeatureForm(initialData);
   const { mutate, isPending } = useCreateFeature();
-  
+
   const handleSubmit = () => {
     if (!isValid) return;
     mutate(form, {
       onSuccess: () => onClose(),
     });
   };
-  
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <FormSection1 data={form} onChange={handleChange} />
@@ -1296,33 +1642,38 @@ export const FeatureModal = ({ isOpen, onClose, initialData }) => {
 ## ❌ Anti-Patrones a Evitar
 
 ### 1. Componentes Monolíticos
+
 ```tsx
 // ❌ MAL: Todo en un componente (300+ líneas)
 export const HugeComponent = () => {
   const [state1, setState1] = useState();
   const [state2, setState2] = useState();
   // ... 10 más estados
-  
-  useEffect(() => { /* 50 líneas */ }, []);
-  useEffect(() => { /* 50 líneas */ }, []);
+
+  useEffect(() => {
+    /* 50 líneas */
+  }, []);
+  useEffect(() => {
+    /* 50 líneas */
+  }, []);
   // ... más effects
-  
-  const helper1 = () => { /* 30 líneas */ };
-  const helper2 = () => { /* 30 líneas */ };
+
+  const helper1 = () => {
+    /* 30 líneas */
+  };
+  const helper2 = () => {
+    /* 30 líneas */
+  };
   // ... más helpers
-  
-  return (
-    <div>
-      {/* 100+ líneas de JSX */}
-    </div>
-  );
+
+  return <div>{/* 100+ líneas de JSX */}</div>;
 };
 
 // ✅ BIEN: Dividido
 export const ProperComponent = () => {
   const logic = useComponentLogic();
   const data = useComponentData();
-  
+
   return (
     <div>
       <Header {...headerProps} />
@@ -1334,6 +1685,7 @@ export const ProperComponent = () => {
 ```
 
 ### 2. Props Drilling Excesivo
+
 ```tsx
 // ❌ MAL: Pasando props por muchos niveles
 <GrandParent data={data}>
@@ -1342,34 +1694,45 @@ export const ProperComponent = () => {
       <GrandChild data={data} />
     </Child>
   </Parent>
-</GrandParent>
+</GrandParent>;
 
 // ✅ BIEN: Usar context o store
 const data = useStore($data);
 ```
 
 ### 3. Lógica en el JSX
+
 ```tsx
 // ❌ MAL: Cálculos complejos en el render
 <div>
-  {items.filter(x => x.active)
-    .map(x => ({ ...x, computed: x.a + x.b }))
+  {items
+    .filter((x) => x.active)
+    .map((x) => ({ ...x, computed: x.a + x.b }))
     .sort((a, b) => a.computed - b.computed)
-    .map(item => <Item key={item.id} {...item} />)}
-</div>
+    .map((item) => (
+      <Item key={item.id} {...item} />
+    ))}
+</div>;
 
 // ✅ BIEN: Mover a useMemo o hook
 const processedItems = useMemo(() => {
   return items
-    .filter(x => x.active)
-    .map(x => ({ ...x, computed: x.a + x.b }))
+    .filter((x) => x.active)
+    .map((x) => ({ ...x, computed: x.a + x.b }))
     .sort((a, b) => a.computed - b.computed);
 }, [items]);
 
-return <div>{processedItems.map(item => <Item key={item.id} {...item} />)}</div>;
+return (
+  <div>
+    {processedItems.map((item) => (
+      <Item key={item.id} {...item} />
+    ))}
+  </div>
+);
 ```
 
 ### 4. Interfaces Inline
+
 ```tsx
 // ❌ MAL: Tipos inline
 const Component = ({ data }: { data: { id: number; name: string } }) => {
@@ -1394,6 +1757,7 @@ const Component = ({ data }: ComponentProps) => {
 ```
 
 ### 5. Efectos Sin Cleanup
+
 ```tsx
 // ❌ MAL: Event listener sin cleanup
 useEffect(() => {
@@ -1457,6 +1821,7 @@ Creado:
 ```
 
 **Resultado:**
+
 - EventsOfBand: 250 → 180 líneas (28% ↓)
 - SongsOfBand: 244 → 175 líneas (28% ↓)
 - ~80% duplicación eliminada
@@ -1475,17 +1840,17 @@ Creado:
 export const useEventPermissions = () => {
   const user = useStore($user);
   const event = useStore($event);
-  
+
   const isSystemAdmin = useMemo(() => {
     return user?.isLoggedIn && user?.roles.includes(userRoles.admin.id);
   }, [user]);
-  
+
   const isAdminEvent = useMemo(() => {
-    return Boolean((bandMembership?.isAdmin) || isSystemAdmin);
+    return Boolean(bandMembership?.isAdmin || isSystemAdmin);
   }, [bandMembership, isSystemAdmin]);
-  
+
   // ... más lógica compartida
-  
+
   return { isSystemAdmin, isAdminEvent, isEventManager, isBandMemberOnly };
 };
 
@@ -1494,6 +1859,7 @@ const { isAdminEvent, showActionButtons } = useEventPermissions();
 ```
 
 **Resultado:**
+
 - EventByIdPage: 213 → 90 líneas (58% ↓)
 - EventControls: 105 → 75 líneas (29% ↓)
 - Duplicación eliminada 100%
@@ -1505,11 +1871,13 @@ const { isAdminEvent, showActionButtons } = useEventPermissions();
 ### Para CREAR un Nuevo Feature
 
 1. **Planificación** (5-10 min)
+
    - Listar componentes necesarios
    - Identificar hooks necesarios
    - Diseñar estructura de carpetas
 
 2. **Crear Estructura** (2-3 min)
+
    ```bash
    mkdir feature/_components
    mkdir feature/_hooks
@@ -1518,15 +1886,18 @@ const { isAdminEvent, showActionButtons } = useEventPermissions();
    ```
 
 3. **Interfaces Primero** (5-10 min)
+
    - Definir todos los tipos
    - Props de componentes
    - Props de hooks
 
 4. **Hooks** (Variable)
+
    - Implementar de lo simple a lo complejo
    - Probar cada hook individualmente
 
 5. **Componentes UI** (Variable)
+
    - Crear componentes puros primero
    - Componer en componente principal
 
@@ -1538,27 +1909,33 @@ const { isAdminEvent, showActionButtons } = useEventPermissions();
 ### Para REFACTORIZAR un Componente Existente
 
 1. **Análisis** (10-15 min)
+
    - Contar líneas
    - Identificar responsabilidades
    - Buscar duplicación
 
 2. **Plan de Extracción** (10 min)
+
    - Qué lógica → hooks
    - Qué UI → componentes
    - Qué tipos → interfaces
 
 3. **Crear Interfaces** (5 min)
+
    - Extraer todas las interfaces primero
 
 4. **Extraer Hooks** (Variable)
+
    - Uno a la vez
    - Testear que funcione
 
 5. **Extraer Componentes** (Variable)
+
    - UI puro primero
    - Componer después
 
 6. **Refactorizar Principal** (15-20 min)
+
    - Usar nuevos hooks
    - Componer componentes
    - Limpiar código
@@ -1575,26 +1952,31 @@ const { isAdminEvent, showActionButtons } = useEventPermissions();
 ### Componente Bien Refactorizado
 
 ✅ **Líneas de Código**
+
 - Componente principal < 150 líneas
 - Cada hook < 100 líneas
 - Cada sub-componente < 80 líneas
 
 ✅ **Acoplamiento**
+
 - Props claramente definidas
 - Sin prop drilling > 2 niveles
 - Dependencies mínimas
 
 ✅ **Cohesión**
+
 - Cada módulo hace UNA cosa
 - Responsabilidades claras
 - Nombres descriptivos
 
 ✅ **Testabilidad**
+
 - Hooks testeables independientemente
 - Componentes con props mockables
 - Sin lógica compleja en JSX
 
 ✅ **Mantenibilidad**
+
 - Fácil encontrar código
 - Fácil hacer cambios
 - Fácil agregar features
@@ -2102,10 +2484,10 @@ npm test -- --verbose
 
 ```typescript
 // ✅ Queries básicas
-screen.getByText('texto');           // Error si no encuentra
-screen.queryByText('texto');         // null si no encuentra
-screen.findByText('texto');          // Async, espera a que aparezca
-screen.getAllByText('texto');        // Array de elementos
+screen.getByText('texto'); // Error si no encuentra
+screen.queryByText('texto'); // null si no encuentra
+screen.findByText('texto'); // Async, espera a que aparezca
+screen.getAllByText('texto'); // Array de elementos
 
 // ✅ Queries por rol
 screen.getByRole('button');
@@ -2239,7 +2621,7 @@ screen.getByText(/welcome/i);
 
 // ❌ MAL: Queries por clase o ID (frágiles)
 container.querySelector('.button-submit');
-screen.getByTestId('submit-btn');  // Solo como último recurso
+screen.getByTestId('submit-btn'); // Solo como último recurso
 ```
 
 ### ✅ DO: Test User Behavior, Not Implementation

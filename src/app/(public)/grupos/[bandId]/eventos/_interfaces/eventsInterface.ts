@@ -5,6 +5,7 @@ export interface EventsProps {
   title: string;
   date: string | Date;
   bandId: number;
+  eventMode?: 'live' | 'videolyrics';
 }
 
 export interface EventSongsProps {
@@ -44,6 +45,16 @@ export interface SongEventProps {
   songType: 'worship' | 'praise';
   key: keysType | null;
   lyrics: LyricsProps[];
+  videoLyrics?: {
+    id: number;
+    youtubeId: string;
+    title: string | null;
+    videoType: 'instrumental' | 'full';
+    description: string | null;
+    priority: number;
+    usesVideoLyrics: boolean;
+    isPreferred: boolean;
+  }[];
 }
 
 export interface EventByIdInterface extends EventsProps {

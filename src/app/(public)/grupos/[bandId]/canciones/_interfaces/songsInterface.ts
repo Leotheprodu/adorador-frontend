@@ -1,5 +1,6 @@
 export interface SongProps extends SongPropsWithoutId {
   id: number;
+  videoLyrics?: SongVideoLyrics[];
 }
 
 export interface SongPropsWithCount extends SongProps {
@@ -16,4 +17,15 @@ export interface SongPropsWithoutId {
   youtubeLink?: string;
   key?: string;
   tempo?: number;
+}
+
+export interface SongVideoLyrics {
+  id: number;
+  youtubeId: string;
+  title?: string;
+  usesVideoLyrics: boolean; // true = usar lyrics del video, false = sincronizar con BD
+  videoType: 'instrumental' | 'full'; // instrumental = sin voces, full = con voces
+  description?: string;
+  priority: number;
+  isPreferred: boolean;
 }

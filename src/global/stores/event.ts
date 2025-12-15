@@ -11,6 +11,7 @@ export const $event = atom<EventByIdInterface>({
   date: '',
   bandId: 0,
   songs: [],
+  eventMode: 'live',
 });
 export type lyricSelectedProps = {
   position: number;

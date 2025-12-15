@@ -1,9 +1,10 @@
 import { EventControlsButtons } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsButtons';
 import { EventControlsSongsList } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsSongsList';
 import { EventControlsLyricsSelect } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventControlsLyricsSelect';
+import { VideoControlBar } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/VideoControlBar';
 import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { $eventAdminName } from '@stores/event';
+import { $eventAdminName, $event } from '@stores/event';
 import { EventControlsHandleManager } from './EventControlsHandleManager';
 import { LightBulbIcon } from '@global/icons';
 import { useEventPermissions } from '../_hooks/useEventPermissions';
@@ -16,6 +17,7 @@ export const EventControls = ({
 }: EventControlsProps) => {
   const { bandId } = params;
   const eventAdminName = useStore($eventAdminName);
+  const eventData = useStore($event);
 
   // Usar hook compartido de permisos
   const {
@@ -29,6 +31,8 @@ export const EventControls = ({
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventAdminName]);
+
+  const isVideoLyricsMode = eventData.eventMode === 'videolyrics';
 
   return (
     <div>
@@ -44,7 +48,14 @@ export const EventControls = ({
           isBandMemberOnly={isBandMemberOnly}
         />
 
-        {(checkAdminEvent || isEventManager) && <EventControlsLyricsSelect />}
+        {/* Show lyrics selector in live mode, video control in videolyrics mode */}
+        {(checkAdminEvent || isEventManager) && !isVideoLyricsMode && (
+          <EventControlsLyricsSelect />
+        )}
+
+        {isVideoLyricsMode && (
+          <VideoControlBar isEventManager={isEventManager} />
+        )}
 
         <EventControlsButtons
           bandId={parseInt(bandId)}
