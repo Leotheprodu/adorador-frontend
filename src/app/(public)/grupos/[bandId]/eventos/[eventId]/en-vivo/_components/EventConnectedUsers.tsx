@@ -86,13 +86,11 @@ export const EventConnectedUsers = ({
     // En modo observador, mostrar mensaje diferente
     if (observerMode) {
       return (
-        <div className="my-3 w-full">
-          <div className="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 dark:bg-slate-800">
-            <span className="text-sm text-slate-600 dark:text-slate-400">
-              Nadie conectado al evento
-            </span>
-          </div>
-        </div>
+        <>
+          <span className="text-sm text-slate-600 dark:text-slate-400">
+            Nadie conectado al evento
+          </span>
+        </>
       );
     }
 
@@ -147,26 +145,30 @@ export const EventConnectedUsers = ({
     return parts.join(' y ') + connectText;
   };
 
-  return (
-    <div className="my-3 w-full">
-      <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-green-100 via-emerald-50 to-green-100 px-4 py-2 shadow-sm ring-1 ring-green-200/50 backdrop-blur-sm">
-        <div className="relative flex h-2.5 w-2.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500"></span>
+  if (observerMode && connectedUsers.totalCount > 0) {
+    return <>{formatUserList()}</>;
+  } else {
+    return (
+      <div className="my-3 w-full">
+        <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-green-100 via-emerald-50 to-green-100 px-4 py-2 shadow-sm ring-1 ring-green-200/50 backdrop-blur-sm">
+          <div className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500"></span>
+          </div>
+          <span className="text-sm font-medium text-green-800">
+            {formatUserList()}
+          </span>
+          {connectedUsers.maxConnections ? (
+            <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
+              {connectedUsers.totalCount}/{connectedUsers.maxConnections}
+            </span>
+          ) : (
+            <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
+              {connectedUsers.totalCount}
+            </span>
+          )}
         </div>
-        <span className="text-sm font-medium text-green-800">
-          {formatUserList()}
-        </span>
-        {connectedUsers.maxConnections ? (
-          <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
-            {connectedUsers.totalCount}/{connectedUsers.maxConnections}
-          </span>
-        ) : (
-          <span className="ml-1 rounded-full bg-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
-            {connectedUsers.totalCount}
-          </span>
-        )}
       </div>
-    </div>
-  );
+    );
+  }
 };

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PlayIcon } from '@global/icons';
+import { PlayIcon, UsersIcon } from '@global/icons';
 import { EventQuickActionsProps } from '../_interfaces/eventAdminInterfaces';
 import { EventConnectedUsers } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/EventConnectedUsers';
 import { useEventAdminWebSocket } from '../_hooks/useEventAdminWebSocket';
@@ -34,8 +34,23 @@ export const EventQuickActions = ({
       </Link>
 
       {/* Participantes conectados - Modo observador */}
-      <div className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-purple-800 dark:bg-gray-900/60">
-        <EventConnectedUsers params={{ bandId, eventId }} observerMode={true} />
+      <div className="group relative flex items-center overflow-hidden rounded-lg border border-brand-purple-200 p-6 shadow-sm transition-all duration-200 hover:shadow-md active:scale-[0.98] dark:border-purple-800 dark:from-brand-purple-900 dark:to-brand-blue-900">
+        <div className="flex items-center gap-4">
+          <div className="rounded-full bg-brand-purple-100 p-3 dark:bg-brand-purple-900/60">
+            <UsersIcon className="h-6 w-6 text-brand-purple-600 dark:text-brand-purple-200" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900 group-hover:text-brand-purple-600 dark:text-slate-100 dark:group-hover:text-brand-purple-300">
+              Participantes
+            </h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              <EventConnectedUsers
+                params={{ bandId, eventId }}
+                observerMode={true}
+              />
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
