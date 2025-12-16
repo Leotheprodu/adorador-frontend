@@ -7,6 +7,7 @@ export interface SongPropsWithCount extends SongProps {
   _count: {
     events: number;
     lyrics: number;
+    videoLyrics: number;
   };
 }
 

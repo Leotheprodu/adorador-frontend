@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
 import { AddSongEventButton } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/AddSongEventButton';
 import { MusicNoteIcon } from '@global/icons';
 import { SongCardWithControls } from './SongCardWithControls';
-import { Button } from "@heroui/react";
+import { Button } from '@heroui/react';
 import toast from 'react-hot-toast';
 import { eventUpdateSongs } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/updatingElements/services/updatingEventSongsService';
 import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
@@ -14,6 +14,7 @@ interface SongListDisplayProps {
   params: { bandId: string; eventId: string };
   refetch: () => void;
   isAdminEvent: boolean;
+  event?: { eventMode?: string };
 }
 
 export const SongListDisplay = ({
@@ -21,6 +22,7 @@ export const SongListDisplay = ({
   params,
   refetch,
   isAdminEvent,
+  event,
 }: SongListDisplayProps) => {
   const [songOrder, setSongOrder] = useState<EventSongsProps[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
@@ -118,6 +120,7 @@ export const SongListDisplay = ({
             refetch={refetch}
             isAdminEvent={isAdminEvent}
             eventSongs={songs}
+            eventMode={event?.eventMode}
           />
         </div>
       </div>
@@ -141,10 +144,11 @@ export const SongListDisplay = ({
           <Droppable droppableId="songListDisplay">
             {(provided, snapshot) => (
               <div
-                className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${snapshot.isDraggingOver
-                  ? 'border-brand-purple-400 bg-brand-purple-50 shadow-lg dark:bg-black'
-                  : 'border-transparent dark:bg-black'
-                  }`}
+                className={`grid gap-2 rounded-xl border-2 p-2 transition-all duration-200 ${
+                  snapshot.isDraggingOver
+                    ? 'border-brand-purple-400 bg-brand-purple-50 shadow-lg dark:bg-black'
+                    : 'border-transparent dark:bg-black'
+                }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
@@ -156,6 +160,8 @@ export const SongListDisplay = ({
                     isAdminEvent={isAdminEvent}
                     songOrder={songOrder}
                     setSongOrder={handleSongOrderChange}
+                    params={params}
+                    refetch={refetch}
                   />
                 ))}
                 {provided.placeholder}
@@ -173,6 +179,8 @@ export const SongListDisplay = ({
               isAdminEvent={isAdminEvent}
               songOrder={songOrder}
               setSongOrder={handleSongOrderChange}
+              params={params}
+              refetch={refetch}
             />
           ))}
         </div>

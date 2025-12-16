@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useDisclosure } from "@heroui/react";
+import { useDisclosure } from '@heroui/react';
 import { getEventsOfBand } from '@bands/[bandId]/eventos/_services/eventsOfBandService';
 import { getEventsById } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_services/eventByIdService';
 import { addSongsToEventService } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/services/AddSongsToEventService';
@@ -10,10 +10,12 @@ export const useAddSongToEvent = ({
   bandId,
   songId,
   songTitle,
+  songVideoLyricsCount = 0,
 }: {
   bandId: string;
   songId: number;
   songTitle: string;
+  songVideoLyricsCount?: number;
 }) => {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -29,14 +31,21 @@ export const useAddSongToEvent = ({
     eventId: selectedEventId || '',
   });
 
-  // Filtrar solo eventos futuros
+  // Filtrar solo eventos futuros y excluir eventos de videolyrics si la canción no tiene videolyrics
   const upcomingEvents = useMemo(() => {
     if (!events) return [];
     const now = new Date();
     return events
-      .filter((event) => new Date(event.date) > now)
+      .filter((event) => {
+        const isFuture = new Date(event.date) > now;
+        // Si el evento es de tipo videolyrics y la canción no tiene videolyrics, excluirlo
+        if (event.eventMode === 'videolyrics' && songVideoLyricsCount === 0) {
+          return false;
+        }
+        return isFuture;
+      })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [events]);
+  }, [events, songVideoLyricsCount]);
 
   // Verificar si hay eventos futuros disponibles
   const hasUpcomingEvents = upcomingEvents.length > 0;

@@ -55,12 +55,18 @@ export const useVideoLyrics = ({
       {
         onSuccess: () => {
           toast.success('Video con lyrics agregado exitosamente');
+          // Invalidar queries relacionadas con el song
           queryClient.invalidateQueries({
             queryKey: ['SongVideoLyrics', bandId, songId],
           });
           queryClient.invalidateQueries({
             queryKey: ['Song', bandId, songId],
           });
+          // Invalidar queries del grupo y lista de canciones
+          queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+          queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+          // Invalidar queries de eventos que puedan usar esta canción
+          queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
           setIsFormOpen(false);
         },
         onError: (error) => {
@@ -79,12 +85,18 @@ export const useVideoLyrics = ({
       updateMutate(data, {
         onSuccess: () => {
           toast.success('Video actualizado exitosamente');
+          // Invalidar queries relacionadas con el song
           queryClient.invalidateQueries({
             queryKey: ['SongVideoLyrics', bandId, songId],
           });
           queryClient.invalidateQueries({
             queryKey: ['Song', bandId, songId],
           });
+          // Invalidar queries del grupo y lista de canciones
+          queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+          queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+          // Invalidar queries de eventos que puedan usar esta canción
+          queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
         },
         onError: (error) => {
           toast.error('Error al actualizar video');
@@ -101,12 +113,18 @@ export const useVideoLyrics = ({
       deleteMutate(null, {
         onSuccess: () => {
           toast.success('Video eliminado exitosamente');
+          // Invalidar queries relacionadas con el song
           queryClient.invalidateQueries({
             queryKey: ['SongVideoLyrics', bandId, songId],
           });
           queryClient.invalidateQueries({
             queryKey: ['Song', bandId, songId],
           });
+          // Invalidar queries del grupo y lista de canciones
+          queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+          queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+          // Invalidar queries de eventos que puedan usar esta canción
+          queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
         },
         onError: (error) => {
           toast.error('Error al eliminar video');
@@ -122,12 +140,18 @@ export const useVideoLyrics = ({
     setPreferredMutate(null, {
       onSuccess: () => {
         toast.success('Video marcado como preferido');
+        // Invalidar queries relacionadas con el song
         queryClient.invalidateQueries({
           queryKey: ['SongVideoLyrics', bandId, songId],
         });
         queryClient.invalidateQueries({
           queryKey: ['Song', bandId, songId],
         });
+        // Invalidar queries del grupo y lista de canciones
+        queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+        queryClient.invalidateQueries({ queryKey: ['BandById', bandId] });
+        // Invalidar queries de eventos que puedan usar esta canción
+        queryClient.invalidateQueries({ queryKey: ['EventsOfBand', bandId] });
       },
       onError: (error) => {
         toast.error('Error al marcar como preferido');

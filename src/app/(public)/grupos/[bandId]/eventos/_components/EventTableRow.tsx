@@ -7,6 +7,8 @@ import {
   CheckIcon,
   EditIcon,
   ArrowRightIcon,
+  GuitarIcon,
+  VideoCameraIcon,
 } from '@global/icons';
 import {
   Dropdown,
@@ -19,7 +21,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@heroui/react";
+} from '@heroui/react';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import { useEditEvent } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEditEvent';
 import { FormAddNewEvent } from '@bands/[bandId]/eventos/_components/FormAddNewEvent';
@@ -109,9 +111,31 @@ export const EventTableRow = ({
             href={`/grupos/${bandId}/eventos/${event.id}`}
             className="flex flex-col gap-1"
           >
-            <span className="font-medium text-slate-900 transition-colors group-hover:text-brand-purple-600 dark:text-slate-100 dark:group-hover:text-brand-purple-300">
-              {event.title}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-medium text-slate-900 transition-colors group-hover:text-brand-purple-600 dark:text-slate-100 dark:group-hover:text-brand-purple-300">
+                {event.title}
+              </span>
+              {/* Event Type Badge - Desktop */}
+              <div
+                className={`hidden items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold sm:inline-flex ${
+                  event.eventMode === 'videolyrics'
+                    ? 'bg-brand-blue-100 text-brand-blue-700 dark:bg-brand-blue-900/40 dark:text-brand-blue-300'
+                    : 'bg-brand-purple-100 text-brand-purple-700 dark:bg-brand-purple-900/40 dark:text-brand-purple-300'
+                }`}
+              >
+                {event.eventMode === 'videolyrics' ? (
+                  <>
+                    <VideoCameraIcon className="h-3 w-3" />
+                    <span>Video Lyrics</span>
+                  </>
+                ) : (
+                  <>
+                    <GuitarIcon className="h-3 w-3" />
+                    <span>En Vivo</span>
+                  </>
+                )}
+              </div>
+            </div>
             {/* Info adicional solo en mobile */}
             <div className="flex flex-wrap gap-2 text-xs text-slate-600 sm:hidden">
               <span className="flex items-center gap-1">
@@ -121,6 +145,26 @@ export const EventTableRow = ({
               <span className="flex items-center gap-1">
                 <ClockIcon className="h-3 w-3" />
                 {formatTime(event.date)}
+              </span>
+              {/* Event Type Badge - Mobile */}
+              <span
+                className={`flex items-center gap-1 rounded-full px-1.5 py-0.5 font-semibold ${
+                  event.eventMode === 'videolyrics'
+                    ? 'bg-brand-blue-100 text-brand-blue-700'
+                    : 'bg-brand-purple-100 text-brand-purple-700'
+                }`}
+              >
+                {event.eventMode === 'videolyrics' ? (
+                  <>
+                    <VideoCameraIcon className="h-3 w-3" />
+                    <span>Video</span>
+                  </>
+                ) : (
+                  <>
+                    <GuitarIcon className="h-3 w-3" />
+                    <span>Vivo</span>
+                  </>
+                )}
               </span>
             </div>
             {/* Tiempo restante - Solo mobile y eventos futuros */}

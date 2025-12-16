@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Tooltip,
-} from "@heroui/react";
+} from '@heroui/react';
 import { AddSongEventBySavedSongs } from './AddSongEventBySavedSongs';
 import { AddNewSongtoChurchAndEvent } from './AddNewSongtoChurchAndEvent';
 import { useState, useMemo, memo } from 'react';
@@ -16,11 +16,13 @@ export const AddSongEventButton = memo(
     refetch,
     isAdminEvent,
     eventSongs,
+    eventMode,
   }: {
     params: { bandId: string; eventId: string };
     refetch: () => void;
     isAdminEvent?: boolean;
     eventSongs?: { order: number; transpose: number; song: { id: number } }[];
+    eventMode?: string;
   }) => {
     const [isOpenPopover, setIsOpenPopover] = useState(false);
     const [isModalCatalogOpen, setIsModalCatalogOpen] = useState(false);
@@ -116,6 +118,7 @@ export const AddSongEventButton = memo(
           eventSongs={memoizedEventSongs}
           isOpen={isModalCatalogOpen}
           onClose={() => setIsModalCatalogOpen(false)}
+          eventMode={eventMode}
         />
         <AddNewSongtoChurchAndEvent
           params={params}

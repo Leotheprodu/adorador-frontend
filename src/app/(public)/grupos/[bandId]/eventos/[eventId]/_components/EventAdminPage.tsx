@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { SongListDisplay } from './SongListDisplay';
 import { useEventPermissions } from '../_hooks/useEventPermissions';
 import { useEventUpdates } from '../_hooks/useEventUpdates';
+import { useEventAdminWebSocket } from '../_hooks/useEventAdminWebSocket';
 import { EventAdminHeader } from './EventAdminHeader';
 import { EventInfoCard } from './EventInfoCard';
 import { EventQuickActions } from './EventQuickActions';
@@ -18,10 +19,14 @@ export const EventAdminPage = ({ params }: EventAdminPageProps) => {
 
   // Custom hooks for logic
   const { isAdminEvent, showActionButtons } = useEventPermissions();
+
+  // Initialize WebSocket for participants and real-time updates
+  useEventAdminWebSocket({ params });
+
   useEventUpdates({
     bandId: params.bandId,
     eventId: params.eventId,
-    refetch
+    refetch,
   });
 
   if (isLoading) {
@@ -79,6 +84,7 @@ export const EventAdminPage = ({ params }: EventAdminPageProps) => {
           params={params}
           refetch={refetch}
           isAdminEvent={isAdminEvent}
+          event={event}
         />
       </div>
 
@@ -87,4 +93,3 @@ export const EventAdminPage = ({ params }: EventAdminPageProps) => {
     </div>
   );
 };
-

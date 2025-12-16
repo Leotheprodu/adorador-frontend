@@ -21,8 +21,10 @@ interface ConnectedUsersData {
 
 export const EventConnectedUsers = ({
   params,
+  observerMode = false, // Si es true, solo observa sin unirse al evento
 }: {
   params: { bandId: string; eventId: string };
+  observerMode?: boolean;
 }) => {
   const socket = useStore($eventSocket);
   const [connectedUsers, setConnectedUsers] = useState<ConnectedUsersData>({
@@ -40,8 +42,10 @@ export const EventConnectedUsers = ({
     const eventId = parseInt(params.eventId);
     const bandId = parseInt(params.bandId);
 
-    // Unirse al evento cuando el componente se monta
-    socket.emit('joinEvent', { eventId, bandId });
+    // Solo unirse al evento si NO está en modo observador
+    if (!observerMode) {
+      socket.emit('joinEvent', { eventId, bandId });
+    }
 
     // Solicitar la lista inicial de usuarios conectados
     socket.emit('getConnectedUsers', { eventId });
@@ -55,15 +59,44 @@ export const EventConnectedUsers = ({
 
     socket.on('eventUsersUpdate', handleUsersUpdate);
 
-    return () => {
-      // Salir del evento cuando el componente se desmonta
-      socket.emit('leaveEvent', {});
-      socket.off('eventUsersUpdate', handleUsersUpdate);
-    };
-  }, [socket, params.eventId]);
+    // Si está en modo observador, hacer polling cada 15 segundos
+    let pollingInterval: NodeJS.Timeout | null = null;
+    if (observerMode) {
+      pollingInterval = setInterval(() => {
+        socket.emit('getConnectedUsers', { eventId });
+      }, 15000); // Refresh cada 15 segundos
+    }
 
-  // Si no hay usuarios conectados pero el socket está activo, mostrar mensaje de carga
+    return () => {
+      // Solo salir del evento si NO está en modo observador
+      if (!observerMode) {
+        socket.emit('leaveEvent', {});
+      }
+      socket.off('eventUsersUpdate', handleUsersUpdate);
+
+      // Limpiar intervalo de polling
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+    };
+  }, [socket, params.eventId, observerMode]);
+
+  // Si no hay usuarios conectados pero el socket está activo
   if (connectedUsers.totalCount === 0 && socket) {
+    // En modo observador, mostrar mensaje diferente
+    if (observerMode) {
+      return (
+        <div className="my-3 w-full">
+          <div className="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 dark:bg-slate-800">
+            <span className="text-sm text-slate-600 dark:text-slate-400">
+              Nadie conectado al evento
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    // En modo normal (en-vivo), mostrar conectando
     return (
       <div className="my-3 w-full">
         <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-blue-100 to-brand-purple-100 px-4 py-2 shadow-sm backdrop-blur-sm">
