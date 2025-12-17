@@ -149,7 +149,7 @@ export const VideoLyricsEventPlayer = ({
         }, 300); // Pequeño delay para smoothness
       }
     }
-  }, [currentSong?.song.id, currentVideoId, isFullscreen, activateFullscreen]);
+  }, [currentSong, currentVideoId, isFullscreen, activateFullscreen]);
 
   // Listen for video seek events from WebSocket (only apply if NOT event manager and in projector mode)
   useEffect(() => {

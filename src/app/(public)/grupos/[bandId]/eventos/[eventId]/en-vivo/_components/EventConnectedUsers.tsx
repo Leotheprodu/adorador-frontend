@@ -79,7 +79,7 @@ export const EventConnectedUsers = ({
         clearInterval(pollingInterval);
       }
     };
-  }, [socket, params.eventId, observerMode]);
+  }, [socket, params.eventId, params.bandId, observerMode]);
 
   // Si no hay usuarios conectados pero el socket está activo
   if (connectedUsers.totalCount === 0 && socket) {

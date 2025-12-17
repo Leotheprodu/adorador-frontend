@@ -6,8 +6,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Select,
-  SelectItem,
 } from '@heroui/react';
 import { $event } from '@stores/event';
 import React, { useEffect, useState, useMemo } from 'react';
@@ -62,9 +60,6 @@ export const AddSongEventBySavedSongs = ({
   const [songTypeFilter, setSongTypeFilter] = useState<
     'all' | 'worship' | 'praise'
   >('all');
-  const [selectedVideoLyrics, setSelectedVideoLyrics] = useState<{
-    [songId: number]: number;
-  }>({});
 
   const [videoId, setVideoId] = useState<number>(0);
   const [songId, setSongId] = useState<string>('0');

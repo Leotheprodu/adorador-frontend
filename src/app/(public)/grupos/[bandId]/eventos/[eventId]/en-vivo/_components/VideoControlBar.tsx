@@ -3,7 +3,6 @@ import {
   $videoProgress,
   $videoProgressDuration,
   $videoDuration,
-  $videoPlayerReady,
 } from '@stores/videoPlayer';
 import { useEventGateway } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_hooks/useEventGateway';
 

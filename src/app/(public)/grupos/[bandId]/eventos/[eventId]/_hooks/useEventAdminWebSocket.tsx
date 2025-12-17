@@ -31,6 +31,7 @@ export const useEventAdminWebSocket = ({
       try {
         const token = await getValidAccessToken();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const socketConfig: any = {
           forceNew: true,
           reconnection: true,

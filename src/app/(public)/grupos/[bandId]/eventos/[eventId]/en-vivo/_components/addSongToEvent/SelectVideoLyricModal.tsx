@@ -38,7 +38,7 @@ export const SelectVideoLyricModal = ({
                     Seleccionar Video Lyric
                   </h2>
                   <p className="text-xs font-normal text-slate-500 dark:text-slate-300">
-                    "{songTitle}" tiene {videoLyrics.length} opciones
+                    &quot;{songTitle}&quot; tiene {videoLyrics.length} opciones
                   </p>
                 </div>
               </div>

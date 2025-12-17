@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -175,6 +175,6 @@ export const useVideoLyrics = ({
     isCreating,
     isDeleting,
     isSettingPreferred,
-    isLoading: isCreating || isDeleting || isSettingPreferred,
+    isLoading: isCreating || isDeleting || isSettingPreferred || isUpdating,
   };
 };
