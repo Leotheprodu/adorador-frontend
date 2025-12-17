@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from "@heroui/react";
+} from '@heroui/react';
 import { $event } from '@stores/event';
 import React, { useEffect, useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -15,6 +15,10 @@ import { songTypes } from '@global/config/constants';
 import { getSongsOfBand } from '@bands/[bandId]/canciones/_services/songsOfBandService';
 import { SearchIcon, MicrophoneIcon } from '@global/icons';
 import { useBandSongsWebSocket } from '@global/hooks/useBandSongsWebSocket';
+import { SelectVideoLyricModal } from './SelectVideoLyricModal';
+import type { SongPropsWithCount } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
+import { useQueryClient } from '@tanstack/react-query';
+import { setPreferredVideoLyricsService } from '@bands/[bandId]/canciones/[songId]/_services/videoLyricsService';
 
 export const AddSongEventBySavedSongs = ({
   params,
@@ -22,12 +26,14 @@ export const AddSongEventBySavedSongs = ({
   eventSongs: eventSongsProp,
   isOpen,
   onClose,
+  eventMode: eventModeProp,
 }: {
   params: { bandId: string; eventId: string };
   refetch: () => void;
   eventSongs?: { order: number; transpose: number; song: { id: number } }[];
   isOpen: boolean;
   onClose: () => void;
+  eventMode?: string;
 }) => {
   // Usar directamente el prop o el store como fallback
   const eventFromStore = useStore($event);
@@ -35,9 +41,12 @@ export const AddSongEventBySavedSongs = ({
     () => eventSongsProp || eventFromStore.songs || [],
     [eventSongsProp, eventFromStore.songs],
   );
+  // Usar eventMode del prop si está disponible, sino del store
+  const eventMode = eventModeProp || eventFromStore.eventMode;
 
   const { bandId } = params;
   const { data } = getSongsOfBand({ bandId });
+  const queryClient = useQueryClient();
 
   // Conectar al WebSocket para actualizaciones en tiempo real
   useBandSongsWebSocket({
@@ -52,7 +61,20 @@ export const AddSongEventBySavedSongs = ({
     'all' | 'worship' | 'praise'
   >('all');
 
+  const [videoId, setVideoId] = useState<number>(0);
+  const [songId, setSongId] = useState<string>('0');
+
+  // Estado para el modal de selección de video lyric
+  const [videoLyricModalOpen, setVideoLyricModalOpen] = useState(false);
+  const [songForVideoSelection, setSongForVideoSelection] =
+    useState<SongPropsWithCount | null>(null);
+
   const [filteredSongs, setFilteredSongs] = useState(data);
+  const { mutate: setPreferred } = setPreferredVideoLyricsService({
+    bandId,
+    songId,
+    videoId,
+  });
 
   // Function to normalize text (remove accents and convert to lowercase)
   const normalizeText = (text: string) => {
@@ -66,6 +88,11 @@ export const AddSongEventBySavedSongs = ({
     let filtered = data?.filter(
       (song) => !eventSongs.some((track) => track.song.id === song.id),
     );
+
+    // Filter by video lyrics for videolyrics events
+    if (eventMode === 'videolyrics') {
+      filtered = filtered?.filter((song) => song._count.videoLyrics > 0);
+    }
 
     // Apply search filter
     if (searchTerm !== '') {
@@ -92,7 +119,7 @@ export const AddSongEventBySavedSongs = ({
     );
 
     setFilteredSongs(filtered);
-  }, [searchTerm, songTypeFilter, data, eventSongs]);
+  }, [searchTerm, songTypeFilter, data, eventSongs, eventMode]);
 
   const { status, mutate } = addSongsToEventService({ params });
 
@@ -119,29 +146,74 @@ export const AddSongEventBySavedSongs = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  const handleSelectSong = (songId: number) => {
+  const handleSelectSong = (song: SongPropsWithCount) => {
+    const songId = song.id;
     const eventSongsLength = eventSongs.length;
     if (songId) {
-      const isSelected = selectedSongs.some((song) => song.songId === songId);
-      const isAlreadyInEvent = eventSongs.some(
-        (song) => song.song.id === songId,
-      );
+      const isSelected = selectedSongs.some((s) => s.songId === songId);
+      const isAlreadyInEvent = eventSongs.some((s) => s.song.id === songId);
       if (isAlreadyInEvent) {
         toast.error('La canción ya está en el evento');
         return;
       }
       if (isSelected) {
-        setSelectedSongs(
-          selectedSongs.filter((song) => song.songId !== songId),
-        );
+        // Deseleccionar
+        setSelectedSongs(selectedSongs.filter((s) => s.songId !== songId));
       } else {
-        const newOrder = eventSongsLength + selectedSongs.length + 1;
-        setSelectedSongs([
-          ...selectedSongs,
-          { songId, transpose: 0, order: newOrder },
-        ]);
+        // Si tiene múltiples video lyrics, abrir modal de selección
+        if (song.videoLyrics && song.videoLyrics.length > 1) {
+          setSongForVideoSelection(song);
+          setVideoLyricModalOpen(true);
+        } else {
+          // Agregar directamente
+          const newOrder = eventSongsLength + selectedSongs.length + 1;
+          setSelectedSongs([
+            ...selectedSongs,
+            { songId, transpose: 0, order: newOrder },
+          ]);
+        }
       }
     }
+  };
+
+  const handleVideoLyricSelected = async (videoLyricId: number) => {
+    if (!songForVideoSelection) return;
+
+    // Configurar los IDs para el hook
+    setSongId(songForVideoSelection.id.toString());
+    setVideoId(videoLyricId);
+
+    setPreferred(null, {
+      onSuccess: () => {
+        // 2. Agregar la canción al evento (usará automáticamente el preferido)
+        const eventSongsLength = eventSongs.length;
+        const newOrder = eventSongsLength + selectedSongs.length + 1;
+
+        setSelectedSongs([
+          ...selectedSongs,
+          { songId: songForVideoSelection.id, transpose: 0, order: newOrder },
+        ]);
+
+        // 3. Mostrar mensaje de confirmación
+        const selectedVideo = songForVideoSelection.videoLyrics?.find(
+          (v) => v.id === videoLyricId,
+        );
+        toast.success(
+          `"${songForVideoSelection.title}" agregada con: "${selectedVideo?.title || 'Video ' + videoLyricId}"`,
+        );
+
+        // 4. Actualizar cache
+        queryClient.invalidateQueries({ queryKey: ['songs', bandId] });
+        queryClient.invalidateQueries({ queryKey: ['SongsOfBand', bandId] });
+
+        // 5. Limpiar estado
+        setSongForVideoSelection(null);
+      },
+      onError: () => {
+        toast.error('Error al actualizar video lyric preferido');
+        setSongForVideoSelection(null);
+      },
+    });
   };
 
   const handleAddSongToEvent = () => {
@@ -153,6 +225,8 @@ export const AddSongEventBySavedSongs = ({
     setSelectedSongs([]);
     setSearchTerm('');
     setSongTypeFilter('all');
+    setSongForVideoSelection(null);
+    setVideoLyricModalOpen(false);
   };
 
   return (
@@ -189,6 +263,11 @@ export const AddSongEventBySavedSongs = ({
                     </span>
                   )}
                 </div>
+                {eventMode === 'videolyrics' && (
+                  <span className="text-xs font-medium text-amber-600">
+                    📹 Solo canciones con video lyrics
+                  </span>
+                )}
                 {filteredSongs && filteredSongs.length > 0 && (
                   <span className="text-xs text-slate-500">
                     {filteredSongs.length} canciones disponibles
@@ -262,35 +341,42 @@ export const AddSongEventBySavedSongs = ({
                                 ? 'border-brand-purple-600 bg-gradient-to-r from-brand-purple-50 to-brand-blue-50 shadow-sm dark:border-brand-purple-400 dark:from-brand-purple-900 dark:to-brand-blue-900'
                                 : 'border-slate-200 hover:border-brand-purple-300 hover:bg-slate-50 hover:shadow-sm dark:border-slate-700 dark:bg-black dark:hover:bg-gray-800'
                             }`}
-                            onClick={() => handleSelectSong(song.id)}
+                            onClick={() => handleSelectSong(song)}
                           >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="font-semibold text-slate-800 dark:text-slate-100">
-                                  {song.title}
-                                </p>
-                                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                                  {song.artist && (
-                                    <span className="flex items-center gap-1">
-                                      <MicrophoneIcon className="h-3 w-3" />{' '}
-                                      {song.artist}
+                            <div className="flex flex-col gap-2">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <p className="font-semibold text-slate-800 dark:text-slate-100">
+                                    {song.title}
+                                  </p>
+                                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                                    {song.artist && (
+                                      <span className="flex items-center gap-1">
+                                        <MicrophoneIcon className="h-3 w-3" />{' '}
+                                        {song.artist}
+                                      </span>
+                                    )}
+                                    {song.key && (
+                                      <span className="rounded bg-slate-200 px-1.5 py-0.5 font-mono font-semibold">
+                                        {song.key}
+                                      </span>
+                                    )}
+                                    <span className="rounded bg-brand-purple-100 px-1.5 py-0.5 text-brand-purple-700">
+                                      {songTypes[song.songType].es}
                                     </span>
-                                  )}
-                                  {song.key && (
-                                    <span className="rounded bg-slate-200 px-1.5 py-0.5 font-mono font-semibold">
-                                      {song.key}
-                                    </span>
-                                  )}
-                                  <span className="rounded bg-brand-purple-100 px-1.5 py-0.5 text-brand-purple-700">
-                                    {songTypes[song.songType].es}
-                                  </span>
+                                    {song._count?.videoLyrics > 0 && (
+                                      <span className="rounded bg-green-100 px-1.5 py-0.5 font-semibold text-green-700">
+                                        📹 {song._count.videoLyrics}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
+                                {isSelected && (
+                                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white">
+                                    ✓
+                                  </span>
+                                )}
                               </div>
-                              {isSelected && (
-                                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 text-white">
-                                  ✓
-                                </span>
-                              )}
                             </div>
                           </li>
                         );
@@ -334,6 +420,20 @@ export const AddSongEventBySavedSongs = ({
           </>
         )}
       </ModalContent>
+
+      {/* Modal de selección de video lyric */}
+      {songForVideoSelection && (
+        <SelectVideoLyricModal
+          isOpen={videoLyricModalOpen}
+          onClose={() => {
+            setVideoLyricModalOpen(false);
+            setSongForVideoSelection(null);
+          }}
+          songTitle={songForVideoSelection.title}
+          videoLyrics={songForVideoSelection.videoLyrics || []}
+          onSelect={handleVideoLyricSelected}
+        />
+      )}
     </Modal>
   );
 };

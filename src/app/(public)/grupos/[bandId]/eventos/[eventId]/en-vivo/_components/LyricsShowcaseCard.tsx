@@ -74,7 +74,7 @@ export const LyricsShowcaseCard = ({
             {eventConfig.showChords &&
               dataOfLyricSelected?.chords &&
               dataOfLyricSelected.chords.length > 0 && (
-                <div className="font-kalam m-0 grid w-full min-w-0 grid-cols-5 justify-items-start gap-2 p-0">
+                <div className="font-momotrust m-0 grid w-full min-w-0 grid-cols-5 justify-items-start gap-2 p-0">
                   {dataOfLyricSelected.chords
                     .sort((a, b) => a.position - b.position)
                     .map((chord) => (
@@ -130,7 +130,7 @@ export const LyricsShowcaseCard = ({
                     ],
                   filter: 'brightness(1.5)',
                 }}
-                className={`${eventConfig.isProjectorMode ? 'font-momotrust' : 'font-kalam'} m-0 w-full p-0 ${shouldCenter ? 'text-center' : ''} ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
+                className={`font-momotrust m-0 w-full p-0 ${shouldCenter ? 'text-center' : ''} ${isFullscreen ? 'sm:text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-lg lg:text-xl'}`}
               >
                 {dataOfLyricSelected?.lyrics}
               </h1>

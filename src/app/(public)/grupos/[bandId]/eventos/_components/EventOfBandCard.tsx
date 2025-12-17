@@ -1,7 +1,13 @@
 import { formatDate, formatTime } from '@global/utils/dataFormat';
 import Link from 'next/link';
 import { EventsProps } from '../_interfaces/eventsInterface';
-import { CalendarIcon, ClockIcon, CheckIcon } from '@global/icons';
+import {
+  CalendarIcon,
+  ClockIcon,
+  CheckIcon,
+  GuitarIcon,
+  VideoCameraIcon,
+} from '@global/icons';
 import { useEventTimeLeft } from '@global/hooks/useEventTimeLeft';
 
 export const EventOfBandCard = ({
@@ -27,24 +33,46 @@ export const EventOfBandCard = ({
         >
           {/* Badge de estado */}
           <div className="mb-3 flex items-center justify-between">
-            <div
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                isUpcoming
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-slate-100 text-slate-600'
-              }`}
-            >
-              {isUpcoming ? (
-                <>
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
-                  <span>Próximo</span>
-                </>
-              ) : (
-                <>
-                  <CheckIcon className="h-3 w-3" />
-                  <span>Finalizado</span>
-                </>
-              )}
+            <div className="flex items-center gap-2">
+              <div
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  isUpcoming
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-slate-100 text-slate-600'
+                }`}
+              >
+                {isUpcoming ? (
+                  <>
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+                    <span>Próximo</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckIcon className="h-3 w-3" />
+                    <span>Finalizado</span>
+                  </>
+                )}
+              </div>
+              {/* Event Type Badge */}
+              <div
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  event.eventMode === 'videolyrics'
+                    ? 'bg-brand-blue-100 text-brand-blue-700 dark:bg-brand-blue-900/40 dark:text-brand-blue-300'
+                    : 'bg-brand-purple-100 text-brand-purple-700 dark:bg-brand-purple-900/40 dark:text-brand-purple-300'
+                }`}
+              >
+                {event.eventMode === 'videolyrics' ? (
+                  <>
+                    <VideoCameraIcon className="h-3 w-3" />
+                    <span>Video Lyrics</span>
+                  </>
+                ) : (
+                  <>
+                    <GuitarIcon className="h-3 w-3" />
+                    <span>En Vivo</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 

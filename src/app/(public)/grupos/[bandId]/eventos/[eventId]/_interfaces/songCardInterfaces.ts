@@ -2,24 +2,26 @@ import { EventSongsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInter
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 
 export interface SongCardWithControlsProps {
-    data: EventSongsProps;
-    index: number;
-    isAdminEvent: boolean;
-    songOrder: EventSongsProps[];
-    setSongOrder: (songs: EventSongsProps[]) => void;
+  data: EventSongsProps;
+  index: number;
+  isAdminEvent: boolean;
+  songOrder: EventSongsProps[];
+  setSongOrder: (songs: EventSongsProps[]) => void;
+  params: { bandId: string; eventId: string };
+  refetch: () => void;
 }
 
 export interface TransposeControlPopoverProps {
-    data: EventSongsProps;
-    index: number;
-    songOrder: EventSongsProps[];
-    setSongOrder: (songs: EventSongsProps[]) => void;
+  data: EventSongsProps;
+  index: number;
+  songOrder: EventSongsProps[];
+  setSongOrder: (songs: EventSongsProps[]) => void;
 }
 
 export interface SongCardContentProps {
-    data: EventSongsProps;
+  data: EventSongsProps;
 }
 
 export interface SongDragHandleProps {
-    dragHandleProps: DraggableProvidedDragHandleProps | null;
+  dragHandleProps: DraggableProvidedDragHandleProps | null;
 }

@@ -10,7 +10,7 @@ import {
   ModalHeader,
   useDisclosure,
   Button,
-} from "@heroui/react";
+} from '@heroui/react';
 import { SongPropsWithCount } from '../_interfaces/songsInterface';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import {
@@ -64,6 +64,7 @@ export const SongTableRow = ({
     bandId,
     songId: song.id,
     songTitle: song.title,
+    songVideoLyricsCount: song._count?.videoLyrics || 0,
   });
 
   // Preparar datos para edición (convertir SongPropsWithCount a SongPropsWithoutId)
@@ -97,8 +98,10 @@ export const SongTableRow = ({
   return (
     <>
       <tr
-        className={`group border-b border-slate-100 dark:border-slate-800 transition-colors duration-150 hover:bg-brand-purple-50/50 dark:hover:bg-gray-900 ${
-          isSelected ? 'bg-brand-purple-100/30 dark:bg-brand-purple-950/40' : 'bg-white dark:bg-gray-950'
+        className={`group border-b border-slate-100 transition-colors duration-150 hover:bg-brand-purple-50/50 dark:border-slate-800 dark:hover:bg-gray-900 ${
+          isSelected
+            ? 'bg-brand-purple-100/30 dark:bg-brand-purple-950/40'
+            : 'bg-white dark:bg-gray-950'
         }`}
       >
         {/* Título - Mobile y Desktop */}
@@ -131,6 +134,11 @@ export const SongTableRow = ({
               {song._count.lyrics === 0 && (
                 <span className="rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-700">
                   Sin letra
+                </span>
+              )}
+              {song._count?.videoLyrics > 0 && (
+                <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-semibold text-green-700">
+                  📹 {song._count.videoLyrics}
                 </span>
               )}
             </div>
@@ -179,6 +187,17 @@ export const SongTableRow = ({
             <span className="inline-flex items-center gap-1 text-sm text-emerald-600">
               <CheckIcon className="h-4 w-4" />
             </span>
+          )}
+        </td>
+
+        {/* Video Lyrics - Solo Desktop */}
+        <td className="hidden px-4 py-3.5 sm:table-cell">
+          {song._count?.videoLyrics > 0 ? (
+            <span className="inline-flex items-center gap-1 rounded-lg bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+              📹 {song._count.videoLyrics}
+            </span>
+          ) : (
+            <span className="text-xs italic text-slate-400">-</span>
           )}
         </td>
 
