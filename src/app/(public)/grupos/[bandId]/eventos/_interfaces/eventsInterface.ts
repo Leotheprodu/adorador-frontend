@@ -43,6 +43,7 @@ export interface SongEventProps {
   title: string;
   artist: string | null;
   songType: 'worship' | 'praise';
+  youtubeLink?: string | null;
   key: keysType | null;
   lyrics: LyricsProps[];
   videoLyrics?: {
