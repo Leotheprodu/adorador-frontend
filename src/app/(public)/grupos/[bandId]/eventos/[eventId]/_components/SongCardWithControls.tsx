@@ -1,10 +1,12 @@
-import { MusicNoteIcon, EditIcon, TrashIcon } from '@global/icons';
+import { MusicNoteIcon, EditIcon, TrashIcon, PlayIcon } from '@global/icons';
 import { Draggable } from '@hello-pangea/dnd';
 import { SongCardWithControlsProps } from '../_interfaces/songCardInterfaces';
 import { SongCardContent } from './SongCardContent';
 import { SongDragHandle } from './SongDragHandle';
 import { TransposeControlPopover } from './TransposeControlPopover';
 import Link from 'next/link';
+import { $SelectedSong } from '@stores/player';
+import { useStore } from '@nanostores/react';
 import {
   useDisclosure,
   Modal,
@@ -26,6 +28,7 @@ export const SongCardWithControls = ({
   params,
   refetch,
 }: SongCardWithControlsProps) => {
+  const selectedSong = useStore($SelectedSong);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { mutate: mutateDeleteSongs, isPending: isPendingDeleteSongs } =
     eventDeleteSongs({ params });
@@ -46,16 +49,63 @@ export const SongCardWithControls = ({
     );
   };
 
+  const handlePlaySong = () => {
+    if (data.song.youtubeLink) {
+      $SelectedSong.set({
+        id: data.song.id,
+        name: data.song.title,
+        youtubeLink: data.song.youtubeLink,
+      });
+    }
+  };
+
+  const isSelected = selectedSong?.id === data.song.id;
+
   // Si no es admin, mostrar sin drag & drop ni botones
   if (!isAdminEvent) {
     return (
-      <div className="group flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-brand-purple-200 hover:shadow-md dark:bg-black">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-sm font-bold text-brand-purple-700">
+      <div
+        className={`group flex items-center gap-3 rounded-lg border p-4 transition-all duration-300 hover:shadow-md dark:bg-black ${
+          isSelected
+            ? 'border-emerald-400 bg-emerald-50/50 shadow-md ring-1 ring-emerald-200 dark:border-emerald-600 dark:bg-emerald-950/20 dark:ring-emerald-800/30'
+            : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-200 dark:border-slate-800'
+        }`}
+      >
+        <span
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-all duration-300 ${
+            isSelected
+              ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg ring-2 ring-emerald-100 dark:ring-emerald-900/50'
+              : 'bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-brand-purple-700'
+          }`}
+        >
           {data.order}
         </span>
         <SongCardContent data={data} />
-        <div className="text-slate-300 transition-colors duration-200 group-hover:text-brand-purple-400">
-          <MusicNoteIcon className="h-5 w-5" />
+        <div className="flex items-center gap-2">
+          {data.song.youtubeLink && (
+            <button
+              onClick={handlePlaySong}
+              className={`rounded-full p-2 transition-all duration-200 hover:scale-110 active:scale-95 ${
+                isSelected
+                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-400'
+                  : 'hover:bg-emerald-100 dark:hover:bg-emerald-900'
+              }`}
+              title="Reproducir canción"
+            >
+              <PlayIcon
+                className={`h-5 w-5 ${isSelected ? 'text-emerald-700' : 'text-emerald-600 dark:text-emerald-400'}`}
+              />
+            </button>
+          )}
+          <div
+            className={`transition-colors duration-200 ${
+              isSelected
+                ? 'text-emerald-500'
+                : 'text-slate-300 group-hover:text-brand-purple-400'
+            }`}
+          >
+            <MusicNoteIcon className="h-5 w-5" />
+          </div>
         </div>
       </div>
     );
@@ -69,17 +119,25 @@ export const SongCardWithControls = ({
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`group flex items-center gap-3 rounded-lg border-2 p-4 transition-all duration-200 ${
+            className={`group flex items-center gap-3 rounded-lg border-2 p-4 transition-all duration-300 ${
               snapshot.isDragging
                 ? 'z-50 scale-105 border-brand-purple-400 bg-brand-purple-50 shadow-2xl dark:border-brand-purple-800 dark:bg-brand-purple-800'
-                : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-black dark:hover:border-brand-purple-400'
+                : isSelected
+                  ? 'border-emerald-400 bg-emerald-50/50 shadow-lg ring-1 ring-emerald-200 dark:border-emerald-600 dark:bg-emerald-950/20 dark:ring-emerald-800/30'
+                  : 'border-slate-200 bg-white shadow-sm hover:border-brand-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-black dark:hover:border-brand-purple-400'
             }`}
           >
             {/* Drag Handle */}
             <SongDragHandle dragHandleProps={provided.dragHandleProps} />
 
             {/* Número de orden */}
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-sm font-bold text-brand-purple-700">
+            <span
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-all duration-300 ${
+                isSelected
+                  ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg ring-2 ring-emerald-100 dark:ring-emerald-900/50'
+                  : 'bg-gradient-to-br from-brand-purple-100 to-brand-blue-100 text-brand-purple-700'
+              }`}
+            >
               {data.order}
             </span>
 
@@ -94,11 +152,28 @@ export const SongCardWithControls = ({
               setSongOrder={setSongOrder}
             />
 
+            {/* Play Button */}
+            {data.song.youtubeLink && (
+              <button
+                onClick={handlePlaySong}
+                className={`rounded-full p-2 transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  isSelected
+                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-400'
+                    : 'hover:bg-emerald-100 dark:hover:bg-emerald-900'
+                }`}
+                title="Reproducir canción"
+              >
+                <PlayIcon
+                  className={`h-4 w-4 ${isSelected ? 'text-emerald-700' : 'text-emerald-600 dark:text-emerald-400'}`}
+                />
+              </button>
+            )}
+
             {/* Edit Button */}
             <Link
               href={`/grupos/${params.bandId}/canciones/${data.song.id}`}
               className="rounded-full p-2 transition-all duration-200 hover:scale-110 hover:bg-brand-blue-100 active:scale-95 dark:hover:bg-brand-blue-900"
-              title="Editar canción"
+              title="Ir a canción"
             >
               <EditIcon className="h-4 w-4 text-brand-blue-600 dark:text-brand-blue-400" />
             </Link>

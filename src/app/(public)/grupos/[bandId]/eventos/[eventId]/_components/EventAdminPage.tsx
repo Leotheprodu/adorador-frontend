@@ -11,11 +11,15 @@ import { EventInfoCard } from './EventInfoCard';
 import { EventQuickActions } from './EventQuickActions';
 import { EventStatsCard } from './EventStatsCard';
 import { EventAdminPageProps } from '../_interfaces/eventAdminInterfaces';
+import { useEventPlaylist } from '../_hooks/useEventPlaylist';
 
 export const EventAdminPage = ({ params }: EventAdminPageProps) => {
   const router = useRouter();
   const { event, isLoading, refetch } = useEventAdminPage({ params });
   const { eventTimeLeft } = useEventTimeLeft(event?.date || '');
+
+  // Sync event songs with global playlist
+  useEventPlaylist(event?.songs);
 
   // Custom hooks for logic
   const { isAdminEvent, showActionButtons } = useEventPermissions();
