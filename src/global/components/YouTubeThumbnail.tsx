@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Button } from '@heroui/react';
 import { PlayIcon } from '@global/icons';
 
@@ -16,13 +15,12 @@ export const YouTubeThumbnail = ({
   onPlay,
 }: YouTubeThumbnailProps) => {
   return (
-    <div className="group relative flex aspect-video w-full cursor-pointer justify-center overflow-hidden rounded-xl">
-      <Image
+    <div className="group relative flex aspect-video w-full cursor-pointer justify-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={thumbnail}
         alt={title || 'Video de YouTube'}
-        fill
         className="object-cover transition-transform duration-300 group-hover:scale-105"
-        unoptimized
       />
 
       {/* Overlay oscuro */}

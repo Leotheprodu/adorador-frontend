@@ -20,7 +20,6 @@ import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSo
 import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';
 import { getYouTubeThumbnail } from '@global/utils/formUtils';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import Image from 'next/image';
 import { RehearsalControlsModal } from './RehearsalControlsModal';
 import { VideoLyricsModal } from './VideoLyricsModal';
 import { getVideoLyricsService } from '../_services/videoLyricsService';
@@ -99,13 +98,11 @@ export const SongBasicInfo = ({
           {/* Thumbnail de YouTube si existe */}
           {data?.youtubeLink && (
             <div className="flex-shrink-0">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={getYouTubeThumbnail(data.youtubeLink, 'maxresdefault')}
                 alt={data.title}
-                width={288}
-                height={160}
                 className="h-48 w-full rounded-xl object-cover lg:h-40 lg:w-72"
-                unoptimized
               />
             </div>
           )}
