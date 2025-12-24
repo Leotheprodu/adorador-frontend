@@ -43,7 +43,7 @@ export async function generateMetadata({
         images: ogImage ? [ogImage] : undefined,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: 'Canción - Zamr',
       description: 'Detalles de la canción en Zamr.',
@@ -68,7 +68,7 @@ export default async function SongsById({
       },
     );
     songData = await response.json();
-  } catch (e) {
+  } catch {
     // Ignore error for schema
   }
 

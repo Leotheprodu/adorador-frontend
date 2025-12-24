@@ -29,7 +29,7 @@ export async function generateMetadata({
         description: `Información y repertorio de ${band.name}.`,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: 'Grupo de Alabanza',
       description: 'Detalles del grupo en Zamr.',
