@@ -3,6 +3,8 @@ export interface SongProps extends SongPropsWithoutId {
   videoLyrics?: SongVideoLyrics[];
 }
 
+export type SongSEOProps = Pick<SongProps, 'title' | 'artist' | 'youtubeLink'>;
+
 export interface SongPropsWithCount extends SongProps {
   _count: {
     events: number;

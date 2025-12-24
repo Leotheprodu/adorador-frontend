@@ -1,4 +1,6 @@
 'use client';
+import { useStore } from '@nanostores/react';
+import { $user } from '@global/stores/users';
 import { UIGuard } from '@global/utils/UIGuard';
 import { SongBasicInfo } from './SongBasicInfo';
 import { StoredLyricsAlert } from './StoredLyricsAlert';
@@ -11,6 +13,7 @@ export const SongIdMainPage = ({
 }: {
   params: { bandId: string; songId: string };
 }) => {
+  const user = useStore($user);
   const {
     data,
     isLoading,
@@ -30,12 +33,14 @@ export const SongIdMainPage = ({
     handleBackToSongs,
   } = useSongIdPage(params);
 
+  const isMember = user.membersofBands.some(
+    (mb) => mb.band.id === parseInt(params.bandId),
+  );
+
+  const hasLyrics = LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0;
+
   return (
-    <UIGuard
-      isLoggedIn
-      checkBandId={parseInt(params.bandId)}
-      isLoading={isLoading}
-    >
+    <UIGuard isLoading={isLoading}>
       <div className="flex flex-col items-center overflow-hidden">
         {/* Alert for stored lyrics */}
         <StoredLyricsAlert />
@@ -57,25 +62,34 @@ export const SongIdMainPage = ({
             isEditMode={isEditMode}
             isPracticeMode={isPracticeMode}
             onPracticeModeChange={setIsPracticeMode}
+            isMember={isMember}
           />
         </section>
 
-        {/* Lyrics Section */}
-        <LyricsSection
-          params={params}
-          songTitle={data?.title}
-          lyrics={LyricsOfCurrentSong}
-          lyricsGrouped={lyricsGrouped}
-          isEditMode={isEditMode}
-          isPracticeMode={isPracticeMode}
-          transpose={transpose}
-          showChords={eventConfig.showChords}
-          lyricsScale={eventConfig.lyricsScale}
-          chordPreferences={chordPreferences}
-          refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-          mutateUploadLyricsByFile={mutateUploadLyricsByFile}
-          onEditModeChange={setIsEditMode}
-        />
+        {/* Lyrics Section or Empty State for Non-members */}
+        {hasLyrics || isMember ? (
+          <LyricsSection
+            params={params}
+            songTitle={data?.title}
+            lyrics={LyricsOfCurrentSong}
+            lyricsGrouped={lyricsGrouped}
+            isEditMode={isEditMode}
+            isPracticeMode={isPracticeMode}
+            transpose={transpose}
+            showChords={eventConfig.showChords}
+            lyricsScale={eventConfig.lyricsScale}
+            chordPreferences={chordPreferences}
+            refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+            mutateUploadLyricsByFile={mutateUploadLyricsByFile}
+            onEditModeChange={setIsEditMode}
+          />
+        ) : (
+          <div className="flex w-full max-w-4xl flex-col items-center justify-center py-20 text-center">
+            <p className="max-w-md text-lg font-medium text-slate-500 dark:text-slate-400">
+              Esta canción aún no cuenta con letra disponible para el público.
+            </p>
+          </div>
+        )}
       </div>
     </UIGuard>
   );
