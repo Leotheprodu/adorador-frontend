@@ -37,6 +37,7 @@ export const SongBasicInfo = ({
   isEditMode,
   isPracticeMode,
   onPracticeModeChange,
+  isMember = false,
 }: {
   data: SongPropsWithCount | undefined;
   status: QueryStatus;
@@ -49,6 +50,7 @@ export const SongBasicInfo = ({
   isEditMode?: boolean;
   isPracticeMode?: boolean;
   onPracticeModeChange?: (isPractice: boolean) => void;
+  isMember?: boolean;
 }) => {
   const playlist = useStore($PlayList);
   const selectedSong = useStore($SelectedSong);
@@ -144,31 +146,33 @@ export const SongBasicInfo = ({
             {/* Botones de acción */}
             <div className="flex flex-col gap-3">
               {/* Toggle Modo Práctica / Edición - Un solo botón intuitivo */}
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  onClick={() => onPracticeModeChange?.(!isPracticeMode)}
-                  className={`border-2 font-semibold transition-all ${
-                    isPracticeMode
-                      ? 'border-green-500 bg-green-100 text-green-700 hover:bg-green-200 dark:border-green-700 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-900'
-                      : 'border-orange-500 bg-orange-100 text-orange-700 hover:bg-orange-200 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-300 dark:hover:bg-orange-900'
-                  }`}
-                  startContent={
-                    isPracticeMode ? (
-                      <MusicNoteIcon className="h-4 w-4" />
-                    ) : (
-                      <EditIcon className="h-4 w-4" />
-                    )
-                  }
-                >
-                  {isPracticeMode ? 'Modo Práctica' : 'Modo Edición'}
-                </Button>
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  {isPracticeMode
-                    ? 'Haz clic para editar'
-                    : 'Haz clic para practicar'}
-                </span>
-              </div>
+              {isMember && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    onPress={() => onPracticeModeChange?.(!isPracticeMode)}
+                    className={`border-2 font-semibold transition-all ${
+                      isPracticeMode
+                        ? 'border-green-500 bg-green-100 text-green-700 hover:bg-green-200 dark:border-green-700 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-900'
+                        : 'border-orange-500 bg-orange-100 text-orange-700 hover:bg-orange-200 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-300 dark:hover:bg-orange-900'
+                    }`}
+                    startContent={
+                      isPracticeMode ? (
+                        <MusicNoteIcon className="h-4 w-4" />
+                      ) : (
+                        <EditIcon className="h-4 w-4" />
+                      )
+                    }
+                  >
+                    {isPracticeMode ? 'Modo Práctica' : 'Modo Edición'}
+                  </Button>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                    {isPracticeMode
+                      ? 'Haz clic para editar'
+                      : 'Haz clic para practicar'}
+                  </span>
+                </div>
+              )}
 
               {/* Botones según el modo */}
               <div className="flex flex-wrap gap-2">
@@ -201,7 +205,7 @@ export const SongBasicInfo = ({
 
                     <Button
                       size="sm"
-                      onClick={onOpen}
+                      onPress={onOpen}
                       className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
                       startContent={<GearIcon className="h-4 w-4" />}
                     >
@@ -209,29 +213,31 @@ export const SongBasicInfo = ({
                     </Button>
 
                     {/* Videos button - always visible */}
-                    <Button
-                      size="sm"
-                      onPress={onVideoLyricsOpen}
-                      startContent={<PlayIcon className="h-4 w-4" />}
-                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
-                    >
-                      Videos
-                      {videoLyrics && videoLyrics.length > 0 && (
-                        <Chip
-                          size="sm"
-                          variant="flat"
-                          color="primary"
-                          className="ml-1"
-                        >
-                          {videoLyrics.length}
-                        </Chip>
-                      )}
-                    </Button>
+                    {isMember && (
+                      <Button
+                        size="sm"
+                        onPress={onVideoLyricsOpen}
+                        startContent={<PlayIcon className="h-4 w-4" />}
+                        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
+                      >
+                        Videos
+                        {videoLyrics && videoLyrics.length > 0 && (
+                          <Chip
+                            size="sm"
+                            variant="flat"
+                            color="primary"
+                            className="ml-1"
+                          >
+                            {videoLyrics.length}
+                          </Chip>
+                        )}
+                      </Button>
+                    )}
                   </>
                 )}
 
-                {/* Botones de Edición (solo visibles en modo edición) */}
-                {!isPracticeMode && (
+                {/* Botones de Edición (solo visibles en modo edición y si es miembro) */}
+                {!isPracticeMode && isMember && (
                   <>
                     {lyrics && lyrics.length > 0 && onEditModeChange && (
                       <Button
@@ -318,6 +324,7 @@ export const SongBasicInfo = ({
       />
 
       {/* Modal de video lyrics */}
+
       <VideoLyricsModal
         isOpen={isVideoLyricsOpen}
         onClose={onVideoLyricsClose}

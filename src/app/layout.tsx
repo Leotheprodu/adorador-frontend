@@ -8,15 +8,33 @@ import { ThemeScript } from '@global/components/ThemeScript';
 export const metadata: Metadata = {
   title: {
     template: `%s | ${appName}`,
-    default: `${appName}`,
+    default: `${appName} | Herramientas para Ministerios de Alabanza`,
   },
   description: `${appDescription}`,
+  metadataBase: new URL(domain || 'https://www.zamr.app'),
+  alternates: {
+    canonical: '/',
+  },
+  keywords: [
+    'alabanza',
+    'adoración',
+    'ministerio cristiano',
+    'herramientas para iglesias',
+    'letras y acordes',
+    'gestión de eventos cristianos',
+    'equipo de alabanza',
+    'cancionero cristiano',
+  ],
+  authors: [{ name: 'Zamr Team' }],
+  creator: 'Zamr',
+  publisher: 'Zamr',
+  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',
+    apple: '/favicon.ico', // Placeholder for apple-touch-icon if not exists
   },
-  keywords: ['iglesia', 'herramientas', 'cristiano'],
   openGraph: {
-    title: `${appName}`,
+    title: `${appName} | Gestiona tu Ministerio de Alabanza`,
     description: `${appDescription}`,
     url: `${domain}`,
     siteName: `${appName}`,
@@ -25,30 +43,29 @@ export const metadata: Metadata = {
         url: '/images/adoradorxyz.webp',
         width: 1200,
         height: 628,
-        alt: 'Plataforma profesional para equipos de alabanza y liderazgo cristiano.',
+        alt: 'Zamr - Plataforma profesional para equipos de alabanza y liderazgo cristiano.',
       },
     ],
     locale: 'es_CR',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${appName} | Herramientas para Ministerios`,
+    description: `${appDescription}`,
+    images: ['/images/adoradorxyz.webp'],
+  },
   robots: {
     index: true,
     follow: true,
-    nocache: true,
     googleBot: {
       index: true,
       follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  /* twitter: {
-    card: 'summary_large_image',
-    title: `${appName}`,
-    description: `${appDescription}`,
-    siteId: '1467726470533754880',
-    creator: '@nextjs',
-    creatorId: '1467726470533754880',
-    images: ['https://nextjs.org/og.png'],
-  }, */
 };
 
 export default function RootLayout({
