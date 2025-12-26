@@ -3,7 +3,9 @@ import { PlayIcon } from '@global/icons/PlayIcon';
 import { PauseIcon } from '@global/icons/PauseIcon';
 import { ForwardIcon } from '@global/icons/ForwardIcon';
 import { BackwardIcon } from '@global/icons/BackwardIcon';
+
 import { PlayerControlsProps } from '../../_interfaces/musicPlayerInterfaces';
+import { MetronomeIcon } from '@global/icons';
 
 export const PlayerControls = ({
   playing,
@@ -12,9 +14,11 @@ export const PlayerControls = ({
   onPlayPause,
   onNext,
   onPrev,
+  onToggleTools,
+  isToolsOpen,
 }: PlayerControlsProps) => {
   return (
-    <div className="flex items-center justify-center gap-5">
+    <div className="relative flex items-center justify-center gap-5">
       {hasMultipleSongs && (
         <button
           type="button"
@@ -49,6 +53,19 @@ export const PlayerControls = ({
           aria-label="Siguiente"
         >
           <ForwardIcon className="text-primary-200" />
+        </button>
+      )}
+
+      {/* Tools Toggle Button */}
+      {onToggleTools && (
+        <button
+          type="button"
+          className={`absolute -right-16 flex items-center justify-center rounded-full p-2 transition-all duration-200 hover:bg-white/10 ${isToolsOpen ? 'bg-white/20 text-brand-purple-400' : 'text-primary-200/50 hover:text-primary-200'}`}
+          onClick={onToggleTools}
+          aria-label="Herramientas"
+          title="Mostrar/Ocultar Herramientas (Metrónomo)"
+        >
+          <MetronomeIcon className="h-5 w-5" />
         </button>
       )}
     </div>

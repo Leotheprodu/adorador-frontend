@@ -20,6 +20,7 @@ export interface SongPropsWithoutId {
   youtubeLink?: string;
   key?: string;
   tempo?: number;
+  startTime?: number;
 }
 
 export interface SongVideoLyrics {

@@ -4,6 +4,8 @@ export type selectedSongProps = {
   id: number;
   youtubeLink?: string;
   name: string;
+  tempo?: number;
+  startTime?: number;
 };
 
 export const $SelectedSong = atom<selectedSongProps | null>(null);

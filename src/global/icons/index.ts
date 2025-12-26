@@ -66,3 +66,4 @@ export * from './VideoCameraIcon';
 export * from './PaintBrushIcon';
 export * from './FaceSmileIcon';
 export * from './FaceFrownIcon';
+export * from './MetronomeIcon';

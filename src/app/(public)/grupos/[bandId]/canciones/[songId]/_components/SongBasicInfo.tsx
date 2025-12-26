@@ -8,7 +8,9 @@ import {
   EyeIcon,
   MusicNoteIcon,
   EditIcon,
+  WrenchIcon,
 } from '@global/icons';
+import Link from 'next/link';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
@@ -74,7 +76,13 @@ export const SongBasicInfo = ({
       data?.youtubeLink !== null
     ) {
       $PlayList.set([
-        { id: data?.id, name: data?.title, youtubeLink: data?.youtubeLink },
+        {
+          id: data?.id,
+          name: data?.title,
+          youtubeLink: data?.youtubeLink,
+          tempo: data?.tempo,
+          startTime: data?.startTime,
+        },
       ]);
     }
   }, [status, data, playlist]);
@@ -87,6 +95,8 @@ export const SongBasicInfo = ({
         id: data.id,
         name: data.title,
         youtubeLink: data.youtubeLink,
+        tempo: data.tempo,
+        startTime: data.startTime,
       });
     }
   };
@@ -274,6 +284,16 @@ export const SongBasicInfo = ({
                           {videoLyrics.length}
                         </Chip>
                       )}
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      as={Link}
+                      href={`/grupos/${bandId}/canciones/${songId}/herramientas`}
+                      className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
+                      startContent={<WrenchIcon className="h-4 w-4" />}
+                    >
+                      Herramientas
                     </Button>
 
                     <EditSongButton
