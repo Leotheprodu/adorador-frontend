@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useMusicPlayer } from '../../_hooks/useMusicPlayer';
 import { PlayerToast } from './PlayerToast';
 import { PlayerProgressBar } from './PlayerProgressBar';
 import { PlayerControls } from './PlayerControls';
 import { PlayerVolumeControl } from './PlayerVolumeControl';
+import { AnimatePresence } from 'framer-motion';
+import { FloatingPlayerTools } from './FloatingPlayerTools';
 
 export const MusicPlayer = () => {
   const {
@@ -17,6 +20,7 @@ export const MusicPlayer = () => {
     duration,
     volume,
     playerRef,
+    currentTime,
     handlePlay,
     handleDuration,
     handleProgress,
@@ -28,7 +32,15 @@ export const MusicPlayer = () => {
     setVolume,
   } = useMusicPlayer();
 
+  const [showTools, setShowTools] = useState(true);
+
   if (!selectedBeat) return null;
+
+  const hasMetronomeData =
+    selectedBeat &&
+    selectedBeat.tempo &&
+    selectedBeat.tempo > 0 &&
+    selectedBeat.startTime !== undefined;
 
   return (
     <>
@@ -48,6 +60,7 @@ export const MusicPlayer = () => {
               width="100%"
               height="100%"
               url={`https://www.youtube.com/watch?v=${selectedBeat?.youtubeLink}`}
+              progressInterval={50} // Critical for smooth metronome
               config={{
                 youtube: {
                   playerVars: {
@@ -69,6 +82,18 @@ export const MusicPlayer = () => {
           </div>
         </div>
 
+        {/* Floating Tools (Metronome) */}
+        <AnimatePresence>
+          {showTools && hasMetronomeData && (
+            <FloatingPlayerTools
+              tempo={selectedBeat.tempo || 0}
+              startTime={selectedBeat.startTime || 0}
+              currentTime={currentTime}
+              onClose={() => setShowTools(false)} // User closes it
+            />
+          )}
+        </AnimatePresence>
+
         <div className="z-20 flex flex-col items-center justify-center gap-2">
           <PlayerControls
             playing={playing}
@@ -77,6 +102,8 @@ export const MusicPlayer = () => {
             onPlayPause={handlePlayButtonClick}
             onNext={handleNextSong}
             onPrev={handlePrevSong}
+            onToggleTools={() => setShowTools(!showTools)} // Toggle button
+            isToolsOpen={showTools && (hasMetronomeData || false)}
           />
 
           <PlayerVolumeControl volume={volume} onVolumeChange={setVolume} />

@@ -16,6 +16,8 @@ export const useMusicPlayer = () => {
   const [duration, setDuration] = useState<string>('0:00');
   const [volume, setVolume] = useState<number>(0.5);
 
+  const [currentTime, setCurrentTime] = useState<number>(0);
+
   const handlePlay = () => {
     setEnded(false);
     setPlaying(true);
@@ -33,6 +35,7 @@ export const useMusicPlayer = () => {
     playedSeconds: number;
   }) => {
     setProgress(played);
+    setCurrentTime(playedSeconds);
     setProgressDuration(formatProgress(playedSeconds));
   };
 
@@ -122,6 +125,7 @@ export const useMusicPlayer = () => {
     duration,
     volume,
     playerRef,
+    currentTime,
 
     // Handlers
     handlePlay,

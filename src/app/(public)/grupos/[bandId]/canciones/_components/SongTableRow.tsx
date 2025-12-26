@@ -255,6 +255,8 @@ export const SongTableRow = ({
                     id: song.id,
                     name: song.title,
                     youtubeLink: song.youtubeLink,
+                    tempo: song.tempo,
+                    startTime: song.startTime,
                   });
                 }}
                 key="escuchar"
