@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Tab, Tabs, Spinner } from '@heroui/react';
+import { Spinner } from '@heroui/react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@global/icons/ArrowLeftIcon';
 import { UIGuard } from '@global/utils/UIGuard';
-import { BeatMapper } from './BeatMapper';
+import { SongTools } from './SongTools';
 import { getSongToolsData } from '../_services/getSongService';
 
 interface SongToolsEditorProps {
@@ -14,8 +14,6 @@ interface SongToolsEditorProps {
 }
 
 export const SongToolsEditor = ({ bandId, songId }: SongToolsEditorProps) => {
-  const [activeTool, setActiveTool] = useState('beat-mapper');
-
   // Fetch data client-side
   const { data: songData, isLoading } = getSongToolsData({ bandId, songId });
 
@@ -51,36 +49,8 @@ export const SongToolsEditor = ({ bandId, songId }: SongToolsEditorProps) => {
         {/* Main Content */}
         <div className="flex flex-1 overflow-hidden">
           <div className="flex h-full w-full flex-col p-4 md:p-6">
-            <Tabs
-              aria-label="Herramientas"
-              selectedKey={activeTool}
-              onSelectionChange={(key) => setActiveTool(key.toString())}
-              className="mb-4"
-              variant="underlined"
-              color="secondary"
-            >
-              <Tab key="beat-mapper" title="Mapeo de Beats & Tempo" />
-              <Tab
-                key="lyrics-sync"
-                title="Sincronizar Letras (Próximamente)"
-                isDisabled
-              />
-              <Tab
-                key="chords-sync"
-                title="Sincronizar Acordes (Próximamente)"
-                isDisabled
-              />
-            </Tabs>
-
             <div className="flex-1 overflow-hidden rounded-2xl bg-black/20 ring-1 ring-white/5">
-              {activeTool === 'beat-mapper' && songData && (
-                <BeatMapper
-                  youtubeLink={songData.youtubeLink}
-                  songId={songId}
-                  initialBpm={songData.tempo}
-                  initialStartTime={songData.startTime}
-                />
-              )}
+              {songData && <SongTools songData={songData} bandId={bandId} />}
             </div>
           </div>
         </div>

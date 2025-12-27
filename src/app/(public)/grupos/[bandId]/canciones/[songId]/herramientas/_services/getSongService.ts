@@ -7,6 +7,7 @@ export interface SongToolsData {
   youtubeLink?: string;
   tempo?: number;
   startTime?: number;
+  lyrics?: any[]; // Set to SongLyric[] if imported
 }
 
 export const getSongToolsData = ({

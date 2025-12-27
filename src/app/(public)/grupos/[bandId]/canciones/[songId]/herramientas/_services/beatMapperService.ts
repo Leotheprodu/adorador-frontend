@@ -3,8 +3,10 @@ import { Server1API } from '@global/config/constants';
 import { SongToolsData } from './getSongService';
 
 interface SaveSongDataRequest {
-  startTime: number;
-  tempo: number;
+  startTime?: number;
+  tempo?: number;
+  lyrics?: any[]; // Using any[] temporarily or import SongLyric
+  chords?: any[];
 }
 
 interface SaveSongDataResponse {

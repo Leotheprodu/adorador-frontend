@@ -1,5 +1,6 @@
-import { useRef, useEffect } from 'react';
+import { SongLyric } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 import { BeatMarker } from '../_interfaces/beatMapperInterfaces';
+import { useEffect, useRef } from 'react';
 
 interface TimelineVisualizerProps {
   currentTime: number;
@@ -9,6 +10,7 @@ interface TimelineVisualizerProps {
   beats: BeatMarker[];
   startTime: number;
   zoomLevel: number;
+  lyrics?: SongLyric[];
 }
 
 export const TimelineVisualizer = ({
@@ -19,6 +21,7 @@ export const TimelineVisualizer = ({
   beats,
   startTime,
   zoomLevel,
+  lyrics = [],
 }: TimelineVisualizerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +111,22 @@ export const TimelineVisualizer = ({
             </span>
           </div>
         )}
+
+        {/* Lyrics Markers */}
+        {lyrics?.map((lyric) => {
+          if (lyric.startTime <= 0) return null;
+          return (
+            <div
+              key={`lyric-${lyric.id}`}
+              className="pointer-events-none absolute bottom-0 top-1/2 z-20 w-0.5 bg-cyan-400"
+              style={{ left: `${(lyric.startTime / (duration || 1)) * 100}%` }}
+            >
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-cyan-500/20 px-1 text-[8px] text-cyan-200">
+                L
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 export interface SongProps extends SongPropsWithoutId {
   id: number;
   videoLyrics?: SongVideoLyrics[];
+  lyrics?: SongLyric[];
+  // chords?: SongChord[]; // Future
 }
 
 export type SongSEOProps = Pick<SongProps, 'title' | 'artist' | 'youtubeLink'>;
@@ -32,4 +34,23 @@ export interface SongVideoLyrics {
   description?: string;
   priority: number;
   isPreferred: boolean;
+}
+
+export interface SongLyric {
+  id: number;
+  songId?: number;
+  structureId?: number;
+  lyrics: string;
+  position: number;
+  startTime: number;
+}
+
+export interface SongChord {
+  id: number;
+  lyricId: number;
+  rootNote: string;
+  chordQuality?: string;
+  slashChord?: string;
+  position: number;
+  startTime: number;
 }
