@@ -1,13 +1,25 @@
 import { useStore } from '@nanostores/react';
 import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { $PlayList, $SelectedSong } from '@stores/player';
+import {
+  $PlayList,
+  $SelectedSong,
+  $CurrentTime,
+  $IsPlaying,
+  $PlayerRef,
+} from '@stores/player';
 import { formatDuration, formatProgress } from '../_utils/timeFormatters';
 
 export const useMusicPlayer = () => {
   const playlist = useStore($PlayList);
   const selectedBeat = useStore($SelectedSong);
   const playerRef = useRef<ReactPlayer>(null);
+
+  useEffect(() => {
+    if (playerRef.current) {
+      $PlayerRef.set(playerRef.current);
+    }
+  }, [playerRef.current]);
 
   const [playing, setPlaying] = useState<boolean>(true);
   const [ended, setEnded] = useState<boolean>(false);
@@ -36,6 +48,7 @@ export const useMusicPlayer = () => {
   }) => {
     setProgress(played);
     setCurrentTime(playedSeconds);
+    $CurrentTime.set(playedSeconds);
     setProgressDuration(formatProgress(playedSeconds));
   };
 
@@ -108,6 +121,10 @@ export const useMusicPlayer = () => {
   }, [ended]);
 
   // Reset state when song changes
+  useEffect(() => {
+    $IsPlaying.set(playing);
+  }, [playing]);
+
   useEffect(() => {
     if (selectedBeat) {
       setEnded(false);

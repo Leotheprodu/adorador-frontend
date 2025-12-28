@@ -1,4 +1,5 @@
 import { atom } from 'nanostores';
+import ReactPlayer from 'react-player';
 
 export type selectedSongProps = {
   id: number;
@@ -16,3 +17,7 @@ export const $PlayList = atom<selectedSongProps[]>([
     name: '',
   },
 ]);
+
+export const $CurrentTime = atom<number>(0);
+export const $IsPlaying = atom<boolean>(false);
+export const $PlayerRef = atom<ReactPlayer | null>(null);

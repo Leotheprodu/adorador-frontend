@@ -18,6 +18,7 @@ export const LyricsGroupedCard = ({
   showChords = true,
   lyricsScale = 1,
   isPracticeMode = false,
+  activeLineId,
 }: LyricsGroupedCardProps) => {
   const { lyricsOrder, handleDragEnd } = useLyricsGroupDragDrop({
     lyrics,
@@ -29,7 +30,7 @@ export const LyricsGroupedCard = ({
 
   return (
     <div
-      className="w-full border-l-4 py-4 pl-4 bg-white dark:bg-gray-900"
+      className="w-full border-l-4 bg-white py-4 pl-4 dark:bg-gray-900"
       style={{
         borderColor: structureColors[structure],
       }}
@@ -59,6 +60,7 @@ export const LyricsGroupedCard = ({
               showChords={showChords}
               lyricsScale={lyricsScale}
               isPracticeMode={isPracticeMode}
+              activeLineId={activeLineId}
             />
           ))}
         </div>
@@ -103,6 +105,7 @@ export const LyricsGroupedCard = ({
                         showChords={showChords}
                         lyricsScale={lyricsScale}
                         isPracticeMode={isPracticeMode}
+                        activeLineId={activeLineId}
                       />
                     )}
 

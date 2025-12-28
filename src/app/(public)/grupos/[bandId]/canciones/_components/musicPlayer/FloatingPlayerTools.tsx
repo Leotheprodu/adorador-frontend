@@ -1,19 +1,20 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import ReactPlayer from 'react-player';
 import { XMarkIcon } from '@global/icons/XMarkIcon';
 import { MetronomeIcon } from '@global/icons';
 
 interface FloatingPlayerToolsProps {
   tempo: number;
   startTime: number;
-  currentTime: number;
+  playerRef: React.RefObject<ReactPlayer>;
   onClose: () => void;
 }
 
 export const FloatingPlayerTools = ({
   tempo,
   startTime,
-  currentTime,
+  playerRef,
   onClose,
 }: FloatingPlayerToolsProps) => {
   const [isBeat, setIsBeat] = useState(false);
@@ -23,30 +24,43 @@ export const FloatingPlayerTools = ({
   useEffect(() => {
     if (!tempo || tempo <= 0) return;
 
+    let animationFrameId: number;
     const secondsPerBeat = 60 / tempo;
-    const relativeTime = currentTime - startTime;
 
-    if (relativeTime < 0) {
-      setIsBeat(false);
-      return;
-    }
+    const loop = () => {
+      const currentTime = playerRef.current?.getCurrentTime() || 0;
+      const relativeTime = currentTime - startTime;
 
-    const totalBeats = Math.floor(relativeTime / secondsPerBeat);
-    const currentBeatInMeasure = (totalBeats % 4) + 1;
-
-    // Phase within the current beat (0.0 to 1.0)
-    const beatPhase = (relativeTime % secondsPerBeat) / secondsPerBeat;
-
-    // Flash for first 15% of the beat
-    const isFlash = beatPhase < 0.15;
-
-    if (isFlash !== isBeat) {
-      setIsBeat(isFlash);
-      if (isFlash) {
-        setBeatNumber(currentBeatInMeasure);
+      if (relativeTime < 0) {
+        setIsBeat(false);
+        animationFrameId = requestAnimationFrame(loop);
+        return;
       }
-    }
-  }, [currentTime, tempo, startTime, isBeat]);
+
+      const totalBeats = Math.floor(relativeTime / secondsPerBeat);
+      const currentBeatInMeasure = (totalBeats % 4) + 1;
+      const beatPhase = (relativeTime % secondsPerBeat) / secondsPerBeat;
+      const isFlash = beatPhase < 0.15;
+
+      // Only update state if changed to minimize React work
+      // effectively we are doing the "diffing" here manually
+      setIsBeat((prev) => {
+        if (prev !== isFlash) return isFlash;
+        return prev;
+      });
+
+      setBeatNumber((prev) => {
+        if (isFlash && prev !== currentBeatInMeasure)
+          return currentBeatInMeasure;
+        return prev;
+      });
+
+      animationFrameId = requestAnimationFrame(loop);
+    };
+
+    loop();
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [tempo, startTime, playerRef]);
 
   return (
     <motion.div

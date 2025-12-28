@@ -9,6 +9,7 @@ import { PlayerControls } from './PlayerControls';
 import { PlayerVolumeControl } from './PlayerVolumeControl';
 import { AnimatePresence } from 'framer-motion';
 import { FloatingPlayerTools } from './FloatingPlayerTools';
+import { $PlayerRef } from '@stores/player';
 
 export const MusicPlayer = () => {
   const {
@@ -74,6 +75,7 @@ export const MusicPlayer = () => {
               ref={playerRef}
               playing={playing}
               onPlay={handlePlay}
+              onReady={(player) => $PlayerRef.set(player)}
               onEnded={() => setEnded(true)}
               onDuration={handleDuration}
               onProgress={handleProgress}
@@ -88,7 +90,7 @@ export const MusicPlayer = () => {
             <FloatingPlayerTools
               tempo={selectedBeat.tempo || 0}
               startTime={selectedBeat.startTime || 0}
-              currentTime={currentTime}
+              playerRef={playerRef}
               onClose={() => setShowTools(false)} // User closes it
             />
           )}

@@ -1,5 +1,6 @@
 import { MiniLyricsEditor } from './MiniLyricsEditor';
 import { Draggable } from '@hello-pangea/dnd';
+import { useRef, useEffect } from 'react';
 import { LyricsCardProps } from '../_interfaces/lyricsInterfaces';
 import { useLyricsCard } from '../_hooks/useLyricsCard';
 import { LyricsContent } from './lyrics/LyricsContent';
@@ -16,6 +17,7 @@ export const LyricsCard = ({
   showChords = true,
   lyricsScale = 1,
   isPracticeMode = false,
+  activeLineId,
 }: LyricsCardProps) => {
   const {
     updateLyric,
@@ -25,10 +27,30 @@ export const LyricsCard = ({
     handleCloseEditor,
   } = useLyricsCard(isPracticeMode);
 
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isActive = activeLineId === lyric.id;
+
+  useEffect(() => {
+    if (isActive && cardRef.current) {
+      cardRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      });
+    }
+  }, [isActive]);
+
   // En modo práctica o cuando index es -1, no usar Draggable
   if (isPracticeMode || index === -1) {
     return (
-      <div className="group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent">
+      <div
+        ref={cardRef}
+        className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
+          isActive
+            ? 'border-l-4 border-l-brand-purple-500 bg-brand-purple-50 dark:bg-brand-purple-900/20'
+            : 'hover:bg-slate-50 dark:bg-transparent dark:hover:bg-gray-800'
+        }`}
+      >
         <div className="flex flex-1 flex-col">
           <LyricsContent
             lyric={lyric}
@@ -58,10 +80,11 @@ export const LyricsCard = ({
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${snapshot.isDragging
-              ? 'z-50 scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
-              : 'hover:bg-slate-50 dark:hover:bg-gray-800 dark:bg-transparent'
-              } lyric-card${lyric.id}`}
+            className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
+              snapshot.isDragging
+                ? 'z-50 scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
+                : 'hover:bg-slate-50 dark:bg-transparent dark:hover:bg-gray-800'
+            } lyric-card${lyric.id}`}
           >
             {/* Drag Handle - Siempre visible */}
             {!updateLyric && (

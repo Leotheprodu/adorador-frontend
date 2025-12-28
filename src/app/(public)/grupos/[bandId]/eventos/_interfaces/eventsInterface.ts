@@ -37,6 +37,7 @@ export interface LyricsProps {
   lyrics: string;
   structure: StructureProps;
   chords: ChordProps[];
+  startTime: number;
 }
 export interface SongEventProps {
   id: number;

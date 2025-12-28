@@ -16,7 +16,7 @@ import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
 import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
-import { Button, useDisclosure, Chip } from '@heroui/react';
+import { Button, useDisclosure, Chip, Checkbox } from '@heroui/react';
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
 import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';
@@ -38,6 +38,8 @@ export const SongBasicInfo = ({
   isEditMode,
   isPracticeMode,
   onPracticeModeChange,
+  isFollowMusic,
+  onFollowMusicChange,
   isMember = false,
 }: {
   data: SongPropsWithCount | undefined;
@@ -51,6 +53,8 @@ export const SongBasicInfo = ({
   isEditMode?: boolean;
   isPracticeMode?: boolean;
   onPracticeModeChange?: (isPractice: boolean) => void;
+  isFollowMusic?: boolean;
+  onFollowMusicChange?: (isFollowMusic: boolean) => void;
   isMember?: boolean;
 }) => {
   const playlist = useStore($PlayList);
@@ -178,6 +182,22 @@ export const SongBasicInfo = ({
                       ? 'Haz clic para editar'
                       : 'Haz clic para practicar'}
                   </span>
+                </div>
+              )}
+
+              {/* Checkbox Seguir la música (Solo en modo práctica) */}
+              {isPracticeMode && onFollowMusicChange && (
+                <div className="flex items-center justify-end px-1">
+                  <Checkbox
+                    isSelected={isFollowMusic}
+                    onValueChange={onFollowMusicChange}
+                    size="sm"
+                    color="success"
+                  >
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                      Seguir la música
+                    </span>
+                  </Checkbox>
                 </div>
               )}
 
