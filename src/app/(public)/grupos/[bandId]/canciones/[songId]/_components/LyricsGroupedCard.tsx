@@ -19,6 +19,8 @@ export const LyricsGroupedCard = ({
   lyricsScale = 1,
   isPracticeMode = false,
   activeLineId,
+  activeChordId,
+  isUserScrolling,
 }: LyricsGroupedCardProps) => {
   const { lyricsOrder, handleDragEnd } = useLyricsGroupDragDrop({
     lyrics,
@@ -61,6 +63,8 @@ export const LyricsGroupedCard = ({
               lyricsScale={lyricsScale}
               isPracticeMode={isPracticeMode}
               activeLineId={activeLineId}
+              activeChordId={activeChordId}
+              isUserScrolling={isUserScrolling}
             />
           ))}
         </div>
@@ -106,6 +110,8 @@ export const LyricsGroupedCard = ({
                         lyricsScale={lyricsScale}
                         isPracticeMode={isPracticeMode}
                         activeLineId={activeLineId}
+                        activeChordId={activeChordId}
+                        isUserScrolling={isUserScrolling}
                       />
                     )}
 

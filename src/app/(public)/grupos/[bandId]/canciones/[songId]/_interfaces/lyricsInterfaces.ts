@@ -18,6 +18,8 @@ export interface LyricsCardProps {
   lyricsScale?: number;
   isPracticeMode?: boolean;
   activeLineId?: number | null;
+  activeChordId?: number | null;
+  isUserScrolling?: boolean;
 }
 
 export interface LyricsContentProps {
@@ -27,6 +29,7 @@ export interface LyricsContentProps {
   lyricsScale: number;
   chordPreferences: ReturnType<typeof useStore>['state'];
   isEditMode?: boolean;
+  activeChordId?: number | null;
 }
 
 export interface LyricsDragHandleProps {
@@ -49,6 +52,8 @@ export interface LyricsGroupedCardProps {
   lyricsScale?: number;
   isPracticeMode?: boolean;
   activeLineId?: number | null;
+  activeChordId?: number | null;
+  isUserScrolling?: boolean;
 }
 
 export interface LyricsInsertButtonProps {

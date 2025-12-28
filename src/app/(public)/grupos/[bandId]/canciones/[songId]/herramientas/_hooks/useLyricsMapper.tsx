@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { SongLyric } from '../../../_interfaces/songsInterface';
 import { useSaveLyricsData } from '../_services/lyricsService';
@@ -7,14 +7,14 @@ interface UseLyricsMapperProps {
   songId: string;
   bandId: string;
   initialLyrics?: SongLyric[];
-  currentTime: number;
+  currentTimeRef: React.MutableRefObject<number>;
 }
 
 export const useLyricsMapper = ({
   songId,
   bandId,
   initialLyrics = [],
-  currentTime,
+  currentTimeRef,
 }: UseLyricsMapperProps) => {
   const [lyrics, setLyrics] = useState<SongLyric[]>(initialLyrics);
   const [activeLineId, setActiveLineId] = useState<number | null>(null);
@@ -65,24 +65,16 @@ export const useLyricsMapper = ({
       const newLyrics = [...prev];
       newLyrics[targetIndex] = {
         ...newLyrics[targetIndex],
-        startTime: currentTime,
+        startTime: currentTimeRef.current,
       };
 
-      // We don't need to manually verify next activeLineId here,
-      // the useEffect will pick up the change in 'lyrics' and auto-advance if needed
-      // (because handling the activeLineId update in state based on newLyrics is cleaner in effect)
-      // HOWEVER: The effect only runs if !activeLineId.
-      // If we just filled 'activeLineId', we should manually advance it here or clear it so effect runs.
-
-      // Let's rely on a smart effect? Or just clear it here to force re-calc?
-      // Clearing activeLineId here ensures the effect finds the NEXT one.
       setActiveLineId(null);
 
       return newLyrics;
     });
-  }, [currentTime, activeLineId]);
+  }, [currentTimeRef, activeLineId]);
 
-  const handleManualAdjust = (id: number, ms: number) => {
+  const handleManualAdjust = useCallback((id: number, ms: number) => {
     setLyrics((prev) =>
       prev.map((l) => {
         if (l.id === id) {
@@ -91,22 +83,21 @@ export const useLyricsMapper = ({
         return l;
       }),
     );
-  };
+  }, []);
 
-  const handleClearDetail = (id: number) => {
+  const handleClearDetail = useCallback((id: number) => {
     setLyrics((prev) =>
       prev.map((l) => (l.id === id ? { ...l, startTime: 0 } : l)),
     );
-    // Explicitly set active to this cleaned line so user can re-record it immediately
     setActiveLineId(id);
-  };
+  }, []);
 
-  const handleClearAll = () => {
+  const handleClearAll = useCallback(() => {
     if (confirm('¿Seguro que quieres borrar todos los tiempos?')) {
       setLyrics((prev) => prev.map((l) => ({ ...l, startTime: 0 })));
-      setActiveLineId(null); // Let effect reset to first
+      setActiveLineId(null);
     }
-  };
+  }, []);
 
   // Keyboard Listener
   useEffect(() => {
@@ -121,7 +112,7 @@ export const useLyricsMapper = ({
   }, [handleRecordLine]);
 
   // Save changes
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     const payload = lyrics.map((l) => ({
       id: l.id,
       startTime: l.startTime,
@@ -130,33 +121,44 @@ export const useLyricsMapper = ({
     saveLyrics(payload, {
       onSuccess: () => {
         toast.success('Lyrics sincronizados guardados');
-        // Update savedLyrics to match current verified state
         setSavedLyrics([...lyrics]);
       },
       onError: () => toast.error('Error al guardar lyrics'),
     });
-  };
+  }, [lyrics, saveLyrics]);
 
   const isLineDirty = useCallback(
     (id: number) => {
       const current = lyrics.find((l) => l.id === id);
       const saved = savedLyrics.find((l) => l.id === id);
       if (!current || !saved) return false;
-      // Compare broadly mainly on startTime
       return Math.abs(current.startTime - saved.startTime) > 0.001;
     },
     [lyrics, savedLyrics],
   );
 
-  return {
-    lyrics,
-    activeLineId,
-    handleSave,
-    isSaving,
-    handleClearDetail,
-    handleClearAll,
-    handleRecordLine,
-    handleManualAdjust,
-    isLineDirty,
-  };
+  return useMemo(
+    () => ({
+      lyrics,
+      activeLineId,
+      handleSave,
+      isSaving,
+      handleClearDetail,
+      handleClearAll,
+      handleRecordLine,
+      handleManualAdjust,
+      isLineDirty,
+    }),
+    [
+      lyrics,
+      activeLineId,
+      handleSave,
+      isSaving,
+      handleClearDetail,
+      handleClearAll,
+      handleRecordLine,
+      handleManualAdjust,
+      isLineDirty,
+    ],
+  );
 };

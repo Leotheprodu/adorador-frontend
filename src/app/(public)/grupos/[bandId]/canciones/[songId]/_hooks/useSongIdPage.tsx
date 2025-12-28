@@ -9,7 +9,6 @@ import {
   uploadSongLyrics,
 } from '../_services/songIdServices';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { useSongTranspose } from './useSongTranspose';
 import { useLyricsEditMode } from './useLyricsEditMode';
 import { SongIdParams } from '../_interfaces/songIdInterfaces';
 
@@ -22,10 +21,12 @@ export const useSongIdPage = (params: SongIdParams) => {
   );
 
   // Custom hooks
-  const transpose = useSongTranspose(params.songId);
+  // const transpose = useSongTranspose(params.songId); // Removed as per instruction
   const { isEditMode, setIsEditMode, isPracticeMode, setIsPracticeMode } =
     useLyricsEditMode(params.bandId, params.songId);
   const [isFollowMusic, setIsFollowMusic] = useState(false);
+  const [isSyncChords, setIsSyncChords] = useState(false);
+  const [transpose, setTranspose] = useState(0);
 
   // Stores
   const chordPreferences = useStore($chordPreferences);
@@ -109,6 +110,8 @@ export const useSongIdPage = (params: SongIdParams) => {
     setIsPracticeMode,
     isFollowMusic,
     setIsFollowMusic,
+    isSyncChords,
+    setIsSyncChords,
     transpose,
 
     // Config

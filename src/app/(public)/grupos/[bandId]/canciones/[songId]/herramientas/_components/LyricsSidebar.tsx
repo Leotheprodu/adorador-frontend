@@ -1,5 +1,5 @@
 import { Button, Card, CardBody } from '@heroui/react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { CheckIcon } from '@global/icons/CheckIcon';
 import { TrashIcon } from '@global/icons/TrashIcon';
 import { SongLyric } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
@@ -14,6 +14,8 @@ interface LyricsSidebarProps {
   onSeek: (time: number) => void;
   onManualAdjust: (id: number, ms: number) => void;
   isLineDirty: (id: number) => boolean;
+  currentTimeRef: React.MutableRefObject<number>;
+  playing: boolean;
 }
 
 export const LyricsSidebar = ({
@@ -26,14 +28,65 @@ export const LyricsSidebar = ({
   onSeek,
   onManualAdjust,
   isLineDirty,
+  currentTimeRef,
+  playing,
 }: LyricsSidebarProps) => {
   const activeRef = useRef<HTMLDivElement>(null);
+  const playingRef = useRef<HTMLDivElement>(null);
 
+  // State for the line currently being sung (playback)
+  const [playingLineId, setPlayingLineId] = useState<number | null>(null);
+
+  // 1. Efficient Polling for Playback Highlight (Low Frequency Updates)
+  useEffect(() => {
+    if (!playing || lyrics.length === 0) return;
+
+    let animationFrameId: number;
+
+    const checkCurrentLine = () => {
+      const time = currentTimeRef.current;
+
+      // Find the last lyric that has started (startTime <= time)
+      // Since lyrics are usually sorted, we can reverse find or just filter.
+      // Optimization: assume sorted.
+      let currentId: number | null = null;
+
+      for (let i = 0; i < lyrics.length; i++) {
+        if (lyrics[i].startTime <= time && lyrics[i].startTime > 0) {
+          currentId = lyrics[i].id;
+        } else if (lyrics[i].startTime > time) {
+          break; // Future lyrics
+        }
+      }
+
+      // ONLY trigger render if changed
+      setPlayingLineId((prev) => {
+        if (prev !== currentId) return currentId;
+        return prev;
+      });
+
+      animationFrameId = requestAnimationFrame(checkCurrentLine);
+    };
+
+    checkCurrentLine();
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [playing, lyrics, currentTimeRef]);
+
+  // 2. Auto-Scroll Effect for Playback
+  useEffect(() => {
+    if (playingLineId && playingRef.current && playing) {
+      playingRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      });
+    }
+  }, [playingLineId, playing]);
+
+  // 3. Keep Recording Scroll Effect (Priority if not playing? Or separate?)
   useEffect(() => {
     if (activeLineId && activeRef.current) {
-      // Use scrollIntoView with block: 'nearest' to avoid jumping the whole page if possible,
-      // or 'center' closer to the desired UX.
-      // Check if the sidebar is actually visible/scrollable first?
       activeRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
@@ -78,24 +131,35 @@ export const LyricsSidebar = ({
         <div className="custom-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-2">
           {lyrics.map((line, index) => {
             const isAssigned = line.startTime > 0;
-            const isActive =
+            const isRecordingActive =
               activeLineId === line.id ||
               (!activeLineId &&
                 !isAssigned &&
                 index === lyrics.findIndex((l) => l.startTime === 0));
+
+            const isPlaybackActive = playingLineId === line.id;
             const isDirty = isLineDirty(line.id);
+
+            // Determine Ref assignment: Priority to Playback if playing, otherwise Recording
+            const refToUse = isPlaybackActive
+              ? playingRef
+              : isRecordingActive
+                ? activeRef
+                : null;
 
             return (
               <div
                 key={line.id}
-                ref={isActive ? activeRef : null}
+                ref={refToUse}
                 onClick={() => isAssigned && onSeek(line.startTime)}
                 className={`group relative flex flex-col gap-1 rounded-lg border p-2 transition-all ${
-                  isActive
-                    ? 'border-brand-purple-500 bg-brand-purple-500/10'
-                    : isAssigned
-                      ? 'cursor-pointer border-brand-blue-500/30 bg-brand-blue-500/5 hover:bg-brand-blue-500/10'
-                      : 'border-white/5 bg-transparent opacity-50'
+                  isRecordingActive
+                    ? 'border-brand-purple-500 bg-brand-purple-500/10' // Recording Highlight
+                    : isPlaybackActive
+                      ? 'scale-[1.02] border-brand-blue-400 bg-brand-blue-400/20 shadow-lg' // Playback Highlight
+                      : isAssigned
+                        ? 'cursor-pointer border-brand-blue-500/30 bg-brand-blue-500/5 hover:bg-brand-blue-500/10'
+                        : 'border-white/5 bg-transparent opacity-50'
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -107,7 +171,7 @@ export const LyricsSidebar = ({
                       />
                     )}
                     <span
-                      className={`text-sm ${isAssigned ? 'text-white' : 'text-white/50'}`}
+                      className={`text-sm ${isAssigned ? 'text-white' : 'text-white/50'} ${isPlaybackActive ? 'font-bold text-brand-blue-200' : ''}`}
                     >
                       {line.lyrics}
                     </span>
@@ -153,7 +217,7 @@ export const LyricsSidebar = ({
                   </span>
                 )}
 
-                {isActive && !isAssigned && (
+                {isRecordingActive && !isAssigned && (
                   <div className="absolute -right-1 -top-1 h-3 w-3 animate-ping rounded-full bg-brand-purple-500" />
                 )}
               </div>

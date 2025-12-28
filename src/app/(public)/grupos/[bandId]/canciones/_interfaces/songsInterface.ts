@@ -2,7 +2,7 @@ export interface SongProps extends SongPropsWithoutId {
   id: number;
   videoLyrics?: SongVideoLyrics[];
   lyrics?: SongLyric[];
-  // chords?: SongChord[]; // Future
+  chords?: SongChord[];
 }
 
 export type SongSEOProps = Pick<SongProps, 'title' | 'artist' | 'youtubeLink'>;
@@ -43,6 +43,11 @@ export interface SongLyric {
   lyrics: string;
   position: number;
   startTime: number;
+  chords?: SongChord[];
+  structure?: {
+    id: number;
+    title: string;
+  };
 }
 
 export interface SongChord {

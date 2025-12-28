@@ -27,4 +27,5 @@ export interface LyricsSectionProps {
   mutateUploadLyricsByFile: (file: FormData) => void;
   onEditModeChange: (value: boolean) => void;
   isFollowMusic?: boolean;
+  isSyncChords?: boolean;
 }

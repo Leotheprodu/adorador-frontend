@@ -9,7 +9,7 @@ interface UseTempoMapperProps {
   bandId: string;
   initialBpm?: number;
   initialStartTime?: number;
-  currentTime: number;
+  currentTimeRef: React.MutableRefObject<number>;
   duration: number;
 }
 
@@ -18,7 +18,7 @@ export const useTempoMapper = ({
   bandId,
   initialBpm,
   initialStartTime,
-  currentTime,
+  currentTimeRef,
   duration,
 }: UseTempoMapperProps) => {
   // Data State
@@ -29,7 +29,7 @@ export const useTempoMapper = ({
 
   // Settings
   const [timeSignature, setTimeSignature] = useState(4);
-  const [zoomLevel, setZoomLevel] = useState(5);
+  const [zoomLevel, setZoomLevel] = useState(6); // Default slightly zoomed in for precision
 
   // Service
   const { mutate: saveSong, isPending: isSaving } = useSaveSongData(
@@ -63,14 +63,14 @@ export const useTempoMapper = ({
   );
 
   const handleTapMeasure = useCallback(() => {
-    const now = currentTime;
+    const now = currentTimeRef.current;
     const newTaps = [...measureTaps, now].sort((a, b) => a - b);
     setMeasureTaps(newTaps);
 
     if (newTaps.length >= 2) {
       calculateFromMeasures(newTaps);
     }
-  }, [currentTime, measureTaps, calculateFromMeasures]);
+  }, [currentTimeRef, measureTaps, calculateFromMeasures]);
 
   const generateGrid = useCallback(
     (start: number, tempo: number, dur: number, signature: number) => {

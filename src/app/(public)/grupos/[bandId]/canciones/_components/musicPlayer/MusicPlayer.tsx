@@ -91,6 +91,7 @@ export const MusicPlayer = () => {
               tempo={selectedBeat.tempo || 0}
               startTime={selectedBeat.startTime || 0}
               playerRef={playerRef}
+              playing={playing}
               onClose={() => setShowTools(false)} // User closes it
             />
           )}

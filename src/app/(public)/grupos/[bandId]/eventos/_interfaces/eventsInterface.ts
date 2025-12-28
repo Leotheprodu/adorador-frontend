@@ -19,6 +19,7 @@ export type ChordQualityType = (typeof keyChordQualities)[number];
 
 export interface ChordProps extends ChordPropsWithoutId {
   id: number;
+  startTime?: number;
 }
 export interface ChordPropsWithoutId {
   rootNote: ChordType;

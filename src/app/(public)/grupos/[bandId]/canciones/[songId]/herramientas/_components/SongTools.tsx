@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import { Card, CardBody, Tab, Tabs, Button, Slider } from '@heroui/react';
 import { PlayIcon } from '@global/icons/PlayIcon';
@@ -9,10 +9,12 @@ import { CheckIcon } from '@global/icons/CheckIcon';
 import { useSongPlayer } from '../_hooks/useSongPlayer';
 import { useTempoMapper } from '../_hooks/useTempoMapper';
 import { useLyricsMapper } from '../_hooks/useLyricsMapper';
+import { useChordsMapper } from '../_hooks/useChordsMapper';
 import { TimelineVisualizer } from './TimelineVisualizer';
 import { MetronomeControls } from './MetronomeControls';
 import { BeatMapperSettings } from './BeatMapperSettings';
 import { LyricsSidebar } from './LyricsSidebar';
+import { ChordsSidebar } from './ChordsSidebar';
 import { SongProps } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 
 interface SongToolsProps {
@@ -24,6 +26,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
   const [activeMode, setActiveMode] = useState<'tempo' | 'lyrics' | 'chords'>(
     'tempo',
   );
+  const [audioOnly, setAudioOnly] = useState(false);
 
   // 1. Shared Player State
   const {
@@ -34,7 +37,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
     handleProgress,
     handleDuration,
     handleSeek,
-    currentTime,
+    currentTimeRef, // Use Ref
     duration,
   } = useSongPlayer();
 
@@ -44,7 +47,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
     bandId,
     initialBpm: songData.tempo,
     initialStartTime: songData.startTime,
-    currentTime,
+    currentTimeRef,
     duration,
   });
 
@@ -53,8 +56,49 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
     songId: songData.id.toString(),
     bandId,
     initialLyrics: songData.lyrics,
-    currentTime,
+    currentTimeRef,
   });
+
+  // 4. Chords Logic
+  const chordsTools = useChordsMapper({
+    songId: songData.id.toString(),
+    bandId,
+    initialLyrics: songData.lyrics,
+    currentTimeRef,
+    beats: tempoTools.beats,
+    bpm: tempoTools.bpm,
+    onSeek: handleSeek,
+  });
+
+  // 5. Global Keyboard Shortcuts (Space to Play/Pause)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input
+      const target = e.target as HTMLElement;
+      if (['INPUT', 'TEXTAREA'].includes(target.tagName)) return;
+
+      if (e.code === 'Space') {
+        e.preventDefault(); // Prevent scrolling
+        togglePlay();
+      }
+
+      // Seek Measure (Arrow Left/Right)
+      if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
+        e.preventDefault();
+        const bpm = tempoTools.bpm || 120; // Default to 120 if not set
+        const beatsPerMeasure = 4; // Assume 4/4 for simple nav, or use timeSignature if available
+        const secondsPerBeat = 60 / bpm;
+        const jumpSeconds = secondsPerBeat * beatsPerMeasure;
+
+        const direction = e.code === 'ArrowRight' ? 1 : -1;
+        // Use Ref for current time base
+        handleSeek(currentTimeRef.current + jumpSeconds * direction);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [togglePlay, currentTimeRef]); // Depend on Ref object (stable)
 
   // Helper for empty state
   if (!songData.youtubeLink) {
@@ -88,7 +132,10 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
           )}
           {activeMode === 'chords' && (
             <div className="text-sm text-white/70">
-              Modo Acordes (Próximamente)
+              <span className="font-bold text-white">Modo Acordes:</span>{' '}
+              Presiona{' '}
+              <span className="font-bold text-brand-purple-400">'A'</span> para
+              asignar acorde.
             </div>
           )}
 
@@ -104,7 +151,9 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
         </div>
 
         {/* Video Player */}
-        <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-black shadow-2xl lg:max-h-[45vh]">
+        <div
+          className={`relative w-full shrink-0 overflow-hidden rounded-xl bg-black shadow-2xl transition-all duration-500 ease-in-out ${audioOnly ? 'h-0 opacity-0' : 'aspect-video lg:max-h-[45vh]'}`}
+        >
           {isMounted && (
             <ReactPlayer
               ref={playerRef}
@@ -129,6 +178,16 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
               }}
             />
           )}
+        </div>
+
+        {/* Toggle Audio Only Button (Small, discrete) */}
+        <div className="flex justify-end px-1">
+          <button
+            onClick={() => setAudioOnly(!audioOnly)}
+            className="flex items-center gap-1 text-[10px] font-bold uppercase text-white/30 transition-colors hover:text-white"
+          >
+            {audioOnly ? '📺 Mostrar Video' : '📻 Modo Solo Audio (Más Rápido)'}
+          </button>
         </div>
 
         {/* Controls & Visualizer */}
@@ -183,6 +242,44 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
               </div>
             )}
 
+            {activeMode === 'chords' && (
+              <div className="flex items-center gap-4">
+                <Button
+                  isIconOnly
+                  className="h-12 w-12 rounded-full"
+                  color={playing ? 'warning' : 'success'}
+                  variant="shadow"
+                  onPress={togglePlay}
+                >
+                  {playing ? (
+                    <PauseIcon className="h-6 w-6 text-white" />
+                  ) : (
+                    <PlayIcon className="ml-1 h-6 w-6 text-white" />
+                  )}
+                </Button>
+                <div className="flex flex-col">
+                  <span className="font-bold text-white">Reproductor</span>
+                  <span className="text-xs text-white/50">
+                    Usa 'Espacio' para pausar.
+                  </span>
+                </div>
+
+                <div className="mx-2 h-8 w-px bg-white/10" />
+
+                <Button
+                  color="secondary"
+                  variant="shadow"
+                  className="max-w-[200px] flex-1 animate-pulse font-bold"
+                  onPress={chordsTools.handleRecordChord}
+                  startContent={
+                    <div className="h-2 w-2 rounded-full bg-white" />
+                  }
+                >
+                  GRABAR ACORDE (A)
+                </Button>
+              </div>
+            )}
+
             {/* Zoom Control (Shared) */}
             <div className="flex items-center gap-4 px-2">
               <span className="shrink-0 text-xs font-bold uppercase text-white/50">
@@ -202,7 +299,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
             </div>
 
             <TimelineVisualizer
-              currentTime={currentTime}
+              currentTimeRef={currentTimeRef}
               duration={duration}
               onSeek={handleSeek}
               measureTaps={tempoTools.measureTaps}
@@ -213,7 +310,13 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
                   : songData.startTime || 0
               }
               zoomLevel={tempoTools.zoomLevel}
-              lyrics={lyricsTools.lyrics} // Pass lyrics for visualization
+              // Strict visibility based on user request:
+              // - Tempo: Hide Lyrics AND Chords (implied by activeMode logic below)
+              // - Lyrics: Hide Chords
+              // - Chords: Hide Lyrics
+              lyrics={activeMode === 'lyrics' ? lyricsTools.lyrics : []}
+              chords={activeMode === 'chords' ? chordsTools.chords : []}
+              playing={playing}
             />
           </CardBody>
         </Card>
@@ -232,7 +335,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
         >
           <Tab key="tempo" title="Tempo" />
           <Tab key="lyrics" title="Letras" />
-          <Tab key="chords" title="Acordes" isDisabled />
+          <Tab key="chords" title="Acordes" />
         </Tabs>
 
         {activeMode === 'tempo' && (
@@ -335,6 +438,26 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
             onSeek={handleSeek}
             onManualAdjust={lyricsTools.handleManualAdjust}
             isLineDirty={lyricsTools.isLineDirty}
+            currentTimeRef={currentTimeRef}
+            playing={playing}
+          />
+        )}
+
+        {activeMode === 'chords' && (
+          <ChordsSidebar
+            chords={chordsTools.chords}
+            lyrics={lyricsTools.lyrics}
+            activeChordId={chordsTools.activeChordId}
+            onSave={chordsTools.handleSave}
+            isSaving={chordsTools.isSaving}
+            onClearDetail={chordsTools.handleClearDetail}
+            onClearAll={chordsTools.handleClearAll}
+            onSeek={handleSeek}
+            onManualAdjust={chordsTools.handleManualAdjust}
+            isChordDirty={chordsTools.isChordDirty}
+            adjustmentUnit={chordsTools.adjustmentUnit}
+            quantizationMode={chordsTools.quantizationMode}
+            setQuantizationMode={chordsTools.setQuantizationMode}
           />
         )}
       </div>

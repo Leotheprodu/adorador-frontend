@@ -40,6 +40,9 @@ export const SongBasicInfo = ({
   onPracticeModeChange,
   isFollowMusic,
   onFollowMusicChange,
+
+  isSyncChords,
+  onSyncChordsChange,
   isMember = false,
 }: {
   data: SongPropsWithCount | undefined;
@@ -55,6 +58,8 @@ export const SongBasicInfo = ({
   onPracticeModeChange?: (isPractice: boolean) => void;
   isFollowMusic?: boolean;
   onFollowMusicChange?: (isFollowMusic: boolean) => void;
+  isSyncChords?: boolean;
+  onSyncChordsChange?: (isSyncChords: boolean) => void;
   isMember?: boolean;
 }) => {
   const playlist = useStore($PlayList);
@@ -185,19 +190,33 @@ export const SongBasicInfo = ({
                 </div>
               )}
 
-              {/* Checkbox Seguir la música (Solo en modo práctica) */}
-              {isPracticeMode && onFollowMusicChange && (
-                <div className="flex items-center justify-end px-1">
-                  <Checkbox
-                    isSelected={isFollowMusic}
-                    onValueChange={onFollowMusicChange}
-                    size="sm"
-                    color="success"
-                  >
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                      Seguir la música
-                    </span>
-                  </Checkbox>
+              {/* Checkbox Seguir la música y Sincronizar Acordes (Solo en modo práctica) */}
+              {isPracticeMode && (
+                <div className="flex flex-col items-end gap-1 px-1">
+                  {onFollowMusicChange && (
+                    <Checkbox
+                      isSelected={isFollowMusic}
+                      onValueChange={onFollowMusicChange}
+                      size="sm"
+                      color="success"
+                    >
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                        Seguir la música
+                      </span>
+                    </Checkbox>
+                  )}
+                  {onSyncChordsChange && (
+                    <Checkbox
+                      isSelected={isSyncChords}
+                      onValueChange={onSyncChordsChange}
+                      size="sm"
+                      color="secondary"
+                    >
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                        Sincronizar Acordes
+                      </span>
+                    </Checkbox>
+                  )}
                 </div>
               )}
 

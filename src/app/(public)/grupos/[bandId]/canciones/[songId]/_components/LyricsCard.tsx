@@ -5,6 +5,7 @@ import { LyricsCardProps } from '../_interfaces/lyricsInterfaces';
 import { useLyricsCard } from '../_hooks/useLyricsCard';
 import { LyricsContent } from './lyrics/LyricsContent';
 import { LyricsDragHandle } from './lyrics/LyricsDragHandle';
+import { $PlayerRef } from '@stores/player';
 
 export const LyricsCard = ({
   lyric,
@@ -18,6 +19,8 @@ export const LyricsCard = ({
   lyricsScale = 1,
   isPracticeMode = false,
   activeLineId,
+  activeChordId,
+  isUserScrolling,
 }: LyricsCardProps) => {
   const {
     updateLyric,
@@ -31,25 +34,36 @@ export const LyricsCard = ({
   const isActive = activeLineId === lyric.id;
 
   useEffect(() => {
-    if (isActive && cardRef.current) {
+    if (isActive && cardRef.current && !isUserScrolling) {
       cardRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
         inline: 'nearest',
       });
     }
-  }, [isActive]);
+  }, [isActive, isUserScrolling]);
 
   // En modo práctica o cuando index es -1, no usar Draggable
   if (isPracticeMode || index === -1) {
+    const handleSeek = () => {
+      // Seek logic specifically for Practice Mode
+      if (isPracticeMode && lyric.startTime && lyric.startTime > 0) {
+        const player = $PlayerRef.get();
+        if (player) {
+          player.seekTo(lyric.startTime, 'seconds');
+        }
+      }
+    };
+
     return (
       <div
         ref={cardRef}
+        onClick={handleSeek}
         className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
           isActive
             ? 'border-l-4 border-l-brand-purple-500 bg-brand-purple-50 dark:bg-brand-purple-900/20'
             : 'hover:bg-slate-50 dark:bg-transparent dark:hover:bg-gray-800'
-        }`}
+        } ${isPracticeMode && lyric.startTime && lyric.startTime > 0 ? 'cursor-pointer hover:bg-brand-purple-100/50 dark:hover:bg-brand-purple-900/10' : ''}`}
       >
         <div className="flex flex-1 flex-col">
           <LyricsContent
@@ -58,6 +72,7 @@ export const LyricsCard = ({
             showChords={showChords}
             lyricsScale={lyricsScale}
             chordPreferences={chordPreferences}
+            activeChordId={activeChordId}
           />
         </div>
       </div>
@@ -113,6 +128,7 @@ export const LyricsCard = ({
                     showChords={showChords}
                     lyricsScale={lyricsScale}
                     chordPreferences={chordPreferences}
+                    activeChordId={activeChordId}
                   />
                 )}
               </div>
