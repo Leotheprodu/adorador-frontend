@@ -16,7 +16,7 @@ import { songTypes } from '@global/config/constants';
 import { useEffect } from 'react';
 import { SongPropsWithCount } from '../../_interfaces/songsInterface';
 import { QueryStatus, RefetchOptions } from '@tanstack/react-query';
-import { Button, useDisclosure, Chip } from '@heroui/react';
+import { Button, useDisclosure, Chip, Checkbox } from '@heroui/react';
 import { EditSongButton } from '@bands/[bandId]/canciones/_components/EditSongButton';
 import { DeleteSongButton } from '@bands/[bandId]/canciones/_components/DeleteSongButton';
 import { ButtonNormalizeLyrics } from './ButtonNormalizeLyrics';
@@ -38,6 +38,11 @@ export const SongBasicInfo = ({
   isEditMode,
   isPracticeMode,
   onPracticeModeChange,
+  isFollowMusic,
+  onFollowMusicChange,
+
+  isSyncChords,
+  onSyncChordsChange,
   isMember = false,
 }: {
   data: SongPropsWithCount | undefined;
@@ -51,6 +56,10 @@ export const SongBasicInfo = ({
   isEditMode?: boolean;
   isPracticeMode?: boolean;
   onPracticeModeChange?: (isPractice: boolean) => void;
+  isFollowMusic?: boolean;
+  onFollowMusicChange?: (isFollowMusic: boolean) => void;
+  isSyncChords?: boolean;
+  onSyncChordsChange?: (isSyncChords: boolean) => void;
   isMember?: boolean;
 }) => {
   const playlist = useStore($PlayList);
@@ -82,6 +91,7 @@ export const SongBasicInfo = ({
           youtubeLink: data?.youtubeLink,
           tempo: data?.tempo,
           startTime: data?.startTime,
+          key: data?.key,
         },
       ]);
     }
@@ -97,6 +107,8 @@ export const SongBasicInfo = ({
         youtubeLink: data.youtubeLink,
         tempo: data.tempo,
         startTime: data.startTime,
+        key: data.key,
+        bandId,
       });
     }
   };
@@ -178,6 +190,36 @@ export const SongBasicInfo = ({
                       ? 'Haz clic para editar'
                       : 'Haz clic para practicar'}
                   </span>
+                </div>
+              )}
+
+              {/* Checkbox Seguir la música y Sincronizar Acordes (Solo en modo práctica) */}
+              {isPracticeMode && (
+                <div className="flex flex-col items-end gap-1 px-1">
+                  {onFollowMusicChange && (
+                    <Checkbox
+                      isSelected={isFollowMusic}
+                      onValueChange={onFollowMusicChange}
+                      size="sm"
+                      color="success"
+                    >
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                        Seguir la música
+                      </span>
+                    </Checkbox>
+                  )}
+                  {onSyncChordsChange && (
+                    <Checkbox
+                      isSelected={isSyncChords}
+                      onValueChange={onSyncChordsChange}
+                      size="sm"
+                      color="secondary"
+                    >
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                        Sincronizar Acordes
+                      </span>
+                    </Checkbox>
+                  )}
                 </div>
               )}
 

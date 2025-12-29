@@ -7,6 +7,7 @@ interface ChordDisplayProps {
   transpose: number;
   chordPreferences: ReturnType<typeof useStore>['state'];
   lyricsScale: number;
+  activeChordId?: number | null;
 }
 
 export const ChordDisplay = ({
@@ -14,6 +15,7 @@ export const ChordDisplay = ({
   transpose,
   chordPreferences,
   lyricsScale,
+  activeChordId,
 }: ChordDisplayProps) => {
   return (
     <div
@@ -29,15 +31,25 @@ export const ChordDisplay = ({
               gridColumnStart: chord.position,
               gridColumnEnd: chord.position + 1,
             }}
-            className="col-span-1 flex items-end gap-1"
+            className={`col-span-1 flex items-end gap-1 rounded px-1 ${
+              activeChordId === chord.id
+                ? 'scale-110 bg-brand-purple-500/20 shadow-sm ring-1 ring-brand-purple-500' // Highlight styles
+                : ''
+            }`}
           >
-            <div className="flex items-baseline">
-              <span className="font-semibold text-primary-600">
+            <div
+              className={`flex items-baseline ${activeChordId === chord.id ? 'font-bold' : ''}`}
+            >
+              <span
+                className={`font-semibold ${activeChordId === chord.id ? 'text-brand-purple-600 dark:text-brand-purple-300' : 'text-primary-600'}`}
+              >
                 {getNoteByType(chord.rootNote, transpose, chordPreferences)}
                 {chord.chordQuality}
               </span>
               {chord.slashChord && (
-                <span className="font-semibold text-primary-600">
+                <span
+                  className={`font-semibold ${activeChordId === chord.id ? 'text-brand-purple-600 dark:text-brand-purple-300' : 'text-primary-600'}`}
+                >
                   /
                   {getNoteByType(chord.slashChord, transpose, chordPreferences)}
                 </span>

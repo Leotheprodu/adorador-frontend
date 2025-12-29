@@ -46,6 +46,7 @@ export const BeatMapper = ({
     handleDuration,
     handleSeek,
     currentTime,
+    currentTimeRef,
     duration,
     startTime,
     beats,
@@ -152,13 +153,14 @@ export const BeatMapper = ({
             />
 
             <TimelineVisualizer
-              currentTime={currentTime}
+              currentTimeRef={currentTimeRef}
               duration={duration}
               onSeek={handleSeek}
               measureTaps={measureTaps}
               beats={beats}
               startTime={startTime}
               zoomLevel={zoomLevel}
+              playing={playing}
             />
 
             <div className="flex justify-between px-1 text-xs text-white/50">
@@ -192,6 +194,8 @@ export const BeatMapper = ({
               setTimeSignature={setTimeSignature}
               zoomLevel={zoomLevel}
               setZoomLevel={setZoomLevel}
+              startTime={startTime}
+              onAdjustStartTime={adjustStartTime}
             />
 
             <div className="custom-scrollbar mt-4 flex-1 overflow-y-auto pr-2">

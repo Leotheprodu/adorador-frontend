@@ -1,5 +1,6 @@
 import { FetchData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
+import { SongLyric } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 
 export interface SongToolsData {
   id: number;
@@ -7,6 +8,7 @@ export interface SongToolsData {
   youtubeLink?: string;
   tempo?: number;
   startTime?: number;
+  lyrics?: SongLyric[];
 }
 
 export const getSongToolsData = ({

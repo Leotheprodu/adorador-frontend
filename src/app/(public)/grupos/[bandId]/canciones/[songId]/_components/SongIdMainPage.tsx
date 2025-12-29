@@ -24,6 +24,10 @@ export const SongIdMainPage = ({
     setIsEditMode,
     isPracticeMode,
     setIsPracticeMode,
+    isFollowMusic,
+    setIsFollowMusic,
+    isSyncChords,
+    setIsSyncChords,
     transpose,
     chordPreferences,
     eventConfig,
@@ -62,6 +66,10 @@ export const SongIdMainPage = ({
             isEditMode={isEditMode}
             isPracticeMode={isPracticeMode}
             onPracticeModeChange={setIsPracticeMode}
+            isFollowMusic={isFollowMusic}
+            onFollowMusicChange={setIsFollowMusic}
+            isSyncChords={isSyncChords}
+            onSyncChordsChange={setIsSyncChords}
             isMember={isMember}
           />
         </section>
@@ -75,6 +83,8 @@ export const SongIdMainPage = ({
             lyricsGrouped={lyricsGrouped}
             isEditMode={isEditMode}
             isPracticeMode={isPracticeMode}
+            isFollowMusic={isFollowMusic}
+            isSyncChords={isSyncChords}
             transpose={transpose}
             showChords={eventConfig.showChords}
             lyricsScale={eventConfig.lyricsScale}

@@ -4,6 +4,9 @@ export interface BaseSongForPlaylist {
   id: number;
   title: string;
   youtubeLink?: string | null;
+  key?: string;
+  tempo?: number;
+  startTime?: number;
 }
 
 /**
@@ -16,6 +19,7 @@ export interface BaseSongForPlaylist {
 export const syncGlobalPlaylist = (
   songs: BaseSongForPlaylist[] | undefined,
   shouldSort = false,
+  bandId?: string,
 ) => {
   if (!songs) return;
 
@@ -31,6 +35,10 @@ export const syncGlobalPlaylist = (
       id: song.id,
       youtubeLink: song.youtubeLink!,
       name: song.title,
+      bandId: bandId,
+      key: song.key,
+      tempo: song.tempo,
+      startTime: song.startTime,
     }));
 
     if (shouldSort) {

@@ -9,6 +9,7 @@ import { PlayerControls } from './PlayerControls';
 import { PlayerVolumeControl } from './PlayerVolumeControl';
 import { AnimatePresence } from 'framer-motion';
 import { FloatingPlayerTools } from './FloatingPlayerTools';
+import { $PlayerRef } from '@stores/player';
 
 export const MusicPlayer = () => {
   const {
@@ -20,7 +21,6 @@ export const MusicPlayer = () => {
     duration,
     volume,
     playerRef,
-    currentTime,
     handlePlay,
     handleDuration,
     handleProgress,
@@ -32,15 +32,19 @@ export const MusicPlayer = () => {
     setVolume,
   } = useMusicPlayer();
 
-  const [showTools, setShowTools] = useState(true);
+  const [showMetronome, setShowMetronome] = useState(true);
+  const [showLyrics, setShowLyrics] = useState(false);
 
   if (!selectedBeat) return null;
 
-  const hasMetronomeData =
+  const hasMetronomeData = !!(
     selectedBeat &&
     selectedBeat.tempo &&
     selectedBeat.tempo > 0 &&
-    selectedBeat.startTime !== undefined;
+    selectedBeat.startTime !== undefined
+  );
+
+  const showFloatingTools = (showMetronome && hasMetronomeData) || showLyrics;
 
   return (
     <>
@@ -74,6 +78,7 @@ export const MusicPlayer = () => {
               ref={playerRef}
               playing={playing}
               onPlay={handlePlay}
+              onReady={(player) => $PlayerRef.set(player)}
               onEnded={() => setEnded(true)}
               onDuration={handleDuration}
               onProgress={handleProgress}
@@ -82,14 +87,21 @@ export const MusicPlayer = () => {
           </div>
         </div>
 
-        {/* Floating Tools (Metronome) */}
+        {/* Floating Tools (Metronome & Lyrics) */}
         <AnimatePresence>
-          {showTools && hasMetronomeData && (
+          {showFloatingTools && (
             <FloatingPlayerTools
               tempo={selectedBeat.tempo || 0}
               startTime={selectedBeat.startTime || 0}
-              currentTime={currentTime}
-              onClose={() => setShowTools(false)} // User closes it
+              tonality={selectedBeat.key}
+              playerRef={playerRef}
+              playing={playing}
+              showMetronome={showMetronome && hasMetronomeData}
+              showLyrics={showLyrics}
+              onClose={() => {
+                setShowMetronome(false);
+                setShowLyrics(false);
+              }}
             />
           )}
         </AnimatePresence>
@@ -102,8 +114,10 @@ export const MusicPlayer = () => {
             onPlayPause={handlePlayButtonClick}
             onNext={handleNextSong}
             onPrev={handlePrevSong}
-            onToggleTools={() => setShowTools(!showTools)} // Toggle button
-            isToolsOpen={showTools && (hasMetronomeData || false)}
+            onToggleMetronome={() => setShowMetronome(!showMetronome)}
+            isMetronomeOpen={showMetronome && hasMetronomeData}
+            onToggleLyrics={() => setShowLyrics(!showLyrics)}
+            isLyricsOpen={showLyrics}
           />
 
           <PlayerVolumeControl volume={volume} onVolumeChange={setVolume} />

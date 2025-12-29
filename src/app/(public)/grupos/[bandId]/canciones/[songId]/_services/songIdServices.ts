@@ -19,12 +19,15 @@ export const getSongData = ({
 
 export const getSongLyrics = ({
   params,
+  isEnabled,
 }: {
   params: { bandId: string; songId: string };
+  isEnabled?: boolean;
 }) => {
   return FetchData<LyricsProps[]>({
     key: ['SongLyrics', params.bandId, params.songId],
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics`,
+    isEnabled,
   });
 };
 

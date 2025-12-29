@@ -6,13 +6,16 @@ import { songTypes } from '@global/config/constants';
 
 type SongTypeFilter = 'all' | 'worship' | 'praise';
 
-export const useSongsFilter = (songs: SongProps[] | undefined) => {
+export const useSongsFilter = (
+  songs: SongProps[] | undefined,
+  bandId?: string,
+) => {
   const [typeFilter, setTypeFilter] = useState<SongTypeFilter>('all');
 
   // Update playlist when songs change
   useEffect(() => {
-    syncGlobalPlaylist(songs, true);
-  }, [songs]);
+    syncGlobalPlaylist(songs, true, bandId);
+  }, [songs, bandId]);
 
   const filterPredicate = useMemo(() => {
     return (song: SongProps) => {

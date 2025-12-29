@@ -10,7 +10,7 @@ import {
   ModalHeader,
   useDisclosure,
   Button,
-} from "@heroui/react";
+} from '@heroui/react';
 import { SongPropsWithCount } from '../_interfaces/songsInterface';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
 import { TrashIcon, CalendarIcon, MusicNoteIcon } from '@global/icons';
@@ -39,12 +39,11 @@ export const SongOfBandCard = ({
   });
   return (
     <div
-      className={`group relative overflow-hidden rounded-xl border-2 bg-gradient-to-br from-white to-brand-purple-50/30 p-4 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-xl
-        dark:bg-gray-900 dark:border-slate-800 dark:shadow-none
-        ${selectedSong?.id === song.id
+      className={`group relative overflow-hidden rounded-xl border-2 bg-gradient-to-br from-white to-brand-purple-50/30 p-4 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-xl dark:border-slate-800 dark:bg-gray-900 dark:shadow-none ${
+        selectedSong?.id === song.id
           ? 'border-brand-purple-400 ring-2 ring-brand-purple-200 dark:border-brand-purple-500 dark:ring-brand-purple-300'
-          : 'border-transparent hover:border-brand-purple-200 dark:hover:border-brand-purple-400'}
-      `}
+          : 'border-transparent hover:border-brand-purple-200 dark:hover:border-brand-purple-400'
+      } `}
     >
       {/* Efecto decorativo en hover */}
       <div className="absolute right-0 top-0 h-20 w-20 -translate-y-8 translate-x-8 rounded-full bg-gradient-to-br from-brand-purple-200 to-brand-blue-200 opacity-0 blur-2xl transition-opacity duration-200 group-hover:opacity-100"></div>
@@ -92,6 +91,10 @@ export const SongOfBandCard = ({
                     id: song.id,
                     name: song.title,
                     youtubeLink: song.youtubeLink,
+                    tempo: song.tempo,
+                    startTime: song.startTime,
+                    key: song.key,
+                    bandId,
                   });
                 }}
                 key="escuchar"

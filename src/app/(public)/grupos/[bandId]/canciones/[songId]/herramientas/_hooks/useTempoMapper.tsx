@@ -1,36 +1,26 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import ReactPlayer from 'react-player';
+import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { BeatMarker } from '../_interfaces/beatMapperInterfaces';
 import { useSaveSongData } from '../_services/beatMapperService';
 import { $SelectedSong } from '@global/stores/player';
 
-interface UseBeatMapperProps {
+interface UseTempoMapperProps {
   songId: string;
   bandId: string;
   initialBpm?: number;
   initialStartTime?: number;
+  currentTimeRef: React.MutableRefObject<number>;
+  duration: number;
 }
 
-export const useBeatMapper = ({
+export const useTempoMapper = ({
   songId,
   bandId,
   initialBpm,
   initialStartTime,
-}: UseBeatMapperProps) => {
-  // Mounting State
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Player State
-  const playerRef = useRef<ReactPlayer>(null);
-  const [playing, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const currentTimeRef = useRef(0);
-  const [duration, setDuration] = useState(0);
-
+  currentTimeRef,
+  duration,
+}: UseTempoMapperProps) => {
   // Data State
   const [startTime, setStartTime] = useState<number>(initialStartTime || 0);
   const [beats, setBeats] = useState<BeatMarker[]>([]);
@@ -39,7 +29,7 @@ export const useBeatMapper = ({
 
   // Settings
   const [timeSignature, setTimeSignature] = useState(4);
-  const [zoomLevel, setZoomLevel] = useState(5);
+  const [zoomLevel, setZoomLevel] = useState(6); // Default slightly zoomed in for precision
 
   // Service
   const { mutate: saveSong, isPending: isSaving } = useSaveSongData(
@@ -52,29 +42,6 @@ export const useBeatMapper = ({
     if (initialBpm) setBpm(initialBpm);
     if (initialStartTime) setStartTime(initialStartTime);
   }, [initialBpm, initialStartTime]);
-
-  // Player Handlers
-  const handleProgress = useCallback(
-    ({ playedSeconds }: { playedSeconds: number }) => {
-      currentTimeRef.current = playedSeconds;
-      setCurrentTime(playedSeconds);
-    },
-    [],
-  );
-
-  const handleDuration = useCallback((d: number) => {
-    setDuration(d);
-  }, []);
-
-  const handleSeek = (value: number) => {
-    if (playerRef.current) {
-      playerRef.current.seekTo(value, 'seconds');
-      currentTimeRef.current = value;
-      setCurrentTime(value);
-    }
-  };
-
-  const togglePlay = () => setPlaying((p) => !p);
 
   // Measure Logic
   const calculateFromMeasures = useCallback(
@@ -96,14 +63,14 @@ export const useBeatMapper = ({
   );
 
   const handleTapMeasure = useCallback(() => {
-    const now = currentTime;
+    const now = currentTimeRef.current;
     const newTaps = [...measureTaps, now].sort((a, b) => a - b);
     setMeasureTaps(newTaps);
 
     if (newTaps.length >= 2) {
       calculateFromMeasures(newTaps);
     }
-  }, [currentTime, measureTaps, calculateFromMeasures]);
+  }, [currentTimeRef, measureTaps, calculateFromMeasures]);
 
   const generateGrid = useCallback(
     (start: number, tempo: number, dur: number, signature: number) => {
@@ -166,10 +133,7 @@ export const useBeatMapper = ({
   };
 
   const handleClear = () => {
-    setStartTime(0);
-    setBpm(null);
     setMeasureTaps([]);
-    setBeats([]);
   };
 
   const handleSave = () => {
@@ -210,10 +174,7 @@ export const useBeatMapper = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (document.activeElement?.tagName === 'INPUT') return;
 
-      if (e.code === 'Space') {
-        e.preventDefault();
-        togglePlay();
-      } else if (e.key.toLowerCase() === 'b') {
+      if (e.key.toLowerCase() === 'b') {
         handleTapMeasure();
       }
     };
@@ -222,17 +183,6 @@ export const useBeatMapper = ({
   }, [handleTapMeasure]);
 
   return {
-    isMounted,
-    playerRef,
-    playing,
-    setPlaying,
-    togglePlay,
-    handleProgress,
-    handleDuration,
-    handleSeek,
-    currentTime,
-    currentTimeRef,
-    duration,
     startTime,
     beats,
     measureTaps,

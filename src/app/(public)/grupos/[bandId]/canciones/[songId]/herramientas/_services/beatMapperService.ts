@@ -1,10 +1,16 @@
 import { PostData } from '@global/services/HandleAPI';
 import { Server1API } from '@global/config/constants';
 import { SongToolsData } from './getSongService';
+import {
+  SongLyric,
+  SongChord,
+} from '@bands/[bandId]/canciones/_interfaces/songsInterface';
 
 interface SaveSongDataRequest {
-  startTime: number;
-  tempo: number;
+  startTime?: number;
+  tempo?: number;
+  lyrics?: Partial<SongLyric>[];
+  chords?: Partial<SongChord>[];
 }
 
 interface SaveSongDataResponse {
