@@ -2,11 +2,21 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, memo } from 'react';
 import ReactPlayer from 'react-player';
 import { XMarkIcon } from '@global/icons/XMarkIcon';
-import { MetronomeIcon } from '@global/icons';
+import { MetronomeIcon, MicrophoneIcon } from '@global/icons';
 import { useStore } from '@nanostores/react';
 import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/getNoteByType';
-import { $ActiveChord } from '@/stores/activeChord';
+import {
+  $ActiveChord,
+  $SongChords,
+  $SongLyrics,
+  $ActiveLyricId,
+  SongChordContext,
+  SongLyricContext,
+} from '@/stores/activeChord';
+import { $SelectedSong } from '@global/stores/player';
+import { getSongLyrics } from '@bands/[bandId]/canciones/[songId]/_services/songIdServices';
 import { $chordPreferences } from '@stores/event';
+import { structureLib } from '@global/config/constants';
 
 interface FloatingPlayerToolsProps {
   tempo: number;
@@ -14,6 +24,9 @@ interface FloatingPlayerToolsProps {
   playerRef: React.RefObject<ReactPlayer>;
   playing: boolean;
   onClose: () => void;
+  tonality?: string;
+  showMetronome: boolean;
+  showLyrics: boolean;
 }
 
 export const FloatingPlayerTools = memo(
@@ -23,157 +36,193 @@ export const FloatingPlayerTools = memo(
     playerRef,
     playing,
     onClose,
+    tonality,
+    showMetronome,
+    showLyrics,
   }: FloatingPlayerToolsProps) => {
-    const activeChord = useStore($ActiveChord);
+    const selectedSong = useStore($SelectedSong);
     const preferences = useStore($chordPreferences);
-    // Use Refs for direct DOM manipulation to avoid Re-renders specific to this component
-    const circleRef = useRef<HTMLDivElement>(null);
-    const textRef = useRef<HTMLSpanElement>(null);
-    const lastBeatRef = useRef<number>(0);
 
-    // Metronome Logic
+    // Use Refs for direct DOM manipulation
+    const viewportRef = useRef<HTMLDivElement>(null);
+    const timelineRef = useRef<HTMLDivElement>(null);
+    const lyricsDisplayRef = useRef<HTMLDivElement>(null);
+    const chordsRef = useRef<readonly SongChordContext[]>([]);
+    const lyricsRef = useRef<readonly SongLyricContext[]>([]);
+    const lastLyricId = useRef<number | null>(null);
+
+    // Subscribe to song chords and lyrics stores
     useEffect(() => {
-      // If not playing, reset visuals
+      const unsubChords = $SongChords.subscribe((chords) => {
+        chordsRef.current = chords;
+      });
+      const unsubLyrics = $SongLyrics.subscribe((lyrics) => {
+        lyricsRef.current = lyrics;
+      });
+      return () => {
+        unsubChords();
+        unsubLyrics();
+      };
+    }, []);
+
+    // Lazy Data Fetching with Hook
+    const shouldFetch =
+      !!selectedSong?.id &&
+      !!selectedSong?.bandId &&
+      (showMetronome || showLyrics);
+
+    // Check if we already have data to avoid re-fetching if not needed (optional optimization,
+    // but React Query handles caching. We mostly care about 'enabled' to prevent fetch on mount if closed)
+
+    const { data: lyricsData } = getSongLyrics({
+      params: {
+        bandId: selectedSong?.bandId ?? '',
+        songId: selectedSong?.id?.toString() ?? '',
+      },
+      isEnabled: shouldFetch,
+    });
+
+    // Populate stores when data is available
+    useEffect(() => {
+      if (lyricsData) {
+        // Populate Chords
+        const flattenedChords = lyricsData.flatMap((l) =>
+          l.chords.map((c) => ({
+            ...c,
+            startTime: c.startTime ?? l.startTime, // fallback
+          })),
+        );
+
+        $SongChords.set(flattenedChords);
+
+        // Populate Lyrics
+        const formattedLyrics = lyricsData.map((l) => ({
+          id: l.id,
+          lyrics: l.lyrics,
+          startTime: l.startTime,
+          structureTitle:
+            l.structure?.title &&
+            structureLib[l.structure.title as keyof typeof structureLib]?.es
+              ? structureLib[l.structure.title as keyof typeof structureLib].es
+              : l.structure?.title,
+        }));
+        $SongLyrics.set(formattedLyrics);
+      }
+    }, [lyricsData]);
+
+    // Metronome & Lyrics Logic
+    useEffect(() => {
       if (!playing) {
-        if (circleRef.current) circleRef.current.innerHTML = ''; // Clear beats
-        if (textRef.current) textRef.current.textContent = '-';
+        if (timelineRef.current) timelineRef.current.innerHTML = '';
+        if (lyricsDisplayRef.current) lyricsDisplayRef.current.innerHTML = '';
         return;
       }
 
-      if (!tempo || tempo <= 0) return;
-
       let animationFrameId: number;
-      const secondsPerBeat = 60 / tempo;
+      const secondsPerBeat = 60 / (tempo || 120);
+      const slotWidth = 48;
+      const windowSize = 8;
+
+      // Pre-create slots for Metronome
+      if (
+        showMetronome &&
+        timelineRef.current &&
+        timelineRef.current.children.length === 0
+      ) {
+        for (let i = 0; i < windowSize + 2; i++) {
+          const div = document.createElement('div');
+          div.className =
+            'absolute top-0 flex items-center justify-center transition-all duration-75';
+          div.style.width = `${slotWidth}px`;
+          div.style.height = '100%';
+          div.innerHTML = '<div class="slot-content"></div>';
+          timelineRef.current.appendChild(div);
+        }
+      }
 
       const loop = () => {
         const currentTime = playerRef.current?.getCurrentTime() || 0;
-        const activeChordData = $ActiveChord.get();
 
-        // 1. Calculate Standard Beat (Fallback or Base)
-        const relativeTime = currentTime - startTime;
-        const totalBeats = Math.floor(relativeTime / secondsPerBeat);
-        const currentBeatInMeasure = (totalBeats % 4) + 1;
+        // 1. Update Metronome if visible
+        if (showMetronome && timelineRef.current && tempo > 0) {
+          const relativeTime = currentTime - startTime;
+          const currentFractionalBeat = relativeTime / secondsPerBeat;
+          const currentIntBeat = Math.floor(currentFractionalBeat);
+          const startBeat = currentIntBeat - 4;
+          const children = timelineRef.current.children;
 
-        // 2. Smart Visuals (Timeline)
-        // Check if we are in a valid chord window
-        if (activeChordData && activeChordData.nextChord) {
-          const currentChordStart = activeChordData.startTime;
-          const nextChordStart = activeChordData.nextChord.startTime;
-          const duration = nextChordStart - currentChordStart;
+          for (let i = 0; i < children.length; i++) {
+            const b = startBeat + i;
+            const slot = children[i] as HTMLDivElement;
+            const contentDiv = slot.querySelector(
+              '.slot-content',
+            ) as HTMLDivElement;
+            if (!contentDiv) continue;
 
-          // How many beats in this chord duration? (Round to nearest integer)
-          const beetsInDuration = Math.max(
-            1,
-            Math.round(duration / secondsPerBeat),
+            const beatStartTime = b * secondsPerBeat + startTime;
+            const chordAtBeat = chordsRef.current.find(
+              (c) =>
+                Math.abs(c.startTime - beatStartTime) < secondsPerBeat * 0.4,
+            );
+
+            const isCenter = b === currentIntBeat;
+            const beatPhase = currentFractionalBeat % 1;
+            const isPulse = isCenter && beatPhase < 0.2;
+            const beatInMeasure = (((b % 4) + 4) % 4) + 1;
+            const isFirstBeat = beatInMeasure === 1;
+
+            let newContent = '';
+            if (chordAtBeat) {
+              const root = getNoteByType(
+                chordAtBeat.rootNote,
+                $ActiveChord.get()?.transpose ?? 0,
+                preferences,
+              );
+              const slash = chordAtBeat.slashChord
+                ? getNoteByType(
+                    chordAtBeat.slashChord,
+                    $ActiveChord.get()?.transpose ?? 0,
+                    preferences,
+                  )
+                : null;
+              newContent = `
+                  <div class="flex items-baseline justify-center font-bold text-brand-purple-400 leading-none">
+                      <span class="text-base">${root}${chordAtBeat.chordQuality || ''}</span>
+                      ${slash ? `<span class="text-[10px] opacity-70 ml-0.5">/${slash}</span>` : ''}
+                  </div>`;
+            } else {
+              newContent = `<div class="h-1.5 w-1.5 rounded-full ${isPulse ? 'bg-brand-purple-400 scale-[2]' : isFirstBeat ? 'bg-white/40' : 'bg-white/10'}"></div>`;
+            }
+
+            if (contentDiv.innerHTML !== newContent)
+              contentDiv.innerHTML = newContent;
+            slot.style.left = `${(b - startBeat) * slotWidth}px`;
+            slot.style.opacity = isCenter ? '1' : '0.4';
+            slot.style.transform = `scale(${isPulse ? 1.4 : 1})`;
+          }
+
+          const offset = -(currentFractionalBeat % 1) * slotWidth;
+          const centerShift = 192 - 4 * slotWidth;
+          timelineRef.current.style.transform = `translateX(${centerShift + offset}px)`;
+        }
+
+        // 2. Update Lyrics if visible
+        if (showLyrics && lyricsDisplayRef.current) {
+          const currentLyric = lyricsRef.current.findLast(
+            (l) => l.startTime <= currentTime,
           );
-
-          // Which beat are we on relative to the CHORD start?
-          const timeInChord = currentTime - currentChordStart;
-          const currentBeatInChord =
-            Math.floor(timeInChord / secondsPerBeat) + 1;
-
-          // Render Timeline Dots
-          if (circleRef.current) {
-            // Optimization: Only rebuild DOM if beat count changes or it's empty
-            // For now, simpler to clear/rebuild or use a more complex diffing if performance suffers.
-            // Let's try to be smart: Check if child count matches beetsInDuration
-            if (circleRef.current.childElementCount !== beetsInDuration) {
-              circleRef.current.innerHTML = '';
-              for (let i = 0; i < beetsInDuration; i++) {
-                const dot = document.createElement('div');
-                // Base styles
-                dot.className =
-                  'h-2 w-2 rounded-full transition-all duration-75 bg-white/10';
-                circleRef.current.appendChild(dot);
-              }
-              // Adjust container width/layout based on beats
-              circleRef.current.className =
-                'flex h-12 items-center justify-center gap-2 px-4 rounded-full bg-white/5 transition-all duration-75 min-w-[3rem]';
-            }
-
-            // Update active state of dots
-            const dots = circleRef.current.children;
-            for (let i = 0; i < dots.length; i++) {
-              const dot = dots[i] as HTMLDivElement;
-              // Logic: Past beats are lit, current beat flashes? Or simple progress bar style?
-              // Let's do: Current beat is bright, passed are dim, future are dark.
-
-              // 1-based index vs 0-based loop
-              const beatIndex = i + 1;
-
-              if (beatIndex < currentBeatInChord) {
-                // Passed
-                dot.className =
-                  'h-2 w-2 rounded-full transition-all duration-75 bg-white/20';
-              } else if (beatIndex === currentBeatInChord) {
-                // Current Beat - Flash logic
-                const beatPhase =
-                  (timeInChord % secondsPerBeat) / secondsPerBeat;
-                const isFlash = beatPhase < 0.2; // Quick flash start of beat
-
-                if (isFlash) {
-                  dot.className =
-                    'h-3 w-3 rounded-full transition-all duration-75 bg-brand-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.8)]';
-                } else {
-                  dot.className =
-                    'h-2.5 w-2.5 rounded-full transition-all duration-75 bg-brand-purple-500/50';
-                }
-              } else {
-                // Future
-                dot.className =
-                  'h-2 w-2 rounded-full transition-all duration-75 bg-white/5';
-              }
-            }
-
-            // Hide the text ref number when in smart mode, or use it for something else?
-            // User asked for "A - - - B", so the dots ARE the numbers.
-            if (textRef.current) textRef.current.style.display = 'none';
-          }
-        } else {
-          // FALLBACK: Standard Metronome (Just the circle pulsing)
-          // This happens if no chords, or last chord (no next chord)
-          // Revert container styles
-          if (circleRef.current) {
-            circleRef.current.innerHTML = ''; // Remove dots
-            circleRef.current.className =
-              'flex h-12 w-12 items-center justify-center rounded-full transition-all duration-75 bg-white/10';
-            // Add the single circle element if we want? Or just use the container bg?
-            // The original code used the container.
-            const relativeTimeFallback = currentTime - startTime; // Use global song start
-            const beatPhase =
-              (relativeTimeFallback % secondsPerBeat) / secondsPerBeat;
-            const isFlash = beatPhase < 0.15;
-
-            if (isFlash) {
-              circleRef.current.className =
-                'flex h-12 w-12 items-center justify-center rounded-full transition-all duration-75 scale-110 bg-brand-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.6)]';
-            } else {
-              circleRef.current.className =
-                'flex h-12 w-12 items-center justify-center rounded-full transition-all duration-75 bg-white/10';
-            }
-          }
-
-          if (textRef.current) {
-            textRef.current.style.display = 'block'; // Show number
-            // Only update text content if it changed
-            if (
-              lastBeatRef.current !== currentBeatInMeasure ||
-              textRef.current.textContent === '-'
-            ) {
-              textRef.current.textContent = currentBeatInMeasure.toString();
-              lastBeatRef.current = currentBeatInMeasure;
-            }
-
-            const relativeTimeFallback = currentTime - startTime;
-            const beatPhase =
-              (relativeTimeFallback % secondsPerBeat) / secondsPerBeat;
-            const isFlash = beatPhase < 0.15;
-
-            if (isFlash) {
-              textRef.current.className = 'text-xl font-bold text-white';
-            } else {
-              textRef.current.className = 'text-xl font-bold text-white/50';
-            }
+          if (currentLyric && currentLyric.id !== lastLyricId.current) {
+            lastLyricId.current = currentLyric.id;
+            $ActiveLyricId.set(currentLyric.id);
+            lyricsDisplayRef.current.innerHTML = `
+                <div class="flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <span class="text-[9px] uppercase tracking-widest text-brand-purple-400 font-bold mb-1">${currentLyric.structureTitle || ''}</span>
+                  <p class="text-sm font-medium text-white text-center line-clamp-2 leading-tight">${currentLyric.lyrics}</p>
+                </div>
+              `;
+          } else if (!currentLyric && lastLyricId.current !== null) {
+            lyricsDisplayRef.current.innerHTML = '';
+            lastLyricId.current = null;
           }
         }
 
@@ -182,20 +231,18 @@ export const FloatingPlayerTools = memo(
 
       loop();
 
-      // Cleanup
       return () => {
         cancelAnimationFrame(animationFrameId);
-        if (circleRef.current) {
-          circleRef.current.innerHTML = '';
-          circleRef.current.className =
-            'flex h-12 w-12 items-center justify-center rounded-full transition-all duration-75 bg-white/10';
-        }
-        if (textRef.current) {
-          textRef.current.className = 'text-xl font-bold text-white/50';
-          textRef.current.style.display = 'block';
-        }
       };
-    }, [tempo, startTime, playerRef, playing]);
+    }, [
+      tempo,
+      startTime,
+      playerRef,
+      playing,
+      preferences,
+      showMetronome,
+      showLyrics,
+    ]);
 
     return (
       <motion.div
@@ -204,13 +251,19 @@ export const FloatingPlayerTools = memo(
         initial={{ opacity: 0, scale: 0.9, y: 0, x: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        className="absolute bottom-24 right-4 z-[1000] flex w-[15rem] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/60 shadow-2xl backdrop-blur-xl"
+        className="absolute bottom-24 right-4 z-[1000] flex w-[24rem] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/80 shadow-2xl backdrop-blur-xl"
       >
         {/* Header / Drag Handle */}
         <div className="flex cursor-move items-center justify-between bg-white/5 px-3 py-2">
           <div className="flex items-center gap-2 text-xs font-semibold text-white/80">
-            <MetronomeIcon className="h-3.5 w-3.5" />
-            <span>Metrónomo y Acordes</span>
+            {showMetronome ? (
+              <MetronomeIcon className="h-3.5 w-3.5" />
+            ) : (
+              <MicrophoneIcon className="h-3.5 w-3.5 text-brand-purple-400" />
+            )}
+            <span>
+              {showMetronome ? 'Metrónomo inteligente' : 'Letra en vivo'}
+            </span>
           </div>
           <button
             onClick={onClose}
@@ -221,102 +274,52 @@ export const FloatingPlayerTools = memo(
         </div>
 
         {/* Content */}
-        <div className="flex flex-col items-center justify-center p-4">
-          {/* Metronome Visual */}
-          <div className="flex items-center gap-4">
-            {/* Active Chord Display (if available) */}
-            {activeChord && (
-              <div className="flex items-center gap-4">
-                {/* Current Chord */}
-                <div className="flex flex-col items-center justify-center">
-                  <div className="flex items-baseline gap-0.5 text-2xl font-bold text-brand-purple-400">
-                    <span>
-                      {getNoteByType(
-                        activeChord.rootNote,
-                        activeChord.transpose,
-                        preferences,
-                      )}
-                      {activeChord.chordQuality}
-                    </span>
-                    {activeChord.slashChord && (
-                      <span className="text-lg opacity-80">
-                        /
-                        {getNoteByType(
-                          activeChord.slashChord,
-                          activeChord.transpose,
-                          preferences,
-                        )}
-                      </span>
+        <div className="flex min-h-[5rem] flex-col items-center justify-center p-4">
+          {showMetronome && (
+            <div
+              ref={viewportRef}
+              className="relative mb-2 h-14 w-full overflow-hidden rounded-xl bg-white/5"
+            >
+              {/* Sliding Container */}
+              <div
+                ref={timelineRef}
+                className="absolute top-0 flex h-full will-change-transform"
+              >
+                {/* Slots will be injected here */}
+              </div>
+            </div>
+          )}
+
+          {showLyrics && (
+            <div
+              ref={lyricsDisplayRef}
+              className={`flex w-full items-center justify-center ${showMetronome ? 'mt-4 border-t border-white/5 pt-4' : ''}`}
+            >
+              {/* Lyrics will be injected here */}
+            </div>
+          )}
+
+          {/* Bottom Info */}
+          <div className="mt-3 flex w-full items-center justify-between px-2 text-[10px] font-bold uppercase tracking-wider text-white/40">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <span className="h-1 w-1 rounded-full bg-brand-purple-500"></span>
+                <span>{tempo} BPM</span>
+              </div>
+              {tonality && (
+                <div className="flex items-center gap-1">
+                  <span className="h-1 w-1 rounded-full bg-brand-purple-500"></span>
+                  <span>
+                    escala:{' '}
+                    {getNoteByType(
+                      tonality,
+                      $ActiveChord.get()?.transpose ?? 0,
+                      preferences,
                     )}
-                  </div>
-                </div>
-
-                {/* Ref-based circle / Timeline */}
-                <div
-                  ref={circleRef}
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 transition-all duration-75"
-                >
-                  {/* Ref-based text - HIDDEN in smart mode */}
-                  <span
-                    ref={textRef}
-                    className="text-xl font-bold text-white/50"
-                  >
-                    -
                   </span>
                 </div>
-
-                {/* Next Chord */}
-                {activeChord.nextChord && (
-                  <div className="flex flex-col items-center justify-center opacity-50">
-                    <div className="flex items-baseline gap-0.5 text-lg font-bold text-white">
-                      <span>
-                        {getNoteByType(
-                          activeChord.nextChord.rootNote,
-                          activeChord.transpose,
-                          preferences,
-                        )}
-                        {activeChord.nextChord.chordQuality}
-                      </span>
-                      {activeChord.nextChord.slashChord && (
-                        <span className="text-sm opacity-80">
-                          /
-                          {getNoteByType(
-                            activeChord.nextChord.slashChord,
-                            activeChord.transpose,
-                            preferences,
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Fallback for No Chords (Just Tempo and Beat) */}
-            {!activeChord && (
-              <div className="flex items-center gap-4">
-                <div className="flex flex-col items-end leading-none">
-                  <span className="text-[10px] uppercase text-white/50">
-                    Tempo
-                  </span>
-                  <span className="font-mono text-xl font-bold text-white">
-                    {tempo}
-                  </span>
-                </div>
-                <div
-                  ref={circleRef}
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 transition-all duration-75"
-                >
-                  <span
-                    ref={textRef}
-                    className="text-xl font-bold text-white/50"
-                  >
-                    -
-                  </span>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </motion.div>

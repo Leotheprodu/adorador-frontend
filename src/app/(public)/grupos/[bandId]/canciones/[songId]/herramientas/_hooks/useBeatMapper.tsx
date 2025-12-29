@@ -28,6 +28,7 @@ export const useBeatMapper = ({
   const playerRef = useRef<ReactPlayer>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const currentTimeRef = useRef(0);
   const [duration, setDuration] = useState(0);
 
   // Data State
@@ -55,6 +56,7 @@ export const useBeatMapper = ({
   // Player Handlers
   const handleProgress = useCallback(
     ({ playedSeconds }: { playedSeconds: number }) => {
+      currentTimeRef.current = playedSeconds;
       setCurrentTime(playedSeconds);
     },
     [],
@@ -67,6 +69,7 @@ export const useBeatMapper = ({
   const handleSeek = (value: number) => {
     if (playerRef.current) {
       playerRef.current.seekTo(value, 'seconds');
+      currentTimeRef.current = value;
       setCurrentTime(value);
     }
   };
@@ -228,6 +231,7 @@ export const useBeatMapper = ({
     handleDuration,
     handleSeek,
     currentTime,
+    currentTimeRef,
     duration,
     startTime,
     beats,

@@ -2,6 +2,7 @@ import { Button, Tooltip } from '@heroui/react';
 import { PlayIcon } from '@global/icons/PlayIcon';
 import { PauseIcon } from '@global/icons/PauseIcon';
 import { CheckIcon } from '@global/icons/CheckIcon';
+import { TrashIcon } from '@global/icons/TrashIcon';
 
 interface MetronomeControlsProps {
   playing: boolean;
@@ -10,6 +11,8 @@ interface MetronomeControlsProps {
   onApply: () => void;
   measureTapsCount: number;
   bpm: number | null;
+  onClear?: () => void;
+  onAdjustCtx?: (amountMs: number) => void;
 }
 
 export const MetronomeControls = ({
@@ -19,6 +22,7 @@ export const MetronomeControls = ({
   onApply,
   measureTapsCount,
   bpm,
+  onClear,
 }: MetronomeControlsProps) => {
   return (
     <div className="flex flex-col gap-3">
@@ -40,7 +44,7 @@ export const MetronomeControls = ({
         <div className="flex flex-col">
           <span className="font-bold text-white">Reproductor</span>
           <span className="text-xs text-white/50">
-            Usa 'Espacio' para pausar.
+            Usa &apos;Espacio&apos; para pausar.
           </span>
         </div>
 
@@ -62,6 +66,18 @@ export const MetronomeControls = ({
             )}
           </Button>
         </Tooltip>
+
+        {onClear && measureTapsCount > 0 && (
+          <Button
+            isIconOnly
+            color="danger"
+            variant="flat"
+            onPress={onClear}
+            title="Borrar marcaciones"
+          >
+            <TrashIcon className="h-4 w-4" />
+          </Button>
+        )}
 
         {measureTapsCount >= 2 && bpm && (
           <Button

@@ -5,7 +5,7 @@ import { NoLyricsSong } from './NoLyricsSong';
 import { $PlayerRef } from '@stores/player';
 import { useStore } from '@nanostores/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { $ActiveChord } from '@/stores/activeChord';
+import { $ActiveChord, $SongChords } from '@/stores/activeChord';
 
 export const LyricsSection = ({
   params,
@@ -67,7 +67,7 @@ export const LyricsSection = ({
   // Memoize this to avoid re-calculation on every render
   const allChords = useMemo(() => {
     if (!lyrics) return [];
-    return lyrics
+    const flattened = lyrics
       .flatMap((line) =>
         (line.chords || []).map((chord) => ({
           ...chord,
@@ -75,6 +75,19 @@ export const LyricsSection = ({
         })),
       )
       .sort((a, b) => (a.startTime ?? 0) - (b.startTime ?? 0)); // Ensure sorted by time for next/prev logic
+
+    // Sync to global store for tools
+    $SongChords.set(
+      flattened.map((c) => ({
+        rootNote: c.rootNote,
+        chordQuality: c.chordQuality,
+        slashChord: c.slashChord,
+        id: c.id,
+        startTime: c.startTime ?? 0,
+      })),
+    );
+
+    return flattened;
   }, [lyrics]);
 
   // Reset active states when features are disabled
@@ -133,7 +146,7 @@ export const LyricsSection = ({
         // Changed from isSyncChords to isFollowMusic
         // Find the index of the active chord
         const activeChordIndex = allChords.findIndex((chord, index) => {
-          const currTime = chord.startTime;
+          const currTime = chord.startTime ?? -1;
           const nextTime = allChords[index + 1]?.startTime ?? Infinity; // Use next chord start as end of current
           return (
             currTime > 0 && currTime <= currentTime && currentTime < nextTime
@@ -194,7 +207,15 @@ export const LyricsSection = ({
 
     loop();
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isFollowMusic, isSyncChords, lyrics, playerRef, allChords, transpose]);
+  }, [
+    isFollowMusic,
+    isSyncChords,
+    lyrics,
+    playerRef,
+    allChords,
+    transpose,
+    activeChordId,
+  ]);
 
   // Sync transpose changes to store if active chord exists
   useEffect(() => {

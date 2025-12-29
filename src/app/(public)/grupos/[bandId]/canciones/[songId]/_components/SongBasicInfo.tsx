@@ -91,6 +91,7 @@ export const SongBasicInfo = ({
           youtubeLink: data?.youtubeLink,
           tempo: data?.tempo,
           startTime: data?.startTime,
+          key: data?.key,
         },
       ]);
     }
@@ -106,6 +107,8 @@ export const SongBasicInfo = ({
         youtubeLink: data.youtubeLink,
         tempo: data.tempo,
         startTime: data.startTime,
+        key: data.key,
+        bandId,
       });
     }
   };

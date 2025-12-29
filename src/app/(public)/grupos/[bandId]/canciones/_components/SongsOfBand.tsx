@@ -29,7 +29,7 @@ export const SongsOfBand = ({ params }: { params: { bandId: string } }) => {
     filterPredicate,
     sortComparator,
     getSearchFields,
-  } = useSongsFilter(data);
+  } = useSongsFilter(data, params.bandId);
 
   const { searchTerm, setSearchTerm, filteredData } = useListFilter({
     data,

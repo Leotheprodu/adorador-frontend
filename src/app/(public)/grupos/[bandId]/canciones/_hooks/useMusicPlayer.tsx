@@ -19,7 +19,7 @@ export const useMusicPlayer = () => {
     if (playerRef.current) {
       $PlayerRef.set(playerRef.current);
     }
-  }, [playerRef.current]);
+  }, []);
 
   const [playing, setPlaying] = useState<boolean>(true);
   const [ended, setEnded] = useState<boolean>(false);

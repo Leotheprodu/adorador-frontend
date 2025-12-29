@@ -102,7 +102,7 @@ export const LyricsSidebar = ({
           <div className="flex flex-col">
             <h3 className="font-bold text-white">Sincronización</h3>
             <p className="text-white/50 text-tiny">
-              Presiona 'L' para asignar tiempo
+              Presiona &apos;L&apos; para asignar tiempo
             </p>
           </div>
           <div className="flex gap-2">

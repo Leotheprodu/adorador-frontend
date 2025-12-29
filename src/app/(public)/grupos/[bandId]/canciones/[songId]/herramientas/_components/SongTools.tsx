@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { Card, CardBody, Tab, Tabs, Button, Slider } from '@heroui/react';
 import { PlayIcon } from '@global/icons/PlayIcon';
@@ -15,10 +15,10 @@ import { MetronomeControls } from './MetronomeControls';
 import { BeatMapperSettings } from './BeatMapperSettings';
 import { LyricsSidebar } from './LyricsSidebar';
 import { ChordsSidebar } from './ChordsSidebar';
-import { SongProps } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
+import { SongToolsData } from '../_services/getSongService';
 
 interface SongToolsProps {
-  songData: SongProps;
+  songData: SongToolsData;
   bandId: string;
 }
 
@@ -98,7 +98,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [togglePlay, currentTimeRef]); // Depend on Ref object (stable)
+  }, [togglePlay, currentTimeRef, handleSeek, tempoTools.bpm]); // Depend on Ref object (stable)
 
   // Helper for empty state
   if (!songData.youtubeLink) {
@@ -118,24 +118,30 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
           {activeMode === 'tempo' && (
             <div className="text-sm text-white/70">
               <span className="font-bold text-white">Modo Tempo:</span> Presiona{' '}
-              <span className="text-brand-yellow-400 font-bold">'B'</span> en el
-              tiempo 1.
+              <span className="text-brand-yellow-400 font-bold">
+                &apos;B&apos;
+              </span>{' '}
+              en el tiempo 1.
             </div>
           )}
           {activeMode === 'lyrics' && (
             <div className="text-sm text-white/70">
               <span className="font-bold text-white">Modo Letras:</span>{' '}
               Presiona{' '}
-              <span className="font-bold text-brand-purple-400">'L'</span> para
-              asignar línea.
+              <span className="font-bold text-brand-purple-400">
+                &apos;L&apos;
+              </span>{' '}
+              para asignar línea.
             </div>
           )}
           {activeMode === 'chords' && (
             <div className="text-sm text-white/70">
               <span className="font-bold text-white">Modo Acordes:</span>{' '}
               Presiona{' '}
-              <span className="font-bold text-brand-purple-400">'A'</span> para
-              asignar acorde.
+              <span className="font-bold text-brand-purple-400">
+                &apos;A&apos;
+              </span>{' '}
+              para asignar acorde.
             </div>
           )}
 
@@ -222,7 +228,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
                 <div className="flex flex-col">
                   <span className="font-bold text-white">Reproductor</span>
                   <span className="text-xs text-white/50">
-                    Usa 'Espacio' para pausar.
+                    Usa &apos;Espacio&apos; para pausar.
                   </span>
                 </div>
 
@@ -260,7 +266,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
                 <div className="flex flex-col">
                   <span className="font-bold text-white">Reproductor</span>
                   <span className="text-xs text-white/50">
-                    Usa 'Espacio' para pausar.
+                    Usa &apos;Espacio&apos; para pausar.
                   </span>
                 </div>
 
@@ -328,7 +334,9 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
         <Tabs
           aria-label="Herramientas"
           selectedKey={activeMode}
-          onSelectionChange={(key) => setActiveMode(key as any)}
+          onSelectionChange={(key) =>
+            setActiveMode(key as 'tempo' | 'lyrics' | 'chords')
+          }
           className="w-full"
           fullWidth
           size="sm"
@@ -381,6 +389,8 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
                 setTimeSignature={tempoTools.setTimeSignature}
                 startTime={tempoTools.startTime}
                 onAdjustStartTime={tempoTools.adjustStartTime}
+                zoomLevel={tempoTools.zoomLevel}
+                setZoomLevel={tempoTools.setZoomLevel}
               />
 
               {/* Grid Preview List */}
@@ -410,7 +420,7 @@ export const SongTools = ({ songData, bandId }: SongToolsProps) => {
                     <p className="max-w-[180px] text-xs">
                       Reproduce la canción y presiona{' '}
                       <span className="text-brand-yellow-400 font-bold">
-                        'B'
+                        &apos;B&apos;
                       </span>{' '}
                       o{' '}
                       <span className="text-brand-yellow-400 font-bold">

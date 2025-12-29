@@ -5,6 +5,8 @@ interface BeatMapperSettingsProps {
   setTimeSignature: (val: number) => void;
   startTime: number;
   onAdjustStartTime: (ms: number) => void;
+  zoomLevel: number;
+  setZoomLevel: (val: number) => void;
 }
 
 export const BeatMapperSettings = ({
@@ -12,6 +14,8 @@ export const BeatMapperSettings = ({
   setTimeSignature,
   startTime,
   onAdjustStartTime,
+  zoomLevel,
+  setZoomLevel,
 }: BeatMapperSettingsProps) => {
   return (
     <div className="flex flex-col gap-4">
@@ -67,6 +71,20 @@ export const BeatMapperSettings = ({
           <p className="text-[10px] text-white/40">
             Ajusta el inicio exacto del primer golpe.
           </p>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-white/50">Zoom</label>
+          <Slider
+            size="sm"
+            step={0.5}
+            minValue={1}
+            maxValue={20}
+            value={zoomLevel}
+            onChange={(v) => setZoomLevel(v as number)}
+            className="max-w-md"
+            color="foreground"
+          />
         </div>
       </div>
     </div>

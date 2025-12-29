@@ -7,6 +7,8 @@ export type selectedSongProps = {
   name: string;
   tempo?: number;
   startTime?: number;
+  key?: string;
+  bandId?: string;
 };
 
 export const $SelectedSong = atom<selectedSongProps | null>(null);

@@ -26,7 +26,7 @@ export const useSongIdPage = (params: SongIdParams) => {
     useLyricsEditMode(params.bandId, params.songId);
   const [isFollowMusic, setIsFollowMusic] = useState(false);
   const [isSyncChords, setIsSyncChords] = useState(false);
-  const [transpose, setTranspose] = useState(0);
+  const [transpose] = useState(0);
 
   // Stores
   const chordPreferences = useStore($chordPreferences);

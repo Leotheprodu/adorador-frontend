@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Spinner } from '@heroui/react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@global/icons/ArrowLeftIcon';

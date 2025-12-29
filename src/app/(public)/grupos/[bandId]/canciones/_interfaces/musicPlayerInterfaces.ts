@@ -20,8 +20,10 @@ export interface PlayerControlsProps {
   onPlayPause: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onNext: () => void;
   onPrev: () => void;
-  onToggleTools?: () => void;
-  isToolsOpen?: boolean;
+  onToggleMetronome?: () => void;
+  isMetronomeOpen?: boolean;
+  onToggleLyrics?: () => void;
+  isLyricsOpen?: boolean;
 }
 
 export interface PlayerVolumeControlProps {

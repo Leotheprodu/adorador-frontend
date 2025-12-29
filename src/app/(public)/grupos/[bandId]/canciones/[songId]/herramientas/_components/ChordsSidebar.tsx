@@ -121,6 +121,7 @@ interface ChordsSidebarProps {
   onClearDetail: (id: number) => void;
   onClearAll: () => void;
   onSeek: (time: number) => void;
+  onManualAdjust: (id: number, direction: 1 | -1) => void;
   isChordDirty: (id: number) => boolean;
   adjustmentUnit?: string;
   quantizationMode: QuantizationMode;
@@ -155,10 +156,6 @@ export const ChordsSidebar = memo(
       }
     }, [activeChordId]);
 
-    const getLyricText = (lyricId: number) => {
-      return lyrics.find((l) => l.id === lyricId)?.lyrics || '...';
-    };
-
     // Optimize chord lookup
     const chordsByLine = useMemo(() => {
       const map = new Map<number, SongChord[]>();
@@ -179,7 +176,7 @@ export const ChordsSidebar = memo(
                 Sincronización de Acordes
               </h3>
               <p className="text-white/50 text-tiny">
-                Presiona 'C' para asignar tiempo
+                Presiona &apos;C&apos; para asignar tiempo
               </p>
             </div>
             <div className="flex gap-2">
@@ -265,7 +262,7 @@ export const ChordsSidebar = memo(
 
                   <div className="rounded-lg bg-white/5 p-2">
                     <p className="mb-2 px-1 text-sm italic text-white/50">
-                      "{line.lyrics}"
+                      &quot;{line.lyrics}&quot;
                     </p>
                     <div className="flex flex-col gap-2">
                       {lineChords.map((chord) => (

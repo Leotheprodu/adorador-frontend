@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { SongLyric, SongChord } from '../../../_interfaces/songsInterface';
 import { useSaveChordsData } from '../_services/lyricsService';
@@ -113,7 +113,7 @@ export const useChordsMapper = ({
     // 4. ATOMIC UPDATE: Set both states. React batching handles the rest.
     setChords(newChords);
     setActiveChordId(nextId);
-  }, [chords, activeChordId, beats, quantizationMode]);
+  }, [chords, activeChordId, beats, quantizationMode, currentTimeRef]);
 
   const handleManualAdjust = useCallback(
     (id: number, direction: 1 | -1) => {
