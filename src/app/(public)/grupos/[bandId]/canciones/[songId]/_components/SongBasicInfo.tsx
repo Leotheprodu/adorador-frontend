@@ -7,11 +7,9 @@ import {
   DocumentEditIcon,
   EyeIcon,
   MusicNoteIcon,
-  EditIcon,
   WrenchIcon,
   BookmarkIcon,
   ClockIcon,
-  MusicalNoteIcon,
 } from '@global/icons';
 import Link from 'next/link';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';

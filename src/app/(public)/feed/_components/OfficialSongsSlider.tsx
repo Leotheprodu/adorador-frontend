@@ -95,7 +95,10 @@ export const OfficialSongsSlider = ({ songs }: OfficialSongsSliderProps) => {
           toast.success('Canción copiada a tu grupo exitosamente');
           onCopyClose();
         },
-        onError: (error: any) => {
+        onError: (error: {
+          response?: { data?: { message?: string } };
+          message?: string;
+        }) => {
           console.error('Copy Error:', error);
           let errorMessage =
             error?.response?.data?.message ||
