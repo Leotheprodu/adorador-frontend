@@ -7,6 +7,8 @@ export interface BaseSongForPlaylist {
   key?: string;
   tempo?: number;
   startTime?: number;
+  hasSyncedLyrics?: boolean;
+  hasSyncedChords?: boolean;
 }
 
 /**
@@ -39,6 +41,8 @@ export const syncGlobalPlaylist = (
       key: song.key,
       tempo: song.tempo,
       startTime: song.startTime,
+      hasSyncedLyrics: song.hasSyncedLyrics,
+      hasSyncedChords: song.hasSyncedChords,
     }));
 
     if (shouldSort) {

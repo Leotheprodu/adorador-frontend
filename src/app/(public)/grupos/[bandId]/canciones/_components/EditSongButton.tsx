@@ -5,7 +5,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from "@heroui/react";
+} from '@heroui/react';
 import { FormAddNewSong } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_components/addSongToEvent/FormAddNewSong';
 import { useEditSong } from '@bands/[bandId]/canciones/_hooks/useEditSong';
 import { SongPropsWithoutId } from '@bands/[bandId]/canciones/_interfaces/songsInterface';
@@ -37,8 +37,8 @@ export const EditSongButton = ({
     <>
       <Button
         size="sm"
-        onClick={handleOpenModal}
-        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800"
+        variant="flat"
+        onPress={handleOpenModal}
         startContent={<EditIcon className="h-4 w-4" />}
       >
         Editar Detalles

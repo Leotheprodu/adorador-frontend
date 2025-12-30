@@ -44,7 +44,7 @@ export const SongIdMainPage = ({
   const hasLyrics = LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0;
 
   return (
-    <UIGuard isLoading={isLoading}>
+    <UIGuard isLoading={isLoading} isLoggedIn>
       <div className="flex flex-col items-center overflow-hidden">
         {/* Alert for stored lyrics */}
         <StoredLyricsAlert />
