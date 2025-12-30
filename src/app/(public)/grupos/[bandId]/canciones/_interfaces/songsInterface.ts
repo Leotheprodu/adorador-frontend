@@ -3,6 +3,8 @@ export interface SongProps extends SongPropsWithoutId {
   videoLyrics?: SongVideoLyrics[];
   lyrics?: SongLyric[];
   chords?: SongChord[];
+  hasSyncedLyrics?: boolean;
+  hasSyncedChords?: boolean;
 }
 
 export type SongSEOProps = Pick<SongProps, 'title' | 'artist' | 'youtubeLink'>;

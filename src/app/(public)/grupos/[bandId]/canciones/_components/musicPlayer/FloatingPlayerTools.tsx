@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { useEffect, useRef, memo } from 'react';
+import { useEffect, useRef, memo, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { XMarkIcon } from '@global/icons/XMarkIcon';
-import { MetronomeIcon, MicrophoneIcon } from '@global/icons';
+import { MetronomeIcon, MicrophoneIcon, MinusIcon } from '@global/icons';
 import { useStore } from '@nanostores/react';
 import { getNoteByType } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/getNoteByType';
 import {
@@ -244,14 +244,20 @@ export const FloatingPlayerTools = memo(
       showLyrics,
     ]);
 
+    const [isMinimized, setIsMinimized] = useState(false);
+
     return (
       <motion.div
         drag
         dragMomentum={false}
         initial={{ opacity: 0, scale: 0.9, y: 0, x: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          height: isMinimized ? 'auto' : 'auto',
+        }}
         exit={{ opacity: 0, scale: 0.9 }}
-        className="absolute bottom-24 right-4 z-[1000] flex w-[24rem] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/80 shadow-2xl backdrop-blur-xl"
+        className={`absolute bottom-24 right-4 z-[1000] flex w-[24rem] flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/80 shadow-2xl backdrop-blur-xl transition-all duration-300 ${isMinimized ? 'w-[18rem]' : ''}`}
       >
         {/* Header / Drag Handle */}
         <div className="flex cursor-move items-center justify-between bg-white/5 px-3 py-2">
@@ -265,63 +271,73 @@ export const FloatingPlayerTools = memo(
               {showMetronome ? 'Metrónomo inteligente' : 'Letra en vivo'}
             </span>
           </div>
-          <button
-            onClick={onClose}
-            className="rounded-full p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <XMarkIcon className="h-3.5 w-3.5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="rounded-full p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <MinusIcon className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={onClose}
+              className="rounded-full p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <XMarkIcon className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
-        <div className="flex min-h-[5rem] flex-col items-center justify-center p-4">
-          {showMetronome && (
-            <div
-              ref={viewportRef}
-              className="relative mb-2 h-14 w-full overflow-hidden rounded-xl bg-white/5"
-            >
-              {/* Sliding Container */}
+        {!isMinimized && (
+          <div className="flex min-h-[5rem] flex-col items-center justify-center p-4">
+            {showMetronome && (
               <div
-                ref={timelineRef}
-                className="absolute top-0 flex h-full will-change-transform"
+                ref={viewportRef}
+                className="relative mb-2 h-14 w-full overflow-hidden rounded-xl bg-white/5"
               >
-                {/* Slots will be injected here */}
+                {/* Sliding Container */}
+                <div
+                  ref={timelineRef}
+                  className="absolute top-0 flex h-full will-change-transform"
+                >
+                  {/* Slots will be injected here */}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {showLyrics && (
-            <div
-              ref={lyricsDisplayRef}
-              className={`flex w-full items-center justify-center ${showMetronome ? 'mt-4 border-t border-white/5 pt-4' : ''}`}
-            >
-              {/* Lyrics will be injected here */}
-            </div>
-          )}
-
-          {/* Bottom Info */}
-          <div className="mt-3 flex w-full items-center justify-between px-2 text-[10px] font-bold uppercase tracking-wider text-white/40">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                <span className="h-1 w-1 rounded-full bg-brand-purple-500"></span>
-                <span>{tempo} BPM</span>
+            {showLyrics && (
+              <div
+                ref={lyricsDisplayRef}
+                className={`flex w-full items-center justify-center ${showMetronome ? 'mt-4 border-t border-white/5 pt-4' : ''}`}
+              >
+                {/* Lyrics will be injected here */}
               </div>
-              {tonality && (
+            )}
+
+            {/* Bottom Info */}
+            <div className="mt-3 flex w-full items-center justify-between px-2 text-[10px] font-bold uppercase tracking-wider text-white/40">
+              <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
                   <span className="h-1 w-1 rounded-full bg-brand-purple-500"></span>
-                  <span>
-                    escala:{' '}
-                    {getNoteByType(
-                      tonality,
-                      $ActiveChord.get()?.transpose ?? 0,
-                      preferences,
-                    )}
-                  </span>
+                  <span>{tempo} BPM</span>
                 </div>
-              )}
+                {tonality && (
+                  <div className="flex items-center gap-1">
+                    <span className="h-1 w-1 rounded-full bg-brand-purple-500"></span>
+                    <span>
+                      escala:{' '}
+                      {getNoteByType(
+                        tonality,
+                        $ActiveChord.get()?.transpose ?? 0,
+                        preferences,
+                      )}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </motion.div>
     );
   },

@@ -9,6 +9,8 @@ export type selectedSongProps = {
   startTime?: number;
   key?: string;
   bandId?: string;
+  hasSyncedLyrics?: boolean;
+  hasSyncedChords?: boolean;
 };
 
 export const $SelectedSong = atom<selectedSongProps | null>(null);

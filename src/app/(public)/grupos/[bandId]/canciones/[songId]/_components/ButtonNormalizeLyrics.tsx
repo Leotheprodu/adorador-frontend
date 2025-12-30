@@ -8,7 +8,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@heroui/react";
+} from '@heroui/react';
 import { normalizeLyricsService } from '../_services/songIdServices';
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import toast from 'react-hot-toast';
@@ -60,9 +60,9 @@ export const ButtonNormalizeLyrics = ({
     <>
       <Button
         size="sm"
-        onClick={onOpen}
-        disabled={isProcessing}
-        className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+        variant="flat"
+        onPress={onOpen}
+        isDisabled={isProcessing}
         startContent={<span className="text-base">🔧</span>}
       >
         Normalizar
@@ -101,20 +101,21 @@ export const ButtonNormalizeLyrics = ({
               </ModalBody>
               <ModalFooter className="dark:bg-gray-900">
                 <Button
-                  className="border-2 border-slate-200 bg-white font-semibold text-slate-700 transition-all hover:border-brand-purple-300 hover:bg-brand-purple-50 dark:border-slate-700 dark:bg-gray-900 dark:text-slate-100 dark:hover:border-brand-purple-400 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  variant="light"
+                  color="danger"
                   onPress={onClose}
-                  disabled={isProcessing}
+                  isDisabled={isProcessing}
                 >
                   Cancelar
                 </Button>
                 <Button
-                  className="border-2 border-primary-500 bg-primary-500 font-semibold text-white transition-all hover:border-primary-600 hover:bg-primary-600 dark:border-primary-400 dark:bg-primary-500 dark:text-white dark:hover:border-primary-300 dark:hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  color="primary"
                   onPress={() => {
                     handleNormalize();
                     onClose();
                   }}
                   isLoading={isProcessing}
-                  disabled={isProcessing}
+                  isDisabled={isProcessing}
                 >
                   {isProcessing ? 'Normalizando...' : 'Normalizar'}
                 </Button>

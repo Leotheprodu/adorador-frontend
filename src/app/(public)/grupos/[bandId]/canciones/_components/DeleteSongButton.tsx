@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@heroui/react";
+} from '@heroui/react';
 import { useDeleteSong } from '@bands/[bandId]/canciones/_hooks/useDeleteSong';
 import { TrashIcon } from '@global/icons';
 
@@ -29,8 +29,9 @@ export const DeleteSongButton = ({
     <>
       <Button
         size="sm"
-        onClick={onOpen}
-        className="border-2 border-red-200 bg-white font-semibold text-red-600 transition-all hover:border-red-300 hover:bg-red-50 dark:border-red-700 dark:bg-gray-900 dark:text-red-400 dark:hover:border-red-400 dark:hover:bg-gray-800"
+        variant="flat"
+        color="danger"
+        onPress={onOpen}
         startContent={<TrashIcon className="h-4 w-4" />}
       >
         Eliminar

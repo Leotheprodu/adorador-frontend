@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { FeedClient } from './_components/FeedClient';
+import { OfficialSongsFeed } from './_components/OfficialSongsFeed';
 
 export const metadata: Metadata = {
   title: 'Feed Social - zamr',
@@ -20,6 +21,9 @@ export default function FeedPage() {
             Comparte canciones y bendice a otros grupos de alabanza
           </p>
         </div>
+
+        {/* Official Songs Slider */}
+        <OfficialSongsFeed />
 
         {/* Feed Content */}
         <FeedClient />

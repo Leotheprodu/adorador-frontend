@@ -41,7 +41,8 @@ export const MusicPlayer = () => {
     selectedBeat &&
     selectedBeat.tempo &&
     selectedBeat.tempo > 0 &&
-    selectedBeat.startTime !== undefined
+    selectedBeat.startTime !== undefined &&
+    selectedBeat.hasSyncedChords
   );
 
   const showFloatingTools = (showMetronome && hasMetronomeData) || showLyrics;
@@ -114,9 +115,17 @@ export const MusicPlayer = () => {
             onPlayPause={handlePlayButtonClick}
             onNext={handleNextSong}
             onPrev={handlePrevSong}
-            onToggleMetronome={() => setShowMetronome(!showMetronome)}
+            onToggleMetronome={
+              selectedBeat?.hasSyncedChords
+                ? () => setShowMetronome(!showMetronome)
+                : undefined
+            }
             isMetronomeOpen={showMetronome && hasMetronomeData}
-            onToggleLyrics={() => setShowLyrics(!showLyrics)}
+            onToggleLyrics={
+              selectedBeat?.hasSyncedLyrics
+                ? () => setShowLyrics(!showLyrics)
+                : undefined
+            }
             isLyricsOpen={showLyrics}
           />
 
