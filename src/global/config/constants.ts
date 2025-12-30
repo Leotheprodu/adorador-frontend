@@ -351,4 +351,4 @@ export const backgroundImages = [
   '/images/backgrounds/paisaje_6.avif',
 ];
 
-export const OFFICIAL_BAND_ID = process.env.NODE_ENV === 'production' ? 8 : 1;
+export const OFFICIAL_BAND_ID = process.env.NODE_ENV === 'production' ? 6 : 1;
