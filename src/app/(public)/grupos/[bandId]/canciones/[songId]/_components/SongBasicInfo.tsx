@@ -346,27 +346,27 @@ export const SongBasicInfo = ({
                 />
 
                 {/* Practice Mode Toggle */}
-                {isMember && (
-                  <Button
-                    size="md"
-                    variant={isPracticeMode ? 'solid' : 'bordered'}
-                    color={isPracticeMode ? 'success' : 'default'}
-                    onPress={() => onPracticeModeChange?.(!isPracticeMode)}
-                    startContent={
-                      isPracticeMode ? (
-                        <MusicNoteIcon className="h-5 w-5" />
-                      ) : (
-                        <MusicNoteIcon className="h-5 w-5 text-default-500" />
-                      )
-                    }
-                    className={`font-medium ${!isPracticeMode && 'border-default-300 text-default-600 hover:border-success-500 hover:text-success-600'}`}
-                  >
-                    Modo Práctica
-                  </Button>
-                )}
+
+                <Button
+                  isDisabled={!isMember}
+                  size="md"
+                  variant={isPracticeMode ? 'solid' : 'bordered'}
+                  color={isPracticeMode ? 'success' : 'default'}
+                  onPress={() => onPracticeModeChange?.(!isPracticeMode)}
+                  startContent={
+                    isPracticeMode ? (
+                      <MusicNoteIcon className="h-5 w-5" />
+                    ) : (
+                      <MusicNoteIcon className="h-5 w-5 text-default-500" />
+                    )
+                  }
+                  className={`font-medium ${!isPracticeMode && 'border-default-300 text-default-600 hover:border-success-500 hover:text-success-600'}`}
+                >
+                  Modo Práctica
+                </Button>
 
                 {/* Practice Options (visible when active) */}
-                {isPracticeMode && isMember && (
+                {isPracticeMode && (
                   <div className="flex animate-appearance-in flex-wrap items-center gap-4 rounded-lg border border-default-200 bg-white px-3 py-1.5 shadow-sm dark:border-default-200/50 dark:bg-default-100">
                     {onFollowMusicChange && data?.hasSyncedLyrics && (
                       <Checkbox
@@ -412,23 +412,26 @@ export const SongBasicInfo = ({
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap gap-2">
                       {/* Edit Lyrics */}
-                      {lyrics && lyrics.length > 0 && onEditModeChange && (
-                        <Button
-                          size="sm"
-                          variant="flat"
-                          color={isEditMode ? 'secondary' : 'default'}
-                          onPress={() => onEditModeChange(!isEditMode)}
-                          startContent={
-                            isEditMode ? (
-                              <EyeIcon className="h-4 w-4" />
-                            ) : (
-                              <DocumentEditIcon className="h-4 w-4" />
-                            )
-                          }
-                        >
-                          {isEditMode ? 'Ver Letra' : 'Editar Letra'}
-                        </Button>
-                      )}
+                      {isMember &&
+                        lyrics &&
+                        lyrics.length > 0 &&
+                        onEditModeChange && (
+                          <Button
+                            size="sm"
+                            variant="flat"
+                            color={isEditMode ? 'secondary' : 'default'}
+                            onPress={() => onEditModeChange(!isEditMode)}
+                            startContent={
+                              isEditMode ? (
+                                <EyeIcon className="h-4 w-4" />
+                              ) : (
+                                <DocumentEditIcon className="h-4 w-4" />
+                              )
+                            }
+                          >
+                            {isEditMode ? 'Ver Letra' : 'Editar Letra'}
+                          </Button>
+                        )}
 
                       {/* Tools Link */}
                       <Button
@@ -464,37 +467,39 @@ export const SongBasicInfo = ({
                     </div>
 
                     {/* Dangerous Actions */}
-                    <div className="flex items-center gap-2">
-                      <EditSongButton
-                        bandId={bandId}
-                        songId={songId}
-                        refetch={refetch}
-                        songData={data}
-                      />
+                    {isMember && (
+                      <div className="flex items-center gap-2">
+                        <EditSongButton
+                          bandId={bandId}
+                          songId={songId}
+                          refetch={refetch}
+                          songData={data}
+                        />
 
-                      {lyrics &&
-                        lyrics.length > 0 &&
-                        refetchLyricsOfCurrentSong && (
-                          <ButtonNormalizeLyrics
-                            params={{ bandId, songId }}
-                            lyrics={lyrics}
-                            refetchLyricsOfCurrentSong={
-                              refetchLyricsOfCurrentSong
-                            }
-                          />
-                        )}
+                        {lyrics &&
+                          lyrics.length > 0 &&
+                          refetchLyricsOfCurrentSong && (
+                            <ButtonNormalizeLyrics
+                              params={{ bandId, songId }}
+                              lyrics={lyrics}
+                              refetchLyricsOfCurrentSong={
+                                refetchLyricsOfCurrentSong
+                              }
+                            />
+                          )}
 
-                      {data &&
-                        data._count &&
-                        (data._count.lyrics === 0 ||
-                          data._count.lyrics === null) && (
-                          <DeleteSongButton
-                            bandId={bandId}
-                            songId={songId}
-                            songTitle={data.title}
-                          />
-                        )}
-                    </div>
+                        {data &&
+                          data._count &&
+                          (data._count.lyrics === 0 ||
+                            data._count.lyrics === null) && (
+                            <DeleteSongButton
+                              bandId={bandId}
+                              songId={songId}
+                              songTitle={data.title}
+                            />
+                          )}
+                      </div>
+                    )}
                   </div>
                 </>
               )}
