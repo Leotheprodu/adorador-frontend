@@ -10,6 +10,8 @@ import { copySongDirectService } from '@app/(public)/feed/_services/feedService'
 import { $user } from '@stores/users';
 import toast from 'react-hot-toast';
 import { useDisclosure } from '@heroui/react';
+import { SavedSongItem } from '../_interfaces/savedSongsInterfaces';
+import { CopySongDto } from '@app/(public)/feed/_interfaces/feedInterface';
 
 export const SavedSongsList = () => {
   const { songs, isLoading, refetch } = useSavedSongs();
@@ -21,20 +23,19 @@ export const SavedSongsList = () => {
     onOpen: onCopyOpen,
     onClose: onCopyClose,
   } = useDisclosure();
-  const [selectedSongToCopy, setSelectedSongToCopy] = useState<any | null>(
-    null,
-  );
+  const [selectedSongToCopy, setSelectedSongToCopy] =
+    useState<SavedSongItem | null>(null);
 
   const copySongDirect = copySongDirectService({
     songId: selectedSongToCopy?.songId || 0,
   });
 
-  const handleCopySong = (song: any) => {
+  const handleCopySong = (song: SavedSongItem) => {
     setSelectedSongToCopy(song);
     onCopyOpen();
   };
 
-  const submitCopySong = (copyData: any) => {
+  const submitCopySong = (copyData: CopySongDto) => {
     if (!selectedSongToCopy) return;
 
     // Add commentId if needed, otherwise just spread copyData
@@ -87,11 +88,6 @@ export const SavedSongsList = () => {
       }
     }
   }, [songs]);
-
-  // Placeholder for back navigation if needed, though this is a top-level page
-  const handleBack = () => {
-    // window.history.back(); // Or router.push('/')
-  };
 
   if (!mounted) {
     return <div className="min-h-screen bg-gray-50 dark:bg-gray-950"></div>;

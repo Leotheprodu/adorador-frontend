@@ -15,14 +15,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const response = await fetch(`${Server1API}/bands`, {
       next: { revalidate: 3600 }, // Cache for 1 hour
     });
+
     interface Band {
       id: number;
       name: string;
     }
 
-    const bands: Band[] = await response.json();
+    const responseData = await response.json();
+    const bands: Band[] = Array.isArray(responseData)
+      ? responseData
+      : responseData?.data || [];
 
-    const bandRoutes = (bands || []).map((band: Band) => ({
+    const bandRoutes = bands.map((band: Band) => ({
       url: `${domain}/grupos/${band.id}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,

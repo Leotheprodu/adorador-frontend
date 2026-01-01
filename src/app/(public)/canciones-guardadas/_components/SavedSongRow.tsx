@@ -12,13 +12,7 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { MenuButtonIcon } from '@global/icons/MenuButtonIcon';
-import {
-  TrashIcon,
-  PlayIcon,
-  XMarkIcon,
-  MusicNoteIcon,
-  CopyIcon,
-} from '@global/icons';
+import { TrashIcon, PlayIcon, MusicNoteIcon, CopyIcon } from '@global/icons';
 import { songTypes } from '@global/config/constants';
 import Link from 'next/link';
 import { $SelectedSong } from '@stores/player';
@@ -53,7 +47,7 @@ export const SavedSongRow = ({
         queryClient.invalidateQueries({
           queryKey: ['SavedSongs'],
         });
-        refetch && refetch();
+        if (refetch) refetch();
         onOpenChange();
       },
       onError: () => {
@@ -232,8 +226,8 @@ export const SavedSongRow = ({
               </ModalHeader>
               <ModalBody>
                 <p>
-                  ¿Estás seguro de que deseas quitar "
-                  <strong>{song.title}</strong>" de tus guardados?
+                  ¿Estás seguro de que deseas quitar &quot;
+                  <strong>{song.title}</strong>&quot; de tus guardados?
                 </p>
               </ModalBody>
               <ModalFooter>

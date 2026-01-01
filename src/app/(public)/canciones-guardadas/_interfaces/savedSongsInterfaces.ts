@@ -1,5 +1,3 @@
-import { SongPropsWithCount } from '@app/(public)/grupos/[bandId]/canciones/_interfaces/songsInterface';
-
 export interface SavedSongsResponse {
   data: SavedSongItem[];
   meta: Meta;

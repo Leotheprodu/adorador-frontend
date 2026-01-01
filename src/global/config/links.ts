@@ -1,5 +1,5 @@
 import { LinksProps } from '../interfaces/AppSecurityInterfaces';
-/* import { userRoles } from './constants'; */
+import { userRoles } from '@global/config/constants';
 
 export const mainNavLinks: LinksProps[] = [
   { name: 'Grupos', href: '/grupos' },
@@ -10,8 +10,14 @@ export const mainNavLinks: LinksProps[] = [
 
 export const userMenuLinks: LinksProps[] = [
   {
+    name: 'Admin',
+    href: '/admin',
+    isLoggedIn: true,
+    roles: [userRoles.admin.id],
+  },
+  {
     name: 'Canciones Guardadas',
-    href: '/saved-songs',
+    href: '/canciones-guardadas',
     isLoggedIn: true,
   },
   {
