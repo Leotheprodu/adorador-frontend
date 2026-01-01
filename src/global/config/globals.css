@@ -70,6 +70,10 @@
   font-family: 'Kalam-Light';
   src: url(/fonts/Kalam-Light.ttf);
 }
+@font-face {
+  font-family: MajorMonoDisplay;
+  src: url(/fonts/MajorMonoDisplay-Regular.ttf);
+}
 
 .font-kalam {
   font-family: 'Kalam-Light', cursive;
@@ -79,6 +83,9 @@
 }
 .font-momotrust {
   font-family: 'MomoTrustDisplay', sans-serif;
+}
+.font-majormonodisplay {
+  font-family: 'MajorMonoDisplay', sans-serif;
 }
 
 /* Animation for Loading */

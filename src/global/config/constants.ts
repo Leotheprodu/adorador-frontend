@@ -1,6 +1,7 @@
 import countryCodesJson from '@global/data/country-codes.json';
 
 export const appName = 'Zamr';
+export const appNameLogo = 'zAmr';
 export const Server1API = process.env.NEXT_PUBLIC_API_URL_1;
 export const domain = process.env.NEXT_PUBLIC_DOMAIN;
 export const adminWhatsApp =
