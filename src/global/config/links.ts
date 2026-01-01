@@ -1,10 +1,19 @@
 import { LinksProps } from '../interfaces/AppSecurityInterfaces';
 /* import { userRoles } from './constants'; */
-export const links: LinksProps[] = [
+
+export const mainNavLinks: LinksProps[] = [
   { name: 'Grupos', href: '/grupos' },
   { name: 'Feed Social', href: '/feed', isLoggedIn: true },
   { name: 'Discipulado', href: '/discipulado' },
   { name: 'Precios', href: '/precios' },
+];
+
+export const userMenuLinks: LinksProps[] = [
+  {
+    name: 'Canciones Guardadas',
+    href: '/saved-songs',
+    isLoggedIn: true,
+  },
   {
     name: 'Crear cuenta',
     href: '/auth/sign-up',
@@ -15,3 +24,5 @@ export const links: LinksProps[] = [
     href: '/auth/login',
   },
 ];
+
+export const links: LinksProps[] = [...mainNavLinks, ...userMenuLinks];

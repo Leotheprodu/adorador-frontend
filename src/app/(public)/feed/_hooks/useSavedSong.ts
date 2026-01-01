@@ -37,6 +37,9 @@ export const useSavedSong = (songId: number) => {
           queryClient.invalidateQueries({
             queryKey: ['CheckSavedSong', String(songId)],
           });
+          queryClient.invalidateQueries({
+            queryKey: ['SavedSongs'],
+          });
         },
         onError: () => {
           toast.error('Error al eliminar canción');
@@ -51,6 +54,9 @@ export const useSavedSong = (songId: number) => {
             toast.success('Canción guardada correctamente');
             queryClient.invalidateQueries({
               queryKey: ['CheckSavedSong', String(songId)],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['SavedSongs'],
             });
           },
           onError: () => {
