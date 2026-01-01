@@ -37,14 +37,15 @@ export const SongIdMainPage = ({
     handleBackToSongs,
   } = useSongIdPage(params);
 
-  const isMember = user.membersofBands.some(
-    (mb) => mb.band.id === parseInt(params.bandId),
-  );
+  const isMember =
+    user?.membersofBands?.some(
+      (mb) => mb.band.id === parseInt(params.bandId),
+    ) ?? false;
 
   const hasLyrics = LyricsOfCurrentSong && LyricsOfCurrentSong.length > 0;
 
   return (
-    <UIGuard isLoading={isLoading} isLoggedIn>
+    <UIGuard isLoading={isLoading}>
       <div className="flex flex-col items-center overflow-hidden">
         {/* Alert for stored lyrics */}
         <StoredLyricsAlert />
