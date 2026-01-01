@@ -12,6 +12,7 @@ export { BrainIcon } from './BrainIcon';
 export { CalendarIcon } from './CalendarIcon';
 export { ChatIcon } from './ChatIcon';
 export { CheckIcon } from './CheckIcon';
+export { CreditCardIcon } from './CreditCardIcon';
 export { ChurchIcon } from './ChurchIcon';
 export { ClockIcon } from './ClockIcon';
 export { CloseIcon } from './CloseIcon';

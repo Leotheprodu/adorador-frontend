@@ -20,6 +20,10 @@ export interface SongBasic {
   tempo: number | null;
   songType: 'worship' | 'praise';
   youtubeLink?: string | null;
+  hasSyncedLyrics?: boolean;
+  hasSyncedChords?: boolean;
+  hasLyrics?: boolean;
+  hasChords?: boolean;
 }
 
 // Tipos para la vista completa de la canción
