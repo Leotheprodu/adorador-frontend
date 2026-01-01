@@ -44,22 +44,29 @@ export const CommentItem = ({
     <div id={`comment-${comment.id}`} className={isReply ? 'ml-8' : ''}>
       <Card>
         <CardBody>
-          <div className="flex gap-3">
-            <Avatar
-              name={comment.author.name}
-              size="sm"
-              className="flex-shrink-0"
-            />
-            <div className="flex-1">
-              <div className="mb-1 flex items-center gap-2">
-                <span className="font-semibold text-small">
-                  {comment.author.name}
-                </span>
-                <span className="text-foreground-400 text-tiny">
-                  {formatRelativeTime(comment.createdAt)}
-                </span>
+          <div className="flex flex-col gap-2">
+            {/* Header: Avatar + Nombre + Fecha */}
+            <div className="flex items-center gap-3">
+              <Avatar
+                name={comment.author.name}
+                size="sm"
+                className="flex-shrink-0"
+              />
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-small">
+                    {comment.author.name}
+                  </span>
+                  <span className="text-foreground-400 text-tiny">
+                    {formatRelativeTime(comment.createdAt)}
+                  </span>
+                </div>
               </div>
-              <p className="text-foreground-700 text-small">
+            </div>
+
+            {/* Content: Texto + Canción + Botones */}
+            <div>
+              <p className="mb-2 text-foreground-700 text-small">
                 {comment.content}
               </p>
 
