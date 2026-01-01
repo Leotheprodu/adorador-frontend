@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardBody, CardFooter } from "@heroui/react";
+import { Card, CardHeader, CardBody, CardFooter } from '@heroui/react';
 import { formatRelativeTime } from '@global/utils/datesUtils';
 import { PostHeader } from './PostHeader';
 import { SongShareContent } from './SongShareContent';
@@ -18,12 +18,22 @@ export const PostCard = ({
   onCopySongFromComment,
   onViewSongFromComment,
 }: PostCardProps) => {
-  const { showComments, handleToggleBlessing, handleToggleComments, isBlessingLoading } =
-    usePostCard({ postId: post.id });
+  const {
+    showComments,
+    handleToggleBlessing,
+    handleToggleComments,
+    isBlessingLoading,
+  } = usePostCard({ postId: post.id });
 
   const isBlessed = post.userBlessing && post.userBlessing.length > 0;
   const isSongShare = post.type === 'SONG_SHARE';
   const isSongRequest = post.type === 'SONG_REQUEST';
+
+  const songTitle = isSongShare
+    ? post.sharedSong?.title
+    : isSongRequest
+      ? post.requestedSongTitle
+      : null;
 
   return (
     <Card className="w-full" id={`post-${post.id}`}>
@@ -31,13 +41,12 @@ export const PostCard = ({
         <PostHeader
           authorName={post.author.name}
           bandName={post.band.name}
-          isSongShare={isSongShare}
+          postType={post.type}
+          songTitle={songTitle}
         />
       </CardHeader>
 
-      <CardBody className="px-3 py-2 text-small text-foreground-700">
-        <h3 className="mb-2 text-base font-semibold">{post.title}</h3>
-
+      <CardBody className="px-3 py-2 text-foreground-700 text-small">
         {post.description && (
           <div className="mb-3 whitespace-pre-wrap text-foreground-600">
             {post.description}
@@ -62,7 +71,7 @@ export const PostCard = ({
           />
         )}
 
-        <p className="text-tiny text-foreground-400">
+        <p className="text-foreground-400 text-tiny">
           {formatRelativeTime(post.createdAt)}
         </p>
       </CardBody>

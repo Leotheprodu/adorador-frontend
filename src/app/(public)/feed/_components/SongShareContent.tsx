@@ -73,22 +73,12 @@ export const SongShareContent = ({
                   {song.songType === 'worship' ? 'Adoración' : 'Alabanza'}
                 </Chip>
                 {(song.hasSyncedLyrics || song.hasLyrics) && (
-                  <Chip
-                    size="sm"
-                    color="success"
-                    variant="dot"
-                    className="border-none pl-1"
-                  >
+                  <Chip size="sm" color="success" variant="flat">
                     Letra Sync
                   </Chip>
                 )}
                 {(song.hasSyncedChords || song.hasChords) && (
-                  <Chip
-                    size="sm"
-                    color="secondary"
-                    variant="dot"
-                    className="border-none pl-1"
-                  >
+                  <Chip size="sm" color="secondary" variant="flat">
                     Acordes Sync
                   </Chip>
                 )}

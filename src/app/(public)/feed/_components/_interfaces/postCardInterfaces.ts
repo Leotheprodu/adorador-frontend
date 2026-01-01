@@ -1,7 +1,8 @@
 export interface PostHeaderProps {
   authorName: string;
   bandName: string;
-  isSongShare: boolean;
+  postType: 'SONG_SHARE' | 'SONG_REQUEST' | 'REGULAR'; // Added REGULAR for completeness although not used yet
+  songTitle?: string | null;
 }
 
 export interface SongShareContentProps {

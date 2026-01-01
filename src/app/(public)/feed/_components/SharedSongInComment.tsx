@@ -35,13 +35,7 @@ export const SharedSongInComment = ({
   } = useSavedSong(sharedSong.id);
 
   return (
-    <div className="mt-2 rounded-lg border border-success bg-content2 p-3">
-      <div className="mb-2 flex items-center gap-2">
-        <span className="text-xs font-medium text-success">
-          🎵 Canción compartida
-        </span>
-      </div>
-
+    <div className="space-y-2">
       {/* Reproductor de YouTube si existe */}
       {sharedSong.youtubeLink && (
         <div className="mb-3">
@@ -78,22 +72,12 @@ export const SharedSongInComment = ({
             </Chip>
           )}
           {(sharedSong.hasSyncedLyrics || sharedSong.hasLyrics) && (
-            <Chip
-              size="sm"
-              color="success"
-              variant="dot"
-              className="border-none pl-1"
-            >
+            <Chip size="sm" color="success" variant="flat">
               Letra Sync
             </Chip>
           )}
           {(sharedSong.hasSyncedChords || sharedSong.hasChords) && (
-            <Chip
-              size="sm"
-              color="secondary"
-              variant="dot"
-              className="border-none pl-1"
-            >
+            <Chip size="sm" color="secondary" variant="flat">
               Acordes Sync
             </Chip>
           )}
