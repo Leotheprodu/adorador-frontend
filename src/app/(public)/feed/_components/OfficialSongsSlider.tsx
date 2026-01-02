@@ -83,7 +83,7 @@ export const OfficialSongsSlider = ({ songs }: OfficialSongsSliderProps) => {
 
   // Guard against undefined currentSong (e.g. during render before effect updates)
   const safeSongId = currentSong?.id || 0;
-  const { isSaved, toggleSave } = useSavedSong(safeSongId);
+  const { isSaved, toggleSave } = useSavedSong(safeSongId, currentSong?.title);
 
   if (!songs || songs.length === 0 || !currentSong) return null;
 

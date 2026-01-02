@@ -6,6 +6,7 @@ import { useStore } from '@nanostores/react';
 import { useMemo, useState, useEffect } from 'react';
 import { SkeletonBandCard } from './SkeletonBandCard';
 import { BandCard } from './BandCard';
+import { BandTable } from './BandTable';
 import { useAllBandSongsWebSocket } from '@global/hooks/useAllBandSongsWebSocket';
 
 export const BandsShowCase = () => {
@@ -53,13 +54,18 @@ export const BandsShowCase = () => {
         </div>
       )}
       {data && (
-        <ul className="flex flex-wrap justify-center gap-3">
-          {data.map((band) => (
-            <li key={band.id} className="">
-              <BandCard band={band} />
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-col gap-6">
+          <div className="hidden xl:block">
+            <BandTable bands={data} />
+          </div>
+          <ul className="flex flex-wrap justify-center gap-3 xl:hidden">
+            {data.map((band) => (
+              <li key={band.id} className="">
+                <BandCard band={band} />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
