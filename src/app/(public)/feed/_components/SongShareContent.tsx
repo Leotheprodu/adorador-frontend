@@ -1,13 +1,7 @@
 'use client';
 
 import { Button, Chip, Tooltip } from '@heroui/react';
-import {
-  CopyIcon,
-  BookmarkIcon,
-  MicrophoneIcon,
-  GuitarIcon,
-  EyeIcon,
-} from '@global/icons';
+import { CopyIcon, BookmarkIcon, EyeIcon } from '@global/icons';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
 import { SongShareContentProps } from './_interfaces/postCardInterfaces';
 import { useSavedSong } from '../_hooks/useSavedSong';

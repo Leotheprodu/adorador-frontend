@@ -1,6 +1,5 @@
 'use client';
 
-import { Chip } from '@heroui/react';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
 import { SongRequestContentProps } from './_interfaces/postCardInterfaces';
 

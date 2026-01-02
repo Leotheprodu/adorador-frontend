@@ -1,18 +1,10 @@
 'use client';
 
-import {
-  Card,
-  CardBody,
-  Avatar,
-  Button,
-  Textarea,
-  Chip,
-  Tooltip,
-} from '@heroui/react';
+import { Card, CardBody, Avatar, Button, Textarea } from '@heroui/react';
 import { formatRelativeTime } from '@global/utils/datesUtils';
-import { SendIcon, DownloadIcon } from '@global/icons';
+import { SendIcon } from '@global/icons';
 import { BlessingButton } from './BlessingButton';
-import { FeedYouTubePlayer } from './FeedYouTubePlayer';
+
 import { useCommentItem } from '../_hooks/useCommentItem';
 import { CommentItemProps } from './_interfaces/commentSectionInterfaces';
 import { SharedSongInComment } from './SharedSongInComment';

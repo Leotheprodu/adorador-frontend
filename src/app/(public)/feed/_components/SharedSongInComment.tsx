@@ -1,7 +1,10 @@
 import { Button, Chip, Tooltip } from '@heroui/react';
 import { CopyIcon, BookmarkIcon, EyeIcon, DownloadIcon } from '@global/icons';
 import { FeedYouTubePlayer } from './FeedYouTubePlayer';
-import { Comment as FeedComment } from '../_interfaces/feedInterface';
+import {
+  Comment as FeedComment,
+  SongBasic,
+} from '../_interfaces/feedInterface';
 import { useSavedSong } from '../_hooks/useSavedSong';
 import Link from 'next/link';
 
@@ -27,7 +30,35 @@ export const SharedSongInComment = ({
 }: SharedSongInCommentProps) => {
   if (!comment.sharedSong) return null;
 
-  const { sharedSong } = comment;
+  return (
+    <SharedSongInCommentContent
+      comment={comment}
+      sharedSong={comment.sharedSong}
+      onViewSong={onViewSong}
+      onCopySong={onCopySong}
+    />
+  );
+};
+
+interface SharedSongInCommentContentProps {
+  comment: FeedComment;
+  sharedSong: SongBasic;
+  onViewSong?: (songId: number, bandId: number) => void;
+  onCopySong: (
+    songId: number,
+    title: string,
+    key?: string | null,
+    tempo?: number | null,
+    commentId?: number,
+  ) => void;
+}
+
+const SharedSongInCommentContent = ({
+  comment,
+  sharedSong,
+  onViewSong,
+  onCopySong,
+}: SharedSongInCommentContentProps) => {
   const {
     isSaved,
     toggleSave,

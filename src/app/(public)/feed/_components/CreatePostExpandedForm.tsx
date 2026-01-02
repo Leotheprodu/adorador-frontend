@@ -1,7 +1,7 @@
 'use client';
 
 import { Textarea, Button, Divider } from '@heroui/react';
-import { SendIcon, XMarkIcon, MusicalNoteIcon, HandsIcon } from '@global/icons';
+import { XMarkIcon, MusicalNoteIcon, HandsIcon } from '@global/icons';
 import { PostType } from '../_interfaces/feedInterface';
 import { PostTypeSelectorButtons } from './PostTypeSelectorButtons';
 import { BandSelector } from './BandSelector';
@@ -10,7 +10,6 @@ import { SongRequestFields } from './SongRequestFields';
 
 interface CreatePostExpandedFormProps {
   // User info
-  userName: string;
 
   // Form state
   postType: PostType;
@@ -48,7 +47,6 @@ interface CreatePostExpandedFormProps {
 }
 
 export const CreatePostExpandedForm = ({
-  userName,
   postType,
   bandId,
   content,
