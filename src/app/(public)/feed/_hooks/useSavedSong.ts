@@ -7,7 +7,10 @@ import {
 } from '../_services/officialSongsService';
 import toast from 'react-hot-toast';
 
-export const useSavedSong = (songId: number) => {
+import { useSavedSongs } from '../../canciones-guardadas/_hooks/useSavedSongs';
+
+export const useSavedSong = (songId: number, songTitle?: string) => {
+  const { songs: savedSongs } = useSavedSongs();
   const queryClient = useQueryClient();
   const [isSaved, setIsSaved] = useState(false);
 
@@ -46,6 +49,17 @@ export const useSavedSong = (songId: number) => {
         },
       });
     } else {
+      // Check for duplicate title if songTitle is provided
+      if (
+        songTitle &&
+        savedSongs.some(
+          (s) => s.song.title.toLowerCase() === songTitle.toLowerCase(),
+        )
+      ) {
+        toast.error('Ya tienes una canción guardada con este nombre');
+        return;
+      }
+
       saveMutate(
         { songId },
         {

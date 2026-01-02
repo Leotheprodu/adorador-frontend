@@ -63,7 +63,7 @@ const SharedSongInCommentContent = ({
     isSaved,
     toggleSave,
     isLoading: isSaving,
-  } = useSavedSong(sharedSong.id);
+  } = useSavedSong(sharedSong.id, sharedSong.title);
 
   return (
     <div className="mb-3">

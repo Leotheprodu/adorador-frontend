@@ -13,7 +13,11 @@ export const SongShareContent = ({
   onViewSong,
   onCopySong,
 }: SongShareContentProps) => {
-  const { isSaved, toggleSave, isLoading: isSaving } = useSavedSong(song.id);
+  const {
+    isSaved,
+    toggleSave,
+    isLoading: isSaving,
+  } = useSavedSong(song.id, song.title);
 
   return (
     <div className="mb-3">

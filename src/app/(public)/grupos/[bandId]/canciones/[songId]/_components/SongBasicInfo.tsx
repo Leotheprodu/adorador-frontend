@@ -133,7 +133,7 @@ export const SongBasicInfo = ({
     isSaved,
     isLoading: isSaveLoading,
     toggleSave,
-  } = useSavedSong(Number(songId));
+  } = useSavedSong(Number(songId), data?.title);
 
   const hasLyrics = data?._count?.lyrics ? data._count.lyrics > 0 : false;
   const hasVideoLyrics = videoLyrics && videoLyrics.length > 0;
