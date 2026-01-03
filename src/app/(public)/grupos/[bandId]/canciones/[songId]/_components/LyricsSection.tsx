@@ -1,4 +1,5 @@
 import { LyricsSectionProps } from '../_interfaces/songIdInterfaces';
+import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { EditLyricsOptions } from './EditLyricsOptions';
 import { LyricsGroupedCard } from './LyricsGroupedCard';
 import { NoLyricsSong } from './NoLyricsSong';
@@ -6,12 +7,14 @@ import { $PlayerRef } from '@stores/player';
 import { useStore } from '@nanostores/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { $ActiveChord, $SongChords } from '@/stores/activeChord';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { useLyricsGlobalDragDrop } from '../_hooks/useLyricsGlobalDragDrop';
+import { songStructure } from '@global/config/constants';
 
 export const LyricsSection = ({
   params,
   songTitle,
   lyrics,
-  lyricsGrouped,
   isEditMode,
   isPracticeMode,
   transpose,
@@ -24,6 +27,61 @@ export const LyricsSection = ({
   isFollowMusic,
   isSyncChords,
 }: LyricsSectionProps) => {
+  const { handleDragEnd, handleDragStart, isDragging, lyricsOrder } =
+    useLyricsGlobalDragDrop({
+      lyrics: lyrics ?? [],
+      params,
+      refetchLyricsOfCurrentSong,
+    });
+
+  // Agrupar lyrics basados en el orden actual (optimista)
+  // Esto reemplaza el uso de lyricsGrouped prop para el renderizado del drag & drop
+  const optimisticallyGroupedLyrics = useMemo(() => {
+    // Si no hay lyrics, retornar vacío
+    if (!lyricsOrder || lyricsOrder.length === 0) return [];
+
+    // Agrupar por structura
+    // Mantener el orden de grupos según aparecen en la canción?
+    // O según un orden predefinido?
+    // Normalmente queremos que aparezcan en orden de posición.
+
+    // Primero, ordenar por posición (ya deberían estar, pero por seguridad)
+    const sorted = [...lyricsOrder].sort((a, b) => a.position - b.position);
+
+    const groupedMap = new Map<number, LyricsProps[]>();
+
+    sorted.forEach((lyric) => {
+      const structId = lyric.structure.id;
+      if (!groupedMap.has(structId)) {
+        groupedMap.set(structId, []);
+      }
+      groupedMap.get(structId)?.push(lyric);
+    });
+
+    // Convertir a array de tuplas [structureId, lyrics[]]
+    // El orden de los grupos debe ser el orden de aparición (como hace el backend probablemente).
+    // Si iteramos sorted, el primer structId que encontramos es el primero. etc.
+    // Map conserva orden de inserción.
+
+    const result: [number, string, LyricsProps[]][] = [];
+    for (const [id, groupLyrics] of groupedMap) {
+      // Encontrar el item original o estructura para saber el ID/Titulo?
+      const structConfig = songStructure.find((s) => s.id === id);
+      const structTitle =
+        structConfig?.title || groupLyrics[0]?.structure?.title || 'verse';
+
+      // El backend probablemente devuelve el ID de la estructura como clave si agrupamos allá?
+      // En LyricsGroupedCard: const { structure } = props;
+      // Y usa structureColors[structure]. structureColors keys are likely structure IDs (ints) as strings?
+
+      // Revisemos como viene lyricsGrouped prop. es [string, ..].
+      // Asumiremos que es el ID como string.
+      result.push([id, structTitle, groupLyrics]);
+    }
+
+    return result;
+  }, [lyricsOrder]);
+
   const playerRef = useStore($PlayerRef);
   const [activeLineId, setActiveLineId] = useState<number | null>(null);
   const [activeChordId, setActiveChordId] = useState<number | null>(null);
@@ -241,24 +299,34 @@ export const LyricsSection = ({
                 onClose={() => onEditModeChange(false)}
               />
             ) : (
-              lyricsGrouped?.map(([structure, groupLyrics], groupIndex) => (
-                <LyricsGroupedCard
-                  key={groupIndex}
-                  structure={structure}
-                  lyrics={groupLyrics}
-                  refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-                  params={params}
-                  chordPreferences={chordPreferences}
-                  lyricsOfCurrentSong={lyrics}
-                  transpose={transpose}
-                  showChords={showChords}
-                  lyricsScale={lyricsScale}
-                  isPracticeMode={isPracticeMode}
-                  activeLineId={activeLineId}
-                  activeChordId={activeChordId}
-                  isUserScrolling={isUserScrolling}
-                />
-              ))
+              <DragDropContext
+                onDragEnd={handleDragEnd}
+                onDragStart={handleDragStart}
+              >
+                {optimisticallyGroupedLyrics.map(
+                  ([structureId, structureTitle, groupLyrics], groupIndex) => (
+                    <LyricsGroupedCard
+                      key={groupIndex} // Using groupIndex as key is risky if groups change order, but structure is better?
+                      // key={structure} might correspond to structure ID... e.g. "1". Unique? Yes.
+                      structure={structureTitle}
+                      structureId={structureId}
+                      lyrics={groupLyrics}
+                      refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+                      params={params}
+                      chordPreferences={chordPreferences}
+                      lyricsOfCurrentSong={lyrics}
+                      transpose={transpose}
+                      showChords={showChords}
+                      lyricsScale={lyricsScale}
+                      isPracticeMode={isPracticeMode}
+                      activeLineId={activeLineId}
+                      activeChordId={activeChordId}
+                      isUserScrolling={isUserScrolling}
+                      isDragging={isDragging}
+                    />
+                  ),
+                )}
+              </DragDropContext>
             )}
           </>
         ) : (

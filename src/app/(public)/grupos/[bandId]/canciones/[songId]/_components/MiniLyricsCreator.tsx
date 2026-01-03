@@ -7,6 +7,7 @@ import {
   parseAndUpdateSingleLyricService,
 } from '../_services/songIdServices';
 import toast from 'react-hot-toast';
+import { songStructure, structureLib } from '@global/config/constants';
 
 interface MiniLyricsCreatorProps {
   params: { bandId: string; songId: string };
@@ -16,6 +17,7 @@ interface MiniLyricsCreatorProps {
   lyricsOfCurrentSong: LyricsProps[];
   newPosition: number;
   structureId: number;
+  suggestedStartTime?: number;
 }
 
 export const MiniLyricsCreator = ({
@@ -26,8 +28,10 @@ export const MiniLyricsCreator = ({
   lyricsOfCurrentSong,
   newPosition,
   structureId,
+  suggestedStartTime,
 }: MiniLyricsCreatorProps) => {
   const [text, setText] = useState('');
+  const [selectedStructureId, setSelectedStructureId] = useState(structureId);
   const [newLyricId, setNewLyricId] = useState<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,9 +70,10 @@ export const MiniLyricsCreator = ({
     if (statusUpdateLyricsPositions === 'success') {
       // Después de actualizar posiciones, crear la nueva letra (sin acordes aún)
       mutateAddNewLyric({
-        structureId,
+        structureId: selectedStructureId,
         lyrics: text,
         position: newPosition,
+        startTime: suggestedStartTime,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,17 +82,19 @@ export const MiniLyricsCreator = ({
   // Paso 2: Después de crear la letra, parsear acordes
   useEffect(() => {
     if (statusAddNewLyric === 'success' && dataAddNewLyric) {
-      const lyricId = dataAddNewLyric.id;
-      if (lyricId) {
-        setNewLyricId(lyricId);
-        // Esperar un tick para que el hook se actualice con el nuevo lyricId
-        setTimeout(() => {
-          mutateParseAndUpdate({ textContent: text });
-        }, 0);
+      if (dataAddNewLyric.id) {
+        setNewLyricId(dataAddNewLyric.id);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusAddNewLyric, dataAddNewLyric]);
+
+  // Paso 2: Después de crear la letra y tener ID, parsear acordes
+  useEffect(() => {
+    if (newLyricId && newLyricId !== 0) {
+      mutateParseAndUpdate({ textContent: text });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newLyricId]);
 
   // Paso 3: Finalizar después del parsing
   useEffect(() => {
@@ -140,17 +147,19 @@ export const MiniLyricsCreator = ({
       } else {
         // No hay letras que mover, crear directamente
         mutateAddNewLyric({
-          structureId,
+          structureId: selectedStructureId,
           lyrics: text,
           position: newPosition,
+          startTime: suggestedStartTime,
         });
       }
     } else {
       // Es la última posición, crear directamente
       mutateAddNewLyric({
-        structureId,
+        structureId: selectedStructureId,
         lyrics: text,
         position: newPosition,
+        startTime: suggestedStartTime,
       });
     }
   };
@@ -198,6 +207,26 @@ export const MiniLyricsCreator = ({
         rows={3}
       />
 
+      {/* Selector de Estructura */}
+      <div className="mt-2 flex items-center gap-2">
+        <select
+          value={selectedStructureId}
+          onChange={(e) => setSelectedStructureId(Number(e.target.value))}
+          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 outline-none focus:border-primary-500 dark:border-slate-700 dark:bg-gray-800 dark:text-slate-300"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {songStructure.map((s) => (
+            <option key={s.id} value={s.id}>
+              {structureLib[s.title as keyof typeof structureLib]?.es ||
+                s.title}
+            </option>
+          ))}
+        </select>
+        <div className="text-xs text-slate-400">
+          (Inicio: {suggestedStartTime?.toFixed(2) || '0.00'}s)
+        </div>
+      </div>
+
       {/* Botones de acción */}
       <div className="mt-2 flex items-center justify-end gap-2 border-t border-slate-200 pt-2 dark:border-slate-700">
         <button
@@ -220,8 +249,14 @@ export const MiniLyricsCreator = ({
 
       {/* Ayuda de teclado */}
       <div className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-        <kbd className="rounded bg-slate-100 px-1 dark:bg-gray-800 dark:text-slate-200">ESC</kbd> para cancelar •{' '}
-        <kbd className="rounded bg-slate-100 px-1 dark:bg-gray-800 dark:text-slate-200">Ctrl+Enter</kbd> para guardar
+        <kbd className="rounded bg-slate-100 px-1 dark:bg-gray-800 dark:text-slate-200">
+          ESC
+        </kbd>{' '}
+        para cancelar •{' '}
+        <kbd className="rounded bg-slate-100 px-1 dark:bg-gray-800 dark:text-slate-200">
+          Ctrl+Enter
+        </kbd>{' '}
+        para guardar
       </div>
     </div>
   );
