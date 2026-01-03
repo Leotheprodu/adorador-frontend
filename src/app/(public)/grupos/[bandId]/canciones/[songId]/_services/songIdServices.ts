@@ -51,7 +51,12 @@ export const addNewLyricService = ({
 }) => {
   return PostData<
     LyricsProps,
-    { structureId: number; lyrics: string; position: number }
+    {
+      structureId: number;
+      lyrics: string;
+      position: number;
+      startTime?: number;
+    }
   >({
     key: 'CreateNewLyric',
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics`,
@@ -81,7 +86,10 @@ export const updateLyricsPositionsService = ({
 }: {
   params: { bandId: string; songId: string };
 }) => {
-  return PostData<{ message: string }, { id: number; position: number }[]>({
+  return PostData<
+    { message: string },
+    { id: number; position: number; structureId?: number }[]
+  >({
     key: 'UpdateLyricsPositions',
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics`,
     method: 'PATCH',
@@ -194,7 +202,7 @@ export const parseAndUpdateSingleLyricService = ({
   params: { bandId: string; songId: string };
   lyricId: number;
 }) => {
-  return PostData<LyricsProps, { textContent: string }>({
+  return PostData<LyricsProps, { textContent: string; structureId?: number }>({
     key: 'ParseAndUpdateSingleLyric',
     url: `${Server1API}/bands/${params.bandId}/songs/${params.songId}/lyrics/${lyricId}/parse-and-update`,
     method: 'PATCH',

@@ -42,6 +42,7 @@ export interface LyricsDragHandleProps {
 
 export interface LyricsGroupedCardProps {
   structure: string;
+  structureId: number;
   lyrics: LyricsProps[];
   refetchLyricsOfCurrentSong: () => void;
   params: { bandId: string; songId: string };
@@ -64,6 +65,7 @@ export interface LyricsInsertButtonProps {
 export interface LyricsPositionUpdate {
   id: number;
   position: number;
+  structureId?: number;
 }
 
 // ============================================================================

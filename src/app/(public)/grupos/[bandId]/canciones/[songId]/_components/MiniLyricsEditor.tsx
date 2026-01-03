@@ -5,9 +5,11 @@ import {
   parseAndUpdateSingleLyricService,
   deleteLyricService,
   updateLyricsPositionsService,
+  updateLyricService,
 } from '../_services/songIdServices';
 import toast from 'react-hot-toast';
 import { DeleteMusicIcon } from '@global/icons/DeleteMusicIcon';
+import { songStructure, structureLib } from '@global/config/constants';
 
 interface MiniLyricsEditorProps {
   lyric: LyricsProps;
@@ -28,6 +30,12 @@ export const MiniLyricsEditor = ({
 }: MiniLyricsEditorProps) => {
   const [text, setText] = useState('');
   const [initialText, setInitialText] = useState('');
+  const [selectedStructureId, setSelectedStructureId] = useState(
+    lyric.structure.id,
+  );
+  const [initialStructureId, setInitialStructureId] = useState(
+    lyric.structure.id,
+  );
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -52,6 +60,15 @@ export const MiniLyricsEditor = ({
     mutate: mutateUpdateLyricsPositions,
     status: statusUpdateLyricsPositions,
   } = updateLyricsPositionsService({ params });
+
+  const {
+    mutate: mutateUpdateLyric,
+    status: statusUpdateLyric,
+    isPending: isPendingUpdateLyric,
+  } = updateLyricService({
+    params,
+    lyricId: lyric.id,
+  });
 
   // Inicializar con el texto actual (acordes arriba, letra abajo)
   useEffect(() => {
@@ -112,7 +129,9 @@ export const MiniLyricsEditor = ({
   }, [lyric]);
 
   // Verificar si hubo cambios
-  const hasChanges = text.trim() !== initialText.trim();
+  const hasChanges =
+    text.trim() !== initialText.trim() ||
+    selectedStructureId !== initialStructureId;
 
   // Manejar click afuera del editor
   useEffect(() => {
@@ -152,7 +171,20 @@ export const MiniLyricsEditor = ({
       return;
     }
 
-    mutateParseAndUpdate({ textContent: text });
+    const structureChanged = selectedStructureId !== initialStructureId;
+    const textChanged = text.trim() !== initialText.trim();
+
+    if (structureChanged) {
+      mutateUpdateLyric({
+        structureId: selectedStructureId,
+      });
+    }
+
+    if (textChanged) {
+      mutateParseAndUpdate({
+        textContent: text,
+      });
+    }
   };
 
   // Manejar cancelar
@@ -200,16 +232,54 @@ export const MiniLyricsEditor = ({
     }
   }, [statusUpdateLyricsPositions, refetchLyricsOfCurrentSong, onClose]);
 
-  // Refetch cuando termine
+  // Refetch cuando termine actualización de parsing
   useEffect(() => {
     if (statusParseAndUpdate === 'success') {
       toast.success('Letra actualizada');
-      refetchLyricsOfCurrentSong();
-      onClose();
+
+      // Si solo cambiamos texto (o ambas cosas y el parsing terminó último), cerramos
+      if (
+        selectedStructureId === initialStructureId ||
+        statusUpdateLyric === 'success'
+      ) {
+        refetchLyricsOfCurrentSong();
+        onClose();
+      }
     } else if (statusParseAndUpdate === 'error') {
       toast.error('Error al actualizar la letra');
     }
-  }, [statusParseAndUpdate, refetchLyricsOfCurrentSong, onClose]);
+  }, [
+    statusParseAndUpdate,
+    refetchLyricsOfCurrentSong,
+    onClose,
+    selectedStructureId,
+    initialStructureId,
+    statusUpdateLyric,
+  ]);
+
+  // Refetch cuando termine actualización de estructura
+  useEffect(() => {
+    if (statusUpdateLyric === 'success') {
+      // Si solo cambiamos estructura, cerramos. Si también cambiamos texto, esperamos a parseAndUpdate
+      if (
+        text.trim() === initialText.trim() ||
+        statusParseAndUpdate === 'success'
+      ) {
+        toast.success('Estructura actualizada');
+        refetchLyricsOfCurrentSong();
+        onClose();
+      }
+    } else if (statusUpdateLyric === 'error') {
+      toast.error('Error al actualizar estructura');
+    }
+  }, [
+    statusUpdateLyric,
+    refetchLyricsOfCurrentSong,
+    onClose,
+    text,
+    initialText,
+    statusParseAndUpdate,
+  ]);
 
   // Manejar teclas
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -235,7 +305,7 @@ export const MiniLyricsEditor = ({
           setShowUnsavedWarning(false); // Quitar advertencia al empezar a escribir
         }}
         onKeyDown={handleKeyDown}
-        className="w-full resize-none rounded-md border-1 border-primary-300 bg-primary-50/50 dark:bg-black p-2 font-mono leading-relaxed text-slate-800 dark:text-white outline-none transition-all focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-200"
+        className="w-full resize-none rounded-md border-1 border-primary-300 bg-primary-50/50 p-2 font-mono leading-relaxed text-slate-800 outline-none transition-all focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-200 dark:bg-black dark:text-white"
         placeholder={`       Em      D        Am
 Mi Dios eres mi fortaleza`}
         spellCheck={false}
@@ -249,7 +319,23 @@ Mi Dios eres mi fortaleza`}
         rows={text.split('\n').length || 2}
       />
 
-      {/* Botones de acción */}
+      <div className="flex items-center justify-between gap-2 border-t border-slate-200 pt-2 dark:border-slate-800">
+        {/* Selector de Estructura */}
+        <div className="">
+          <select
+            value={selectedStructureId}
+            onChange={(e) => setSelectedStructureId(Number(e.target.value))}
+            className="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 outline-none focus:border-primary-500 dark:border-slate-700 dark:bg-gray-800 dark:text-slate-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {songStructure.map((s) => (
+              <option key={s.id} value={s.id}>
+                {structureLib[s.title as keyof typeof structureLib]?.es ||
+                  s.title}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* Lado izquierdo - Eliminar */}
         <div className="flex items-center gap-2">
           {showDeleteConfirm ? (
@@ -337,14 +423,20 @@ Mi Dios eres mi fortaleza`}
                 e.stopPropagation();
                 handleSubmit();
               }}
-              disabled={!hasChanges || statusParseAndUpdate === 'pending'}
+              disabled={
+                !hasChanges ||
+                statusParseAndUpdate === 'pending' ||
+                isPendingUpdateLyric
+              }
               className="rounded-md bg-primary-500 px-3 py-1.5 text-xs font-medium text-white transition-all hover:bg-primary-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {statusParseAndUpdate === 'pending' ? 'Guardando...' : 'Guardar'}
+              {statusParseAndUpdate === 'pending' || isPendingUpdateLyric
+                ? 'Guardando...'
+                : 'Guardar'}
             </button>
           </div>
         )}
       </div>
-   
+    </div>
   );
 };

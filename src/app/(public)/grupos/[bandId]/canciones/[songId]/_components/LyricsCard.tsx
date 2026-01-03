@@ -1,5 +1,5 @@
 import { MiniLyricsEditor } from './MiniLyricsEditor';
-import { Draggable } from '@hello-pangea/dnd';
+import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 import { useRef, useEffect } from 'react';
 import { LyricsCardProps } from '../_interfaces/lyricsInterfaces';
 import { useLyricsCard } from '../_hooks/useLyricsCard';
@@ -21,14 +21,14 @@ export const LyricsCard = ({
   activeLineId,
   activeChordId,
   isUserScrolling,
-}: LyricsCardProps) => {
-  const {
-    updateLyric,
-    isDragging,
-    setIsDragging,
-    handleClickLyric,
-    handleCloseEditor,
-  } = useLyricsCard(isPracticeMode);
+  isDragging,
+  dragHandleProps,
+}: LyricsCardProps & {
+  isDragging?: boolean;
+  dragHandleProps?: DraggableProvidedDragHandleProps | null;
+}) => {
+  const { updateLyric, handleClickLyric, handleCloseEditor } =
+    useLyricsCard(isPracticeMode);
 
   const cardRef = useRef<HTMLDivElement>(null);
   const isActive = activeLineId === lyric.id;
@@ -58,7 +58,10 @@ export const LyricsCard = ({
     }
   }, [isActive, isUserScrolling]);
 
-  // En modo práctica o cuando index es -1, no usar Draggable
+  // En modo práctica o cuando index es -1, no usar drag logic
+  // Also disable drag visuals if updating lyric
+  const showDragHandle = !isPracticeMode && index !== -1 && !updateLyric;
+
   if (isPracticeMode || index === -1) {
     const handleSeek = () => {
       // Seek logic specifically for Practice Mode
@@ -95,62 +98,49 @@ export const LyricsCard = ({
   }
 
   return (
-    <Draggable
-      draggableId={lyric.id.toString()}
-      index={index}
-      isDragDisabled={updateLyric}
+    <div
+      ref={cardRef}
+      className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
+        isDragging
+          ? 'scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
+          : 'hover:bg-slate-50 dark:bg-transparent dark:hover:bg-gray-800'
+      } lyric-card${lyric.id}`}
     >
-      {(provided, snapshot) => {
-        // Actualizar estado de dragging
-        if (snapshot.isDragging !== isDragging) {
-          setIsDragging(snapshot.isDragging);
-        }
+      {/* Drag Handle - Siempre visible si drag enabled */}
+      {/* Drag Handle - Siempre visible si drag enabled */}
+      {dragHandleProps && (
+        <div className={showDragHandle ? '' : 'invisible'}>
+          <LyricsDragHandle dragHandleProps={dragHandleProps} />
+        </div>
+      )}
 
-        return (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            className={`group relative flex w-full flex-1 flex-row items-center gap-2 rounded-lg p-1 duration-100 ${
-              snapshot.isDragging
-                ? 'z-50 scale-105 border-2 border-primary-400 bg-primary-50 shadow-2xl'
-                : 'hover:bg-slate-50 dark:bg-transparent dark:hover:bg-gray-800'
-            } lyric-card${lyric.id}`}
-          >
-            {/* Drag Handle - Siempre visible */}
-            {!updateLyric && (
-              <LyricsDragHandle dragHandleProps={provided.dragHandleProps} />
-            )}
-
-            {/* Contenido de la letra */}
-            <div className="flex flex-1 flex-col">
-              <div
-                onClick={updateLyric ? undefined : handleClickLyric}
-                className={!updateLyric ? 'cursor-text' : ''}
-              >
-                {updateLyric ? (
-                  <MiniLyricsEditor
-                    lyric={lyric}
-                    params={params}
-                    refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-                    onClose={handleCloseEditor}
-                    lyricsScale={lyricsScale}
-                    lyricsOfCurrentSong={lyricsOfCurrentSong}
-                  />
-                ) : (
-                  <LyricsContent
-                    lyric={lyric}
-                    transpose={transpose}
-                    showChords={showChords}
-                    lyricsScale={lyricsScale}
-                    chordPreferences={chordPreferences}
-                    activeChordId={activeChordId}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      }}
-    </Draggable>
+      {/* Contenido de la letra */}
+      <div className="flex flex-1 flex-col">
+        <div
+          onClick={updateLyric ? undefined : handleClickLyric}
+          className={!updateLyric ? 'cursor-text' : ''}
+        >
+          {updateLyric ? (
+            <MiniLyricsEditor
+              lyric={lyric}
+              params={params}
+              refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+              onClose={handleCloseEditor}
+              lyricsScale={lyricsScale}
+              lyricsOfCurrentSong={lyricsOfCurrentSong}
+            />
+          ) : (
+            <LyricsContent
+              lyric={lyric}
+              transpose={transpose}
+              showChords={showChords}
+              lyricsScale={lyricsScale}
+              chordPreferences={chordPreferences}
+              activeChordId={activeChordId}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
