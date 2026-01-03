@@ -7,7 +7,7 @@ import { $PlayerRef } from '@stores/player';
 import { useStore } from '@nanostores/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { $ActiveChord, $SongChords } from '@/stores/activeChord';
-import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { DragDropContext } from '@hello-pangea/dnd';
 import { useLyricsGlobalDragDrop } from '../_hooks/useLyricsGlobalDragDrop';
 import { songStructure } from '@global/config/constants';
 
@@ -40,43 +40,52 @@ export const LyricsSection = ({
     // Si no hay lyrics, retornar vacío
     if (!lyricsOrder || lyricsOrder.length === 0) return [];
 
-    // Agrupar por structura
-    // Mantener el orden de grupos según aparecen en la canción?
-    // O según un orden predefinido?
-    // Normalmente queremos que aparezcan en orden de posición.
+    // Agrupar por structura contigua
+    // Importante: No agrupar todos los Versos juntos si están separados por un Coro.
+    // Verse 1 -> Chorus -> Verse 2 deben ser 3 grupos distintos.
 
-    // Primero, ordenar por posición (ya deberían estar, pero por seguridad)
+    // Primero, ordenar por posición
     const sorted = [...lyricsOrder].sort((a, b) => a.position - b.position);
 
-    const groupedMap = new Map<number, LyricsProps[]>();
+    const result: [number, string, LyricsProps[]][] = [];
+    if (sorted.length === 0) return result;
+
+    let currentGroupLyrics: LyricsProps[] = [];
+    let currentStructureId = sorted[0].structure.id;
+
+    // Helper para obtener titulo
+    const getStructureTitle = (id: number, lyricsInGroup: LyricsProps[]) => {
+      const structConfig = songStructure.find((s) => s.id === id);
+      return (
+        structConfig?.title || lyricsInGroup[0]?.structure?.title || 'verse'
+      );
+    };
 
     sorted.forEach((lyric) => {
-      const structId = lyric.structure.id;
-      if (!groupedMap.has(structId)) {
-        groupedMap.set(structId, []);
+      if (lyric.structure.id === currentStructureId) {
+        currentGroupLyrics.push(lyric);
+      } else {
+        // Push previous group
+        if (currentGroupLyrics.length > 0) {
+          result.push([
+            currentStructureId,
+            getStructureTitle(currentStructureId, currentGroupLyrics),
+            currentGroupLyrics,
+          ]);
+        }
+        // Start new group
+        currentStructureId = lyric.structure.id;
+        currentGroupLyrics = [lyric];
       }
-      groupedMap.get(structId)?.push(lyric);
     });
 
-    // Convertir a array de tuplas [structureId, lyrics[]]
-    // El orden de los grupos debe ser el orden de aparición (como hace el backend probablemente).
-    // Si iteramos sorted, el primer structId que encontramos es el primero. etc.
-    // Map conserva orden de inserción.
-
-    const result: [number, string, LyricsProps[]][] = [];
-    for (const [id, groupLyrics] of groupedMap) {
-      // Encontrar el item original o estructura para saber el ID/Titulo?
-      const structConfig = songStructure.find((s) => s.id === id);
-      const structTitle =
-        structConfig?.title || groupLyrics[0]?.structure?.title || 'verse';
-
-      // El backend probablemente devuelve el ID de la estructura como clave si agrupamos allá?
-      // En LyricsGroupedCard: const { structure } = props;
-      // Y usa structureColors[structure]. structureColors keys are likely structure IDs (ints) as strings?
-
-      // Revisemos como viene lyricsGrouped prop. es [string, ..].
-      // Asumiremos que es el ID como string.
-      result.push([id, structTitle, groupLyrics]);
+    // Push last group
+    if (currentGroupLyrics.length > 0) {
+      result.push([
+        currentStructureId,
+        getStructureTitle(currentStructureId, currentGroupLyrics),
+        currentGroupLyrics,
+      ]);
     }
 
     return result;
@@ -306,8 +315,8 @@ export const LyricsSection = ({
                 {optimisticallyGroupedLyrics.map(
                   ([structureId, structureTitle, groupLyrics], groupIndex) => (
                     <LyricsGroupedCard
-                      key={groupIndex} // Using groupIndex as key is risky if groups change order, but structure is better?
-                      // key={structure} might correspond to structure ID... e.g. "1". Unique? Yes.
+                      key={groupIndex}
+                      groupIndex={groupIndex} // Pass index to unique-ify droppableId
                       structure={structureTitle}
                       structureId={structureId}
                       lyrics={groupLyrics}
