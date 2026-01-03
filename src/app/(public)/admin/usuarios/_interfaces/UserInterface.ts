@@ -23,6 +23,9 @@ export interface MembersofBandsProps {
   band: {
     id: number;
     name: string;
+    subscription?: {
+      status: string;
+    };
   };
 }
 

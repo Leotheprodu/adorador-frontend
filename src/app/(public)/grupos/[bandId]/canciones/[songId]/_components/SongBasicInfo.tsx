@@ -36,6 +36,7 @@ import { VideoLyricsModal } from './VideoLyricsModal';
 import { getVideoLyricsService } from '../_services/videoLyricsService';
 import { OFFICIAL_BAND_ID } from '@global/config/constants';
 import { useSavedSong } from '@/app/(public)/feed/_hooks/useSavedSong';
+import { useSyncedLyricsAccess } from '@global/hooks/useSyncedLyricsAccess';
 
 export const SongBasicInfo = ({
   data,
@@ -81,6 +82,7 @@ export const SongBasicInfo = ({
     onOpen: onVideoLyricsOpen,
     onClose: onVideoLyricsClose,
   } = useDisclosure();
+  const hasAccess = useSyncedLyricsAccess(); // Hook de permisos
 
   //  Fetch video lyrics count
   const { data: videoLyrics } = getVideoLyricsService({ bandId, songId });
@@ -369,26 +371,46 @@ export const SongBasicInfo = ({
                 {isPracticeMode && (
                   <div className="flex animate-appearance-in flex-wrap items-center gap-4 rounded-lg border border-default-200 bg-white px-3 py-1.5 shadow-sm dark:border-default-200/50 dark:bg-default-100">
                     {onFollowMusicChange && data?.hasSyncedLyrics && (
-                      <Checkbox
-                        isSelected={isFollowMusic}
-                        onValueChange={onFollowMusicChange}
-                        size="sm"
-                        color="success"
-                        classNames={{ label: 'text-small text-default-600' }}
+                      <Tooltip
+                        content="Función exclusiva para miembros de grupos con plan activo."
+                        isDisabled={hasAccess}
                       >
-                        Seguir música
-                      </Checkbox>
+                        <div>
+                          <Checkbox
+                            isSelected={isFollowMusic}
+                            onValueChange={onFollowMusicChange}
+                            isDisabled={!hasAccess}
+                            size="sm"
+                            color="success"
+                            classNames={{
+                              label: `text-small text-default-600 ${!hasAccess ? 'opacity-50' : ''}`,
+                            }}
+                          >
+                            Seguir música
+                          </Checkbox>
+                        </div>
+                      </Tooltip>
                     )}
                     {onSyncChordsChange && data?.hasSyncedChords && (
-                      <Checkbox
-                        isSelected={isSyncChords}
-                        onValueChange={onSyncChordsChange}
-                        size="sm"
-                        color="secondary"
-                        classNames={{ label: 'text-small text-default-600' }}
+                      <Tooltip
+                        content="Función exclusiva para miembros de grupos con plan activo."
+                        isDisabled={hasAccess}
                       >
-                        Sync acordes
-                      </Checkbox>
+                        <div>
+                          <Checkbox
+                            isSelected={isSyncChords}
+                            onValueChange={onSyncChordsChange}
+                            isDisabled={!hasAccess}
+                            size="sm"
+                            color="secondary"
+                            classNames={{
+                              label: `text-small text-default-600 ${!hasAccess ? 'opacity-50' : ''}`,
+                            }}
+                          >
+                            Sync acordes
+                          </Checkbox>
+                        </div>
+                      </Tooltip>
                     )}
                     <Divider orientation="vertical" className="h-5" />
                     <Tooltip content="Configuración avanzada">
@@ -397,6 +419,7 @@ export const SongBasicInfo = ({
                         size="sm"
                         variant="light"
                         onPress={onOpen}
+                        isDisabled={!hasAccess}
                       >
                         <GearIcon className="h-4 w-4 text-default-500" />
                       </Button>

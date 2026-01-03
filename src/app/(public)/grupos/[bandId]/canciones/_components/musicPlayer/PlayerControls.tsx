@@ -7,6 +7,8 @@ import { BackwardIcon } from '@global/icons/BackwardIcon';
 import { PlayerControlsProps } from '../../_interfaces/musicPlayerInterfaces';
 import { MetronomeIcon, MicrophoneIcon } from '@global/icons';
 
+import { useSyncedLyricsAccess } from '@global/hooks/useSyncedLyricsAccess';
+
 export const PlayerControls = ({
   playing,
   hasSelectedBeat,
@@ -19,6 +21,8 @@ export const PlayerControls = ({
   onToggleLyrics,
   isLyricsOpen,
 }: PlayerControlsProps) => {
+  const hasAccess = useSyncedLyricsAccess();
+
   return (
     <div className="relative flex items-center justify-center gap-5">
       {hasMultipleSongs && (
@@ -60,7 +64,7 @@ export const PlayerControls = ({
 
       {/* Tools Toggle Buttons */}
       <div className="absolute -right-24 flex items-center gap-2">
-        {onToggleMetronome && (
+        {onToggleMetronome && hasAccess && (
           <button
             type="button"
             className={`flex items-center justify-center rounded-full p-2 transition-all duration-200 hover:bg-white/10 ${isMetronomeOpen ? 'bg-white/20 text-brand-purple-400' : 'text-primary-200/50 hover:text-primary-200'}`}
@@ -71,7 +75,7 @@ export const PlayerControls = ({
             <MetronomeIcon className="h-5 w-5" />
           </button>
         )}
-        {onToggleLyrics && (
+        {onToggleLyrics && hasAccess && (
           <button
             type="button"
             className={`flex items-center justify-center rounded-full p-2 transition-all duration-200 hover:bg-white/10 ${isLyricsOpen ? 'bg-white/20 text-brand-purple-400' : 'text-primary-200/50 hover:text-primary-200'}`}
