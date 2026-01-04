@@ -1,10 +1,12 @@
 'use client';
-import { Button, Input } from "@heroui/react";
+import { Button, Input } from '@heroui/react';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { PasswordRecoveryService } from '../_services/PasswordRecoveryService';
-import Link from 'next/link';
 import { WhatsAppResetComponent } from './WhatsAppResetComponent';
+import { AuthCard } from '../../_components/ui/AuthCard';
+import { AuthHeader } from '../../_components/ui/AuthHeader';
+import { AuthFooter } from '../../_components/ui/AuthFooter';
 
 export const PasswordRecoveryForm = () => {
   const [phone, setPhone] = useState('');
@@ -42,6 +44,7 @@ export const PasswordRecoveryForm = () => {
 
     mutate({ phone });
   };
+
   if (status === 'success' && data) {
     return (
       <WhatsAppResetComponent
@@ -51,46 +54,68 @@ export const PasswordRecoveryForm = () => {
       />
     );
   }
-  if (status === 'error') {
-    return (
-      <div className="flex min-h-[20rem] flex-col items-center gap-4">
-        <p>
-          Ha ocurrido un error, por favor intenta de nuevo o contacta con
-          soporte.
-        </p>
-        <Button as={Link} href="/" color="success">
-          Ir a Inicio
-        </Button>
-      </div>
-    );
-  }
+
+  // Handle error state inside the card now or separate?
+  // Let's keep the form logic but styled nicely.
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex min-h-[20rem] max-w-[20rem] flex-col items-center gap-2"
-    >
-      <p className="mb-4">
-        Ingresa tu número de teléfono y te ayudaremos a restablecer tu
-        contraseña por WhatsApp.
-      </p>
-      <Input
-        ref={phoneInput}
-        value={phone}
-        autoComplete="tel"
-        onChange={(e) => {
-          setPhone(e.target.value);
-          setError(false);
-        }}
-        className={`mb-4 ${error ? 'border border-danger' : ''}`}
-        type="tel"
-        placeholder="+50677778888"
-        description="Incluye el + y código de país"
-        autoFocus
+    <AuthCard>
+      <AuthHeader
+        title="Recuperar Contraseña"
+        subtitle="Ingresa tu número para recibir instrucciones"
       />
-      <Button isLoading={isPending} type="submit" color="primary">
-        Generar Token de Reset
-      </Button>
-    </form>
+
+      <div className="px-8 py-8">
+        {status === 'error' ? (
+          <div className="space-y-6 text-center">
+            <div className="rounded-xl bg-red-50 p-4 text-red-600 dark:bg-red-900/20 dark:text-red-300">
+              Ha ocurrido un error, por favor intenta de nuevo o contacta con
+              soporte.
+            </div>
+            <Button
+              href="/auth/login"
+              as="a"
+              className="w-full bg-brand-purple-600 font-semibold text-white"
+            >
+              Volver al inicio
+            </Button>
+          </div>
+        ) : (
+          <>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Input
+                  ref={phoneInput}
+                  value={phone}
+                  autoComplete="tel"
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setError(false);
+                  }}
+                  variant="bordered"
+                  label="Número de WhatsApp"
+                  placeholder="+50677778888"
+                  isInvalid={error}
+                  errorMessage={error && 'Formato inválido'}
+                  className="text-gray-900 dark:text-brand-purple-200"
+                  type="tel"
+                  description="Incluye el + y código de país"
+                  autoFocus
+                />
+              </div>
+
+              <Button
+                isLoading={isPending}
+                type="submit"
+                className="w-full bg-brand-purple-600 py-6 text-base font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.02] hover:bg-brand-purple-700 active:scale-95 dark:bg-brand-purple-600 dark:hover:bg-brand-purple-500"
+              >
+                Enviar Instrucciones
+              </Button>
+            </form>
+            <AuthFooter mode="recovery" />
+          </>
+        )}
+      </div>
+    </AuthCard>
   );
 };

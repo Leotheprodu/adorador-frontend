@@ -1,5 +1,5 @@
 import { PhoneIcon } from '@global/icons/PhoneIcon';
-import { Input } from "@heroui/react";
+import { Input } from '@heroui/react';
 
 export const InputPhoneLoginForm = ({
   handle,
@@ -25,7 +25,7 @@ export const InputPhoneLoginForm = ({
         label="Número de WhatsApp"
         placeholder="+50677778888"
         className="text-gray-900 dark:text-brand-purple-200"
-        variant="underlined"
+        variant="bordered"
         startContent={
           <PhoneIcon className="pointer-events-none flex-shrink-0 text-2xl text-brand-purple-600 dark:text-brand-purple-300" />
         }

@@ -32,7 +32,7 @@ export const MusicPlayer = () => {
     setVolume,
   } = useMusicPlayer();
 
-  const [showMetronome, setShowMetronome] = useState(true);
+  const [showMetronome, setShowMetronome] = useState(false);
   const [showLyrics, setShowLyrics] = useState(false);
 
   if (!selectedBeat) return null;

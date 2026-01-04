@@ -1,4 +1,4 @@
-import { Input } from "@heroui/react";
+import { Input } from '@heroui/react';
 import { EndContentInputPassword } from '@auth/login/_components/EndContentInputPassword';
 import { KeyIcon } from '@global/icons/KeyIcon';
 import { useEffect, useState } from 'react';
@@ -40,7 +40,7 @@ export const InputPasswordLoginForm = ({
         label={confirmPassword ? 'Confirmar contraseña' : 'Contraseña'}
         placeholder={placeHolder}
         isRequired
-        variant="underlined"
+        variant="bordered"
         endContent={
           <EndContentInputPassword
             isVisible={toggleVisibility}

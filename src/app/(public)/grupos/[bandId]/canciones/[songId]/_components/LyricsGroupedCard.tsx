@@ -1,12 +1,10 @@
 import { structureColors, structureLib } from '@global/config/constants';
 import { LyricsCard } from './LyricsCard';
-import { useState } from 'react';
 import { MiniLyricsCreator } from './MiniLyricsCreator';
 import { LyricsGroupedCardProps } from '../_interfaces/lyricsInterfaces';
-import { useLyricsGroupDragDrop } from '../_hooks/useLyricsGroupDragDrop';
 import { useLyricsInsertion } from '../_hooks/useLyricsInsertion';
 import { LyricsInsertButton } from './lyrics/LyricsInsertButton';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 
 export const LyricsGroupedCard = ({
   structure,
@@ -24,7 +22,12 @@ export const LyricsGroupedCard = ({
   activeChordId,
   isUserScrolling,
   isDragging, // Recibir como prop
-}: LyricsGroupedCardProps & { isDragging: boolean; structureId: number }) => {
+  groupIndex,
+}: LyricsGroupedCardProps & {
+  isDragging: boolean;
+  structureId: number;
+  groupIndex: number;
+}) => {
   // Ya no necesitamos useLyricsGroupDragDrop aquí, porque el orden lo maneja el padre a través de lyricsGrouped
   // Pero necesitamos ordenar localmente las lyrics que recibimos para mostrarlas
   const sortedLyrics = [...lyrics].sort((a, b) => a.position - b.position);
@@ -70,7 +73,7 @@ export const LyricsGroupedCard = ({
           ))}
         </div>
       ) : (
-        <Droppable droppableId={`lyrics-${structureId}`}>
+        <Droppable droppableId={`lyrics-${structureId}-${groupIndex}`}>
           {(provided) => (
             <div
               className="flex flex-col gap-1"
