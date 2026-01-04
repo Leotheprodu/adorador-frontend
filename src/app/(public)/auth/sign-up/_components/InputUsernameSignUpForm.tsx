@@ -1,4 +1,4 @@
-import { Input } from "@heroui/react";
+import { Input } from '@heroui/react';
 
 export const InputUsernameSignUpForm = ({
   handle,
@@ -19,7 +19,7 @@ export const InputUsernameSignUpForm = ({
         label="Nombre de usuario"
         placeholder="Ingresa tu nombre de usuario"
         isRequired
-        variant="underlined"
+        variant="bordered"
         type="text"
         className=""
         autoComplete="username"

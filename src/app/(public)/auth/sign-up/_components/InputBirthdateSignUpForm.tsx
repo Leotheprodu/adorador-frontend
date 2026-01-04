@@ -1,4 +1,4 @@
-import { Input } from "@heroui/react";
+import { Input } from '@heroui/react';
 
 export const InputBirthdateSignUpForm = ({
   handle,
@@ -17,7 +17,7 @@ export const InputBirthdateSignUpForm = ({
       <Input
         size="lg"
         placeholder="Ingresa tu fecha de nacimiento"
-        variant="underlined"
+        variant="bordered"
         type="date"
         className=""
         autoComplete="birthdate"

@@ -1,4 +1,4 @@
-import { Input } from "@heroui/react";
+import { Input } from '@heroui/react';
 
 export const InputPhoneSignUpForm = ({
   handle,
@@ -18,7 +18,7 @@ export const InputPhoneSignUpForm = ({
         size="lg"
         label="Número de WhatsApp"
         placeholder="+50677778888"
-        variant="underlined"
+        variant="bordered"
         type="tel"
         className=""
         autoComplete="tel"

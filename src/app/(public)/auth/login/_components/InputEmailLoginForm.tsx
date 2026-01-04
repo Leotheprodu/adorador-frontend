@@ -1,5 +1,5 @@
 import { MailIcon } from '@global/icons/MailIcon';
-import { Input } from "@heroui/react";
+import { Input } from '@heroui/react';
 
 export const InputEmailLoginForm = ({
   handle,
@@ -25,7 +25,7 @@ export const InputEmailLoginForm = ({
         label="Correo Electrónico"
         placeholder="Ingresa tu correo electrónico"
         className="text-gray-900 dark:text-brand-purple-200"
-        variant="underlined"
+        variant="bordered"
         startContent={
           <MailIcon className="pointer-events-none flex-shrink-0 text-2xl text-brand-purple-600 dark:text-brand-purple-300" />
         }

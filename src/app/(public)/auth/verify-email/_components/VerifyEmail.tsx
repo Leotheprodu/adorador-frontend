@@ -1,10 +1,12 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { Button, Link } from "@heroui/react";
+import { Button, Link } from '@heroui/react';
 import { verifyWhatsAppTokenService } from '@auth/verify-email/_services/verifyService';
 import toast from 'react-hot-toast';
 import { findHrefFromLinks } from '@/global/utils/findHrefFromLinks';
 import { useSearchParams } from 'next/navigation';
+import { AuthCard } from '../../_components/ui/AuthCard';
+import { AuthHeader } from '../../_components/ui/AuthHeader';
 
 export const VerifyWhatsApp = () => {
   const searchParams = useSearchParams();
@@ -29,26 +31,58 @@ export const VerifyWhatsApp = () => {
     }
   }, [status]);
 
-  return (
-    <div className="flex flex-col items-center justify-center gap-10">
-      <p>
-        {status === 'pending'
-          ? 'Verificando tu número de WhatsApp...'
-          : status === 'success'
-            ? '¡Número de WhatsApp verificado correctamente! Ya puedes iniciar sesión'
-            : status === 'error'
-              ? 'Token inválido o expirado. Por favor, solicita un nuevo código de verificación'
-              : 'Verificando...'}
-      </p>
-      <div>
+  let content;
+  if (status === 'pending' || status === 'idle') {
+    content = (
+      <div className="space-y-4 text-center">
+        <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-brand-purple-200 border-t-brand-purple-600"></div>
+        <p className="text-slate-600 dark:text-slate-400">
+          Verificando tu número de WhatsApp...
+        </p>
+      </div>
+    );
+  } else if (status === 'success') {
+    content = (
+      <div className="space-y-6 text-center">
+        <div className="rounded-xl bg-green-50 p-4 text-green-700 dark:bg-green-900/20 dark:text-green-300">
+          ¡Número de WhatsApp verificado correctamente! Ya puedes iniciar
+          sesión.
+        </div>
         <Button
           as={Link}
-          isDisabled={status === 'pending'}
           href={findHrefFromLinks('Login')}
+          className="w-full bg-brand-purple-600 py-6 font-semibold text-white shadow-lg hover:bg-brand-purple-700"
         >
           Iniciar Sesión
         </Button>
       </div>
-    </div>
+    );
+  } else {
+    content = (
+      <div className="space-y-6 text-center">
+        <div className="rounded-xl bg-red-50 p-4 text-red-600 dark:bg-red-900/20 dark:text-red-300">
+          Token inválido o expirado. Por favor, solicita un nuevo código de
+          verificación.
+        </div>
+        <Button
+          as={Link}
+          href={findHrefFromLinks('Login')}
+          variant="bordered"
+          className="w-full font-semibold"
+        >
+          Volver al inicio
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <AuthCard>
+      <AuthHeader
+        title="Verificación"
+        subtitle="Confirmando tu cuenta de WhatsApp"
+      />
+      <div className="px-8 py-8">{content}</div>
+    </AuthCard>
   );
 };

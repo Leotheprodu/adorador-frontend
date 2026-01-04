@@ -1,5 +1,5 @@
 'use client';
-import { Button } from "@heroui/react";
+import { Button } from '@heroui/react';
 import { $user } from '@stores/users';
 import { useStore } from '@nanostores/react';
 import { InputPhoneLoginForm } from './InputPhoneLoginForm';
@@ -29,7 +29,6 @@ export const LoginForm = () => {
           <AuthHeader
             title="Bienvenido"
             subtitle="Inicia sesión para acceder a tus herramientas"
-            emoji="🎵"
           />
 
           {/* Formulario */}
@@ -51,7 +50,7 @@ export const LoginForm = () => {
               <Button
                 isLoading={isPending}
                 type="submit"
-                className="w-full border-2 border-transparent bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 py-6 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95 dark:border-brand-pink-400 dark:from-brand-pink-600 dark:to-brand-blue-500"
+                className="w-full bg-brand-purple-600 py-6 text-base font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.02] hover:bg-brand-purple-700 active:scale-95 dark:bg-brand-purple-600 dark:hover:bg-brand-purple-500"
               >
                 Iniciar Sesión
               </Button>

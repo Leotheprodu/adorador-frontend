@@ -1,5 +1,5 @@
 'use client';
-import { Button } from "@heroui/react";
+import { Button } from '@heroui/react';
 import { useSignUpForm } from '@auth/sign-up/_hooks/useSignUpForm';
 import { InputUsernameSignUpForm } from '@auth/sign-up/_components/InputUsernameSignUpForm';
 import { InputEmailSignUpForm } from '@auth/sign-up/_components/InputEmailSignUpForm';
@@ -59,7 +59,7 @@ export const SignUpForm = () => {
     <div className="w-full max-w-md">
       {/* Loading overlay mejorado */}
       {isPending && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-brand-purple-900/90 to-brand-pink-900/90 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
           <div className="text-center">
             <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-4 border-white/20 border-t-white"></div>
             <p className="text-lg font-semibold text-white">
@@ -76,7 +76,6 @@ export const SignUpForm = () => {
         <AuthHeader
           title="¡Únete Ahora!"
           subtitle="Crea tu cuenta gratis y disfruta de todas las herramientas"
-          emoji="✨"
         />
 
         {/* Formulario */}
@@ -120,7 +119,7 @@ export const SignUpForm = () => {
             <Button
               isLoading={isPending}
               type="submit"
-              className="w-full border-2 border-transparent bg-gradient-to-r from-brand-purple-600 to-brand-blue-600 py-6 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95 dark:border-brand-pink-400 dark:from-brand-pink-600 dark:to-brand-blue-500"
+              className="w-full bg-brand-purple-600 py-6 text-base font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.02] hover:bg-brand-purple-700 active:scale-95 dark:bg-brand-purple-600 dark:hover:bg-brand-purple-500"
             >
               Crear Cuenta Gratis
             </Button>
