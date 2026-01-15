@@ -11,6 +11,7 @@ import {
   BookmarkIcon,
   ClockIcon,
 } from '@global/icons';
+import { NoteType } from '@stores/event';
 import Link from 'next/link';
 import { handleTranspose } from '@bands/[bandId]/eventos/[eventId]/en-vivo/_utils/handleTranspose';
 import { songTypes } from '@global/config/constants';
@@ -52,10 +53,16 @@ export const SongBasicInfo = ({
   onPracticeModeChange,
   isFollowMusic,
   onFollowMusicChange,
-
+  transpose,
+  onTransposeChange,
+  showChords,
+  onShowChordsChange,
+  noteType,
+  onNoteTypeChange,
   isSyncChords,
   onSyncChordsChange,
   isMember = false,
+  lyricsScale,
 }: {
   data: SongPropsWithCount | undefined;
   status: QueryStatus;
@@ -73,6 +80,14 @@ export const SongBasicInfo = ({
   isSyncChords?: boolean;
   onSyncChordsChange?: (isSyncChords: boolean) => void;
   isMember?: boolean;
+  transpose?: number;
+  onTransposeChange?: (val: number) => void;
+  onScaleChange?: (val: number) => void;
+  onShowChordsChange?: (val: boolean) => void;
+  onNoteTypeChange?: (val: NoteType) => void;
+  lyricsScale?: number;
+  showChords?: boolean;
+  noteType?: NoteType;
 }) => {
   const playlist = useStore($PlayList);
   const selectedSong = useStore($SelectedSong);
@@ -254,14 +269,28 @@ export const SongBasicInfo = ({
                 {data?.key && (
                   <Chip
                     size="sm"
-                    variant="flat"
-                    startContent={<span className="ml-1 text-xs">Ton:</span>}
+                    variant={transpose !== 0 ? 'solid' : 'flat'}
+                    color={transpose !== 0 ? 'warning' : 'default'}
+                    startContent={<span className="ml-1 text-xs">Tono:</span>}
                     classNames={{
-                      base: 'bg-default-100',
-                      content: 'font-semibold text-default-600',
+                      base: transpose !== 0 ? '' : 'bg-default-100',
+                      content: `font-semibold ${transpose !== 0 ? 'text-white' : 'text-default-600'}`,
                     }}
                   >
-                    {handleTranspose(data.key, 0)}
+                    {transpose !== 0 ? (
+                      <span className="flex items-center gap-1">
+                        <span className="opacity-75">
+                          {' '}
+                          {handleTranspose(data.key, 0)}
+                        </span>
+                        <span>→</span>
+                        <span className="font-bold">
+                          {handleTranspose(data.key, transpose || 0)}
+                        </span>
+                      </span>
+                    ) : (
+                      <span> {handleTranspose(data.key, 0)}</span>
+                    )}
                   </Chip>
                 )}
 
@@ -536,6 +565,13 @@ export const SongBasicInfo = ({
         isOpen={isOpen}
         onClose={onClose}
         songId={songId}
+        transpose={transpose || 0}
+        onTransposeChange={onTransposeChange}
+        onShowChordsChange={onShowChordsChange}
+        onNoteTypeChange={onNoteTypeChange}
+        showChords={showChords ?? true}
+        noteType={noteType || 'american'}
+        lyricsScale={lyricsScale || 1}
       />
       <VideoLyricsModal
         isOpen={isVideoLyricsOpen}

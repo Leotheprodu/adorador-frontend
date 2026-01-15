@@ -1,36 +1,41 @@
 'use client';
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-} from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody } from '@heroui/react';
 import { GearIcon } from '@global/icons';
 import { useRehearsalControls } from '../_hooks/useRehearsalControls';
 import { TransposeControls } from './rehearsalControls/TransposeControls';
 import { LyricsScaleControls } from './rehearsalControls/LyricsScaleControls';
 import { DisplayOptions } from './rehearsalControls/DisplayOptions';
+import { NoteType } from '@stores/event';
 
 interface RehearsalControlsModalProps {
   isOpen: boolean;
   onClose: () => void;
   songId: string;
+  transpose: number;
+  onTransposeChange?: (val: number) => void;
+  lyricsScale: number;
+  onScaleChange?: (val: number) => void;
+  showChords: boolean;
+  onShowChordsChange?: (val: boolean) => void;
+  noteType: NoteType;
+  onNoteTypeChange?: (val: NoteType) => void;
 }
 
 export const RehearsalControlsModal = ({
   isOpen,
   onClose,
   songId,
+  transpose,
+  onTransposeChange,
+  lyricsScale,
+  onScaleChange,
+  showChords,
+  onShowChordsChange,
+  noteType,
+  onNoteTypeChange,
 }: RehearsalControlsModalProps) => {
-  const {
-    transpose,
-    eventConfig,
-    chordConfig,
-    handleTransposeChange,
-    handleLyricsScaleChange,
-    handleShowChordsChange,
-    handleNoteTypeChange,
-  } = useRehearsalControls(songId);
+  // No internal hook usage
+  // All state is controlled by props
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
@@ -50,21 +55,21 @@ export const RehearsalControlsModal = ({
           {/* Transpose Control */}
           <TransposeControls
             transpose={transpose}
-            onTransposeChange={handleTransposeChange}
+            onTransposeChange={onTransposeChange || (() => {})}
           />
 
           {/* Lyrics Scale Control */}
           <LyricsScaleControls
-            lyricsScale={eventConfig.lyricsScale}
-            onScaleChange={handleLyricsScaleChange}
+            lyricsScale={lyricsScale}
+            onScaleChange={onScaleChange || (() => {})}
           />
 
           {/* Display Options */}
           <DisplayOptions
-            showChords={eventConfig.showChords}
-            noteType={chordConfig.noteType}
-            onShowChordsChange={handleShowChordsChange}
-            onNoteTypeChange={handleNoteTypeChange}
+            showChords={showChords}
+            noteType={noteType}
+            onShowChordsChange={onShowChordsChange || (() => {})}
+            onNoteTypeChange={onNoteTypeChange || (() => {})}
           />
 
           {/* Info footer */}
