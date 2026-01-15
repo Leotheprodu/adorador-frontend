@@ -11,6 +11,7 @@ import {
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
 import { useLyricsEditMode } from './useLyricsEditMode';
 import { SongIdParams } from '../_interfaces/songIdInterfaces';
+import { useRehearsalControls } from './useRehearsalControls';
 
 export const useSongIdPage = (params: SongIdParams) => {
   const router = useRouter();
@@ -26,7 +27,14 @@ export const useSongIdPage = (params: SongIdParams) => {
     useLyricsEditMode(params.bandId, params.songId);
   const [isFollowMusic, setIsFollowMusic] = useState(false);
   const [isSyncChords, setIsSyncChords] = useState(false);
-  const [transpose] = useState(0);
+
+  const {
+    transpose,
+    handleTransposeChange,
+    handleLyricsScaleChange,
+    handleShowChordsChange,
+    handleNoteTypeChange,
+  } = useRehearsalControls(params.songId);
 
   // Stores
   const chordPreferences = useStore($chordPreferences);
@@ -113,6 +121,10 @@ export const useSongIdPage = (params: SongIdParams) => {
     isSyncChords,
     setIsSyncChords,
     transpose,
+    handleTransposeChange,
+    handleLyricsScaleChange,
+    handleShowChordsChange,
+    handleNoteTypeChange,
 
     // Config
     chordPreferences,

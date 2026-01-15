@@ -29,6 +29,10 @@ export const SongIdMainPage = ({
     isSyncChords,
     setIsSyncChords,
     transpose,
+    handleTransposeChange,
+    handleLyricsScaleChange,
+    handleShowChordsChange,
+    handleNoteTypeChange,
     chordPreferences,
     eventConfig,
     refetch,
@@ -72,6 +76,15 @@ export const SongIdMainPage = ({
             isSyncChords={isSyncChords}
             onSyncChordsChange={setIsSyncChords}
             isMember={isMember}
+            // Rehearsal Controls
+            transpose={transpose}
+            onTransposeChange={handleTransposeChange}
+            onScaleChange={handleLyricsScaleChange}
+            onShowChordsChange={handleShowChordsChange}
+            onNoteTypeChange={handleNoteTypeChange}
+            lyricsScale={eventConfig.lyricsScale}
+            showChords={eventConfig.showChords}
+            noteType={chordPreferences.noteType}
           />
         </section>
 
