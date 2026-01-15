@@ -1,5 +1,5 @@
 import { LyricsProps } from '@bands/[bandId]/eventos/_interfaces/eventsInterface';
-import { Button, Input, Select, SelectItem } from "@heroui/react";
+import { Button, Input, Select, SelectItem } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import {
   addNewLyricService,
@@ -156,7 +156,7 @@ export const AddOrUpdateLyricForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`${type === 'add' ? 'form-add-new-lyric' : 'form-update-lyric'} flex flex-col items-center justify-center gap-3 rounded-lg border-1 border-slate-100 bg-slate-50 p-4`}
+      className={`${type === 'add' ? 'form-add-new-lyric' : 'form-update-lyric'} flex flex-col items-center justify-center gap-3 rounded-lg border-1 border-slate-100 bg-slate-50 p-4 dark:border-slate-700 dark:bg-gray-800`}
     >
       <Input
         value={newLyric}

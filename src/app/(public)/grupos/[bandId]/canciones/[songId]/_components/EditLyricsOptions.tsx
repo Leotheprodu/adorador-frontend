@@ -117,7 +117,7 @@ export const EditLyricsOptions = ({
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="flex w-full flex-col items-center gap-6 rounded-lg border-2 border-primary-200 bg-white p-6 shadow-md dark:bg-gray-900 dark:border-primary-800 dark:shadow-none">
+        <div className="flex w-full flex-col items-center gap-6 rounded-lg bg-white p-6 shadow-md dark:bg-gray-900 dark:shadow-none">
           {/* Close Button */}
           <button
             onClick={() =>
@@ -156,19 +156,21 @@ export const EditLyricsOptions = ({
           <div className="flex w-full max-w-4xl justify-center gap-2 border-b-2 border-slate-200 dark:border-slate-700">
             <button
               onClick={() => setActiveTab('editor')}
-              className={`px-6 py-3 font-semibold transition-all ${activeTab === 'editor'
+              className={`px-6 py-3 font-semibold transition-all ${
+                activeTab === 'editor'
                   ? 'border-b-4 border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-300'
                   : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100'
-                }`}
+              }`}
             >
               ✍️ Editor de Texto
             </button>
             <button
               onClick={() => setActiveTab('upload')}
-              className={`px-6 py-3 font-semibold transition-all ${activeTab === 'upload'
+              className={`px-6 py-3 font-semibold transition-all ${
+                activeTab === 'upload'
                   ? 'border-b-4 border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-300'
                   : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100'
-                }`}
+              }`}
             >
               📁 Subir Archivo
             </button>

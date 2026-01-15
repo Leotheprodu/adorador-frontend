@@ -19,6 +19,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Me has tomado en Tus Brazos',
           structure: { id: 2, title: 'verse' },
           chords: [],
@@ -34,6 +35,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Me has tomado en Tus Brazos',
           structure: { id: 2, title: 'verse' },
           chords: [
@@ -67,6 +69,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Asombroso amor',
           structure: { id: 4, title: 'chorus' },
           chords: [
@@ -90,6 +93,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Primera línea',
           structure: { id: 2, title: 'verse' },
           chords: [],
@@ -97,6 +101,7 @@ describe('lyricsConverter', () => {
         {
           id: 2,
           position: 2,
+          startTime: 0,
           lyrics: 'Segunda línea',
           structure: { id: 2, title: 'verse' },
           chords: [],
@@ -112,6 +117,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Verso línea',
           structure: { id: 2, title: 'verse' },
           chords: [],
@@ -119,6 +125,7 @@ describe('lyricsConverter', () => {
         {
           id: 2,
           position: 2,
+          startTime: 0,
           lyrics: 'Coro línea',
           structure: { id: 4, title: 'chorus' },
           chords: [],
@@ -136,6 +143,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Me has tomado en Tus Brazos fuertemente',
           structure: { id: 2, title: 'verse' },
           chords: [
@@ -177,6 +185,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: 'Test line',
           structure: { id: 1, title: 'INTRO' },
           chords: [],
@@ -193,6 +202,7 @@ describe('lyricsConverter', () => {
         {
           id: 1,
           position: 1,
+          startTime: 0,
           lyrics: '12345678901234567890', // 20 characters
           structure: { id: 2, title: 'verse' },
           chords: [
@@ -220,6 +230,42 @@ describe('lyricsConverter', () => {
       expect(chordLine[0]).toBe('A');
       // Position 3 should be at columnWidth * 2 = 4 * 2 = 8
       expect(chordLine[8]).toBe('B');
+    });
+
+    it('should prevent chords from overlapping/touching', () => {
+      const lyrics: LyricsProps[] = [
+        {
+          id: 1,
+          position: 1,
+          startTime: 0,
+          lyrics: 'Y mi enfermedad',
+          structure: { id: 2, title: 'verse' },
+          chords: [
+            {
+              id: 1,
+              rootNote: 'F#',
+              chordQuality: 'm',
+              slashChord: '',
+              position: 1, // Start
+            },
+            {
+              id: 2,
+              rootNote: 'E',
+              chordQuality: '',
+              slashChord: '',
+              position: 2, // Very close
+            },
+          ],
+        },
+      ];
+
+      const result = convertLyricsToPlainText(lyrics);
+      const lines = result.split('\n');
+      const chordLine = lines[1];
+
+      // Should contain "F#m E" with at least one space
+      expect(chordLine).toMatch(/F#m\s+E/);
+      expect(chordLine).not.toContain('F#mE');
     });
   });
 });

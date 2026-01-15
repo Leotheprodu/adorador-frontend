@@ -18,7 +18,9 @@ export const NoLyricsSong = ({
   songTitle?: string;
 }) => {
   const [isDragging, setIsDragging] = useState(false);
-  const [activeTab, setActiveTab] = useState<'editor' | 'upload'>('editor');
+  const [activeTab, setActiveTab] = useState<
+    'editor' | 'upload' | 'individualLyric'
+  >('editor');
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -64,22 +66,22 @@ export const NoLyricsSong = ({
   return (
     <div className="flex w-full flex-col items-center gap-6">
       <div className="text-center">
-        <h3 className="mb-2 text-2xl font-bold text-slate-800">
+        <h3 className="mb-2 text-2xl font-bold text-slate-800 dark:text-slate-100">
           Esta canción aún no tiene letra
         </h3>
-        <p className="text-slate-600">
+        <p className="text-slate-600 dark:text-slate-300">
           Elige cómo quieres agregar la letra de la canción
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex w-full max-w-4xl justify-center gap-2 border-b-2 border-slate-200">
+      <div className="flex w-full max-w-4xl justify-center gap-2 border-b-2 border-slate-200 dark:border-slate-700">
         <button
           onClick={() => setActiveTab('editor')}
           className={`px-6 py-3 font-semibold transition-all ${
             activeTab === 'editor'
-              ? 'border-b-4 border-primary-500 text-primary-600'
-              : 'text-slate-500 hover:text-slate-700'
+              ? 'border-b-4 border-primary-500 text-primary-600 dark:text-primary-400'
+              : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
           ✍️ Editor de Texto
@@ -88,16 +90,26 @@ export const NoLyricsSong = ({
           onClick={() => setActiveTab('upload')}
           className={`px-6 py-3 font-semibold transition-all ${
             activeTab === 'upload'
-              ? 'border-b-4 border-primary-500 text-primary-600'
-              : 'text-slate-500 hover:text-slate-700'
+              ? 'border-b-4 border-primary-500 text-primary-600 dark:text-primary-400'
+              : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
           📁 Subir Archivo
         </button>
+        <button
+          onClick={() => setActiveTab('individualLyric')}
+          className={`px-6 py-3 font-semibold transition-all ${
+            activeTab === 'individualLyric'
+              ? 'border-b-4 border-primary-500 text-primary-600 dark:text-primary-400'
+              : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+          }`}
+        >
+          📝 Letra Individual
+        </button>
       </div>
 
       {/* Content */}
-      <div className="w-full max-w-4xl rounded-lg bg-white p-6 shadow-sm">
+      <div className="w-full max-w-4xl rounded-lg bg-white p-6 shadow-sm dark:bg-gray-900">
         {activeTab === 'editor' ? (
           <div className="flex flex-col items-center space-y-6">
             <LyricsTextEditor
@@ -105,24 +117,17 @@ export const NoLyricsSong = ({
               songTitle={songTitle}
               refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
             />
-            <div className="w-full max-w-3xl border-t-2 border-slate-200 pt-4">
-              <AddOrUpdateLyricForm
-                refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
-                LyricsOfCurrentSong={LyricsOfCurrentSong}
-                params={params}
-              />
-            </div>
           </div>
-        ) : (
+        ) : activeTab === 'upload' ? (
           <div className="mx-auto max-w-3xl space-y-4">
-            <h4 className="text-xl font-bold text-slate-800">
+            <h4 className="text-xl font-bold text-slate-800 dark:text-slate-100">
               Subir Archivo .txt
             </h4>
-            <p className="text-slate-600">
+            <p className="text-slate-600 dark:text-slate-300">
               Al subir un archivo txt con la letra y acordes, ten en cuenta lo
               siguiente:
             </p>
-            <ul className="list-inside list-disc space-y-2 text-slate-700">
+            <ul className="list-inside list-disc space-y-2 text-slate-700 dark:text-slate-300">
               <li>
                 Incluye etiquetas de estructura entre paréntesis: (verso),
                 (coro), (intro), (puente)
@@ -142,8 +147,8 @@ export const NoLyricsSong = ({
               onDrop={handleDrop}
               className={`relative mt-6 rounded-lg border-2 border-dashed p-8 transition-all ${
                 isDragging
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-slate-300 bg-slate-50 hover:border-primary-400 hover:bg-slate-100'
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                  : 'border-slate-300 bg-slate-50 hover:border-primary-400 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700'
               }`}
             >
               <input
@@ -159,12 +164,16 @@ export const NoLyricsSong = ({
               >
                 <div
                   className={`rounded-full p-4 ${
-                    isDragging ? 'bg-primary-200' : 'bg-slate-200'
+                    isDragging
+                      ? 'bg-primary-200 dark:bg-primary-900/40'
+                      : 'bg-slate-200 dark:bg-slate-700'
                   }`}
                 >
                   <svg
                     className={`h-12 w-12 ${
-                      isDragging ? 'text-primary-600' : 'text-slate-500'
+                      isDragging
+                        ? 'text-primary-600 dark:text-primary-400'
+                        : 'text-slate-500 dark:text-slate-400'
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -179,24 +188,32 @@ export const NoLyricsSong = ({
                   </svg>
                 </div>
                 <div className="text-center">
-                  <p className="text-lg font-semibold text-slate-700">
+                  <p className="text-lg font-semibold text-slate-700 dark:text-slate-200">
                     {isDragging
                       ? 'Suelta el archivo aquí'
                       : 'Arrastra tu archivo .txt aquí'}
                   </p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     o haz clic para seleccionar
                   </p>
                 </div>
-                <div className="rounded-full bg-primary-100 px-4 py-2">
-                  <span className="text-sm font-medium text-primary-700">
+                <div className="rounded-full bg-primary-100 px-4 py-2 dark:bg-primary-900/30">
+                  <span className="text-sm font-medium text-primary-700 dark:text-white">
                     Solo archivos .txt
                   </span>
                 </div>
               </label>
             </div>
           </div>
-        )}
+        ) : activeTab === 'individualLyric' ? (
+          <div className="w-full max-w-3xl border-t-2 border-slate-200 pt-4 dark:border-slate-700">
+            <AddOrUpdateLyricForm
+              refetchLyricsOfCurrentSong={refetchLyricsOfCurrentSong}
+              LyricsOfCurrentSong={LyricsOfCurrentSong}
+              params={params}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

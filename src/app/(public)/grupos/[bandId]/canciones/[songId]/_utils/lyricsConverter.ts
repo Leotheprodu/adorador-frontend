@@ -79,33 +79,44 @@ const reconstructChordsLine = (
   const lyricsLength = lyricsText.length;
 
   // Calculate column width (divide lyrics into 5 equal parts)
-  const columnWidth = Math.floor(lyricsLength / 5);
+  const columnWidth = Math.max(1, Math.floor(lyricsLength / 5));
 
-  // Find the maximum length needed for the chords line
-  let maxChordPosition = 0;
+  // Calculate positions with collision detection
+  const positionedChords: { chordStr: string; startPos: number }[] = [];
+  let lastEndPos = -1; // The index of the last character of the previous chord
+
   sortedChords.forEach((chord) => {
     const chordStr = getChordString(chord);
     // Convert position (1-5) to actual character position
     // Position 1 = index 0, Position 2 = columnWidth, etc.
-    const charPosition = (chord.position - 1) * columnWidth;
-    const endPosition = charPosition + chordStr.length;
-    maxChordPosition = Math.max(maxChordPosition, endPosition);
+    let startPos = (chord.position - 1) * columnWidth;
+
+    // Ensure startPos is at least one space after the previous chord
+    // (lastEndPos is the index of the last character, so lastEndPos + 1 is the next free slot)
+    // We want at least one space, so lastEndPos + 2
+    if (startPos <= lastEndPos + 1) {
+      startPos = lastEndPos + 2;
+    }
+
+    // Ensure startPos is non-negative
+    startPos = Math.max(0, startPos);
+
+    positionedChords.push({ chordStr, startPos });
+    lastEndPos = startPos + chordStr.length - 1;
   });
 
-  // Make sure the chords line is at least as long as the lyrics
-  const chordsLineLength = Math.max(maxChordPosition, lyricsLength);
+  // Calculate total length needed
+  const lastChord = positionedChords[positionedChords.length - 1];
+  const minChordsLineLength = lastChord.startPos + lastChord.chordStr.length;
+  const chordsLineLength = Math.max(minChordsLineLength, lyricsLength);
+
   const chordsArray = new Array(chordsLineLength).fill(' ');
 
   // Place each chord at its calculated position
-  sortedChords.forEach((chord) => {
-    const chordStr = getChordString(chord);
-    // Convert position (1-5) to actual character position
-    const charPosition = (chord.position - 1) * columnWidth;
-
-    // Place each character of the chord
+  positionedChords.forEach(({ chordStr, startPos }) => {
     for (let i = 0; i < chordStr.length; i++) {
-      if (charPosition + i < chordsLineLength) {
-        chordsArray[charPosition + i] = chordStr[i];
+      if (startPos + i < chordsLineLength) {
+        chordsArray[startPos + i] = chordStr[i];
       }
     }
   });
