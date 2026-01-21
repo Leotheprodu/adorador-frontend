@@ -16,6 +16,9 @@ interface YouTubePlayerProps {
   playerRef?: React.RefObject<ReactPlayer>; // External ref for controlling the player
   onProgress?: (state: { played: number; playedSeconds: number }) => void;
   onDuration?: (duration: number) => void;
+  onReady?: () => void;
+  onPlay?: () => void;
+  onPause?: () => void;
 }
 
 export const YouTubePlayer = ({
@@ -30,6 +33,9 @@ export const YouTubePlayer = ({
   playerRef: externalRef,
   onProgress,
   onDuration,
+  onReady,
+  onPlay,
+  onPause,
 }: YouTubePlayerProps) => {
   const {
     playerRef: internalRef,
@@ -38,8 +44,8 @@ export const YouTubePlayer = ({
     thumbnail,
     playing,
     handlePlayPause,
-    handlePlay,
-    handlePause,
+    handlePlay: internalHandlePlay,
+    handlePause: internalHandlePause,
     handleEnd,
   } = useYouTubePlayer({ youtubeUrl, uniqueId, autoplay, onEnd });
 
@@ -71,11 +77,18 @@ export const YouTubePlayer = ({
             controls={showControls}
             width="100%"
             height="100%"
-            onPlay={handlePlay}
-            onPause={handlePause}
+            onPlay={() => {
+              internalHandlePlay();
+              onPlay?.();
+            }}
+            onPause={() => {
+              internalHandlePause();
+              onPause?.();
+            }}
             onEnded={handleEnd}
             onProgress={onProgress}
             onDuration={onDuration}
+            onReady={onReady}
             config={{
               youtube: {
                 playerVars: {

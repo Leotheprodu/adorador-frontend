@@ -9,6 +9,7 @@ import { CTASection } from './_components/CTASection';
 import { ResourcesSection } from './_components/ResourcesSection';
 import { appName, domain } from '@global/config/constants';
 import { JsonLd } from '@global/components/SEO/JsonLd';
+import { VideoShowcaseSection } from './_components/VideoShowcaseSection';
 
 export const metadata: Metadata = {
   title: `${appName} - Gestión Profesional para Grupos de Alabanza`,
@@ -49,8 +50,9 @@ export default function Home() {
       <JsonLd data={organizationSchema} />
       <JsonLd data={softwareSchema} />
       <HeroSection />
-      <FeaturesSection />
+      <VideoShowcaseSection />
       <ProblemSolutionSection />
+      <FeaturesSection />
       <ValuePropositionSection />
       <HowItWorksSection />
       <SocialProofSection />

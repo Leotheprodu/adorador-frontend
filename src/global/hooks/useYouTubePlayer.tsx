@@ -28,7 +28,7 @@ export const useYouTubePlayer = ({
 
   // Extraer el ID de YouTube
   const youtubeId = extractYouTubeId(youtubeUrl);
-  const thumbnail = getYouTubeThumbnail(youtubeUrl);
+  const thumbnail = getYouTubeThumbnail(youtubeId, 'maxresdefault');
 
   const isActive = activePlayer?.id === uniqueId;
   const isPlaying = isActive && activePlayer?.isPlaying;
