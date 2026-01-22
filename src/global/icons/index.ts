@@ -70,3 +70,6 @@ export * from './FaceFrownIcon';
 export * from './BookmarkIcon';
 export * from './MetronomeIcon';
 export * from './MinusIcon';
+export * from './RefreshIcon';
+export * from './LayoutIcon';
+export * from './BrandWhatsappIcon';
