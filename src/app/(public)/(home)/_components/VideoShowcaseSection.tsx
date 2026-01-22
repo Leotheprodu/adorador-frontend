@@ -1,32 +1,41 @@
 'use client';
 
 import { appName } from '@global/config/constants';
-import { YouTubePlayer } from '@global/components/YouTubePlayer';
 import ReactPlayer from 'react-player';
 import { useRef, useState } from 'react';
 import { VIDEO_CHAPTERS } from '../_constants/videoShowcase.constants';
 import { VideoChaptersList } from './VideoShowcase/VideoChaptersList';
 import { VideoHighlights } from './VideoShowcase/VideoHighlights';
+import { YouTubeThumbnail } from '@global/components/YouTubeThumbnail';
+import { extractYouTubeId, getYouTubeThumbnail } from '@global/utils/formUtils';
 
 export const VideoShowcaseSection = () => {
   const playerRef = useRef<ReactPlayer>(null);
   const [currentChapterId, setCurrentChapterId] = useState<number>(1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
   const [pendingSeekTime, setPendingSeekTime] = useState<number | null>(null);
+
+  const videoUrl = 'https://www.youtube.com/watch?v=NGFYbOixTMo';
+  const youtubeId = extractYouTubeId(videoUrl);
+  const thumbnail = getYouTubeThumbnail(youtubeId, 'maxresdefault');
 
   // Handle seeking when a chapter is clicked
   const handleSeek = (seconds: number, id: number) => {
     setCurrentChapterId(id);
 
-    // If player is active and ready, seek immediately
-    if (playerRef.current) {
-      playerRef.current.seekTo(seconds, 'seconds');
-      setIsPlaying(true);
-    } else {
-      // If player is not active (thumbnail mode) or not playing,
-      // we set pending seek time and force play
+    // Ensure player is visible
+    if (!showPlayer) {
+      setShowPlayer(true);
       setPendingSeekTime(seconds);
       setIsPlaying(true);
+      return;
+    }
+
+    // If player is active, seek and play
+    setIsPlaying(true);
+    if (playerRef.current) {
+      playerRef.current.seekTo(seconds, 'seconds');
     }
   };
 
@@ -35,6 +44,11 @@ export const VideoShowcaseSection = () => {
       playerRef.current.seekTo(pendingSeekTime, 'seconds');
       setPendingSeekTime(null);
     }
+  };
+
+  const handlePlayVideo = () => {
+    setShowPlayer(true);
+    setIsPlaying(true);
   };
 
   // Optional: Track progress to update active chapter
@@ -76,19 +90,39 @@ export const VideoShowcaseSection = () => {
         <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Video Column */}
           <div className="lg:col-span-7 xl:col-span-8">
-            <div className="sticky top-24 aspect-video overflow-hidden rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-gray-900/10">
-              <YouTubePlayer
-                playerRef={playerRef}
-                youtubeUrl="https://www.youtube.com/watch?v=NGFYbOixTMo"
-                uniqueId="showcase-video"
-                onProgress={handleProgress}
-                showControls={true}
-                className="h-full w-full"
-                autoplay={isPlaying}
-                onReady={handlePlayerReady}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-              />
+            <div className="sticky top-24 aspect-video h-full overflow-hidden rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-gray-900/10">
+              {!showPlayer ? (
+                <YouTubeThumbnail
+                  thumbnail={thumbnail}
+                  title="Showcase Video"
+                  onPlay={handlePlayVideo}
+                />
+              ) : (
+                <div className="relative h-full w-full">
+                  <ReactPlayer
+                    ref={playerRef}
+                    url={videoUrl}
+                    playing={isPlaying}
+                    controls={true}
+                    width="100%"
+                    height="100%"
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onEnded={() => setIsPlaying(false)}
+                    onProgress={handleProgress}
+                    onReady={handlePlayerReady}
+                    config={{
+                      youtube: {
+                        playerVars: {
+                          modestbranding: 1,
+                          rel: 0,
+                          autoplay: 1,
+                        },
+                      },
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
